@@ -1,0 +1,44 @@
+{
+  "name": "80bots",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node next.server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node next.server.js"
+  },
+  "dependencies": {
+    "@emotion/core": "^10.0.15",
+    "@emotion/styled": "^10.0.15",
+    "@zeit/next-css": "^1.0.1",
+    "axios": "^0.19.0",
+    "bootstrap": "^4.3.1",
+    "dotenv": "^8.0.0",
+    "emotion-theming": "^10.0.14",
+    "next": "^9.0.3",
+    "next-routes": "^1.4.2",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.1.0",
+    "redux": "^4.0.4",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^1.0.5",
+    "redux-saga-requests": "^0.25.0",
+    "redux-saga-requests-axios": "^0.7.6",
+    "redux-saga-thunk": "^0.7.3",
+    "redux-thunk": "^2.3.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.1.0",
+    "eslint-plugin-react": "^7.14.3",
+    "redux-devtools-extension": "^2.13.8"
+  },
+  "engines": {
+    "npm": "6.4.1",
+    "yarn": "1.11",
+    "node": "8.16.0"
+  },
+  "license": "MIT"
+}
