@@ -2,6 +2,7 @@ import { css } from '@emotion/core';
 
 export const theme = {
   colors: {
+    blue: '#007bff',
     primary: '#0492fe',
     clearBlue: '#27a2ff',
     clearBlueTwo: '#5cb3f5',
@@ -17,7 +18,9 @@ export const theme = {
     silver: '#ced0da',
     orange: '#eab550',
     black: '#0a0a0a',
-    white: '#ffffff'
+    white: '#ffffff',
+    whiteGrey: '#eeeeee',
+    purple: '#6f42c1'
   }
 };
 
@@ -34,13 +37,41 @@ export const notificationTimings = {
   HELP_HIDE_DELAY: 5000
 };
 
+export const SIDEBAR_ANIMATION_TIME = 250;
+
 export const globalStyles = css`
+  @font-face {
+    font-family: Overpass, monospace;
+    font-weight: normal;
+    src: url("/static/fonts/overpass-mono/overpass-mono-regular.otf");
+  }
+  
+  @font-face {
+    font-family: Overpass, monospace;
+    font-weight: bold;
+    src: url("/static/fonts/overpass-mono/overpass-mono-bold.otf");
+  }
+  
+  @font-face {
+    font-family: Overpass, monospace;
+    font-weight: 300;
+    src: url("/static/fonts/overpass-mono/overpass-mono-light.otf");
+  }
+  
+  @font-face {
+    font-family: Overpass, monospace;
+    font-weight: 600;
+    src: url("/static/fonts/overpass-mono/overpass-mono-semibold.otf");
+  }
+
   body {
+    font-family: Overpass, monospace;
     margin: 0;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     overflow-x: hidden;
+    line-height: 1.6;
     &::-webkit-scrollbar {
       width: 5px;
       background-color: transparent;
@@ -55,5 +86,19 @@ export const globalStyles = css`
     display: flex;
     flex-direction: column;
     flex: 1;
+  }
+  
+  .btn-primary {
+    background-color: hsl(200, 100%, 40%) !important;
+    border-color: hsl(200, 100%, 40%) !important;
+    &:hover {
+      background-color: hsl(200, 100%, 35%) !important;
+      border-color: hsl(200, 100%, 35%) !important;
+    }
+  }
+  
+  .btn, .btn:active {
+    box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08) !important;
+    transition: all .20s ease;
   }
 `;

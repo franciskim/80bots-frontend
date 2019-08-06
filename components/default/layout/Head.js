@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 const defaultDescription = '80bots da best';
 const defaultOGURL = '';
 const defaultOGImage = '';
-const googleAnalyticsId = '';
+const googleAnalyticsId = 'id';
 
 const Head = props => (
   <NextHead>
-    <title>{props.title}</title>
+    <title>{props.title + ' | 80bots'}</title>
     <meta charSet="UTF-8" />
     <meta name="description" content={props.description || defaultDescription} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -91,14 +91,14 @@ const Head = props => (
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', ${googleAnalyticsId});`}}
+        gtag('config', '123');`}}
     />
     <script dangerouslySetInnerHTML={{__html: `
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        ga('create', ${googleAnalyticsId}, 'auto');
+        ga('create', '123', 'auto');
         ga('send', 'pageview');`}}
     />
     <noscript dangerouslySetInnerHTML={{__html: `<iframe src="https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}"

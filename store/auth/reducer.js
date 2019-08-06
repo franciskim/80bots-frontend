@@ -18,11 +18,15 @@ export const reducer = (state = initialState, action) => {
       return { ...state, loading: true, error: null };
 
     case success(LOGIN):
-    case success(REGISTER):
+    case success(REGISTER): {
+      localStorage.setItem('token', action.data.token);
       return { ...state, user: action.data.user, loading: false, localLoading: false, isAuthorized: true };
+    }
 
-    case success(LOGOUT):
+    case success(LOGOUT): {
+      localStorage.clear();
       return { ...state, user: null, loading: false, isAuthorized: false };
+    }
 
     case error(LOGIN):
     case error(LOGOUT):

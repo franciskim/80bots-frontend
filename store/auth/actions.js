@@ -1,5 +1,5 @@
 import {
-  LOGIN, REGISTER
+  LOGIN, REGISTER, LOGOUT
 } from './types';
 
 export const login = (email, password) => {
@@ -33,3 +33,7 @@ export const register = (email, password) => {
     }
   };
 };
+
+export const logout = () => ({
+  type: LOGOUT
+});

@@ -10,5 +10,9 @@ export default function* rootSaga() {
 
 axios.interceptors.request.use(req => {
   req.url = process.env.API_URL + req.url;
+  const token = localStorage.getItem('token');
+  if(token) {
+    req.headers.Authorization = 'Bearer ' + token;
+  }
   return req;
 });
