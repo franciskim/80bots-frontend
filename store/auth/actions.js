@@ -1,6 +1,7 @@
 import {
-  LOGIN, REGISTER, LOGOUT
+  AUTH_CHECK, LOGIN, REGISTER, LOGOUT
 } from './types';
+import Router from 'next/router';
 
 export const login = (email, password) => {
   return {
@@ -33,6 +34,17 @@ export const register = (email, password) => {
     }
   };
 };
+
+export const checkAuth = () => dispatch => dispatch({
+  type: AUTH_CHECK,
+  request: {
+    method: 'GET',
+    url: '/auth/login'
+  },
+  meta: {
+    thunk: true
+  }
+}).catch(() => Router.push('/login'));
 
 export const logout = () => ({
   type: LOGOUT

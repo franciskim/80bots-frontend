@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import Head from 'components/default/layout/Head';
+import Head from 'components/default/layout/components/Head';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -103,12 +103,8 @@ Register.propTypes = {
   register: PropTypes.func
 };
 
-const mapStateToProps = state => ({
-
-});
-
 const mapDispatchToProps = dispatch => ({
   register: (email, password) => dispatch(register(email, password))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default connect(null, mapDispatchToProps)(Register);

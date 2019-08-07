@@ -1,12 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Home from 'components/Home';
 
-class Index extends Component {
-  render () {
-    return (
-      <Home />
-    );
-  }
-}
+const HomePage = () => <Home />;
 
-export default Index;
+export default HomePage;

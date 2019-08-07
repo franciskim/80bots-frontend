@@ -1,23 +1,12 @@
 import React, { Fragment, useState } from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { login } from 'store/auth/actions';
 import { addNotification } from 'store/notification/actions';
-import { notificationTypes } from 'config';
 import Router from 'next/router';
 import Link from 'next/link';
-import Head from 'components/default/layout/Head';
-
-const slideAnimation = keyframes`
-  from {
-    
-  }
-  to {
-  
-  }
-`;
+import Head from 'components/default/layout/components/Head';
 
 const Container = styled.div`
   display: flex;
@@ -48,20 +37,17 @@ const SignUpWrap = styled.div`
 const Logo = styled.a`
   display: block;
   text-decoration: none;
-  padding: 1rem 1.5rem;
+  padding: 1rem 1.5rem; 
 `;
 
-const Login = ({ login, addNotification }) => {
+const Login = ({ login }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formVisible, toggle] = useState(false);
 
   const submit = (e) => {
     e.preventDefault();
-    login(email, password).then(() => {
-      Router.push('/dashboard');
-      addNotification({ type: notificationTypes.INFO, message: 'Success!' });
-    });
+    login(email, password).then(Router.push('/dashboard'));
   };
 
   const changeForms = () => {
@@ -136,13 +122,9 @@ Login.propTypes = {
   login: PropTypes.func
 };
 
-const mapStateToProps = state => ({
-
-});
-
 const mapDispatchToProps = dispatch => ({
   login: (email, password) => dispatch(login(email, password)),
   addNotification: payload => dispatch(addNotification(payload))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(null, mapDispatchToProps)(Login);

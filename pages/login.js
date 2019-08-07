@@ -1,13 +1,6 @@
-import React, { Component } from 'react';
-import AuthLogin from 'components/Auth/Login';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react';
+import Login from 'components/Auth/Login';
 
-class Login extends Component {
-  render () {
-    return (
-      <AuthLogin />
-    );
-  }
-}
+const LoginPage = () => <Login />;
 
-export default Login;
+export default LoginPage;

@@ -1,13 +1,14 @@
-import React, { Fragment } from 'react';
+import React  from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Icon from '../icons';
+import Icon from '../../icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DropDown from 'components/default/DropDown';
-import HamburgerButton from '../HamburgerButton';
+import HamburgerButton from '../../HamburgerButton';
 import { logout } from 'store/auth/actions';
 import Router from 'next/router';
+import Link from 'next/link';
 
 const Container = styled.nav`
   position: relative;
@@ -28,6 +29,15 @@ const Arrow = styled.div`
   margin: 1px 0 0 6px;
 `;
 
+const User = styled.div`
+  margin: 0 5px 0 0;
+`;
+
+const UserName = styled.span`
+  display: flex;
+  font-size: 13px;
+`;
+
 const Header = ({ user, sidebarOpened, onHamburgerClick, logout }) => {
   const onLogoutClick = () => {
     logout();
@@ -38,10 +48,14 @@ const Header = ({ user, sidebarOpened, onHamburgerClick, logout }) => {
     <Container>
       <HamburgerButton opened={sidebarOpened} onClick={onHamburgerClick}/>
       <div className="nav-right">
-        <DropDown toggleItem={<Fragment>{ user ? user.name : 'User'}<Arrow><Icon name={'arrow'}/></Arrow></Fragment>}>
-          <a href="#" className="dropdown-item d-flex align-items-center justify-content-between">
+        <DropDown toggleItem={<UserName><User><Icon name={'user'} width={15} height={15}/></User>
+          { user ? user.name : 'User'}<Arrow><Icon name={'arrow'}/></Arrow></UserName>}
+        >
+          <Link href={'/profile'}>
+            <a href="#" className="dropdown-item d-flex align-items-center justify-content-between">
             Profile <Icon name={'user'} width={20} height={20}/>
-          </a>
+            </a>
+          </Link>
           <a className="dropdown-item d-flex align-items-center justify-content-between" href="#" onClick={onLogoutClick}>
             Logout <Icon name={'exit'} />
           </a>

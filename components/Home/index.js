@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withTheme } from 'emotion-theming';
 import styled from '@emotion/styled';
+import Head from '../default/layout/components/Head';
 
 const Container = styled.div`
   display: flex;
@@ -20,9 +21,12 @@ const Header = styled.h1`
 
 const Home = () => {
   return(
-    <Container>
-      <Header>Home page here</Header>
-    </Container>
+    <Fragment>
+      <Head title={'Home'}/>
+      <Container>
+        <Header>Home page here</Header>
+      </Container>
+    </Fragment>
   );
 };
 
@@ -34,8 +38,4 @@ const mapStateToProps = state => ({
   isAuthorized: state.auth.isAuthorized
 });
 
-const mapDispatchToProps = dispatch => ({
-
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Home));
+export default connect(mapStateToProps, null)(withTheme(Home));

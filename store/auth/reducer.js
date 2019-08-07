@@ -1,12 +1,12 @@
 import { success, error } from 'redux-saga-requests';
 import {
-  LOGIN, REGISTER, LOGOUT
+  LOGIN, REGISTER, LOGOUT, AUTH_CHECK
 } from './types';
 
 const initialState = {
   user: null,
   isAuthorized: false,
-  loading: false,
+  loading: true,
   error: null,
 };
 
@@ -15,13 +15,17 @@ export const reducer = (state = initialState, action) => {
     case LOGIN:
     case LOGOUT:
     case REGISTER:
+    case AUTH_CHECK:
       return { ...state, loading: true, error: null };
 
     case success(LOGIN):
     case success(REGISTER): {
       localStorage.setItem('token', action.data.token);
-      return { ...state, user: action.data.user, loading: false, localLoading: false, isAuthorized: true };
+      return { ...state, user: action.data.user, loading: false, isAuthorized: true };
     }
+
+    case success(AUTH_CHECK):
+      return { ...state, user: action.data.user, loading: false, isAuthorized: true };
 
     case success(LOGOUT): {
       localStorage.clear();
@@ -31,6 +35,7 @@ export const reducer = (state = initialState, action) => {
     case error(LOGIN):
     case error(LOGOUT):
     case error(REGISTER):
+    case error(AUTH_CHECK):
       return { ...state, loading: false, error: action.error, isAuthorized: false };
 
     default: return state;

@@ -9,12 +9,13 @@ import saga from './saga';
 
 import auth from './auth/reducer';
 import notification from './notification/reducer';
+import user from './user/reducer';
 
 const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
 
 const rootReducer = combineReducers({
-  auth, notification
+  auth, notification, user
 });
 
 export function initializeStore(initialState = undefined) {

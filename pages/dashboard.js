@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import Dashboard from '../components/Dashboard';
+import React from 'react';
+import Dashboard from '/components/Dashboard';
+import AppLayout from 'components/default/layout';
 
-export default class DashboardPage extends Component {
-  render() {
-    return <Dashboard />;
-  }
-}
+const DashboardPage = () => <AppLayout title={'Dashboard'}> <Dashboard/> </AppLayout>;
+
+export default DashboardPage;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Icon from './icons';
+import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 
 const Container = styled.div`
@@ -9,7 +9,7 @@ const Container = styled.div`
 const DropDownMenu = styled.div`
   position: absolute;
   top: 100%;
-  left: -100px;
+  left: 0;
   z-index: 1000;
   float: left;
   min-width: 10rem;
@@ -38,7 +38,7 @@ const DropDown = ({ toggleItem, children }) => {
 
   return(
     <Container>
-      <DropDownToggle onClick={e => toggle(!opened)}>
+      <DropDownToggle onClick={() => toggle(!opened)}>
         { toggleItem }
       </DropDownToggle>
       <DropDownMenu open={opened}>
@@ -46,6 +46,11 @@ const DropDown = ({ toggleItem, children }) => {
       </DropDownMenu>
     </Container>
   );
+};
+
+DropDown.propTypes = {
+  toggleItem: PropTypes.object,
+  children: PropTypes.any
 };
 
 export default DropDown;

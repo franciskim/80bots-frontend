@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
 import Link from 'next/link';
+import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { SIDEBAR_ANIMATION_TIME } from 'config';
 
@@ -34,6 +35,11 @@ const Hr = styled.hr`
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
+const linkHoverStyle = css`
+  background-color: rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+`;
+
 const A = styled.a`
   display: block;
   padding: 0.625rem 1.5rem 0.625rem 2.75rem;
@@ -41,12 +47,30 @@ const A = styled.a`
   text-decoration: none;
   color: ${ props => props.theme.colors.blue };
   &:hover {
-    background-color: rgba(0, 0, 0, 0.2);
-    text-decoration: none;
+    ${linkHoverStyle};
   }
+  ${props => props.active && linkHoverStyle};
 `;
 
+const LINKS = {
+  admin: [
+
+  ],
+  user: [
+    { name: 'Running Bots', href: '/bots/running' },
+    { name: 'Available Bots', href: '/bots' },
+    { name: 'Bots Schedule', href: '/schedule' },
+    { name: 'My Subscription', href: '/subscription' }
+  ]
+};
+
 const Sidebar = ({ opened = false }) => {
+  const renderLink = (link, idx) => <Li key={idx}>
+    <Link href={ link.href }>
+      <A href="#" active={link.href === Router.router.route}>{ link.name }</A>
+    </Link>
+  </Li>;
+
   return(
     <Container opened={opened}>
       <LinkWrap>
@@ -55,26 +79,7 @@ const Sidebar = ({ opened = false }) => {
         </Link>
       </LinkWrap>
       <Ul>
-        <Li>
-          <Link href={'/'}>
-            <A href="#"> My Bots </A>
-          </Link>
-        </Li>
-        <Li>
-          <Link href={'/'}>
-            <A href="#"> Bots List </A>
-          </Link>
-        </Li>
-        <Li>
-          <Link href={'/'}>
-            <A href="#"> Scheduling List </A>
-          </Link>
-        </Li>
-        <Li>
-          <Link href={'/'}>
-            <A href="#"> My Subscription </A>
-          </Link>
-        </Li>
+        { LINKS.user.map(renderLink) }
       </Ul>
       <Hr/>
     </Container>
