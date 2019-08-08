@@ -4,11 +4,11 @@ import { css, keyframes } from '@emotion/core';
 import { connect } from 'react-redux';
 import Icon from '../default/icons';
 import PropTypes from 'prop-types';
-import { notificationTypes, notificationTimings } from 'config';
+import { NOTIFICATION_TYPES, notificationTimings } from 'config';
 import { removeLastNotification, hideNotification } from 'store/notification/actions';
 import { withTheme } from 'emotion-theming';
 
-const { SUCCESS, ERROR } = notificationTypes;
+const { SUCCESS, ERROR } = NOTIFICATION_TYPES;
 
 const P = styled.p`
   font-size: 10px;
@@ -65,6 +65,7 @@ const InfoNotificationContent = styled.div`
 
 const NotificationMessage = styled(P)`
   font-size: 14px;
+  margin: 0;
 `;
 
 const Notification = props => {
@@ -112,7 +113,7 @@ const Notification = props => {
     );
   };
 
-  return notification && notification.type !== notificationTypes.HELP
+  return notification && notification.type !== NOTIFICATION_TYPES.HELP
     ? renderInfoNotification(notification)
     : null;
 };

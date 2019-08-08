@@ -3,12 +3,14 @@ import { css } from '@emotion/core';
 export const theme = {
   colors: {
     blue: '#007bff',
+    darkBlue: '#3490dc',
     primary: '#0492fe',
     clearBlue: '#27a2ff',
     clearBlueTwo: '#5cb3f5',
     mediumGreen: '#35ad45',
     clearGreen: '#19ad7a',
     darkishPink: '#e54d93',
+    darkishPink2: '#dc1c74',
     pink: '#e56fbc',
     blueGrey: '#7f8fa4',
     darkGreyBlue: '#354052',
@@ -25,7 +27,7 @@ export const theme = {
   }
 };
 
-export const notificationTypes = {
+export const NOTIFICATION_TYPES = {
   HELP: 'help',
   SUCCESS: 'success',
   ERROR: 'error',

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/core';
+import { theme } from 'config';
 
 const DefaultButton = styled.button`
   display: inline-block;
@@ -45,18 +46,18 @@ const btnRound = css`
 `;
 
 const btnSuccess = css`
-  color: #fff;
+  color: ${ theme.colors.white };
   background-color: #38c172;
   border-color: #38c172;
   &:hover {
-    color: #fff;
+    color: ${ theme.colors.white };
     background-color: #2fa360;
     border-color: #2d995b;
   }
 `;
 
 const btnPrimary = css`
-  color: #fff;
+  color: ${ theme.colors.white };
   background-color: hsl(200, 100%, 40%);
   border-color: hsl(200, 100%, 40%);
   &:hover {
@@ -65,18 +66,29 @@ const btnPrimary = css`
   }
 `;
 
+const btnDanger = css`
+  color: ${ theme.colors.white };
+  background-color: ${ theme.colors.darkishPink };
+  border-color: ${ theme.colors.darkishPink };
+  &:hover {
+    background-color: ${ theme.colors.darkishPink2 };
+    border-color: ${ theme.colors.darkishPink2 };
+  }
+`;
+
 const Button = ({ rounded = false, type, children, ...props }) => {
   const styles = css`
     ${ rounded && btnRound };
     ${ type === 'success' && btnSuccess };
     ${ type === 'primary' && btnPrimary };
+    ${ type === 'danger' && btnDanger };
   `;
 
   return <DefaultButton styles={styles} {...props}>{ children }</DefaultButton>;
 };
 
 Button.propTypes = {
-  type: PropTypes.oneOf(['success', 'primary']).isRequired,
+  type: PropTypes.oneOf(['success', 'primary', 'danger']).isRequired,
   rounded: PropTypes.bool,
   children: PropTypes.any.isRequired
 };

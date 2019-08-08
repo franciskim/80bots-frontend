@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import Arrow from './Arrow';
 import Bubbles from './Bubbles';
 import Cross from './Cross';
+import Edit from './Edit';
+import Eye from './Eye';
 import Exit from './Exit';
+import Garbage from './Garbage';
 import SpinningBubbles from './SpinningBubbles';
 import User from './User';
 
@@ -12,18 +15,22 @@ export default class Icon extends Component {
 
   static icons = {
     arrow: Arrow,
-    cross: Cross,
-    exit: Exit,
-    user: User,
     bubbles: Bubbles,
-    'spinning-bubbles': SpinningBubbles
+    cross: Cross,
+    edit: Edit,
+    eye: Eye,
+    exit: Exit,
+    garbage: Garbage,
+    'spinning-bubbles': SpinningBubbles,
+    user: User,
   };
 
   static propTypes = {
     color: PropTypes.string,
     width: PropTypes.number,
     height: PropTypes.number,
-    name: PropTypes.oneOf(['cross', 'exit', 'user', 'arrow', 'bubbles', 'spinning-bubbles'
+    name: PropTypes.oneOf(['cross', 'exit', 'user', 'arrow', 'bubbles', 'spinning-bubbles', 'edit', 'eye',
+      'garbage'
     ]).isRequired //  coding assistance in IDE to find need icon when typing `name="...`
   };
 
