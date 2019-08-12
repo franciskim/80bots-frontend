@@ -69,15 +69,15 @@ const Bots = ({ getBots, launchInstance, bots, paginate }) => {
                 <th>Description</th>
                 <th>Platform</th>
                 <th>Tags</th>
-              <th>Action</th>
-            </tr>
-          </Thead>
-          <tbody>
-            { bots.map(renderRow) }
-          </tbody>
-        </Table>
-        <Paginator total={paginate.total} pageSize={1} onChangePage={getBots}/>
-      </CardBody>
+                <th>Action</th>
+              </tr>
+            </Thead>
+            <tbody>
+              { bots.map(renderRow) }
+            </tbody>
+          </Table>
+          <Paginator total={paginate.total} pageSize={1} onChangePage={getBots}/>
+        </CardBody>
       </Container>
       <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}>
         <Buttons>
