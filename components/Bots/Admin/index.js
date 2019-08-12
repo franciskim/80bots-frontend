@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import Button from '../default/Button';
-import Badge from '../default/Badge';
-import { Card, CardBody } from '../default/Card';
-import { Table, Thead } from '../default/Table';
+import Button from 'components/default/Button';
+import { Card, CardBody } from 'components/default/Card';
+import { Table, Thead } from 'components/default/Table';
 import { connect } from 'react-redux';
 import { getBots } from 'store/bot/actions';
-import Modal from '../default/Modal';
+import Modal from 'components/default/Modal';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
 
@@ -21,21 +20,23 @@ const Launch = styled(Button)`
   font-size: 16px;
 `;
 
-const Tag = styled(Badge)`
-  margin-right: .5rem;
-  font-size: 14px;
-  &:last-child {
-    margin-right: 0;
-  }
-`;
-
 const Buttons = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 `;
 
-const Bots = ({ getBots, bots }) => {
+const StatusButton = styled(Button)`
+  text-transform: uppercase;
+`;
+
+const TEMP_BOTS = [
+  { name: 'testbot1', ami_id: '12hfa23qd', ami_name: 'name', instance_type: 't2.micro', storage: 8, status: 'active' },
+  { name: 'testbot2', ami_id: 'sddas', ami_name: 'name', instance_type: 't2.micro', storage: 8, status: 'inactive' },
+  { name: 'testbot3', ami_id: '12hfa23qd', ami_name: 'name', instance_type: 't2.micro', storage: 8, status: 'active' },
+];
+
+const Bots = ({ getBots, bots, addNotification }) => {
   const [clickedBot, setClickedBot] = useState(null);
   const modal = useRef(null);
 
@@ -46,15 +47,28 @@ const Bots = ({ getBots, bots }) => {
   };
 
   useEffect(() => {
-    getBots();
+    //getBots();
   }, []);
+
+  const changeBotStatus = bot => {
+    const status = bot.status === 'active' ? 'deactivated' : 'activated';
+    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `Bot was successfully ${status}` });
+  };
 
   const renderRow = (bot, idx) => <tr key={idx}>
     <td>{ bot.name }</td>
-    <td>{ bot.description }</td>
-    <td>{ bot.platform }</td>
-    {/*<td>{ bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag }</Tag>) }</td>*/}
-    <td><Launch type={'primary'} onClick={() => modal.current.open()}>Launch</Launch></td>
+    <td>{ bot.ami_id }</td>
+    <td>{ bot.ami_name }</td>
+    <td>{ bot.instance_type }</td>
+    <td>{ bot.storage }&nbsp;GB</td>
+    <td>
+      <StatusButton type={bot.status === 'active' ? 'success' : 'danger'} onClick={() => changeBotStatus(bot)}>
+        { bot.status }
+      </StatusButton>
+    </td>
+    <td>
+      <Launch type={'primary'} onClick={() => modal.current.open()}>Launch</Launch>
+    </td>
   </tr>;
 
   return(
@@ -64,15 +78,17 @@ const Bots = ({ getBots, bots }) => {
           <Table responsive>
             <Thead>
               <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Platform</th>
-                {/*<th>Tags</th>*/}
+                <th>Bot Name</th>
+                <th>AMI Image ID</th>
+                <th>AMI name</th>
+                <th>Instance Type</th>
+                <th>Storage GB</th>
+                <th>Status</th>
                 <th>Action</th>
               </tr>
             </Thead>
             <tbody>
-              { bots.map(renderRow) }
+              { TEMP_BOTS.map(renderRow) }
             </tbody>
           </Table>
         </CardBody>

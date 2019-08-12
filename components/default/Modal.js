@@ -81,7 +81,6 @@ const ModalBodyContent = styled.div`
   justify-content: space-between;
   padding: 20px;
   min-width: 200px;
-  max-width: 96%;
   min-height: 200px;
   max-height: 90%;
   overflow-y: auto;

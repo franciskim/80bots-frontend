@@ -10,7 +10,7 @@ const PaginationContainer = styled.div`
 `;
 
 const PaginationList = styled.ul`
-  list-style: none;
+  list-style: none; 
   border-radius: 4px;
   margin: 20px 20px;
   padding: 0;
