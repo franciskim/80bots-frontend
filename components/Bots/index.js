@@ -6,7 +6,9 @@ import Badge from '../default/Badge';
 import { Card, CardBody } from '../default/Card';
 import { Table, Thead } from '../default/Table';
 import { connect } from 'react-redux';
-import { getBots } from 'store/bot/actions';
+import { getBots, launchInstance } from 'store/bot/actions';
+import Paginator from '../default/Paginator';
+import {NOTIFICATION_TYPES} from '../../config';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -26,7 +28,7 @@ const Tag = styled(Badge)`
   }
 `;
 
-const Bots = ({ getBots, bots }) => {
+const Bots = ({ getBots, launchInstance, bots, paginate }) => {
 
   useEffect(() => {
     getBots();
@@ -36,8 +38,8 @@ const Bots = ({ getBots, bots }) => {
     <td>{ bot.name }</td>
     <td>{ bot.description }</td>
     <td>{ bot.platform }</td>
-    {/*<td>{ bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag }</Tag>) }</td>*/}
-    <td><Launch type={'primary'}>Launch</Launch></td>
+    <td>{ bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag['name'] }</Tag>) }</td>
+    <td><Launch type={'primary'} onClick={(e) => launchInstance(bot.id, e)}>Launch</Launch></td>
   </tr>;
 
   return(
@@ -49,7 +51,7 @@ const Bots = ({ getBots, bots }) => {
               <th>Name</th>
               <th>Description</th>
               <th>Platform</th>
-              {/*<th>Tags</th>*/}
+              <th>Tags</th>
               <th>Action</th>
             </tr>
           </Thead>
@@ -57,6 +59,7 @@ const Bots = ({ getBots, bots }) => {
             { bots.map(renderRow) }
           </tbody>
         </Table>
+        <Paginator total={paginate.total} pageSize={1} onChangePage={getBots}/>
       </CardBody>
     </Container>
   );
@@ -64,15 +67,19 @@ const Bots = ({ getBots, bots }) => {
 
 Bots.propTypes = {
   getBots: PropTypes.func.isRequired,
-  bots: PropTypes.array.isRequired
+  launchInstance: PropTypes.func.isRequired,
+  bots: PropTypes.array.isRequired,
+  paginate: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  bots: state.bot.bots
+  bots: state.bot.bots,
+  paginate: state.bot.paginate,
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBots: (page) => dispatch(getBots(page))
+  getBots: (page) => dispatch(getBots(page)),
+  launchInstance: (id) => dispatch(launchInstance(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Bots);

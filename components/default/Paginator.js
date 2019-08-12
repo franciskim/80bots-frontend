@@ -33,7 +33,7 @@ const ListItem = styled.li`
 const Paginator = props => {
   const [total, setTotal] = useState(props.total || 0);
   const [currentPage, setCurrentPage] = useState(props.initialPage || 1);
-  const [pageSize, setPageSize] = useState(props.pageSize || 10);
+  const [pageSize, setPageSize] = useState(props.pageSize || 1);
   const [pages, setPages] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -88,8 +88,8 @@ const Paginator = props => {
   useEffect(() => {
     if(total !== props.total) {
       setTotal(props.total);
-      setPaginator(currentPage);
     }
+    setPaginator(currentPage);
   }, [props.total, total]);
 
   const setPage = page => {
@@ -101,7 +101,7 @@ const Paginator = props => {
     onChangePage(page);
   };
 
-  if (total <= 10) {
+  if (total <= 1) {
     return null;
   }
 

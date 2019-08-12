@@ -1,38 +1,31 @@
 import { success, error } from 'redux-saga-requests';
 import {
-  GET_SCHEDULES,
-  PUT_STATUS
+  GET_SUBSCRIPTIONS
 } from './types';
 
 const initialState = {
-  schedules: [],
-  paginate: {
-    total: 0,
-    page: 1
-  },
+  plans: [],
+  subscriptionEnded: true,
+  activePlan: null,
   loading: true,
   error: null,
 };
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_SCHEDULES:
-    case PUT_STATUS:
+    case GET_SUBSCRIPTIONS:
       return { ...state, loading: true, error: null };
 
-    case success(GET_SCHEDULES):
+    case success(GET_SUBSCRIPTIONS):
       return {
         ...state,
-        schedules: action.data.schedules,
-        paginate: action.data.paginate,
+        plans: action.data.plans,
+        subscriptionEnded: action.data.subscriptionEnded,
+        activePlan: action.data.activePlan,
         loading: false
       };
 
-    case success(PUT_STATUS):
-      return { ...state, loading: false };
-
-    case error(GET_SCHEDULES):
-    case error(PUT_STATUS):
+    case error(GET_SUBSCRIPTIONS):
       return { ...state, loading: false, error: action.error };
 
     default: return state;

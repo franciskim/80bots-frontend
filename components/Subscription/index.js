@@ -1,7 +1,11 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { Card, CardBody, CardFooter } from '../default/Card';
 import Button from '../default/Button';
+import { getSubscriptions } from 'store/subscription/actions';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import {withTheme} from 'emotion-theming';
 
 const PlanCard = styled(Card)`
   border-radius: 0.25rem;
@@ -34,19 +38,17 @@ const PlanButton = styled(Button)`
   font-size: 14px;
 `;
 
-const TEMP_PLANS = [
-  { name: 'BASIC', credits: 10, cost: 10 },
-  { name: 'PLUS', credits: 40, cost: 30 },
-  { name: 'PRO', credits: 70, cost: 50 }
-];
-
-const Subscription = () => {
+const Subscription = ({ getSubscriptions, plans }) => {
   const [selectedPlan, setPlan] = useState(null);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [cvv, setCvv] = useState('');
+
+  useEffect(() => {
+    getSubscriptions();
+  }, []);
 
   const choosePlan = e => {
     e.preventDefault();
@@ -77,7 +79,7 @@ const Subscription = () => {
         </div>
         <div className="card-body d-flex justify-content-center">
           <div className="row w-75 p-3">
-            { TEMP_PLANS.map(renderPlan) }
+            { plans.map(renderPlan) }
           </div>
         </div>
       </div>
@@ -136,4 +138,17 @@ const Subscription = () => {
   );
 };
 
-export default Subscription;
+Subscription.propTypes = {
+  getSubscriptions: PropTypes.func.isRequired,
+  plans: PropTypes.array.isRequired
+};
+
+const mapStateToProps = state => ({
+  plans: state.subscription.plans
+});
+
+const mapDispatchToProps = dispatch => ({
+  getSubscriptions: () => dispatch(getSubscriptions())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Subscription));

@@ -11,13 +11,7 @@ import { connect } from 'react-redux';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { getRunningBots } from 'store/bot/actions';
-
-const TEMP_BOT_INSTANCES = [
-  { name: 'Bot 1', credits_used: 2, ip: '129.123.32.23', status: 'running', launched_at: new Date().toDateString() },
-  { name: 'Bot 2', credits_used: 21, ip: '129.123.32.23', status: 'stopped', launched_at: new Date().toDateString() },
-  { name: 'Bot 3', credits_used: 0, ip: '129.123.32.23', status: 'terminated', launched_at: new Date().toDateString() },
-  { name: 'Bot 4', credits_used: 223, ip: '129.123.32.23', status: 'stopped', launched_at: new Date().toDateString() },
-];
+import Paginator from '../default/Paginator';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -43,7 +37,7 @@ const OPTIONS = [
   { value: 'terminated', label: 'Terminated' }
 ];
 
-const RunningBots = ({ theme, addNotification, getRunningBots, botInstances }) => {
+const RunningBots = ({ theme, addNotification, getRunningBots, botInstances, paginate }) => {
 
   useEffect(() => {
     getRunningBots();
@@ -88,6 +82,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, botInstances }) =
               { botInstances.map(renderRow) }
             </tbody>
           </Table>
+          <Paginator total={paginate.total} pageSize={1} onChangePage={getRunningBots}/>
         </CardBody>
       </Container>
     </Fragment>
@@ -100,11 +95,13 @@ RunningBots.propTypes = {
   }).isRequired,
   addNotification: PropTypes.func.isRequired,
   getRunningBots: PropTypes.func.isRequired,
-  botInstances: PropTypes.array.isRequired
+  botInstances: PropTypes.array.isRequired,
+  paginate: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  botInstances: state.bot.botInstances
+  botInstances: state.bot.botInstances,
+  paginate: state.bot.paginate,
 });
 
 const mapDispatchToProps = dispatch => ({

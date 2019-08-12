@@ -1,10 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from '../default/Card';
 import { Table, Thead } from '../default/Table';
 import Button from '../default/Button';
+import Badge from '../default/Badge';
 import Icon from '../default/icons';
 import Select from 'react-select';
 import Modal from '../default/Modal';
@@ -12,13 +13,7 @@ import { addNotification } from 'store/notification/actions';
 import { connect } from 'react-redux';
 import { NOTIFICATION_TYPES } from 'config';
 import Paginator from '../default/Paginator';
-
-const TEMP_SCHEDULES = [
-  { instance_id: 'asd123123', bot_name: 'Name 1', status: 'active' },
-  { instance_id: 'asd123112e3123', bot_name: 'Name 2', status: 'inactive' },
-  { instance_id: 'asd1adsa23123', bot_name: 'Name 3', status: 'active' },
-  { instance_id: 'asdadsd123123', bot_name: 'Name 4', status: 'inactive' },
-];
+import { getSchedules, changeStatus } from 'store/schedule/actions';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -43,18 +38,34 @@ const Buttons = styled.div`
   justify-content: space-between;
 `;
 
+const Tag = styled(Badge)`
+  margin-right: .5rem;
+  font-size: 14px;
+  &:last-child {
+    margin-right: 0;
+  }
+`;
+
 const OPTIONS = [
   { value: 'active', label: 'Active' },
   { value: 'inactive', label: 'Inactive' }
 ];
 
-const BotsSchedule = ({ theme, addNotification }) => {
+const BotsSchedule = ({ theme, addNotification, getSchedules, changeStatus, schedules, paginate }) => {
   const [clickedSchedule, setClickedSchedule] = useState(null);
   const modal = useRef(null);
 
-  const changeScheduleStatus = option => {
+  useEffect(() => {
+    getSchedules();
+  }, []);
+
+  const changeScheduleStatus = (option, id) => {
     const status = option.value === 'active' ? 'activated' : 'deactivated';
-    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `Schedule was successfully ${status}!` });
+    changeStatus(id, option.value)
+      .then(() => addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: `Schedule was successfully ${status}!`
+      }));
   };
 
   const toggleModal = schedule => {
@@ -73,8 +84,13 @@ const BotsSchedule = ({ theme, addNotification }) => {
     <td>{ schedule.bot_name }</td>
     <td>
       <Select options={OPTIONS} defaultValue={OPTIONS.find(item => item.value === schedule.status)}
-        onChange={changeScheduleStatus}
+        onChange={option => changeScheduleStatus(option, schedule.id)}
       />
+    </td>
+    <td>
+      <ul>
+        { schedule.details.map((detail, idx) => <li key={idx}><Tag pill type={'info'}>{ detail['day'] } { detail['selected_time'] } ({ detail['schedule_type'] })</Tag></li>) }
+      </ul>
     </td>
     <td>
       <IconButton type={'primary'}><Icon name={'edit'} color={theme.colors.white} /></IconButton>
@@ -94,14 +110,15 @@ const BotsSchedule = ({ theme, addNotification }) => {
                 <th>Instance Id</th>
                 <th>Bot Name</th>
                 <th>Status</th>
+                <th>Details</th>
                 <th>Actions</th>
               </tr>
             </Thead>
             <tbody>
-              { TEMP_SCHEDULES.map(renderRow) }
+              { schedules.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={22} onChangePage={console.log}/>
+          <Paginator total={paginate.total} pageSize={1} onChangePage={getSchedules}/>
         </CardBody>
       </Container>
       <Modal ref={modal} title={'Delete this schedule?'} onClose={() => setClickedSchedule(null)}>
@@ -118,11 +135,22 @@ BotsSchedule.propTypes = {
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
-  addNotification: PropTypes.func.isRequired
+  addNotification: PropTypes.func.isRequired,
+  getSchedules: PropTypes.func.isRequired,
+  changeStatus: PropTypes.func.isRequired,
+  schedules: PropTypes.array.isRequired,
+  paginate: PropTypes.object.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  addNotification: payload => dispatch(addNotification(payload))
+const mapStateToProps = state => ({
+  schedules: state.schedule.schedules,
+  paginate: state.schedule.paginate,
 });
 
-export default connect(null, mapDispatchToProps)(withTheme(BotsSchedule));
+const mapDispatchToProps = dispatch => ({
+  addNotification: payload => dispatch(addNotification(payload)),
+  getSchedules: (page) => dispatch(getSchedules(page)),
+  changeStatus: (id, status) => dispatch(changeStatus(id, status))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(BotsSchedule));
