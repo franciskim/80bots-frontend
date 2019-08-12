@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { withTheme } from 'emotion-theming';
@@ -10,6 +10,7 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
+import { getRunningBots } from 'store/bot/actions';
 
 const TEMP_BOT_INSTANCES = [
   { name: 'Bot 1', credits_used: 2, ip: '129.123.32.23', status: 'running', launched_at: new Date().toDateString() },
@@ -36,12 +37,18 @@ const IconButton = styled(Button)`
 `;
 
 const OPTIONS = [
+  { value: 'pending', label: 'Pending' },
   { value: 'running', label: 'Running' },
   { value: 'stopped', label: 'Stopped' } ,
   { value: 'terminated', label: 'Terminated' }
 ];
 
-const RunningBots = ({ theme, addNotification }) => {
+const RunningBots = ({ theme, addNotification, getRunningBots, botInstances }) => {
+
+  useEffect(() => {
+    getRunningBots();
+  }, []);
+
   const changeBotInstanceStatus = option => {
     addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `Instance was successfully ${option.value}` });
   };
@@ -78,7 +85,7 @@ const RunningBots = ({ theme, addNotification }) => {
               </tr>
             </Thead>
             <tbody>
-              { TEMP_BOT_INSTANCES.map(renderRow) }
+              { botInstances.map(renderRow) }
             </tbody>
           </Table>
         </CardBody>
@@ -91,11 +98,18 @@ RunningBots.propTypes = {
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
-  addNotification: PropTypes.func.isRequired
+  addNotification: PropTypes.func.isRequired,
+  getRunningBots: PropTypes.func.isRequired,
+  botInstances: PropTypes.array.isRequired
 };
 
-const mapDispatchToProps = dispatch => ({
-  addNotification: payload => dispatch(addNotification(payload))
+const mapStateToProps = state => ({
+  botInstances: state.bot.botInstances
 });
 
-export default connect(null, mapDispatchToProps)(withTheme(RunningBots));
+const mapDispatchToProps = dispatch => ({
+  addNotification: payload => dispatch(addNotification(payload)),
+  getRunningBots: (page) => dispatch(getRunningBots(page))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(RunningBots));

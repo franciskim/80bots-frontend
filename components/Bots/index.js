@@ -1,16 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Button from '../default/Button';
 import Badge from '../default/Badge';
 import { Card, CardBody } from '../default/Card';
 import { Table, Thead } from '../default/Table';
-
-const TEMP_BOTS = [
-  { name: 'Bot 1', description: 'Description 1', platform: 'Facebook', tags: [ 'bot', 'facebook' ] },
-  { name: 'Bot 2', description: 'Description 2', platform: 'Telegram', tags: [ 'bot', 'telegram' ] },
-  { name: 'Bot 3', description: 'Description 3', platform: 'Google', tags: [ 'bot', 'goggle' ] },
-  { name: 'Bot 4', description: 'Description 4', platform: 'Twitter', tags: [ 'bot', 'twitter' ] },
-];
+import { connect } from 'react-redux';
+import { getBots } from 'store/bot/actions';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -30,12 +26,17 @@ const Tag = styled(Badge)`
   }
 `;
 
-const Bots = () => {
+const Bots = ({ getBots, bots }) => {
+
+  useEffect(() => {
+    getBots();
+  }, []);
+
   const renderRow = (bot, idx) => <tr key={idx}>
     <td>{ bot.name }</td>
     <td>{ bot.description }</td>
     <td>{ bot.platform }</td>
-    <td>{ bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag }</Tag>) }</td>
+    {/*<td>{ bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag }</Tag>) }</td>*/}
     <td><Launch type={'primary'}>Launch</Launch></td>
   </tr>;
 
@@ -48,12 +49,12 @@ const Bots = () => {
               <th>Name</th>
               <th>Description</th>
               <th>Platform</th>
-              <th>Tags</th>
+              {/*<th>Tags</th>*/}
               <th>Action</th>
             </tr>
           </Thead>
           <tbody>
-            { TEMP_BOTS.map(renderRow) }
+            { bots.map(renderRow) }
           </tbody>
         </Table>
       </CardBody>
@@ -61,4 +62,17 @@ const Bots = () => {
   );
 };
 
-export default Bots;
+Bots.propTypes = {
+  getBots: PropTypes.func.isRequired,
+  bots: PropTypes.array.isRequired
+};
+
+const mapStateToProps = state => ({
+  bots: state.bot.bots
+});
+
+const mapDispatchToProps = dispatch => ({
+  getBots: (page) => dispatch(getBots(page))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Bots);

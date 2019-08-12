@@ -47,7 +47,7 @@ const Login = ({ login }) => {
 
   const submit = (e) => {
     e.preventDefault();
-    login(email, password).then(Router.push('/dashboard'));
+    login(email, password).then(() => Router.push('/dashboard'));
   };
 
   const changeForms = () => {

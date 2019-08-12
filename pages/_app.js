@@ -6,6 +6,7 @@ import { ThemeProvider } from 'emotion-theming';
 import { theme, globalStyles } from '../config';
 import { Global } from '@emotion/core';
 import Notification from '../components/default/Notification';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class MyApp extends App {
   render () {
