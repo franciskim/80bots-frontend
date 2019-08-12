@@ -4,7 +4,7 @@ import { css } from '@emotion/core';
 import Link from 'next/link';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
-import { SIDEBAR_ANIMATION_TIME } from 'config';
+import { SIDEBAR_ANIMATION_TIME, ROUTES } from 'config';
 
 const Container = styled.div`
   min-width: 250px;
@@ -52,19 +52,7 @@ const A = styled.a`
   ${props => props.active && linkHoverStyle};
 `;
 
-const LINKS = {
-  admin: [
-
-  ],
-  user: [
-    { name: 'Running Bots', href: '/bots/running' },
-    { name: 'Available Bots', href: '/bots' },
-    { name: 'Bots Schedule', href: '/schedule' },
-    { name: 'My Subscription', href: '/subscription' }
-  ]
-};
-
-const Sidebar = ({ opened = false }) => {
+const Sidebar = ({ opened = false, userRole }) => {
   const renderLink = (link, idx) => <Li key={idx}>
     <Link href={ link.href }>
       <A href="#" active={link.href === Router.router.route}>{ link.name }</A>
@@ -79,7 +67,7 @@ const Sidebar = ({ opened = false }) => {
         </Link>
       </LinkWrap>
       <Ul>
-        { LINKS.user.map(renderLink) }
+        { userRole && ROUTES[userRole].map(renderLink) }
       </Ul>
       <Hr/>
     </Container>
@@ -87,7 +75,8 @@ const Sidebar = ({ opened = false }) => {
 };
 
 Sidebar.propTypes = {
-  opened: PropTypes.bool
+  opened: PropTypes.bool,
+  userRole: PropTypes.oneOf(['User', 'Admin'])
 };
 
 export default Sidebar;

@@ -9,6 +9,8 @@ import Loader from '../Loader';
 import { checkAuth } from 'store/auth/actions';
 import { connect } from 'react-redux';
 import { withTheme } from 'emotion-theming';
+import Router from 'next/router';
+import { ROUTES } from 'config';
 
 const Container = styled.div`
   display: flex;
@@ -26,10 +28,11 @@ const Content = styled(Main)`
   padding: 2rem;
 `;
 
-const AppLayout = ({ title, children, checkAuth, isAuthorized, loading, theme, hideBanner = false }) => {
+const AppLayout = ({ title, children, checkAuth, isAuthorized, loading, theme, user, hideBanner = false }) => {
   const [opened, toggle] = useState(true);
-
-  useEffect(() => { if(!isAuthorized) checkAuth(); }, []);
+  useEffect(() => {
+    if(!isAuthorized) checkAuth();
+  }, []);
 
   return(
     <Fragment>
@@ -37,7 +40,7 @@ const AppLayout = ({ title, children, checkAuth, isAuthorized, loading, theme, h
       {
         !loading
           ? <Container>
-            <Sidebar opened={opened}/>
+            <Sidebar opened={opened} userRole={user && user.role}/>
             <Main>
               <Header sidebarOpened={opened} onHamburgerClick={() => toggle(!opened)}/>
               <Content>
@@ -65,6 +68,7 @@ AppLayout.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  user: state.auth.user,
   isAuthorized: state.auth.isAuthorized,
   loading: state.auth.loading
 });

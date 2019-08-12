@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Button from '../default/Button';
@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import { getBots, launchInstance } from 'store/bot/actions';
 import Paginator from '../default/Paginator';
 import {NOTIFICATION_TYPES} from '../../config';
+import Modal from '../default/Modal';
+import { addNotification } from 'store/notification/actions';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -28,7 +30,21 @@ const Tag = styled(Badge)`
   }
 `;
 
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 const Bots = ({ getBots, launchInstance, bots, paginate }) => {
+  const [clickedBot, setClickedBot] = useState(null);
+  const modal = useRef(null);
+
+  const launchBot = () => {
+    modal.current.close();
+    setClickedBot(null);
+    addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Launching selected bot' });
+  };
 
   useEffect(() => {
     getBots();
@@ -43,15 +59,16 @@ const Bots = ({ getBots, launchInstance, bots, paginate }) => {
   </tr>;
 
   return(
-    <Container>
-      <CardBody>
-        <Table responsive>
-          <Thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Platform</th>
-              <th>Tags</th>
+    <>
+      <Container>
+        <CardBody>
+          <Table responsive>
+            <Thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Platform</th>
+                <th>Tags</th>
               <th>Action</th>
             </tr>
           </Thead>
@@ -61,7 +78,14 @@ const Bots = ({ getBots, launchInstance, bots, paginate }) => {
         </Table>
         <Paginator total={paginate.total} pageSize={1} onChangePage={getBots}/>
       </CardBody>
-    </Container>
+      </Container>
+      <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}>
+        <Buttons>
+          <Button type={'primary'} onClick={launchBot}>Yes</Button>
+          <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
+        </Buttons>
+      </Modal>
+    </>
   );
 };
 
@@ -69,7 +93,8 @@ Bots.propTypes = {
   getBots: PropTypes.func.isRequired,
   launchInstance: PropTypes.func.isRequired,
   bots: PropTypes.array.isRequired,
-  paginate: PropTypes.object.isRequired
+  paginate: PropTypes.object.isRequired,
+  addNotification: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -79,6 +104,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getBots: (page) => dispatch(getBots(page)),
+  addNotification: payload => dispatch(addNotification(payload)),
   launchInstance: (id) => dispatch(launchInstance(id))
 });
 

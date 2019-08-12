@@ -1,5 +1,22 @@
 import { css } from '@emotion/core';
 
+export const ROUTES = {
+  Admin: [
+    { name: 'Users', href: '/admin/users' },
+    { name: 'Running Bots', href: '/admin/bots/running' },
+    { name: 'Available Bots', href: '/admin/bots' },
+    { name: 'Bots Sessions', href: '/admin/sessions' },
+    { name: 'Subscription Plans', href: '/admin/subscriptions' },
+    { name: 'Low Credit Notifications', href: '/admin/notifications' },
+  ],
+  User: [
+    { name: 'Running Bots', href: '/bots/running' },
+    { name: 'Available Bots', href: '/bots' },
+    { name: 'Bots Schedule', href: '/schedule' },
+    { name: 'My Subscription', href: '/subscription' }
+  ]
+};
+
 export const theme = {
   colors: {
     blue: '#007bff',
