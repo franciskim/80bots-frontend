@@ -1,11 +1,11 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from '../default/Card';
-import { Table, Thead } from '../default/Table';
+import { Table, Thead, Filters, LimitFilter } from '../default/Table';
 import Button from '../default/Button';
 import Icon from '../default/icons';
 import Select from 'react-select';
@@ -90,7 +90,11 @@ const TIME_OPTIONS = (() => {
   return timeStops;
 })();
 
-const RunningBots = ({ theme, addNotification, getRunningBots, botInstances, paginate }) => {
+const RunningBots = ({ theme, addNotification, getRunningBots, botInstances, total }) => {
+
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+
   const modal = useRef(null);
 
   useEffect(() => {
@@ -123,6 +127,9 @@ const RunningBots = ({ theme, addNotification, getRunningBots, botInstances, pag
     <>
       <Container>
         <CardBody>
+          <Filters>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getRunningBots({ page, limit: value }); }}/>
+          </Filters>
           <Table>
             <Thead>
               <tr>
@@ -138,7 +145,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, botInstances, pag
               { botInstances.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={paginate.total} pageSize={1} onChangePage={getRunningBots}/>
+          <Paginator total={total} pageSize={1} onChangePage={(page) => { setPage(page); getRunningBots({ page, limit }); }}/>
         </CardBody>
       </Container>
       <Modal ref={modal} title={'Schedule Editor'} contentStyles={modalStyles} onClose={() => {}}>
@@ -168,12 +175,12 @@ RunningBots.propTypes = {
   addNotification: PropTypes.func.isRequired,
   getRunningBots: PropTypes.func.isRequired,
   botInstances: PropTypes.array.isRequired,
-  paginate: PropTypes.object.isRequired
+  total: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
   botInstances: state.bot.botInstances,
-  paginate: state.bot.paginate,
+  total: state.bot.total,
 });
 
 const mapDispatchToProps = dispatch => ({

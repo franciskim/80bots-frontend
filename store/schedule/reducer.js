@@ -6,10 +6,7 @@ import {
 
 const initialState = {
   schedules: [],
-  paginate: {
-    total: 0,
-    page: 1
-  },
+  total: 0,
   loading: true,
   error: null,
 };
@@ -24,7 +21,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         schedules: action.data.schedules,
-        paginate: action.data.paginate,
+        total: action.data.total,
         loading: false
       };
 

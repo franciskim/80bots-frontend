@@ -3,15 +3,16 @@ import {
   PUT_STATUS
 } from './types';
 
-export const getSchedules = (page) => {
+export const getSchedules = (query = { page: 1, limit: 1 }) => {
 
-  const url = page ? `/schedules?page=${page}` : '/schedules';
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
 
   return {
     type: GET_SCHEDULES,
     request: {
       method: 'GET',
-      url: url,
+      url: '/schedules',
+      params: query
     },
     meta: {
       thunk: true

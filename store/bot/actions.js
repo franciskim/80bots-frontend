@@ -4,15 +4,15 @@ import {
   POST_LAUNCH_INSTANCE
 } from './types';
 
-export const getBots = (page) => {
-
-  const url = page ? `/bots?page=${page}` : '/bots';
+export const getBots = (query = { page: 1, limit: 1 }) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
 
   return {
     type: GET_BOTS,
     request: {
       method: 'GET',
-      url: url,
+      url: '/bots',
+      params: query
     },
     meta: {
       thunk: true
@@ -20,15 +20,16 @@ export const getBots = (page) => {
   };
 };
 
-export const getRunningBots = (page) => {
+export const getRunningBots = (query = { page: 1, limit: 1 }) => {
 
-  const url = page ? `/bots/running?page=${page}` : '/bots/running';
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
 
   return {
     type: GET_RUNNING_BOTS,
     request: {
       method: 'GET',
-      url: url,
+      url: '/bots/running',
+      params: query
     },
     meta: {
       thunk: true

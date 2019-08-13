@@ -8,10 +8,7 @@ import {
 const initialState = {
   bots: [],
   botInstances: [],
-  paginate: {
-    total: 0,
-    page: 1
-  },
+  total: 0,
   loading: true,
   error: null,
 };
@@ -27,7 +24,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         bots: action.data.bots,
-        paginate: action.data.paginate,
+        total: action.data.total,
         loading: false
       };
 
@@ -35,7 +32,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         botInstances: action.data.botInstances,
-        paginate: action.data.paginate,
+        total: action.data.total,
         loading: false
       };
 

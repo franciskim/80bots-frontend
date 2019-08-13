@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import Button from '../default/Button';
 import Badge from '../default/Badge';
 import { Card, CardBody } from '../default/Card';
-import { Table, Thead } from '../default/Table';
+import { Table, Thead, Filters, LimitFilter } from '../default/Table';
 import { connect } from 'react-redux';
 import { getBots, launchInstance } from 'store/bot/actions';
 import Paginator from '../default/Paginator';
@@ -36,14 +36,19 @@ const Buttons = styled.div`
   justify-content: space-between;
 `;
 
-const Bots = ({ getBots, launchInstance, bots, paginate }) => {
+const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
   const [clickedBot, setClickedBot] = useState(null);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+
   const modal = useRef(null);
 
   const launchBot = () => {
     modal.current.close();
-    setClickedBot(null);
-    addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Launching selected bot' });
+    launchInstance(clickedBot.id).then(() => {
+      setClickedBot(null);
+      addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Launching selected bot' });
+    });
   };
 
   useEffect(() => {
@@ -55,13 +60,20 @@ const Bots = ({ getBots, launchInstance, bots, paginate }) => {
     <td>{ bot.description }</td>
     <td>{ bot.platform }</td>
     <td>{ bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag['name'] }</Tag>) }</td>
-    <td><Launch type={'primary'} onClick={(e) => launchInstance(bot.id, e)}>Launch</Launch></td>
+    <td>
+      <Launch type={'primary'} onClick={() => { setClickedBot(bot); modal.current.open(); }}>
+      Launch
+      </Launch>
+    </td>
   </tr>;
 
   return(
     <>
       <Container>
         <CardBody>
+          <Filters>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getBots({ page, limit: value }); }}/>
+          </Filters>
           <Table responsive>
             <Thead>
               <tr>
@@ -76,7 +88,7 @@ const Bots = ({ getBots, launchInstance, bots, paginate }) => {
               { bots.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={paginate.total} pageSize={1} onChangePage={getBots}/>
+          <Paginator total={total} pageSize={1} onChangePage={(page) => { setPage(page); getBots({ page, limit }); }}/>
         </CardBody>
       </Container>
       <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}>
@@ -93,13 +105,13 @@ Bots.propTypes = {
   getBots: PropTypes.func.isRequired,
   launchInstance: PropTypes.func.isRequired,
   bots: PropTypes.array.isRequired,
-  paginate: PropTypes.object.isRequired,
+  total: PropTypes.number.isRequired,
   addNotification: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   bots: state.bot.bots,
-  paginate: state.bot.paginate,
+  total: state.bot.total,
 });
 
 const mapDispatchToProps = dispatch => ({

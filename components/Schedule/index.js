@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from '../default/Card';
-import { Table, Thead } from '../default/Table';
+import {Filters, LimitFilter, Table, Thead} from '../default/Table';
 import Button from '../default/Button';
 import Badge from '../default/Badge';
 import Icon from '../default/icons';
@@ -51,8 +51,12 @@ const OPTIONS = [
   { value: 'inactive', label: 'Inactive' }
 ];
 
-const BotsSchedule = ({ theme, addNotification, getSchedules, changeStatus, schedules, paginate }) => {
+const BotsSchedule = ({ theme, addNotification, getSchedules, changeStatus, schedules, total }) => {
+
   const [clickedSchedule, setClickedSchedule] = useState(null);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+
   const modal = useRef(null);
 
   useEffect(() => {
@@ -104,6 +108,9 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, changeStatus, sche
     <>
       <Container>
         <CardBody>
+          <Filters>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getSchedules({ page, limit: value }); }}/>
+          </Filters>
           <Table>
             <Thead>
               <tr>
@@ -118,7 +125,7 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, changeStatus, sche
               { schedules.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={paginate.total} pageSize={1} onChangePage={getSchedules}/>
+          <Paginator total={total} pageSize={1} onChangePage={(page) => { setPage(page); getSchedules({ page, limit }); }}/>
         </CardBody>
       </Container>
       <Modal ref={modal} title={'Delete this schedule?'} onClose={() => setClickedSchedule(null)}>
@@ -139,12 +146,12 @@ BotsSchedule.propTypes = {
   getSchedules: PropTypes.func.isRequired,
   changeStatus: PropTypes.func.isRequired,
   schedules: PropTypes.array.isRequired,
-  paginate: PropTypes.object.isRequired,
+  total: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
   schedules: state.schedule.schedules,
-  paginate: state.schedule.paginate,
+  total: state.schedule.total,
 });
 
 const mapDispatchToProps = dispatch => ({
