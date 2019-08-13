@@ -113,7 +113,7 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, ch
   const modalScheduleDetails = useRef(null);
 
   useEffect(() => {
-    getSchedules();
+    getSchedules({ page, limit });
   }, []);
 
   const changeScheduleStatus = (option, id) => {
@@ -211,7 +211,7 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, ch
               { schedules.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={1} onChangePage={(page) => { setPage(page); getSchedules({ page, limit }); }}/>
+          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getSchedules({ page, limit }); }}/>
         </CardBody>
       </Container>
       <Modal ref={modal} title={'Delete this schedule?'} onClose={() => setClickedSchedule(null)}>
@@ -264,7 +264,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
-  getSchedules: (page) => dispatch(getSchedules(page)),
+  getSchedules: query => dispatch(getSchedules(query)),
   updateSchedule: (id, timezone, details) => dispatch(updateSchedule(id, timezone, details)),
   changeStatus: (id, status) => dispatch(changeStatus(id, status)),
   deleteSchedule: (id) => dispatch(deleteSchedule(id))

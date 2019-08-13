@@ -107,7 +107,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, changeStatus, cre
   const modal = useRef(null);
 
   useEffect(() => {
-    getRunningBots();
+    getRunningBots({ page, limit });
   }, []);
 
   const modalCreateSchedule = () => {
@@ -186,7 +186,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, changeStatus, cre
               { botInstances.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={1} onChangePage={(page) => { setPage(page); getRunningBots({ page, limit }); }}/>
+          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getRunningBots({ page, limit }); }}/>
         </CardBody>
       </Container>
       <Modal ref={modal} title={'Schedule Editor'} contentStyles={modalStyles} onClose={() => {}}>
@@ -219,6 +219,7 @@ RunningBots.propTypes = {
   }).isRequired,
   addNotification: PropTypes.func.isRequired,
   getRunningBots: PropTypes.func.isRequired,
+  changeStatus: PropTypes.func.isRequired,
   createSchedule: PropTypes.func.isRequired,
   botInstances: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired
@@ -231,7 +232,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
-  getRunningBots: (page) => dispatch(getRunningBots(page)),
+  getRunningBots: query => dispatch(getRunningBots(query)),
   changeStatus: (id, status) => dispatch(changeStatus(id, status)),
   createSchedule: (instanceId, timezone, details) => dispatch(createSchedule(instanceId, timezone, details)),
 });
