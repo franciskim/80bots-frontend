@@ -55,7 +55,7 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
   };
 
   useEffect(() => {
-    getBots();
+    getBots({ limit, page });
   }, []);
 
   const renderRow = (bot, idx) => <tr key={idx}>
@@ -91,7 +91,7 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
               { bots.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={1} onChangePage={(page) => { setPage(page); getBots({ page, limit }); }}/>
+          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getBots({ page, limit }); }}/>
         </CardBody>
       </Container>
       <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}>

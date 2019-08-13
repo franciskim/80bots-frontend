@@ -1,17 +1,21 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { withTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
 import Button from '../default/Button';
 import { Card, CardBody } from '../default/Card';
-import { Table, Thead } from '../default/Table';
+import { Table, Thead, Filters, LimitFilter, SearchFilter } from '../default/Table';
 import Modal from '../default/Modal';
 import { addNotification } from 'store/notification/actions';
+import {
+  getLowCreditNotifications, addLowCreditNotifications, deleteLowCreditNotification
+} from 'store/eventNotification/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { connect } from 'react-redux';
 import Icon from '../default/icons';
 import Select from 'react-select';
+import Paginator from '../default/Paginator';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -55,18 +59,19 @@ const PERCENTAGES = (() => {
   return percentages;
 })();
 
-const TEMP_NOTIFICATIONS = [
-  { id: 1, percentage: 1 },
-  { id: 2, percentage: 12 },
-  { id: 3, percentage: 15 },
-];
-
-const Notifications = ({ theme, addNotification }) => {
+const Notifications = ({ theme, addNotification, lowCreditNotifications, total, ...props }) => {
   const [clickedNotification, setClickedNotification] = useState(null);
   const [percentage, setPercentage] = useState(null);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(1);
+
   const editModal = useRef(null);
   const deleteModal = useRef(null);
   const addModal = useRef(null);
+
+  useEffect(() => {
+    props.getLowCreditNotifications();
+  }, []);
 
   const openEditModal = notification => {
     setClickedNotification(notification);
@@ -84,11 +89,14 @@ const Notifications = ({ theme, addNotification }) => {
   };
 
   const addLowCreditNotification = () => {
-    addNotification({
-      type: NOTIFICATION_TYPES.SUCCESS,
-      message: `Notification added with percentage ${percentage.value}`
+    props.addLowCreditNotification(percentage.value).then(() => {
+      props.getLowCreditNotifications();
+      addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: `Notification added with percentage ${percentage.value}`
+      });
+      addModal.current.close();
     });
-    addModal.current.close();
   };
 
   const updateNotification = () => {
@@ -97,8 +105,16 @@ const Notifications = ({ theme, addNotification }) => {
   };
 
   const deleteNotification = () => {
-    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Notification successfully removed!' });
-    deleteModal.current.close();
+    props.deleteLowCreditNotification(clickedNotification.id)
+      .then(() => {
+        props.getLowCreditNotifications();
+        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Notification successfully deleted!' });
+        deleteModal.current.close();
+      });
+  };
+
+  const onPageChange = (page) => {
+    setPage(page); getLowCreditNotifications({ page, limit });
   };
 
   const renderRow = (notification, idx) => <tr key={idx}>
@@ -121,6 +137,11 @@ const Notifications = ({ theme, addNotification }) => {
       </AddButtonWrap>
       <Container>
         <CardBody>
+          <Filters>
+            <LimitFilter
+              onChange={({ limit }) => { setLimit(limit); props.getLowCreditNotifications({ page, limit }); }}
+            />
+          </Filters>
           <Table>
             <Thead>
               <tr>
@@ -130,9 +151,10 @@ const Notifications = ({ theme, addNotification }) => {
               </tr>
             </Thead>
             <tbody>
-              { TEMP_NOTIFICATIONS.map(renderRow) }
+              { lowCreditNotifications.map(renderRow) }
             </tbody>
           </Table>
+          <Paginator total={total} pageSize={limit} onChangePage={onPageChange}/>
         </CardBody>
       </Container>
 
@@ -174,11 +196,24 @@ Notifications.propTypes = {
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
-  addNotification: PropTypes.func.isRequired
+  addNotification: PropTypes.func.isRequired,
+  getLowCreditNotifications: PropTypes.func.isRequired,
+  addLowCreditNotification: PropTypes.func.isRequired,
+  deleteLowCreditNotification: PropTypes.func.isRequired,
+  lowCreditNotifications: PropTypes.array.isRequired,
+  total: PropTypes.number.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  addNotification: payload => dispatch(addNotification(payload))
+const mapStateToProps = state => ({
+  lowCreditNotifications: state.eventNotification.lowCreditNotifications,
+  total: state.eventNotification.total
 });
 
-export default connect(null, mapDispatchToProps)(withTheme(Notifications));
+const mapDispatchToProps = dispatch => ({
+  addNotification: payload => dispatch(addNotification(payload)),
+  getLowCreditNotifications: query => dispatch(getLowCreditNotifications(query)),
+  addLowCreditNotification: percentage => dispatch(addLowCreditNotifications(percentage)),
+  deleteLowCreditNotification: id => dispatch(deleteLowCreditNotification(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Notifications));

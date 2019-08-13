@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useImperativeHandle, forwardRef } from 'react';
+import React, { Fragment, useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import styled from '@emotion/styled';
 import { css, keyframes, Global } from '@emotion/core';
 import { globalStyles } from 'config';
@@ -110,6 +110,12 @@ const ModalHeader = styled.h3`
 `;
 
 const DefaultModal = ({ children, title, styles, containerStyles, contentStyles, onClose, mode, close }) => {
+  useEffect(() => {
+    if(mode === 'closed') {
+      onClose && onClose();
+    }
+  }, [mode]);
+
   const getContainerStyle = (mode = 'in') => {
     const animation = keyframes`
       ${mode === 'in' ? 'to' : 'from'} {
@@ -153,11 +159,11 @@ const DefaultModal = ({ children, title, styles, containerStyles, contentStyles,
       ? <Fragment>
         <Global styles={bodyStyles}/>
         <Container styles={getContainerStyle(mode)}>
-          <ModalContainer onClick={() => { close(); onClose && onClose(); }}>
+          <ModalContainer onClick={() => close()}>
             {/* preventing parent component to fire onClick by stopping event propagation */}
             <ModalDiv styles={combinedStyles} onClick={e => e.stopPropagation()}>
               <ModalBody styles={styles}>
-                <IconContainer onClick={() => { close(); onClose && onClose(); }}>
+                <IconContainer onClick={() => close()}>
                   <Icon name={'cross'} />
                 </IconContainer>
                 <ModalBodyContent styles={contentStyles}>

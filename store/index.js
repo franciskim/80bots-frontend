@@ -13,12 +13,13 @@ import user from './user/reducer';
 import bot from './bot/reducer';
 import schedule from './schedule/reducer';
 import subscription from './subscription/reducer';
+import eventNotification from './eventNotification/reducer';
 
 const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
 
 const rootReducer = combineReducers({
-  auth, notification, user, bot, schedule, subscription
+  auth, notification, user, bot, schedule, subscription, eventNotification
 });
 
 export function initializeStore(initialState = undefined) {

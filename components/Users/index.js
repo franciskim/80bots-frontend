@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import moment from 'moment';
 import { withTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
 import Button from '../default/Button';
@@ -8,6 +9,8 @@ import { Card, CardBody } from '../default/Card';
 import { Table, Thead, Filters, SearchFilter, LimitFilter } from '../default/Table';
 import Modal from '../default/Modal';
 import { addNotification } from 'store/notification/actions';
+import { updateUser } from 'store/user/actions';
+import { getUsers } from 'store/user/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { connect } from 'react-redux';
 import Icon from '../default/icons';
@@ -50,17 +53,21 @@ const modalStyles = css`
 `;
 
 const TEMP_USERS = [
-  { name: 'Loud', email: 'some@email.com', credits_remaining: 80, created_at: new Date().toString(), status: 'active' }
+  { name: 'Loud', email: 'some@email.com', remaining_credits: 80, created_at: new Date().toString(), status: 'active' }
 ];
 
-const Users = ({ theme, addNotification }) => {
+const Users = ({ theme, addNotification, getUsers, updateUser, users }) => {
   const [clickedUser, setClickedUser] = useState(null);
   const [credits, setCredits] = useState(null);
   const modal = useRef(null);
 
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   const openEditModal = user => {
     setClickedUser(user);
-    setCredits(user.credits_remaining);
+    setCredits(user.remaining_credits);
     modal.current.open();
   };
 
@@ -70,20 +77,26 @@ const Users = ({ theme, addNotification }) => {
   };
 
   const changeUserStatus = user => {
-    const status = user.status === 'active' ? 'deactivated' : 'activated';
-    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `User was successfully ${status}` });
+    updateUser(user.id, { status: user.status === 'active' ? 'inactive' : 'active' })
+      .then(() => {
+        const status = user.status === 'active' ? 'deactivated' : 'activated';
+        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `User was successfully ${status}` });
+      });
   };
 
   const updateCredits = () => {
-    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `User remaining credits was set to ${credits}` });
-    modal.current.close();
+    updateUser(clickedUser.id, { remaining_credits: credits })
+      .then(() => {
+        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `User remaining credits was set to ${credits}` });
+        modal.current.close();
+      });
   };
 
   const renderRow = (user, idx) => <tr key={idx}>
     <td>{ user.name }</td>
     <td>{ user.email }</td>
-    <td>{ user.credits_remaining }</td>
-    <td>{ user.created_at }</td>
+    <td>{ user.remaining_credits }</td>
+    <td>{ moment(user.created_at).format('YYYY-MM-DD HH:mm:ss') }</td>
     <td>
       <StatusButton type={user.status === 'active' ? 'success' : 'danger'} onClick={() => changeUserStatus(user)}>
         { user.status }
@@ -119,7 +132,7 @@ const Users = ({ theme, addNotification }) => {
               </tr>
             </Thead>
             <tbody>
-              { TEMP_USERS.map(renderRow) }
+              { users.map(renderRow) }
             </tbody>
           </Table>
         </CardBody>
@@ -144,11 +157,20 @@ Users.propTypes = {
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
-  addNotification: PropTypes.func.isRequired
+  addNotification: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired,
+  users: PropTypes.array.isRequired
 };
 
-const mapDispatchToProps = dispatch => ({
-  addNotification: payload => dispatch(addNotification(payload))
+const mapStateToProps = state => ({
+  users: state.user.users
 });
 
-export default connect(null, mapDispatchToProps)(withTheme(Users));
+const mapDispatchToProps = dispatch => ({
+  addNotification: payload => dispatch(addNotification(payload)),
+  getUsers: query => dispatch(getUsers(query)),
+  updateUser: (id, updateData) => dispatch(updateUser(id, updateData)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Users));

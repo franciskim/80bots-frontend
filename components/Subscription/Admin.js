@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { withTheme } from 'emotion-theming';
@@ -8,6 +8,7 @@ import { Card, CardBody } from '../default/Card';
 import { Table, Thead } from '../default/Table';
 import Modal from '../default/Modal';
 import { addNotification } from 'store/notification/actions';
+import {getSubscriptionsAdmin, updateSubscriptionAdmin } from 'store/subscription/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { connect } from 'react-redux';
 import Icon from '../default/icons';
@@ -59,20 +60,19 @@ const modalStyles = css`
   overflow-y: visible;
 `;
 
-const TEMP_PLANS = [
-  { name: 'Basic', price: 10, credits: 80, status: 'active' },
-  { name: 'Plus', price: 100, credits: 820, status: 'inactive' },
-  { name: 'Pro', price: 120, credits: 810, status: 'active' },
-];
-
-const Subscriptions = ({ theme, addNotification }) => {
+const Subscriptions = ({ theme, addNotification, getSubscriptions, updateSubscription, plans }) => {
   const [clickedPlan, setClickedPlan] = useState(null);
   const [planName, setPlanName] = useState('');
   const [planCredits, setPlanCredits] = useState('');
   const [planPrice, setPlanPrice] = useState('');
+
   const addModal = useRef(null);
   const editModal = useRef(null);
   const deleteModal = useRef(null);
+
+  useEffect(() => {
+    getSubscriptions();
+  }, []);
 
   const openAddModal = plan => {
     setClickedPlan(plan);
@@ -100,8 +100,11 @@ const Subscriptions = ({ theme, addNotification }) => {
   };
 
   const changePlanStatus = plan => {
-    const status = plan.status === 'active' ? 'deactivated' : 'activated';
-    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `Subscription plan was successfully ${status}` });
+    updateSubscription(plan.id, { status: plan.status === 'active' ? 'inactive' : 'active' })
+      .then(() => {
+        const status = plan.status === 'active' ? 'deactivated' : 'activated';
+        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `Subscription plan was successfully ${status}` });
+      });
   };
 
   const addPlan = () => {
@@ -125,7 +128,7 @@ const Subscriptions = ({ theme, addNotification }) => {
   const renderRow = (plan, idx) => <tr key={idx}>
     <td>{ plan.name }</td>
     <td>{ plan.price }$</td>
-    <td>{ plan.credits }</td>
+    <td>{ plan.credit }</td>
     <td>
       <StatusButton type={plan.status === 'active' ? 'success' : 'danger'} onClick={() => changePlanStatus(plan)}>
         { plan.status }
@@ -159,7 +162,7 @@ const Subscriptions = ({ theme, addNotification }) => {
               </tr>
             </Thead>
             <tbody>
-              { TEMP_PLANS.map(renderRow) }
+              { plans.map(renderRow) }
             </tbody>
           </Table>
         </CardBody>
@@ -234,11 +237,20 @@ Subscriptions.propTypes = {
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
-  addNotification: PropTypes.func.isRequired
+  addNotification: PropTypes.func.isRequired,
+  getSubscriptions: PropTypes.func.isRequired,
+  updateSubscription: PropTypes.func.isRequired,
+  plans: PropTypes.array.isRequired
 };
 
-const mapDispatchToProps = dispatch => ({
-  addNotification: payload => dispatch(addNotification(payload))
+const mapStateToProps = state => ({
+  plans: state.subscription.plans,
 });
 
-export default connect(null, mapDispatchToProps)(withTheme(Subscriptions));
+const mapDispatchToProps = dispatch => ({
+  addNotification: payload => dispatch(addNotification(payload)),
+  getSubscriptions: query => dispatch(getSubscriptionsAdmin(query)),
+  updateSubscription: (id, updateObject) => dispatch(updateSubscriptionAdmin(id, updateObject)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Subscriptions));

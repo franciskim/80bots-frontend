@@ -33,7 +33,7 @@ const ListItem = styled.li`
 const Paginator = props => {
   const [total, setTotal] = useState(props.total || 0);
   const [currentPage, setCurrentPage] = useState(props.initialPage || 1);
-  const [pageSize, setPageSize] = useState(props.pageSize || 1);
+  const [pageSize, setPageSize] = useState(props.pageSize || 10);
   const [pages, setPages] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -70,7 +70,6 @@ const Paginator = props => {
 
     setTotalItems(total);
     setCurrentPage(page);
-    setPageSize(pageSize);
     setTotalPages(totalPages);
     setDiapasonAndIndexes({
       startPage,
@@ -89,8 +88,12 @@ const Paginator = props => {
     if(total !== props.total) {
       setTotal(props.total);
     }
+    if(pageSize !== props.pageSize) {
+      console.log('here', pageSize, props.pageSize);
+      setPageSize(props.pageSize);
+    }
     setPaginator(currentPage);
-  }, [props.total, total]);
+  }, [props.total, total, props.pageSize, pageSize]);
 
   const setPage = page => {
     const { total, onChangePage } = props;
@@ -101,7 +104,7 @@ const Paginator = props => {
     onChangePage(page);
   };
 
-  if (total <= 1) {
+  if (total <= pageSize) {
     return null;
   }
 
