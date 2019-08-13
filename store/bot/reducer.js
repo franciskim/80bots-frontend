@@ -1,12 +1,15 @@
 import { success, error } from 'redux-saga-requests';
 import {
-  GET_ADMIN_RUNNING_BOTS,
   GET_BOTS,
+  GET_ADMIN_BOTS,
   GET_RUNNING_BOTS,
+  GET_ADMIN_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
   PUT_STATUS,
-  PUT_ADMIN_STATUS
+  UPDATE_ADMIN_BOT,
+  UPDATE_ADMIN_RUNNING_BOT
 } from './types';
+import {UPDATE_USER} from '../user/types';
 
 const initialState = {
   bots: [],
@@ -19,14 +22,17 @@ const initialState = {
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_BOTS:
+    case GET_ADMIN_BOTS:
     case GET_RUNNING_BOTS:
     case GET_ADMIN_RUNNING_BOTS:
     case POST_LAUNCH_INSTANCE:
     case PUT_STATUS:
-    case PUT_ADMIN_STATUS:
+    case UPDATE_ADMIN_BOT:
+    case UPDATE_ADMIN_RUNNING_BOT:
       return { ...state, loading: true, error: null };
 
     case success(GET_BOTS):
+    case success(GET_ADMIN_BOTS):
       return {
         ...state,
         bots: action.data.data,
@@ -45,15 +51,28 @@ export const reducer = (state = initialState, action) => {
 
     case success(POST_LAUNCH_INSTANCE):
     case success(PUT_STATUS):
-    case success(PUT_ADMIN_STATUS):
       return { ...state, loading: false };
 
+    case success(UPDATE_ADMIN_BOT): {
+      const userIdx = state.bots.findIndex(item => item.id === action.data.id);
+      if(userIdx || userIdx === 0) state.bots[userIdx] = action.data;
+      return { ...state, bots: [...state.bots], loading: false };
+    }
+
+    case success(UPDATE_ADMIN_RUNNING_BOT): {
+      const userIdx = state.botInstances.findIndex(item => item.id === action.data.id);
+      if(userIdx || userIdx === 0) state.botInstances[userIdx] = action.data;
+      return { ...state, botInstances: [...state.botInstances], loading: false };
+    }
+
     case error(GET_BOTS):
+    case error(GET_ADMIN_BOTS):
     case error(GET_RUNNING_BOTS):
     case error(GET_ADMIN_RUNNING_BOTS):
     case error(POST_LAUNCH_INSTANCE):
     case error(PUT_STATUS):
-    case error(PUT_ADMIN_STATUS):
+    case error(UPDATE_ADMIN_BOT):
+    case error(UPDATE_ADMIN_RUNNING_BOT):
       return { ...state, loading: false, error: action.error };
 
     default: return state;

@@ -1,10 +1,12 @@
 import {
   GET_BOTS,
+  GET_ADMIN_BOTS,
   GET_RUNNING_BOTS,
   GET_ADMIN_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
   PUT_STATUS,
-  PUT_ADMIN_STATUS
+  UPDATE_ADMIN_BOT,
+  UPDATE_ADMIN_RUNNING_BOT
 } from './types';
 
 export const getBots = (query = { page: 1, limit: 1 }) => {
@@ -23,6 +25,24 @@ export const getBots = (query = { page: 1, limit: 1 }) => {
   };
 };
 
+export const getAdminBots = (query = { page: 1, limit: 1 }) => {
+
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+
+  return {
+    type: GET_ADMIN_BOTS,
+    request: {
+      method: 'GET',
+      url: '/admin/bots',
+      params: query
+    },
+    meta: {
+      thunk: true,
+      admin: true
+    }
+  };
+};
+
 export const getRunningBots = (query = { page: 1, limit: 1 }) => {
 
   Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
@@ -36,6 +56,21 @@ export const getRunningBots = (query = { page: 1, limit: 1 }) => {
     },
     meta: {
       thunk: true
+    }
+  };
+};
+
+export const updateAdminRunningBot = (id, updateData) => {
+  return {
+    type: UPDATE_ADMIN_RUNNING_BOT,
+    request: {
+      method: 'PUT',
+      url: `/admin/instances/${id}`,
+      data: { update: updateData }
+    },
+    meta: {
+      thunk: true,
+      admin: true
     }
   };
 };
@@ -86,13 +121,13 @@ export const getAdminRunningBots = (query = { page: 1, limit: 1 }) => {
   };
 };
 
-export const changeAdminStatus = (id, status) => {
+export const updateAdminBot = (id, updateData) => {
   return {
-    type: PUT_ADMIN_STATUS,
+    type: UPDATE_ADMIN_BOT,
     request: {
       method: 'PUT',
-      url: '/admin/bots/running/status',
-      data: { id, status }
+      url: `/admin/bots/${id}`,
+      data: { update: updateData }
     },
     meta: {
       thunk: true,

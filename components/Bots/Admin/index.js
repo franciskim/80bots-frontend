@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Button from 'components/default/Button';
 import { Card, CardBody } from 'components/default/Card';
-import { Table, Thead } from 'components/default/Table';
+import { Table, Thead, Filters, LimitFilter } from 'components/default/Table';
 import { connect } from 'react-redux';
-import { getBots } from 'store/bot/actions';
+import { getAdminBots, updateAdminBot } from 'store/bot/actions';
 import Modal from 'components/default/Modal';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
+import Paginator from '../../default/Paginator';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -30,14 +31,11 @@ const StatusButton = styled(Button)`
   text-transform: uppercase;
 `;
 
-const TEMP_BOTS = [
-  { name: 'testbot1', ami_id: '12hfa23qd', ami_name: 'name', instance_type: 't2.micro', storage: 8, status: 'active' },
-  { name: 'testbot2', ami_id: 'sddas', ami_name: 'name', instance_type: 't2.micro', storage: 8, status: 'inactive' },
-  { name: 'testbot3', ami_id: '12hfa23qd', ami_name: 'name', instance_type: 't2.micro', storage: 8, status: 'active' },
-];
-
-const Bots = ({ getBots, bots, addNotification }) => {
+const Bots = ({ getAdminBots, updateAdminBot, bots, total, addNotification }) => {
   const [clickedBot, setClickedBot] = useState(null);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+
   const modal = useRef(null);
 
   const launchBot = () => {
@@ -47,12 +45,19 @@ const Bots = ({ getBots, bots, addNotification }) => {
   };
 
   useEffect(() => {
-    //getBots();
+    getAdminBots({ page, limit });
   }, []);
 
   const changeBotStatus = bot => {
-    const status = bot.status === 'active' ? 'deactivated' : 'activated';
-    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `Bot was successfully ${status}` });
+    const statusName = bot.status === 'active' ? 'deactivated' : 'activated';
+    const status = bot.status === 'active' ? 'inactive' : 'active';
+
+    updateAdminBot(bot.id, { status })
+      .then(() => addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: `Bot was successfully ${statusName}!`
+      }))
+      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
   const renderRow = (bot, idx) => <tr key={idx}>
@@ -75,6 +80,9 @@ const Bots = ({ getBots, bots, addNotification }) => {
     <>
       <Container>
         <CardBody>
+          <Filters>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getAdminBots({ page, limit: value }); }}/>
+          </Filters>
           <Table responsive>
             <Thead>
               <tr>
@@ -88,9 +96,10 @@ const Bots = ({ getBots, bots, addNotification }) => {
               </tr>
             </Thead>
             <tbody>
-              { TEMP_BOTS.map(renderRow) }
+              { bots.map(renderRow) }
             </tbody>
           </Table>
+          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getAdminBots({ page, limit }); }}/>
         </CardBody>
       </Container>
       <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}>
@@ -104,18 +113,22 @@ const Bots = ({ getBots, bots, addNotification }) => {
 };
 
 Bots.propTypes = {
-  getBots: PropTypes.func.isRequired,
+  getAdminBots: PropTypes.func.isRequired,
+  updateAdminBot: PropTypes.func.isRequired,
   bots: PropTypes.array.isRequired,
+  total: PropTypes.number.isRequired,
   addNotification: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  bots: state.bot.bots
+  bots: state.bot.bots,
+  total: state.bot.total,
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBots: (page) => dispatch(getBots(page)),
-  addNotification: payload => dispatch(addNotification(payload))
+  getAdminBots: query => dispatch(getAdminBots(query)),
+  addNotification: payload => dispatch(addNotification(payload)),
+  updateAdminBot: (id, data) => dispatch(updateAdminBot(id, data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Bots);

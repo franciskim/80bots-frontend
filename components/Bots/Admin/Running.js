@@ -11,7 +11,7 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
-import {getAdminRunningBots, changeAdminStatus, changeStatus} from 'store/bot/actions';
+import { getAdminRunningBots, updateAdminRunningBot,} from 'store/bot/actions';
 import Paginator from '../../default/Paginator';
 
 const Container = styled(Card)`
@@ -69,7 +69,7 @@ const OPTIONS = [
   { value: 'terminated', label: 'Terminated' }
 ];
 
-const RunningBots = ({ theme, addNotification, getAdminRunningBots, changeAdminStatus, botInstances, total }) => {
+const RunningBots = ({ theme, addNotification, getAdminRunningBots, updateAdminRunningBot, botInstances, total }) => {
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -79,7 +79,7 @@ const RunningBots = ({ theme, addNotification, getAdminRunningBots, changeAdminS
   }, []);
 
   const changeBotInstanceStatus = (option, id) => {
-    changeAdminStatus(id, option.value)
+    updateAdminRunningBot(id, { status: option.value })
       .then(() => addNotification({
         type: NOTIFICATION_TYPES.SUCCESS,
         message: `Instance was successfully ${option.value}`
@@ -139,7 +139,7 @@ RunningBots.propTypes = {
   }).isRequired,
   addNotification: PropTypes.func.isRequired,
   getAdminRunningBots: PropTypes.func.isRequired,
-  changeAdminStatus: PropTypes.func.isRequired,
+  updateAdminRunningBot: PropTypes.func.isRequired,
   botInstances: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired
 };
@@ -152,7 +152,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   getAdminRunningBots: query => dispatch(getAdminRunningBots(query)),
-  changeAdminStatus: (id, status) => dispatch(changeAdminStatus(id, status)),
+  updateAdminRunningBot: (id, data) => dispatch(updateAdminRunningBot(id, data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(RunningBots));

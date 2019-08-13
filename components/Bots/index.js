@@ -120,7 +120,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getBots: (page) => dispatch(getBots(page)),
   addNotification: payload => dispatch(addNotification(payload)),
-  launchInstance: (id) => dispatch(launchInstance(id))
+  launchInstance: (id) => dispatch(launchInstance(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Bots);
