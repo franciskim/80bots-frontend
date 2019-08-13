@@ -89,7 +89,6 @@ const Paginator = props => {
       setTotal(props.total);
     }
     if(pageSize !== props.pageSize) {
-      console.log('here', pageSize, props.pageSize);
       setPageSize(props.pageSize);
     }
     setPaginator(currentPage);

@@ -8,7 +8,7 @@ import { Card, CardBody } from '../default/Card';
 import { Table, Thead } from '../default/Table';
 import Modal from '../default/Modal';
 import { addNotification } from 'store/notification/actions';
-import {getSubscriptionsAdmin, updateSubscriptionAdmin } from 'store/subscription/actions';
+import { getSubscriptionsAdmin, updateSubscriptionAdmin, deleteSubscriptionAdmin } from 'store/subscription/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { connect } from 'react-redux';
 import Icon from '../default/icons';
@@ -60,7 +60,7 @@ const modalStyles = css`
   overflow-y: visible;
 `;
 
-const Subscriptions = ({ theme, addNotification, getSubscriptions, updateSubscription, plans }) => {
+const Subscriptions = ({ theme, addNotification, getSubscriptions, updateSubscription, deleteSubscription, plans }) => {
   const [clickedPlan, setClickedPlan] = useState(null);
   const [planName, setPlanName] = useState('');
   const [planCredits, setPlanCredits] = useState('');
@@ -82,7 +82,7 @@ const Subscriptions = ({ theme, addNotification, getSubscriptions, updateSubscri
   const openEditModal = plan => {
     setClickedPlan(plan);
     setPlanPrice(plan.price);
-    setPlanCredits(plan.credits);
+    setPlanCredits(plan.credit);
     setPlanName(plan.name);
     editModal.current.open();
   };
@@ -113,16 +113,21 @@ const Subscriptions = ({ theme, addNotification, getSubscriptions, updateSubscri
   };
 
   const updatePlan = () => {
-    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Subscription plan was successfully updated' });
-    editModal.current.close();
+    updateSubscription(clickedPlan.id, { credit: planCredits, price: planPrice, name: planName })
+      .then(() => {
+        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Subscription plan was successfully updated' });
+        editModal.current.close();
+      });
   };
 
   const deletePlan = () => {
-    addNotification({
-      type: NOTIFICATION_TYPES.SUCCESS,
-      message: `Subscription plan "${clickedPlan.name}" was successfully deleted`
+    deleteSubscription(clickedPlan.id).then(() => {
+      addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: `Subscription plan "${clickedPlan.name}" was successfully deleted`
+      });
+      deleteModal.current.close();
     });
-    deleteModal.current.close();
   };
 
   const renderRow = (plan, idx) => <tr key={idx}>
@@ -240,6 +245,7 @@ Subscriptions.propTypes = {
   addNotification: PropTypes.func.isRequired,
   getSubscriptions: PropTypes.func.isRequired,
   updateSubscription: PropTypes.func.isRequired,
+  deleteSubscription: PropTypes.func.isRequired,
   plans: PropTypes.array.isRequired
 };
 
@@ -251,6 +257,7 @@ const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   getSubscriptions: query => dispatch(getSubscriptionsAdmin(query)),
   updateSubscription: (id, updateObject) => dispatch(updateSubscriptionAdmin(id, updateObject)),
+  deleteSubscription: (id) => dispatch(deleteSubscriptionAdmin(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Subscriptions));
