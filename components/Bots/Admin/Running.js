@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from 'components/default/Card';
-import { Table, Thead } from 'components/default/Table';
+import { Table, Thead, Filters, LimitFilter } from 'components/default/Table';
 import Button from 'components/default/Button';
 import Icon from 'components/default/icons';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
-import { getRunningBots } from 'store/bot/actions';
+import {getAdminRunningBots, changeAdminStatus, changeStatus} from 'store/bot/actions';
+import Paginator from '../../default/Paginator';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -68,46 +69,22 @@ const OPTIONS = [
   { value: 'terminated', label: 'Terminated' }
 ];
 
-const TEMP_BOT_INSTANCES = [
-  {
-    launched_by: 'user@asdas.asd',
-    name: 'name 1',
-    instance_id: '1sda',
-    uptime: 1231,
-    ip: '123.32.12.32',
-    status: 'running',
-    launch_time: new Date().toISOString(),
-    pem: 'pem key path here'
-  },
-  {
-    launched_by: 'user@asdas.asd',
-    name: 'name 1',
-    instance_id: '1sda',
-    uptime: 1231,
-    ip: '123.32.12.32',
-    status: 'running',
-    launch_time: new Date().toISOString(),
-    pem: 'pem key path here'
-  },
-  {
-    launched_by: 'user@asdas.asd',
-    name: 'name 1',
-    instance_id: '1sda',
-    uptime: 1231,
-    ip: '123.32.12.32',
-    status: 'running',
-    launch_time: new Date().toISOString(),
-    pem: 'pem key path here'
-  }
-];
+const RunningBots = ({ theme, addNotification, getAdminRunningBots, changeAdminStatus, botInstances, total }) => {
 
-const RunningBots = ({ theme, addNotification, getRunningBots, botInstances }) => {
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+
   useEffect(() => {
-    //getRunningBots();
+    getAdminRunningBots({ page, limit });
   }, []);
 
-  const changeBotInstanceStatus = option => {
-    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `Instance was successfully ${option.value}` });
+  const changeBotInstanceStatus = (option, id) => {
+    changeAdminStatus(id, option.value)
+      .then(() => addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: `Instance was successfully ${option.value}`
+      }))
+      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
   const renderRow = (botInstance, idx) => <tr key={idx}>
@@ -118,7 +95,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, botInstances }) =
     <td>{ botInstance.ip }</td>
     <td>
       <Select options={OPTIONS} defaultValue={OPTIONS.find(item => item.value === botInstance.status)}
-        onChange={changeBotInstanceStatus}
+        onChange={option => changeBotInstanceStatus(option, botInstance.id)}
       />
     </td>
     <td>{ botInstance.launch_time }</td>
@@ -129,6 +106,9 @@ const RunningBots = ({ theme, addNotification, getRunningBots, botInstances }) =
     <>
       <Container>
         <CardBody>
+          <Filters>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getAdminRunningBots({ page, limit: value }); }}/>
+          </Filters>
           <Table>
             <Thead>
               <tr>
@@ -143,9 +123,10 @@ const RunningBots = ({ theme, addNotification, getRunningBots, botInstances }) =
               </tr>
             </Thead>
             <tbody>
-              { TEMP_BOT_INSTANCES.map(renderRow) }
+              { botInstances.map(renderRow) }
             </tbody>
           </Table>
+          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getAdminRunningBots({ page, limit }); }}/>
         </CardBody>
       </Container>
     </>
@@ -157,17 +138,21 @@ RunningBots.propTypes = {
     colors: PropTypes.object.isRequired
   }).isRequired,
   addNotification: PropTypes.func.isRequired,
-  getRunningBots: PropTypes.func.isRequired,
-  botInstances: PropTypes.array.isRequired
+  getAdminRunningBots: PropTypes.func.isRequired,
+  changeAdminStatus: PropTypes.func.isRequired,
+  botInstances: PropTypes.array.isRequired,
+  total: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
-  botInstances: state.bot.botInstances
+  botInstances: state.bot.botInstances,
+  total: state.bot.total,
 });
 
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
-  getRunningBots: (page) => dispatch(getRunningBots(page))
+  getAdminRunningBots: query => dispatch(getAdminRunningBots(query)),
+  changeAdminStatus: (id, status) => dispatch(changeAdminStatus(id, status)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(RunningBots));
