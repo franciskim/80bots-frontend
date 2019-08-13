@@ -1,5 +1,5 @@
 import {
-  GET_SUBSCRIPTIONS, GET_SUBSCRIPTIONS_ADMIN, UPDATE_SUBSCRIPTION_ADMIN
+  GET_SUBSCRIPTIONS, GET_SUBSCRIPTIONS_ADMIN, UPDATE_SUBSCRIPTION_ADMIN, DELETE_SUBSCRIPTION_ADMIN
 } from './types';
 
 export const getSubscriptions = () => ({
@@ -33,6 +33,18 @@ export const updateSubscriptionAdmin = (id, updateData) => ({
     data: {
       update: updateData
     }
+  },
+  meta: {
+    thunk: true,
+    admin: true
+  }
+});
+
+export const deleteSubscriptionAdmin = (id) => ({
+  type: UPDATE_SUBSCRIPTION_ADMIN,
+  request: {
+    method: 'DELETE',
+    url: `/admin/subscription/${id}`
   },
   meta: {
     thunk: true,

@@ -118,7 +118,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBots: (page) => dispatch(getBots(page)),
+  getBots: query => dispatch(getBots(query)),
   addNotification: payload => dispatch(addNotification(payload)),
   launchInstance: (id) => dispatch(launchInstance(id))
 });

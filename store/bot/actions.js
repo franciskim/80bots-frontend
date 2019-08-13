@@ -33,7 +33,7 @@ export const getRunningBots = (query = { page: 1, limit: 1 }) => {
       params: query
     },
     meta: {
-      thunk: true
+      thunk: true,
     }
   };
 };
