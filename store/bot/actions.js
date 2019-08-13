@@ -1,7 +1,8 @@
 import {
   GET_BOTS,
   GET_RUNNING_BOTS,
-  POST_LAUNCH_INSTANCE
+  POST_LAUNCH_INSTANCE,
+  PUT_STATUS
 } from './types';
 
 export const getBots = (query = { page: 1, limit: 1 }) => {
@@ -44,6 +45,20 @@ export const launchInstance = (id) => {
       method: 'POST',
       url: '/instances/launch',
       data: { bot_id: id }
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const changeStatus = (id, status) => {
+  return {
+    type: PUT_STATUS,
+    request: {
+      method: 'PUT',
+      url: '/bots/running/status',
+      data: { id, status }
     },
     meta: {
       thunk: true

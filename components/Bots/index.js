@@ -46,8 +46,11 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
   const launchBot = () => {
     modal.current.close();
     launchInstance(clickedBot.id).then(() => {
-      setClickedBot(null);
       addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Launching selected bot' });
+    }).catch(() => {
+
+    }).finally(() => {
+      setClickedBot(null);
     });
   };
 

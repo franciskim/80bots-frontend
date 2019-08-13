@@ -13,7 +13,9 @@ import { addNotification } from 'store/notification/actions';
 import { connect } from 'react-redux';
 import { NOTIFICATION_TYPES } from 'config';
 import Paginator from '../default/Paginator';
-import { getSchedules, changeStatus } from 'store/schedule/actions';
+import { getSchedules, updateSchedule, changeStatus, deleteSchedule } from 'store/schedule/actions';
+import moment from 'moment';
+import {css} from '@emotion/core';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -46,18 +48,69 @@ const Tag = styled(Badge)`
   }
 `;
 
+const modalStyles = css`
+  min-width: 500px;
+  overflow-y: visible;
+`;
+
+const SelectContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const SelectWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-right: 10px;
+`;
+
+const selectStyles = {
+  container: (provided) => ({
+    ...provided,
+    width: '100%'
+  })
+};
+
+const Label = styled.label`
+  font-size: 13px;
+  margin-bottom: 5px;
+`;
+
 const OPTIONS = [
   { value: 'active', label: 'Active' },
   { value: 'inactive', label: 'Inactive' }
 ];
 
-const BotsSchedule = ({ theme, addNotification, getSchedules, changeStatus, schedules, total }) => {
+const TYPE_OPTIONS = [
+  { value: 'stop', label: 'Stop' },
+  { value: 'start', label: 'Start' }
+];
+
+const DAY_OPTIONS = moment.weekdays().map(day => ({ value: day, label: day }));
+
+const TIME_OPTIONS = (() => {
+  const startTime = moment('00:00', 'HH:mm');
+  const endTime = moment('11:30', 'HH:mm');
+  let timeStops = [];
+  while(startTime <= endTime){
+    let stop = new moment(startTime).format('HH:mm');
+    timeStops.push({ value: stop, label: stop });
+    startTime.add(30, 'minutes');
+  }
+  return timeStops;
+})();
+
+const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, changeStatus, deleteSchedule, schedules, total }) => {
 
   const [clickedSchedule, setClickedSchedule] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
   const modal = useRef(null);
+  const modalScheduleDetails = useRef(null);
 
   useEffect(() => {
     getSchedules();
@@ -69,7 +122,8 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, changeStatus, sche
       .then(() => addNotification({
         type: NOTIFICATION_TYPES.SUCCESS,
         message: `Schedule was successfully ${status}!`
-      }));
+      }))
+      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
   const toggleModal = schedule => {
@@ -77,10 +131,40 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, changeStatus, sche
     modal.current.open();
   };
 
-  const deleteSchedule = () => {
+  const toggleEditModal = schedule => {
+    setClickedSchedule(schedule);
+    modalScheduleDetails.current.open();
+  };
+
+  const modalUpdateSchedule = () => {
+    modalScheduleDetails.current.close();
+
+    const timezone = '+03:00';
+    const details = [
+      {
+        type: 'start',
+        time: '6:00 PM',
+        day: 'Friday'
+      },
+      {
+        type: 'end',
+        time: '8:00 PM',
+        day: 'Friday'
+      }
+    ];
+
+    updateSchedule(clickedSchedule.id, timezone, details)
+      .then(() => addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully updated' }))
+      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Update of schedule failed' }))
+      .finally(() => setClickedSchedule(null));
+  };
+
+  const modalDeleteSchedule = () => {
     modal.current.close();
-    setClickedSchedule(null);
-    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully deleted' });
+    deleteSchedule(clickedSchedule.id)
+      .then(() => addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully deleted' }))
+      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Removal of Schedule failed' }))
+      .finally(() => setClickedSchedule(null));
   };
 
   const renderRow = (schedule, idx) => <tr key={idx}>
@@ -97,7 +181,9 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, changeStatus, sche
       </ul>
     </td>
     <td>
-      <IconButton type={'primary'}><Icon name={'edit'} color={theme.colors.white} /></IconButton>
+      <IconButton type={'primary'} onClick={() => toggleEditModal(schedule)}>
+        <Icon name={'edit'} color={theme.colors.white} />
+      </IconButton>
       <IconButton type={'danger'} onClick={() => toggleModal(schedule)}>
         <Icon name={'garbage'} color={theme.colors.white} />
       </IconButton>
@@ -130,8 +216,28 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, changeStatus, sche
       </Container>
       <Modal ref={modal} title={'Delete this schedule?'} onClose={() => setClickedSchedule(null)}>
         <Buttons>
-          <Button type={'primary'} onClick={deleteSchedule}>Yes</Button>
+          <Button type={'primary'} onClick={modalDeleteSchedule}>Yes</Button>
           <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
+        </Buttons>
+      </Modal>
+      <Modal ref={modalScheduleDetails} title={'Schedule Editor'} contentStyles={modalStyles} onClose={() => setClickedSchedule(null)}>
+        <SelectContainer>
+          <SelectWrap>
+            <Label>Type</Label>
+            <Select options={TYPE_OPTIONS} styles={selectStyles}/>
+          </SelectWrap>
+          <SelectWrap>
+            <Label>Day</Label>
+            <Select options={DAY_OPTIONS} styles={selectStyles}/>
+          </SelectWrap>
+          <SelectWrap>
+            <Label>Time</Label>
+            <Select options={TIME_OPTIONS} styles={selectStyles}/>
+          </SelectWrap>
+        </SelectContainer>
+        <Buttons>
+          <Button type={'primary'} onClick={modalUpdateSchedule}>Yes</Button>
+          <Button type={'danger'} onClick={() => modalScheduleDetails.current.close()}>Cancel</Button>
         </Buttons>
       </Modal>
     </>
@@ -144,7 +250,9 @@ BotsSchedule.propTypes = {
   }).isRequired,
   addNotification: PropTypes.func.isRequired,
   getSchedules: PropTypes.func.isRequired,
+  updateSchedule: PropTypes.func.isRequired,
   changeStatus: PropTypes.func.isRequired,
+  deleteSchedule: PropTypes.func.isRequired,
   schedules: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
 };
@@ -157,7 +265,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   getSchedules: (page) => dispatch(getSchedules(page)),
-  changeStatus: (id, status) => dispatch(changeStatus(id, status))
+  updateSchedule: (id, timezone, details) => dispatch(updateSchedule(id, timezone, details)),
+  changeStatus: (id, status) => dispatch(changeStatus(id, status)),
+  deleteSchedule: (id) => dispatch(deleteSchedule(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(BotsSchedule));

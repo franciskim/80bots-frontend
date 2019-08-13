@@ -1,6 +1,9 @@
 import {
   GET_SCHEDULES,
-  PUT_STATUS
+  CREATE_SCHEDULE,
+  UPDATE_SCHEDULE,
+  PUT_STATUS,
+  DELETE_SCHEDULE
 } from './types';
 
 export const getSchedules = (query = { page: 1, limit: 1 }) => {
@@ -20,6 +23,52 @@ export const getSchedules = (query = { page: 1, limit: 1 }) => {
   };
 };
 
+/**
+ *
+ * details[0][type] = stop | start
+ * details[0][time] = 6:00 PM
+ * details[0][day] = Friday
+ *
+ * @param instanceId
+ * @param timezone
+ * @param details
+ * @returns {{request: {method: string, data: {instance_id: *, timezone: *, details: *}, url: string}, meta: {thunk: boolean}, type: *}}
+ */
+export const createSchedule = (instanceId, timezone, details) => {
+  return {
+    type: CREATE_SCHEDULE,
+    request: {
+      method: 'POST',
+      url: '/schedules',
+      data: {
+        instance_id: instanceId,
+        timezone,
+        details
+      }
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const updateSchedule = (id, timezone, details) => {
+  return {
+    type: UPDATE_SCHEDULE,
+    request: {
+      method: 'PUT',
+      url: `/schedules/${id}`,
+      data: {
+        timezone,
+        details
+      }
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
 export const changeStatus = (id, status) => {
   return {
     type: PUT_STATUS,
@@ -30,6 +79,19 @@ export const changeStatus = (id, status) => {
         id: id,
         status: status
       }
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const deleteSchedule = (id) => {
+  return {
+    type: DELETE_SCHEDULE,
+    request: {
+      method: 'DELETE',
+      url: `/schedules/${id}`,
     },
     meta: {
       thunk: true

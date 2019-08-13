@@ -1,2 +1,5 @@
-export const GET_SCHEDULES  = 'GET_SCHEDULES';
-export const PUT_STATUS     = 'PUT_STATUS';
+export const GET_SCHEDULES    = 'GET_SCHEDULES';
+export const CREATE_SCHEDULE  = 'CREATE_SCHEDULE';
+export const UPDATE_SCHEDULE  = 'UPDATE_SCHEDULE';
+export const PUT_STATUS       = 'PUT_STATUS';
+export const DELETE_SCHEDULE  = 'DELETE_SCHEDULE';

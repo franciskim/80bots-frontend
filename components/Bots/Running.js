@@ -13,12 +13,19 @@ import Modal from '../default/Modal';
 import { connect } from 'react-redux';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
-import { getRunningBots } from 'store/bot/actions';
+import { getRunningBots, changeStatus } from 'store/bot/actions';
+import { createSchedule } from 'store/schedule/actions';
 import Paginator from '../default/Paginator';
 
 const Container = styled(Card)`
   border-radius: .25rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 const IconButton = styled(Button)`
@@ -64,6 +71,7 @@ const Label = styled.label`
   margin-bottom: 5px;
 `;
 
+// TODO: Pending readonly
 const OPTIONS = [
   { value: 'pending', label: 'Pending' },
   { value: 'running', label: 'Running' },
@@ -90,8 +98,9 @@ const TIME_OPTIONS = (() => {
   return timeStops;
 })();
 
-const RunningBots = ({ theme, addNotification, getRunningBots, botInstances, total }) => {
+const RunningBots = ({ theme, addNotification, getRunningBots, changeStatus, createSchedule, botInstances, total }) => {
 
+  const [clickedBotInstance, setClickedBotInstance] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
@@ -101,8 +110,40 @@ const RunningBots = ({ theme, addNotification, getRunningBots, botInstances, tot
     getRunningBots();
   }, []);
 
-  const changeBotInstanceStatus = option => {
-    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `Instance was successfully ${option.value}` });
+  const modalCreateSchedule = () => {
+
+    modal.current.close();
+
+    const timezone = '+03:00';
+    const details = [
+      {
+        type: 'start',
+        time: '6:00 PM',
+        day: 'Friday'
+      },
+      {
+        type: 'end',
+        time: '8:00 PM',
+        day: 'Friday'
+      }
+    ];
+
+    createSchedule(clickedBotInstance.id, timezone, details).then(() => {
+      addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'New schedule creation was successful' });
+    }).catch(() => {
+      addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'After trying to create Schedule error occurred' });
+    }).finally(() => {
+      setClickedBotInstance(null);
+    });
+  };
+
+  const changeBotInstanceStatus = (option, id) => {
+    changeStatus(id, option.value)
+      .then(() => addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: `Instance was successfully ${option.value}`
+      }))
+      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
   const renderRow = (botInstance, idx) => <tr key={idx}>
@@ -111,13 +152,13 @@ const RunningBots = ({ theme, addNotification, getRunningBots, botInstances, tot
     <td>{ botInstance.ip }</td>
     <td>
       <Select options={OPTIONS} defaultValue={OPTIONS.find(item => item.value === botInstance.status)}
-        onChange={changeBotInstanceStatus}
+        onChange={option => changeBotInstanceStatus(option, botInstance.id)}
       />
     </td>
     <td>{ botInstance.launched_at }</td>
     <td>
       <IconButton type={'primary'}><Icon name={'eye'} color={theme.colors.white} /></IconButton>
-      <IconButton type={'primary'} onClick={() => modal.current.open()}>
+      <IconButton type={'primary'} onClick={() => { setClickedBotInstance(botInstance); modal.current.open(); }}>
         <Icon name={'edit'} color={theme.colors.white} />
       </IconButton>
     </td>
@@ -163,6 +204,10 @@ const RunningBots = ({ theme, addNotification, getRunningBots, botInstances, tot
             <Select options={TIME_OPTIONS} styles={selectStyles}/>
           </SelectWrap>
         </SelectContainer>
+        <Buttons>
+          <Button type={'primary'} onClick={modalCreateSchedule}>Yes</Button>
+          <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
+        </Buttons>
       </Modal>
     </>
   );
@@ -174,6 +219,7 @@ RunningBots.propTypes = {
   }).isRequired,
   addNotification: PropTypes.func.isRequired,
   getRunningBots: PropTypes.func.isRequired,
+  createSchedule: PropTypes.func.isRequired,
   botInstances: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired
 };
@@ -185,7 +231,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
-  getRunningBots: (page) => dispatch(getRunningBots(page))
+  getRunningBots: (page) => dispatch(getRunningBots(page)),
+  changeStatus: (id, status) => dispatch(changeStatus(id, status)),
+  createSchedule: (instanceId, timezone, details) => dispatch(createSchedule(instanceId, timezone, details)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(RunningBots));
