@@ -5,7 +5,8 @@ import {
   GET_RUNNING_BOTS,
   GET_ADMIN_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
-  PUT_STATUS,
+  POST_ADMIN_LAUNCH_INSTANCE,
+  UPDATE_RUNNING_BOT,
   UPDATE_ADMIN_BOT,
   UPDATE_ADMIN_RUNNING_BOT
 } from './types';
@@ -26,7 +27,7 @@ export const reducer = (state = initialState, action) => {
     case GET_RUNNING_BOTS:
     case GET_ADMIN_RUNNING_BOTS:
     case POST_LAUNCH_INSTANCE:
-    case PUT_STATUS:
+    case UPDATE_RUNNING_BOT:
     case UPDATE_ADMIN_BOT:
     case UPDATE_ADMIN_RUNNING_BOT:
       return { ...state, loading: true, error: null };
@@ -50,7 +51,6 @@ export const reducer = (state = initialState, action) => {
       };
 
     case success(POST_LAUNCH_INSTANCE):
-    case success(PUT_STATUS):
       return { ...state, loading: false };
 
     case success(UPDATE_ADMIN_BOT): {
@@ -59,6 +59,7 @@ export const reducer = (state = initialState, action) => {
       return { ...state, bots: [...state.bots], loading: false };
     }
 
+    case success(UPDATE_RUNNING_BOT):
     case success(UPDATE_ADMIN_RUNNING_BOT): {
       const userIdx = state.botInstances.findIndex(item => item.id === action.data.id);
       if(userIdx || userIdx === 0) state.botInstances[userIdx] = action.data;
@@ -70,7 +71,7 @@ export const reducer = (state = initialState, action) => {
     case error(GET_RUNNING_BOTS):
     case error(GET_ADMIN_RUNNING_BOTS):
     case error(POST_LAUNCH_INSTANCE):
-    case error(PUT_STATUS):
+    case error(UPDATE_RUNNING_BOT):
     case error(UPDATE_ADMIN_BOT):
     case error(UPDATE_ADMIN_RUNNING_BOT):
       return { ...state, loading: false, error: action.error };

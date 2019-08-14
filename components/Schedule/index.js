@@ -13,7 +13,7 @@ import { addNotification } from 'store/notification/actions';
 import { connect } from 'react-redux';
 import { NOTIFICATION_TYPES } from 'config';
 import Paginator from '../default/Paginator';
-import { getSchedules, updateSchedule, changeStatus, deleteSchedule } from 'store/schedule/actions';
+import { getSchedules, updateSchedule, deleteSchedule } from 'store/schedule/actions';
 import moment from 'moment';
 import {css} from '@emotion/core';
 
@@ -79,6 +79,10 @@ const Label = styled.label`
   margin-bottom: 5px;
 `;
 
+const StatusButton = styled(Button)`
+  text-transform: uppercase;
+`;
+
 const OPTIONS = [
   { value: 'active', label: 'Active' },
   { value: 'inactive', label: 'Inactive' }
@@ -103,7 +107,7 @@ const TIME_OPTIONS = (() => {
   return timeStops;
 })();
 
-const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, changeStatus, deleteSchedule, schedules, total }) => {
+const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, deleteSchedule, schedules, total }) => {
 
   const [clickedSchedule, setClickedSchedule] = useState(null);
   const [limit, setLimit] = useState(10);
@@ -116,12 +120,13 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, ch
     getSchedules({ page, limit });
   }, []);
 
-  const changeScheduleStatus = (option, id) => {
-    const status = option.value === 'active' ? 'activated' : 'deactivated';
-    changeStatus(id, option.value)
+  const changeScheduleStatus = schedule => {
+    const statusName = schedule.status === 'active' ? 'deactivated' : 'activated';
+    const status = schedule.status === 'active' ? 'inactive' : 'active';
+    updateSchedule(schedule.id, {status})
       .then(() => addNotification({
         type: NOTIFICATION_TYPES.SUCCESS,
-        message: `Schedule was successfully ${status}!`
+        message: `Schedule was successfully ${statusName}!`
       }))
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
@@ -153,7 +158,7 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, ch
       }
     ];
 
-    updateSchedule(clickedSchedule.id, timezone, details)
+    updateSchedule(clickedSchedule.id, {timezone, details})
       .then(() => addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully updated' }))
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Update of schedule failed' }))
       .finally(() => setClickedSchedule(null));
@@ -171,9 +176,9 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, ch
     <td>{ schedule.instance_id }</td>
     <td>{ schedule.bot_name }</td>
     <td>
-      <Select options={OPTIONS} defaultValue={OPTIONS.find(item => item.value === schedule.status)}
-        onChange={option => changeScheduleStatus(option, schedule.id)}
-      />
+      <StatusButton type={schedule.status === 'active' ? 'success' : 'danger'} onClick={() => changeScheduleStatus(schedule)}>
+        { schedule.status }
+      </StatusButton>
     </td>
     <td>
       <ul>
@@ -251,7 +256,6 @@ BotsSchedule.propTypes = {
   addNotification: PropTypes.func.isRequired,
   getSchedules: PropTypes.func.isRequired,
   updateSchedule: PropTypes.func.isRequired,
-  changeStatus: PropTypes.func.isRequired,
   deleteSchedule: PropTypes.func.isRequired,
   schedules: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
@@ -265,8 +269,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   getSchedules: query => dispatch(getSchedules(query)),
-  updateSchedule: (id, timezone, details) => dispatch(updateSchedule(id, timezone, details)),
-  changeStatus: (id, status) => dispatch(changeStatus(id, status)),
+  updateSchedule: (id, data) => dispatch(updateSchedule(id, data)),
   deleteSchedule: (id) => dispatch(deleteSchedule(id))
 });
 

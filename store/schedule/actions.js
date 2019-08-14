@@ -2,7 +2,6 @@ import {
   GET_SCHEDULES,
   CREATE_SCHEDULE,
   UPDATE_SCHEDULE,
-  PUT_STATUS,
   DELETE_SCHEDULE
 } from './types';
 
@@ -52,33 +51,13 @@ export const createSchedule = (instanceId, timezone, details) => {
   };
 };
 
-export const updateSchedule = (id, timezone, details) => {
+export const updateSchedule = (id, updateData) => {
   return {
     type: UPDATE_SCHEDULE,
     request: {
       method: 'PUT',
       url: `/schedules/${id}`,
-      data: {
-        timezone,
-        details
-      }
-    },
-    meta: {
-      thunk: true
-    }
-  };
-};
-
-export const changeStatus = (id, status) => {
-  return {
-    type: PUT_STATUS,
-    request: {
-      method: 'PUT',
-      url: '/schedules/status',
-      data: {
-        id: id,
-        status: status
-      }
+      data: { update: updateData }
     },
     meta: {
       thunk: true

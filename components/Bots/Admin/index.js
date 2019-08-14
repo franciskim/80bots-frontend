@@ -5,7 +5,7 @@ import Button from 'components/default/Button';
 import { Card, CardBody } from 'components/default/Card';
 import { Table, Thead, Filters, LimitFilter } from 'components/default/Table';
 import { connect } from 'react-redux';
-import { getAdminBots, updateAdminBot } from 'store/bot/actions';
+import { getAdminBots, updateAdminBot, adminLaunchInstance } from 'store/bot/actions';
 import Modal from 'components/default/Modal';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
@@ -31,7 +31,7 @@ const StatusButton = styled(Button)`
   text-transform: uppercase;
 `;
 
-const Bots = ({ getAdminBots, updateAdminBot, bots, total, addNotification }) => {
+const Bots = ({ getAdminBots, updateAdminBot, adminLaunchInstance, bots, total, addNotification }) => {
   const [clickedBot, setClickedBot] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -40,8 +40,14 @@ const Bots = ({ getAdminBots, updateAdminBot, bots, total, addNotification }) =>
 
   const launchBot = () => {
     modal.current.close();
-    setClickedBot(null);
-    addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Launching selected bot' });
+
+    adminLaunchInstance(clickedBot.id).then(() => {
+      addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
+    }).catch(() => {
+      addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch' });
+    }).finally(() => {
+      setClickedBot(null);
+    });
   };
 
   useEffect(() => {
@@ -72,7 +78,7 @@ const Bots = ({ getAdminBots, updateAdminBot, bots, total, addNotification }) =>
       </StatusButton>
     </td>
     <td>
-      <Launch type={'primary'} onClick={() => modal.current.open()}>Launch</Launch>
+      <Launch type={'primary'} onClick={() => { setClickedBot(bot); modal.current.open(); }}>Launch</Launch>
     </td>
   </tr>;
 
@@ -115,6 +121,7 @@ const Bots = ({ getAdminBots, updateAdminBot, bots, total, addNotification }) =>
 Bots.propTypes = {
   getAdminBots: PropTypes.func.isRequired,
   updateAdminBot: PropTypes.func.isRequired,
+  adminLaunchInstance: PropTypes.func.isRequired,
   bots: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
   addNotification: PropTypes.func.isRequired
@@ -128,6 +135,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getAdminBots: query => dispatch(getAdminBots(query)),
   addNotification: payload => dispatch(addNotification(payload)),
+  adminLaunchInstance: id => dispatch(adminLaunchInstance(id)),
   updateAdminBot: (id, data) => dispatch(updateAdminBot(id, data))
 });
 

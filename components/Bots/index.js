@@ -45,10 +45,11 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
 
   const launchBot = () => {
     modal.current.close();
-    launchInstance(clickedBot.id).then(() => {
-      addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Launching selected bot' });
-    }).catch(() => {
 
+    launchInstance(clickedBot.id).then(() => {
+      addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
+    }).catch(() => {
+      addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch' });
     }).finally(() => {
       setClickedBot(null);
     });

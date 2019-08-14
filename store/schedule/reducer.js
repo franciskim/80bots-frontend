@@ -3,7 +3,6 @@ import {
   GET_SCHEDULES,
   CREATE_SCHEDULE,
   UPDATE_SCHEDULE,
-  PUT_STATUS,
   DELETE_SCHEDULE
 } from './types';
 
@@ -19,7 +18,6 @@ export const reducer = (state = initialState, action) => {
     case GET_SCHEDULES:
     case CREATE_SCHEDULE:
     case UPDATE_SCHEDULE:
-    case PUT_STATUS:
     case DELETE_SCHEDULE:
       return { ...state, loading: true, error: null };
 
@@ -32,15 +30,18 @@ export const reducer = (state = initialState, action) => {
       };
 
     case success(CREATE_SCHEDULE):
-    case success(UPDATE_SCHEDULE):
-    case success(PUT_STATUS):
     case success(DELETE_SCHEDULE):
       return { ...state, loading: false };
+
+    case success(UPDATE_SCHEDULE): {
+      const userIdx = state.schedules.findIndex(item => item.id === action.data.id);
+      if(userIdx || userIdx === 0) state.schedules[userIdx] = action.data;
+      return { ...state, schedules: [...state.schedules], loading: false };
+    }
 
     case error(GET_SCHEDULES):
     case error(CREATE_SCHEDULE):
     case error(UPDATE_SCHEDULE):
-    case error(PUT_STATUS):
     case error(DELETE_SCHEDULE):
       return { ...state, loading: false, error: action.error };
 

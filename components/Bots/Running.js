@@ -13,7 +13,7 @@ import Modal from '../default/Modal';
 import { connect } from 'react-redux';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
-import { getRunningBots, changeStatus } from 'store/bot/actions';
+import { getRunningBots, updateRunningBot } from 'store/bot/actions';
 import { createSchedule } from 'store/schedule/actions';
 import Paginator from '../default/Paginator';
 
@@ -71,7 +71,7 @@ const Label = styled.label`
   margin-bottom: 5px;
 `;
 
-// TODO: Pending readonly
+// TODO: Pending and terminated - readonly
 const OPTIONS = [
   { value: 'pending', label: 'Pending' },
   { value: 'running', label: 'Running' },
@@ -98,7 +98,7 @@ const TIME_OPTIONS = (() => {
   return timeStops;
 })();
 
-const RunningBots = ({ theme, addNotification, getRunningBots, changeStatus, createSchedule, botInstances, total }) => {
+const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot, createSchedule, botInstances, total }) => {
 
   const [clickedBotInstance, setClickedBotInstance] = useState(null);
   const [limit, setLimit] = useState(10);
@@ -138,7 +138,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, changeStatus, cre
   };
 
   const changeBotInstanceStatus = (option, id) => {
-    changeStatus(id, option.value)
+    updateRunningBot(id, { status: option.value })
       .then(() => addNotification({
         type: NOTIFICATION_TYPES.SUCCESS,
         message: `Instance was successfully ${option.value}`
@@ -219,7 +219,7 @@ RunningBots.propTypes = {
   }).isRequired,
   addNotification: PropTypes.func.isRequired,
   getRunningBots: PropTypes.func.isRequired,
-  changeStatus: PropTypes.func.isRequired,
+  updateRunningBot: PropTypes.func.isRequired,
   createSchedule: PropTypes.func.isRequired,
   botInstances: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired
@@ -233,7 +233,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   getRunningBots: query => dispatch(getRunningBots(query)),
-  changeStatus: (id, status) => dispatch(changeStatus(id, status)),
+  updateRunningBot: (id, data) => dispatch(updateRunningBot(id, data)),
   createSchedule: (instanceId, timezone, details) => dispatch(createSchedule(instanceId, timezone, details)),
 });
 

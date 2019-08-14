@@ -4,7 +4,8 @@ import {
   GET_RUNNING_BOTS,
   GET_ADMIN_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
-  PUT_STATUS,
+  POST_ADMIN_LAUNCH_INSTANCE,
+  UPDATE_RUNNING_BOT,
   UPDATE_ADMIN_BOT,
   UPDATE_ADMIN_RUNNING_BOT
 } from './types';
@@ -89,13 +90,28 @@ export const launchInstance = (id) => {
   };
 };
 
-export const changeStatus = (id, status) => {
+export const adminLaunchInstance = (id) => {
   return {
-    type: PUT_STATUS,
+    type: POST_ADMIN_LAUNCH_INSTANCE,
+    request: {
+      method: 'POST',
+      url: '/admin/instances/launch',
+      data: { bot_id: id }
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const updateRunningBot = (id, updateData) => {
+
+  return {
+    type: UPDATE_RUNNING_BOT,
     request: {
       method: 'PUT',
-      url: '/bots/running/status',
-      data: { id, status }
+      url: `/instances/${id}`,
+      data: { update: updateData }
     },
     meta: {
       thunk: true
