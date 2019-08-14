@@ -1,13 +1,49 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getTimeZones } from 'store/user/actions';
+import { getTimezones, updateUserProfile } from 'store/user/actions';
+import Select from 'react-select';
+import Button from '../default/Button';
+import { addNotification } from 'store/notification/actions';
+import { NOTIFICATION_TYPES } from 'config';
 
-const Profile = ({ user, getTimeZones }) => {
-  useEffect(() => { getTimeZones(); }, []);
+const Container = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 0 15px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 15px;
+`;
+
+const Profile = ({ user, getTimezones, updateUser, addNotification, timezones }) => {
+  const [timezone, setTimezone] = useState(null);
+
+  useEffect(() => { getTimezones(); }, []);
+  useEffect(() => {
+    if(!timezone && timezones.length > 0) {
+      const defaultValue = timezones.find(item => item.timezone === user.timezone);
+      setTimezone({ value: defaultValue.id, label: defaultValue.timezone });
+    }
+  }, [timezones]);
+
+  const updateTimezone = () => {
+    updateUser({ timezone_id: timezone.value })
+      .then(() => {
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `Timezone was successfully set to ${timezone.label}`
+        });
+      });
+  };
 
   return(
-    <Fragment>
+    <>
       <div className="card">
         <div className="card-header d-flex align-items-center justify-content-between">
           <h5 className="mb-0">User Profile</h5>
@@ -51,40 +87,38 @@ const Profile = ({ user, getTimeZones }) => {
           <h5 className="mb-0">My Timezone</h5>
         </div>
         <div className="card-body">
-          <div className="row">
-            <div className="col-md-12 col-sm-12">
-              <form method="post">
-                <div className="form-group">
-                  <label htmlFor="">Timezone</label>
-                  <select name="timezone" className="form-control">
-                    <option value="">Timezone</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <button className="btn btn-primary">Update</button>
-                </div>
-              </form>
-            </div>
-          </div>
+          <Container>
+            <Select options={timezones.map(item => ({ value: item.id, label: item.timezone }))}
+              onChange={option => setTimezone(option)} value={timezone}
+              defaultValue={timezone}
+            />
+            <ButtonContainer>
+              <Button type={'primary'} onClick={updateTimezone}>Update</Button>
+            </ButtonContainer>
+          </Container>
         </div>
       </div>
-    </Fragment>
+    </>
   );
 };
 
 Profile.propTypes = {
   user: PropTypes.object.isRequired,
-  getTimeZones: PropTypes.func.isRequired,
-  timeZones: PropTypes.array.isRequired
+  getTimezones: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired,
+  timezones: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  timeZones: state.user.timeZones
+  timezones: state.user.timezones
 });
 
 const mapDispatchToProps = dispatch => ({
-  getTimeZones: () => dispatch(getTimeZones())
+  getTimezones: () => dispatch(getTimezones()),
+  updateUser: updateData => dispatch(updateUserProfile(updateData)),
+  addNotification: payload => dispatch(addNotification(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

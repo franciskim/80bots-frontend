@@ -13,7 +13,7 @@ export const getSchedules = (query = { page: 1, limit: 1 }) => {
     type: GET_SCHEDULES,
     request: {
       method: 'GET',
-      url: '/schedules',
+      url: '/schedule',
       params: query
     },
     meta: {
@@ -22,27 +22,14 @@ export const getSchedules = (query = { page: 1, limit: 1 }) => {
   };
 };
 
-/**
- *
- * details[0][type] = stop | start
- * details[0][time] = 6:00 PM
- * details[0][day] = Friday
- *
- * @param instanceId
- * @param timezone
- * @param details
- * @returns {{request: {method: string, data: {instance_id: *, timezone: *, details: *}, url: string}, meta: {thunk: boolean}, type: *}}
- */
-export const createSchedule = (instanceId, timezone, details) => {
+export const createSchedule = ({ instanceId }) => {
   return {
     type: CREATE_SCHEDULE,
     request: {
       method: 'POST',
-      url: '/schedules',
+      url: '/schedule',
       data: {
-        instance_id: instanceId,
-        timezone,
-        details
+        instance_id: instanceId
       }
     },
     meta: {
@@ -56,7 +43,7 @@ export const updateSchedule = (id, updateData) => {
     type: UPDATE_SCHEDULE,
     request: {
       method: 'PUT',
-      url: `/schedules/${id}`,
+      url: `/schedule/${id}`,
       data: { update: updateData }
     },
     meta: {
@@ -70,7 +57,7 @@ export const deleteSchedule = (id) => {
     type: DELETE_SCHEDULE,
     request: {
       method: 'DELETE',
-      url: `/schedules/${id}`,
+      url: `/schedule/${id}`,
     },
     meta: {
       thunk: true

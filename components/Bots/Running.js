@@ -15,7 +15,6 @@ import { NOTIFICATION_TYPES } from 'config';
 import { getRunningBots, updateRunningBot } from 'store/bot/actions';
 import { createSchedule } from 'store/schedule/actions';
 import Paginator from '../default/Paginator';
-import ScheduleEditor from '../default/ScheduleEditor';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -57,33 +56,6 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
   useEffect(() => {
     getRunningBots({ page, limit });
   }, []);
-
-  const modalCreateSchedule = () => {
-
-    modal.current.close();
-
-    const timezone = '+03:00';
-    const details = [
-      {
-        type: 'start',
-        time: '6:00 PM',
-        day: 'Friday'
-      },
-      {
-        type: 'end',
-        time: '8:00 PM',
-        day: 'Friday'
-      }
-    ];
-
-    createSchedule(clickedBotInstance.id, timezone, details).then(() => {
-      addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'New schedule creation was successful' });
-    }).catch(() => {
-      addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'After trying to create Schedule error occurred' });
-    }).finally(() => {
-      setClickedBotInstance(null);
-    });
-  };
 
   const changeBotInstanceStatus = (option, id) => {
     updateRunningBot(id, { status: option.value })
@@ -139,8 +111,8 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
           <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getRunningBots({ page, limit }); }}/>
         </CardBody>
       </Container>
-      <Modal ref={modal} title={'Schedule Editor'} contentStyles={modalStyles} onClose={() => {}}>
-        <ScheduleEditor close={() => modal.current.close()} schedules={[]}/>
+      <Modal ref={modal} title={'Edit Bot'} contentStyles={modalStyles} onClose={() => {}}>
+        <span>Edit Bot here</span>
       </Modal>
     </>
   );

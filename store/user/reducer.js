@@ -4,7 +4,7 @@ import {
 } from './types';
 
 const initialState = {
-  timeZones: [],
+  timezones: [],
   users: [],
   total: 0,
   loading: true,
@@ -18,7 +18,7 @@ export const reducer = (state = initialState, action) => {
       return { ...state, loading: true, error: null };
 
     case success(TIMEZONES):
-      return { ...state, timeZones: action.data, loading: false };
+      return { ...state, timezones: action.data.data, loading: false };
 
     case success(USERS):
       return { ...state, users: action.data.data, total: action.data.total, loading: false };

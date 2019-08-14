@@ -1,8 +1,8 @@
 import {
-  TIMEZONES, USERS, UPDATE_USER
+  TIMEZONES, USERS, UPDATE_USER, UPDATE_USER_PROFILE
 } from './types';
 
-export const getTimeZones = () => ({
+export const getTimezones = () => ({
   type: TIMEZONES,
   request: {
     method: 'GET',
@@ -38,5 +38,19 @@ export const updateUser = (id, updateData) => ({
   meta: {
     thunk: true,
     admin: true
+  }
+});
+
+export const updateUserProfile = (updateData) => ({
+  type: UPDATE_USER_PROFILE,
+  request: {
+    method: 'PUT',
+    url: '/user/profile',
+    data: {
+      update: updateData
+    }
+  },
+  meta: {
+    thunk: true
   }
 });

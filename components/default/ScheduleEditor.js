@@ -6,7 +6,6 @@ import Icon from './icons';
 import styled from '@emotion/styled';
 import moment from 'moment';
 import { theme } from 'config';
-import { connect } from 'react-redux';
 
 const Buttons = styled.div`
   display: flex;
@@ -21,8 +20,12 @@ const selectStyles = {
   })
 };
 
-const SelectContainer = styled.div`
+const Container = styled.div`
   display: flex;
+  flex-direction: column;
+`;
+
+const SelectContainer = styled(Container)`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
@@ -63,6 +66,12 @@ const IconButton = styled(Button)`
   }
 `;
 
+const Error = styled.span`
+  font-size: 15px;
+  text-align: center;
+  color: ${ props => props.theme.colors.darkishPink };
+`;
+
 const TYPE_OPTIONS = [
   { value: 'stop', label: 'Stop' },
   { value: 'start', label: 'Start' }
@@ -86,6 +95,7 @@ const Schedule = ({ type, day, time, idx, add, remove, updateScheduleList, ...pr
   const [scheduleType, setScheduleType] = useState(TYPE_OPTIONS.find(item => item.value === type) || null);
   const [scheduleDay, setScheduleDay] = useState(DAY_OPTIONS.find(item => item.value === day) || null);
   const [scheduleTime, setScheduleTime] = useState(TIME_OPTIONS.find(item => item.value === time) || null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setScheduleType(TYPE_OPTIONS.find(item => item.value === type) || null);
@@ -100,10 +110,15 @@ const Schedule = ({ type, day, time, idx, add, remove, updateScheduleList, ...pr
   }, [time]);
 
   const addSchedule = () => {
-    setScheduleType(null);
-    setScheduleDay(null);
-    setScheduleTime(null);
-    add();
+    if(!scheduleTime || !scheduleType || !scheduleDay ) {
+      setError('You must fill all fields');
+    } else {
+      setError(null);
+      setScheduleType(null);
+      setScheduleDay(null);
+      setScheduleTime(null);
+      add();
+    }
   };
 
   const changeSchedule = (fieldName, setter, option) => {
@@ -118,42 +133,45 @@ const Schedule = ({ type, day, time, idx, add, remove, updateScheduleList, ...pr
   };
 
   return(
-    <SelectContainer {...props}>
-      <SelectWrap>
-        <Label>Type</Label>
-        <Select options={TYPE_OPTIONS} styles={selectStyles} defaultValue={scheduleType} value={scheduleType}
-          onChange={option => changeSchedule('type', setScheduleType, option)}
-        />
-      </SelectWrap>
-      <SelectWrap>
-        <Label>Day</Label>
-        <Select options={DAY_OPTIONS} styles={selectStyles} defaultValue={scheduleDay} value={scheduleDay}
-          onChange={option => changeSchedule('day', setScheduleDay, option)}
-        />
-      </SelectWrap>
-      <SelectWrap>
-        <Label>Time</Label>
-        <Select options={TIME_OPTIONS} styles={selectStyles} defaultValue={scheduleTime} value={scheduleTime}
-          onChange={option => changeSchedule('time', setScheduleTime, option)}
-        />
-      </SelectWrap>
-      <SelectWrap>
-        {
-          idx === 0
-            ? <IconButton type={'success'} onClick={addSchedule}>
-              <Icon name={'plus'} color={theme.colors.white}/>
-            </IconButton>
-            : <IconButton type={'danger'} onClick={remove}>
-              <Icon name={'garbage'} color={theme.colors.white}/>
-            </IconButton>
-        }
+    <Container {...props}>
+      <SelectContainer>
+        <SelectWrap>
+          <Label>Type</Label>
+          <Select options={TYPE_OPTIONS} styles={selectStyles} defaultValue={scheduleType} value={scheduleType}
+            onChange={option => changeSchedule('type', setScheduleType, option)}
+          />
+        </SelectWrap>
+        <SelectWrap>
+          <Label>Day</Label>
+          <Select options={DAY_OPTIONS} styles={selectStyles} defaultValue={scheduleDay} value={scheduleDay}
+            onChange={option => changeSchedule('day', setScheduleDay, option)}
+          />
+        </SelectWrap>
+        <SelectWrap>
+          <Label>Time</Label>
+          <Select options={TIME_OPTIONS} styles={selectStyles} defaultValue={scheduleTime} value={scheduleTime}
+            onChange={option => changeSchedule('time', setScheduleTime, option)}
+          />
+        </SelectWrap>
+        <SelectWrap>
+          {
+            idx === 0
+              ? <IconButton type={'success'} onClick={addSchedule}>
+                <Icon name={'plus'} color={theme.colors.white}/>
+              </IconButton>
+              : <IconButton type={'danger'} onClick={remove}>
+                <Icon name={'garbage'} color={theme.colors.white}/>
+              </IconButton>
+          }
 
-      </SelectWrap>
-    </SelectContainer>
+        </SelectWrap>
+      </SelectContainer>
+      { error && <Error>{ error }</Error> }
+    </Container>
   );
 };
 
-const ScheduleEditor = ({ close, ...props }) => {
+const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
   const [schedules, setSchedules] = useState([{}].concat(props.schedules));
 
   const addSchedule = () => {
@@ -170,7 +188,7 @@ const ScheduleEditor = ({ close, ...props }) => {
   };
 
   const updateSchedule = () => {
-
+    onUpdateClick(schedules.slice(1));
   };
 
   return(
@@ -193,7 +211,8 @@ const ScheduleEditor = ({ close, ...props }) => {
 
 ScheduleEditor.propTypes = {
   close: PropTypes.func.isRequired,
-  schedules: PropTypes.array.isRequired
+  schedules: PropTypes.array.isRequired,
+  onUpdateClick: PropTypes.func.isRequired,
 };
 
 Schedule.propTypes = {
@@ -206,4 +225,4 @@ Schedule.propTypes = {
   type: PropTypes.string
 };
 
-export default connect(null, null)(ScheduleEditor);
+export default ScheduleEditor;

@@ -34,8 +34,8 @@ export const reducer = (state = initialState, action) => {
       return { ...state, loading: false };
 
     case success(UPDATE_SCHEDULE): {
-      const userIdx = state.schedules.findIndex(item => item.id === action.data.id);
-      if(userIdx || userIdx === 0) state.schedules[userIdx] = action.data;
+      const scheduleIdx = state.schedules.findIndex(item => item.id === action.data.id);
+      if(scheduleIdx || scheduleIdx === 0) state.schedules[scheduleIdx] = action.data;
       return { ...state, schedules: [...state.schedules], loading: false };
     }
 
