@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import Button from '../default/Button';
 import Badge from '../default/Badge';
 import { Card, CardBody } from '../default/Card';
-import { Table, Thead, Filters, LimitFilter } from '../default/Table';
+import {Table, Thead, Filters, LimitFilter, SearchFilter} from '../default/Table';
 import { connect } from 'react-redux';
 import { getBots, launchInstance } from 'store/bot/actions';
 import Paginator from '../default/Paginator';
@@ -77,6 +77,7 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
         <CardBody>
           <Filters>
             <LimitFilter onChange={({ value }) => {setLimit(value); getBots({ page, limit: value }); }}/>
+            <SearchFilter onChange={console.log}/>
           </Filters>
           <Table responsive>
             <Thead>

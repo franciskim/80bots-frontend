@@ -13,11 +13,12 @@ export const getTimeZones = () => ({
   }
 });
 
-export const getUsers = () => ({
+export const getUsers = (query = { page: 1, limit: 1 }) => ({
   type: USERS,
   request: {
     method: 'GET',
-    url: '/admin/user'
+    url: '/admin/user',
+    params: query
   },
   meta: {
     thunk: true,

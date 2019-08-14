@@ -4,7 +4,7 @@ import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from '../default/Card';
-import { Table, Thead, Filters, LimitFilter } from '../default/Table';
+import {Table, Thead, Filters, LimitFilter, SearchFilter} from '../default/Table';
 import Button from '../default/Button';
 import Icon from '../default/icons';
 import Select from 'react-select';
@@ -119,6 +119,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
         <CardBody>
           <Filters>
             <LimitFilter onChange={({ value }) => {setLimit(value); getRunningBots({ page, limit: value }); }}/>
+            <SearchFilter onChange={console.log}/>
           </Filters>
           <Table>
             <Thead>

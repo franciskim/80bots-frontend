@@ -6,6 +6,7 @@ import {
 const initialState = {
   timeZones: [],
   users: [],
+  total: 0,
   loading: true,
   error: null,
 };
@@ -20,7 +21,7 @@ export const reducer = (state = initialState, action) => {
       return { ...state, timeZones: action.data, loading: false };
 
     case success(USERS):
-      return { ...state, users: action.data.data, loading: false };
+      return { ...state, users: action.data.data, total: action.data.total, loading: false };
 
     case success(UPDATE_USER): {
       const userIdx = state.users.findIndex(item => item.id === action.data.id);

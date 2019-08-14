@@ -14,6 +14,7 @@ import { getUsers } from 'store/user/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { connect } from 'react-redux';
 import Icon from '../default/icons';
+import Paginator from '../default/Paginator';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -56,13 +57,16 @@ const TEMP_USERS = [
   { name: 'Loud', email: 'some@email.com', remaining_credits: 80, created_at: new Date().toString(), status: 'active' }
 ];
 
-const Users = ({ theme, addNotification, getUsers, updateUser, users }) => {
+const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) => {
   const [clickedUser, setClickedUser] = useState(null);
   const [credits, setCredits] = useState(null);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+
   const modal = useRef(null);
 
   useEffect(() => {
-    getUsers();
+    getUsers({ page, limit });
   }, []);
 
   const openEditModal = user => {
@@ -117,7 +121,7 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users }) => {
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={console.log}/>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getUsers({ page, limit: value }); }}/>
             <SearchFilter onChange={console.log}/>
           </Filters>
           <Table>
@@ -135,6 +139,9 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users }) => {
               { users.map(renderRow) }
             </tbody>
           </Table>
+          <Paginator total={total} pageSize={limit}
+            onChangePage={(page) => { setPage(page); getUsers({ page, limit }); }}
+          />
         </CardBody>
       </Container>
       <Modal ref={modal} title={'Edit Remaining Credits'} contentStyles={modalStyles}
@@ -160,11 +167,13 @@ Users.propTypes = {
   addNotification: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired,
+  total: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
-  users: state.user.users
+  users: state.user.users,
+  total: state.user.total,
 });
 
 const mapDispatchToProps = dispatch => ({
