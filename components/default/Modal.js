@@ -17,6 +17,7 @@ const ModalContainer = styled.div`
   position: relative;
   justify-content: center;
   flex: 1 1 auto;
+  overflow: visible;
 `;
 
 const ModalBody = styled.div`
@@ -109,7 +110,8 @@ const ModalHeader = styled.h3`
   margin: 0;
 `;
 
-const DefaultModal = ({ children, title, styles, containerStyles, contentStyles, onClose, mode, close }) => {
+const DefaultModal = ({ children, title, styles, containerStyles, contentStyles, onClose, mode, close,
+  enableScroll }) => {
   useEffect(() => {
     if(mode === 'closed') {
       onClose && onClose();
@@ -205,7 +207,8 @@ DefaultModal.propTypes = {
   styles: PropTypes.object,
   containerStyles: PropTypes.object,
   contentStyles: PropTypes.object,
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
+  enableScroll: PropTypes.bool
 };
 
 export default forwardRef(Modal);

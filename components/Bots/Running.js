@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from '../default/Card';
 import { Table, Thead, Filters, LimitFilter } from '../default/Table';
@@ -16,16 +15,11 @@ import { NOTIFICATION_TYPES } from 'config';
 import { getRunningBots, updateRunningBot } from 'store/bot/actions';
 import { createSchedule } from 'store/schedule/actions';
 import Paginator from '../default/Paginator';
+import ScheduleEditor from '../default/ScheduleEditor';
 
 const Container = styled(Card)`
   border-radius: .25rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-`;
-
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 `;
 
 const IconButton = styled(Button)`
@@ -45,58 +39,12 @@ const modalStyles = css`
   overflow-y: visible;
 `;
 
-const selectStyles = {
-  container: (provided) => ({
-    ...provided,
-    width: '100%'
-  })
-};
-
-const SelectContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-`;
-
-const SelectWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-right: 10px;
-`;
-
-const Label = styled.label`
-  font-size: 13px;
-  margin-bottom: 5px;
-`;
-
-// TODO: Pending and terminated - readonly
 const OPTIONS = [
-  { value: 'pending', label: 'Pending' },
+  { value: 'pending', label: 'Pending', readOnly: true },
   { value: 'running', label: 'Running' },
   { value: 'stopped', label: 'Stopped' } ,
   { value: 'terminated', label: 'Terminated' }
 ];
-
-const TYPE_OPTIONS = [
-  { value: 'stop', label: 'Stop' },
-  { value: 'start', label: 'Start' }
-];
-
-const DAY_OPTIONS = moment.weekdays().map(day => ({ value: day, label: day }));
-
-const TIME_OPTIONS = (() => {
-  const startTime = moment('00:00', 'HH:mm');
-  const endTime = moment('11:30', 'HH:mm');
-  let timeStops = [];
-  while(startTime <= endTime){
-    let stop = new moment(startTime).format('HH:mm');
-    timeStops.push({ value: stop, label: stop });
-    startTime.add(30, 'minutes');
-  }
-  return timeStops;
-})();
 
 const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot, createSchedule, botInstances, total }) => {
 
@@ -153,6 +101,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
     <td>
       <Select options={OPTIONS} defaultValue={OPTIONS.find(item => item.value === botInstance.status)}
         onChange={option => changeBotInstanceStatus(option, botInstance.id)}
+        isOptionDisabled={ (option) => option.readOnly }
       />
     </td>
     <td>{ botInstance.launched_at }</td>
@@ -190,24 +139,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
         </CardBody>
       </Container>
       <Modal ref={modal} title={'Schedule Editor'} contentStyles={modalStyles} onClose={() => {}}>
-        <SelectContainer>
-          <SelectWrap>
-            <Label>Type</Label>
-            <Select options={TYPE_OPTIONS} styles={selectStyles}/>
-          </SelectWrap>
-          <SelectWrap>
-            <Label>Day</Label>
-            <Select options={DAY_OPTIONS} styles={selectStyles}/>
-          </SelectWrap>
-          <SelectWrap>
-            <Label>Time</Label>
-            <Select options={TIME_OPTIONS} styles={selectStyles}/>
-          </SelectWrap>
-        </SelectContainer>
-        <Buttons>
-          <Button type={'primary'} onClick={modalCreateSchedule}>Yes</Button>
-          <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
-        </Buttons>
+        <ScheduleEditor close={() => modal.current.close()} schedules={[]}/>
       </Modal>
     </>
   );

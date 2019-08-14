@@ -3,19 +3,18 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from '../default/Card';
-import {Filters, LimitFilter, Table, Thead} from '../default/Table';
+import { Filters, LimitFilter, Table, Thead } from '../default/Table';
 import Button from '../default/Button';
 import Badge from '../default/Badge';
 import Icon from '../default/icons';
-import Select from 'react-select';
 import Modal from '../default/Modal';
 import { addNotification } from 'store/notification/actions';
 import { connect } from 'react-redux';
 import { NOTIFICATION_TYPES } from 'config';
 import Paginator from '../default/Paginator';
 import { getSchedules, updateSchedule, deleteSchedule } from 'store/schedule/actions';
-import moment from 'moment';
-import {css} from '@emotion/core';
+import { css } from '@emotion/core';
+import ScheduleEditor from '../default/ScheduleEditor';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -40,6 +39,10 @@ const Buttons = styled.div`
   justify-content: space-between;
 `;
 
+const StatusButton = styled(Button)`
+  text-transform: uppercase;
+`;
+
 const Tag = styled(Badge)`
   margin-right: .5rem;
   font-size: 14px;
@@ -48,73 +51,26 @@ const Tag = styled(Badge)`
   }
 `;
 
+const AddButtonWrap = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+`;
+
 const modalStyles = css`
   min-width: 500px;
   overflow-y: visible;
 `;
 
-const SelectContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-`;
-
-const SelectWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-right: 10px;
-`;
-
-const selectStyles = {
-  container: (provided) => ({
-    ...provided,
-    width: '100%'
-  })
-};
-
-const Label = styled.label`
-  font-size: 13px;
-  margin-bottom: 5px;
-`;
-
-const StatusButton = styled(Button)`
-  text-transform: uppercase;
-`;
-
-const OPTIONS = [
-  { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'Inactive' }
-];
-
-const TYPE_OPTIONS = [
-  { value: 'stop', label: 'Stop' },
-  { value: 'start', label: 'Start' }
-];
-
-const DAY_OPTIONS = moment.weekdays().map(day => ({ value: day, label: day }));
-
-const TIME_OPTIONS = (() => {
-  const startTime = moment('00:00', 'HH:mm');
-  const endTime = moment('11:30', 'HH:mm');
-  let timeStops = [];
-  while(startTime <= endTime){
-    let stop = new moment(startTime).format('HH:mm');
-    timeStops.push({ value: stop, label: stop });
-    startTime.add(30, 'minutes');
-  }
-  return timeStops;
-})();
-
-const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, deleteSchedule, schedules, total }) => {
-
+const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, changeStatus, deleteSchedule, schedules,
+  total }) => {
   const [clickedSchedule, setClickedSchedule] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
   const modal = useRef(null);
-  const modalScheduleDetails = useRef(null);
+  const addModal = useRef(null);
+  const editModal = useRef(null);
 
   useEffect(() => {
     getSchedules({ page, limit });
@@ -138,11 +94,11 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, de
 
   const toggleEditModal = schedule => {
     setClickedSchedule(schedule);
-    modalScheduleDetails.current.open();
+    editModal.current.open();
   };
 
   const modalUpdateSchedule = () => {
-    modalScheduleDetails.current.close();
+    editModal.current.close();
 
     const timezone = '+03:00';
     const details = [
@@ -182,7 +138,11 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, de
     </td>
     <td>
       <ul>
-        { schedule.details.map((detail, idx) => <li key={idx}><Tag pill type={'info'}>{ detail['day'] } { detail['selected_time'] } ({ detail['schedule_type'] })</Tag></li>) }
+        {
+          schedule.details.map((detail, idx) => <li key={idx}>
+            <Tag pill type={'info'}>{ detail['day'] } { detail['selected_time'] } ({ detail['schedule_type'] })</Tag>
+          </li>)
+        }
       </ul>
     </td>
     <td>
@@ -197,6 +157,9 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, de
 
   return(
     <>
+      <AddButtonWrap>
+        <Button type={'primary'} onClick={() => addModal.current.open()}>Add schedule</Button>
+      </AddButtonWrap>
       <Container>
         <CardBody>
           <Filters>
@@ -216,34 +179,33 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, updateSchedule, de
               { schedules.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getSchedules({ page, limit }); }}/>
+          <Paginator total={total} pageSize={limit}
+            onChangePage={(page) => { setPage(page); getSchedules({ page, limit }); }}
+          />
         </CardBody>
       </Container>
+
       <Modal ref={modal} title={'Delete this schedule?'} onClose={() => setClickedSchedule(null)}>
         <Buttons>
           <Button type={'primary'} onClick={modalDeleteSchedule}>Yes</Button>
           <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
         </Buttons>
       </Modal>
-      <Modal ref={modalScheduleDetails} title={'Schedule Editor'} contentStyles={modalStyles} onClose={() => setClickedSchedule(null)}>
-        <SelectContainer>
-          <SelectWrap>
-            <Label>Type</Label>
-            <Select options={TYPE_OPTIONS} styles={selectStyles}/>
-          </SelectWrap>
-          <SelectWrap>
-            <Label>Day</Label>
-            <Select options={DAY_OPTIONS} styles={selectStyles}/>
-          </SelectWrap>
-          <SelectWrap>
-            <Label>Time</Label>
-            <Select options={TIME_OPTIONS} styles={selectStyles}/>
-          </SelectWrap>
-        </SelectContainer>
-        <Buttons>
-          <Button type={'primary'} onClick={modalUpdateSchedule}>Yes</Button>
-          <Button type={'danger'} onClick={() => modalScheduleDetails.current.close()}>Cancel</Button>
-        </Buttons>
+
+      <Modal ref={addModal} title={'Schedule Editor'} contentStyles={modalStyles}
+        onClose={() => setClickedSchedule(null)}
+      >
+        <ScheduleEditor schedules={clickedSchedule ? clickedSchedule.details : []}
+          close={() => editModal.current.close()}
+        />
+      </Modal>
+
+      <Modal ref={editModal} title={'Schedule Editor'} contentStyles={modalStyles}
+        onClose={() => setClickedSchedule(null)}
+      >
+        <ScheduleEditor schedules={clickedSchedule ? clickedSchedule.details : []}
+          close={() => editModal.current.close()}
+        />
       </Modal>
     </>
   );
