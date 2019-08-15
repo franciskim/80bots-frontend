@@ -94,3 +94,19 @@ export const LimitFilter = ({ onChange }) => <FilterBox>
 LimitFilter.propTypes = {
   onChange: PropTypes.func.isRequired
 };
+
+const selectListFilterStyles = {
+  container: (provided) => ({ ...provided, minWidth: '200px' })
+};
+
+export const ListFilter = ({ options, onChange }) => <FilterBox>
+  <Label>Show</Label>
+  <Select components={{ IndicatorSeparator: () => null }} options={options}
+    defaultValue={options[0]} onChange={onChange} styles={selectListFilterStyles}
+  />
+</FilterBox>;
+
+ListFilter.propTypes = {
+  options: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired
+};

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Button from 'components/default/Button';
 import { Card, CardBody } from 'components/default/Card';
-import { Table, Thead, Filters, LimitFilter } from 'components/default/Table';
+import { Table, Thead, Filters, LimitFilter, SearchFilter } from 'components/default/Table';
 import { connect } from 'react-redux';
-import { getAdminBots, updateAdminBot, adminLaunchInstance } from 'store/bot/actions';
+import { adminGetBots, adminUpdateBot, adminLaunchInstance } from 'store/bot/actions';
 import Modal from 'components/default/Modal';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
@@ -31,7 +31,7 @@ const StatusButton = styled(Button)`
   text-transform: uppercase;
 `;
 
-const Bots = ({ getAdminBots, updateAdminBot, adminLaunchInstance, bots, total, addNotification }) => {
+const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, addNotification }) => {
   const [clickedBot, setClickedBot] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -51,14 +51,14 @@ const Bots = ({ getAdminBots, updateAdminBot, adminLaunchInstance, bots, total, 
   };
 
   useEffect(() => {
-    getAdminBots({ page, limit });
+    adminGetBots({ page, limit });
   }, []);
 
   const changeBotStatus = bot => {
     const statusName = bot.status === 'active' ? 'deactivated' : 'activated';
     const status = bot.status === 'active' ? 'inactive' : 'active';
 
-    updateAdminBot(bot.id, { status })
+    adminUpdateBot(bot.id, { status })
       .then(() => addNotification({
         type: NOTIFICATION_TYPES.SUCCESS,
         message: `Bot was successfully ${statusName}!`
@@ -87,7 +87,8 @@ const Bots = ({ getAdminBots, updateAdminBot, adminLaunchInstance, bots, total, 
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); getAdminBots({ page, limit: value }); }}/>
+            <LimitFilter onChange={({ value }) => {setLimit(value); adminGetBots({ page, limit: value }); }}/>
+            <SearchFilter onChange={console.log}/>
           </Filters>
           <Table responsive>
             <Thead>
@@ -105,7 +106,7 @@ const Bots = ({ getAdminBots, updateAdminBot, adminLaunchInstance, bots, total, 
               { bots.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getAdminBots({ page, limit }); }}/>
+          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); adminGetBots({ page, limit }); }}/>
         </CardBody>
       </Container>
       <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}>
@@ -119,8 +120,8 @@ const Bots = ({ getAdminBots, updateAdminBot, adminLaunchInstance, bots, total, 
 };
 
 Bots.propTypes = {
-  getAdminBots: PropTypes.func.isRequired,
-  updateAdminBot: PropTypes.func.isRequired,
+  adminGetBots: PropTypes.func.isRequired,
+  adminUpdateBot: PropTypes.func.isRequired,
   adminLaunchInstance: PropTypes.func.isRequired,
   bots: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
@@ -133,10 +134,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getAdminBots: query => dispatch(getAdminBots(query)),
+  adminGetBots: query => dispatch(adminGetBots(query)),
   addNotification: payload => dispatch(addNotification(payload)),
   adminLaunchInstance: id => dispatch(adminLaunchInstance(id)),
-  updateAdminBot: (id, data) => dispatch(updateAdminBot(id, data))
+  adminUpdateBot: (id, data) => dispatch(adminUpdateBot(id, data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Bots);

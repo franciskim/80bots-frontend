@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Arrow from './Arrow';
 import Bubbles from './Bubbles';
 import Cross from './Cross';
+import Download from './Download';
 import Edit from './Edit';
 import Eye from './Eye';
 import Exit from './Exit';
@@ -18,6 +19,7 @@ export default class Icon extends Component {
     arrow: Arrow,
     bubbles: Bubbles,
     cross: Cross,
+    download: Download,
     edit: Edit,
     eye: Eye,
     exit: Exit,
@@ -32,7 +34,7 @@ export default class Icon extends Component {
     width: PropTypes.number,
     height: PropTypes.number,
     name: PropTypes.oneOf(['cross', 'exit', 'user', 'arrow', 'bubbles', 'spinning-bubbles', 'edit', 'eye',
-      'garbage', 'plus'
+      'garbage', 'plus', 'download'
     ]).isRequired //  coding assistance in IDE to find need icon when typing `name="...`
   };
 

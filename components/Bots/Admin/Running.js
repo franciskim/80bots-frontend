@@ -4,14 +4,14 @@ import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from 'components/default/Card';
-import { Table, Thead, Filters, LimitFilter } from 'components/default/Table';
+import { Table, Thead, Filters, LimitFilter, ListFilter, SearchFilter } from 'components/default/Table';
 import Button from 'components/default/Button';
 import Icon from 'components/default/icons';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
-import { getAdminRunningBots, updateAdminRunningBot,} from 'store/bot/actions';
+import { adminGetRunningBots, updateAdminRunningBot, downloadInstancePemFile } from 'store/bot/actions';
 import Paginator from '../../default/Paginator';
 
 const Container = styled(Card)`
@@ -69,14 +69,45 @@ const OPTIONS = [
   { value: 'terminated', label: 'Terminated' }
 ];
 
-const RunningBots = ({ theme, addNotification, getAdminRunningBots, updateAdminRunningBot, botInstances, total }) => {
+const FILTERS_LIST_OPTIONS = [
+  { value: 'all', label: 'All Instances' },
+  { value: 'my', label: 'My Instances' },
+];
 
+const RunningBots = ({
+  theme,
+  addNotification,
+  adminGetRunningBots,
+  downloadInstancePemFile,
+  updateAdminRunningBot,
+  botInstances,
+  total
+}) => {
+
+  const [list, setFilterList] = useState('all');
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    getAdminRunningBots({ page, limit });
+    adminGetRunningBots({ page, limit, list });
   }, []);
+
+  const downloadEventHandler = instance => {
+    downloadInstancePemFile(instance.id).then(({ data }) => {
+      const blob = new Blob([data], { type: 'application/x-pem-file' });
+      const file = new File([blob], `${instance.instance_id}.pem`, {
+        type: 'application/x-pem-file'
+      });
+      let a = document.createElement('a');
+      a.href = URL.createObjectURL(file);
+      a.download = `${instance.instance_id}.pem`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function() {
+        document.body.removeChild(a);
+      }, 0);
+    }).catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred while downloading file' }));
+  };
 
   const changeBotInstanceStatus = (option, id) => {
     updateAdminRunningBot(id, { status: option.value })
@@ -99,7 +130,12 @@ const RunningBots = ({ theme, addNotification, getAdminRunningBots, updateAdminR
       />
     </td>
     <td>{ botInstance.launch_time }</td>
-    <td>{ botInstance.pem }</td>
+    <td>
+      <IconButton type={'success'}
+        onClick={() => downloadEventHandler(botInstance)}>
+        <Icon name={'download'} color={'white'}/>
+      </IconButton>
+    </td>
   </tr>;
 
   return(
@@ -107,7 +143,9 @@ const RunningBots = ({ theme, addNotification, getAdminRunningBots, updateAdminR
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); getAdminRunningBots({ page, limit: value }); }}/>
+            <LimitFilter onChange={({ value }) => {setLimit(value); adminGetRunningBots({ page, limit: value, list }); }}/>
+            <ListFilter options={FILTERS_LIST_OPTIONS} onChange={({ value }) => {setFilterList(value); adminGetRunningBots({ page, limit, list: value }); }}/>
+            <SearchFilter onChange={console.log}/>
           </Filters>
           <Table>
             <Thead>
@@ -126,7 +164,7 @@ const RunningBots = ({ theme, addNotification, getAdminRunningBots, updateAdminR
               { botInstances.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getAdminRunningBots({ page, limit }); }}/>
+          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); adminGetRunningBots({ page, limit, list }); }}/>
         </CardBody>
       </Container>
     </>
@@ -138,7 +176,8 @@ RunningBots.propTypes = {
     colors: PropTypes.object.isRequired
   }).isRequired,
   addNotification: PropTypes.func.isRequired,
-  getAdminRunningBots: PropTypes.func.isRequired,
+  adminGetRunningBots: PropTypes.func.isRequired,
+  downloadInstancePemFile: PropTypes.func.isRequired,
   updateAdminRunningBot: PropTypes.func.isRequired,
   botInstances: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired
@@ -146,12 +185,13 @@ RunningBots.propTypes = {
 
 const mapStateToProps = state => ({
   botInstances: state.bot.botInstances,
-  total: state.bot.total,
+  total: state.bot.total
 });
 
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
-  getAdminRunningBots: query => dispatch(getAdminRunningBots(query)),
+  adminGetRunningBots: query => dispatch(adminGetRunningBots(query)),
+  downloadInstancePemFile: id => dispatch(downloadInstancePemFile(id)),
   updateAdminRunningBot: (id, data) => dispatch(updateAdminRunningBot(id, data)),
 });
 
