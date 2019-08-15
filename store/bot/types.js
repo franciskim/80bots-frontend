@@ -9,3 +9,6 @@ export const ADMIN_POST_LAUNCH_INSTANCE = 'ADMIN_POST_LAUNCH_INSTANCE';
 export const ADMIN_UPDATE_BOT           = 'ADMIN_UPDATE_BOT';
 export const ADMIN_UPDATE_RUNNING_BOT   = 'ADMIN_UPDATE_RUNNING_BOT';
 export const DOWNLOAD_INSTANCE_PEM_FILE = 'DOWNLOAD_INSTANCE_PEM_FILE';
+
+export const GET_TAGS                   = 'GET_TAGS';
+export const ADD_BOT                    = 'ADD_BOT';

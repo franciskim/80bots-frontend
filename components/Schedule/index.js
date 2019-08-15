@@ -12,7 +12,7 @@ import { addNotification } from 'store/notification/actions';
 import { connect } from 'react-redux';
 import { NOTIFICATION_TYPES } from 'config';
 import Paginator from '../default/Paginator';
-import {addSchedule, getSchedules, updateSchedule, deleteSchedule, createSchedule} from 'store/schedule/actions';
+import { getSchedules, updateSchedule, deleteSchedule, createSchedule } from 'store/schedule/actions';
 import { getRunningBots } from 'store/bot/actions';
 import { css } from '@emotion/core';
 import ScheduleEditor from '../default/ScheduleEditor';

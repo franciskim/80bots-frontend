@@ -15,6 +15,7 @@ import { NOTIFICATION_TYPES } from 'config';
 import { connect } from 'react-redux';
 import Icon from '../default/icons';
 import Paginator from '../default/Paginator';
+import Badge from '../default/Badge';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -99,6 +100,11 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
   const renderRow = (user, idx) => <tr key={idx}>
     <td>{ user.name }</td>
     <td>{ user.email }</td>
+    <td>
+      <Badge type={user.role === 'Admin' ? 'success' : 'info'} pill>
+        { user.role }
+      </Badge>
+    </td>
     <td>{ user.remaining_credits }</td>
     <td>{ moment(user.created_at).format('YYYY-MM-DD HH:mm:ss') }</td>
     <td>
@@ -129,6 +135,7 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
               <tr>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Role</th>
                 <th>Credits</th>
                 <th>Register Date</th>
                 <th>Status</th>

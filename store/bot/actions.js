@@ -1,6 +1,7 @@
 import {
   GET_BOTS,
   ADMIN_GET_BOTS,
+  ADD_BOT,
   GET_RUNNING_BOTS,
   ADMIN_GET_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
@@ -8,12 +9,12 @@ import {
   UPDATE_RUNNING_BOT,
   ADMIN_UPDATE_BOT,
   ADMIN_UPDATE_RUNNING_BOT,
-  DOWNLOAD_INSTANCE_PEM_FILE
+  DOWNLOAD_INSTANCE_PEM_FILE,
+  GET_TAGS
 } from './types';
 
 export const getBots = (query = { page: 1, limit: 1 }) => {
   Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
-
   return {
     type: GET_BOTS,
     request: {
@@ -28,11 +29,8 @@ export const getBots = (query = { page: 1, limit: 1 }) => {
 };
 
 
-
 export const getRunningBots = (query = { page: 1, limit: 1 }) => {
-
   Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
-
   return {
     type: GET_RUNNING_BOTS,
     request: {
@@ -76,7 +74,6 @@ export const launchInstance = (id) => {
 };
 
 export const updateRunningBot = (id, updateData) => {
-
   return {
     type: UPDATE_RUNNING_BOT,
     request: {
@@ -105,9 +102,7 @@ export const adminLaunchInstance = (id) => {
 };
 
 export const adminGetRunningBots = (query = { page: 1, limit: 1 }) => {
-
   Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
-
   return {
     type: ADMIN_GET_RUNNING_BOTS,
     request: {
@@ -162,6 +157,36 @@ export const downloadInstancePemFile = id => {
       method: 'GET',
       url: '/admin/instances/pem',
       params: { instance: id }
+    },
+    meta: {
+      thunk: true,
+      admin: true
+    }
+  };
+};
+
+
+export const addBot = (data) => ({
+  type: ADD_BOT,
+  request: {
+    method: 'POST',
+    url: '/admin/bots',
+    data
+  },
+  meta: {
+    thunk: true,
+    admin: true
+  }
+});
+
+export const getTags = (query = { page: 1, limit: 1 }) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  return {
+    type: GET_TAGS,
+    request: {
+      method: 'GET',
+      url: '/admin/bots/tags',
+      params: query
     },
     meta: {
       thunk: true,

@@ -15,12 +15,13 @@ import schedule from './schedule/reducer';
 import subscription from './subscription/reducer';
 import eventNotification from './eventNotification/reducer';
 import instanceSession from './instanceSession/reducer';
+import platform from './platform/reducer';
 
 const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
 
 const rootReducer = combineReducers({
-  auth, notification, user, bot, schedule, subscription, eventNotification, instanceSession
+  auth, notification, user, bot, schedule, subscription, eventNotification, instanceSession, platform
 });
 
 export function initializeStore(initialState = undefined) {

@@ -111,7 +111,7 @@ const ModalHeader = styled.h3`
 `;
 
 const DefaultModal = ({ children, title, styles, containerStyles, contentStyles, onClose, mode, close,
-  enableScroll }) => {
+  disableSideClosing }) => {
   useEffect(() => {
     if(mode === 'closed') {
       onClose && onClose();
@@ -161,7 +161,7 @@ const DefaultModal = ({ children, title, styles, containerStyles, contentStyles,
       ? <Fragment>
         <Global styles={bodyStyles}/>
         <Container styles={getContainerStyle(mode)}>
-          <ModalContainer onClick={() => close()}>
+          <ModalContainer onClick={() => !disableSideClosing && close()}>
             {/* preventing parent component to fire onClick by stopping event propagation */}
             <ModalDiv styles={combinedStyles} onClick={e => e.stopPropagation()}>
               <ModalBody styles={styles}>
@@ -208,7 +208,7 @@ DefaultModal.propTypes = {
   containerStyles: PropTypes.object,
   contentStyles: PropTypes.object,
   onClose: PropTypes.func,
-  enableScroll: PropTypes.bool
+  disableSideClosing: PropTypes.bool,
 };
 
 export default forwardRef(Modal);
