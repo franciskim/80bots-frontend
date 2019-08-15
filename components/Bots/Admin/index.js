@@ -74,7 +74,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
   const editModal = useRef(null);
 
   useEffect(() => {
-    getAdminBots({ page, limit });
+    adminGetBots({ page, limit });
   }, []);
 
   const launchBot = () => {
