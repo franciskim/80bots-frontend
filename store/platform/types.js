@@ -1,0 +1,2 @@
+export const GET_PLATFORMS      = 'GET_PLATFORMS';
+export const GET_INSTANCE_TYPES = 'GET_INSTANCE_TYPES';

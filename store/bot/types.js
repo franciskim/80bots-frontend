@@ -7,3 +7,5 @@ export const POST_ADMIN_LAUNCH_INSTANCE = 'POST_ADMIN_LAUNCH_INSTANCE';
 export const UPDATE_ADMIN_BOT           = 'UPDATE_ADMIN_BOT';
 export const UPDATE_RUNNING_BOT         = 'UPDATE_RUNNING_BOT';
 export const UPDATE_ADMIN_RUNNING_BOT   = 'UPDATE_ADMIN_RUNNING_BOT';
+export const GET_TAGS                   = 'GET_TAGS';
+export const ADD_BOT                    = 'ADD_BOT';

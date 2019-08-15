@@ -8,13 +8,15 @@ import {
   POST_ADMIN_LAUNCH_INSTANCE,
   UPDATE_RUNNING_BOT,
   UPDATE_ADMIN_BOT,
-  UPDATE_ADMIN_RUNNING_BOT
+  UPDATE_ADMIN_RUNNING_BOT,
+  GET_TAGS
 } from './types';
-import {UPDATE_USER} from '../user/types';
 
 const initialState = {
   bots: [],
+  tags: [],
   botInstances: [],
+  platforms: [],
   total: 0,
   loading: true,
   error: null,
@@ -65,6 +67,9 @@ export const reducer = (state = initialState, action) => {
       if(userIdx || userIdx === 0) state.botInstances[userIdx] = action.data;
       return { ...state, botInstances: [...state.botInstances], loading: false };
     }
+
+    case success(GET_TAGS):
+      return { ...state, tags: action.data.data };
 
     case error(GET_BOTS):
     case error(GET_ADMIN_BOTS):

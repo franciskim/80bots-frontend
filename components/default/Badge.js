@@ -30,10 +30,16 @@ const infoStyles = css`
   background-color: ${ theme.colors.darkBlue };
 `;
 
+const successStyles = css`
+  color: ${ theme.colors.white };
+  background-color: #38c172;
+`;
+
 const Badge = ({ pill = false, type, ...props }) => {
   const styles = css`
     ${ pill && pillLikeBadge };
     ${ type === 'info' && infoStyles };
+    ${ type === 'success' && successStyles };
   `;
 
   return <DefaultBadge styles={styles} {...props}/>;
