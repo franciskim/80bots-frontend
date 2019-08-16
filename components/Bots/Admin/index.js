@@ -63,6 +63,10 @@ const modalStyles = css`
   min-width: 800px;
   max-width: 800px;
   overflow-y: visible;
+  @media (max-height: 900px) {
+    max-height: 700px;
+    overflow-y: scroll;
+  }
 `;
 
 const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, addNotification, theme, ...props}) => {
@@ -118,7 +122,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
   };
 
   const updateBot = botData => {
-    props.updateBot(clickedBot.id, convertBotData(botData))
+    props.adminUpdateBot(clickedBot.id, convertBotData(botData))
       .then(() => addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot updated!' }))
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Update failed!' }));
   };
@@ -215,8 +219,7 @@ Bots.propTypes = {
   bots: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
   addNotification: PropTypes.func.isRequired,
-  addBot: PropTypes.func.isRequired,
-  updateBot: PropTypes.func.isRequired,
+  addBot: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -229,8 +232,7 @@ const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   adminLaunchInstance: id => dispatch(adminLaunchInstance(id)),
   adminUpdateBot: (id, data) => dispatch(adminUpdateBot(id, data)),
-  addBot: (data) => dispatch(addBot(data)),
-  updateBot: (id, updateData) => dispatch(updateAdminBot(id, updateData))
+  addBot: (data) => dispatch(addBot(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Bots));

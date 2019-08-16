@@ -84,7 +84,7 @@ const ModalBodyContent = styled.div`
   min-width: 200px;
   min-height: 200px;
   max-height: 90%;
-  overflow-y: auto;
+  overflow-y: scroll;
   &::-webkit-scrollbar {
     width: 5px;
     background-color: transparent;border-radius: 10px;
@@ -111,7 +111,7 @@ const ModalHeader = styled.h3`
 `;
 
 const DefaultModal = ({ children, title, styles, containerStyles, contentStyles, onClose, mode, close,
-  disableSideClosing }) => {
+  disableSideClosing, enableScroll }) => {
   useEffect(() => {
     if(mode === 'closed') {
       onClose && onClose();
@@ -159,7 +159,7 @@ const DefaultModal = ({ children, title, styles, containerStyles, contentStyles,
   return(
     mode !== 'closed'
       ? <Fragment>
-        <Global styles={bodyStyles}/>
+        <Global styles={!enableScroll && bodyStyles}/>
         <Container styles={getContainerStyle(mode)}>
           <ModalContainer onClick={() => !disableSideClosing && close()}>
             {/* preventing parent component to fire onClick by stopping event propagation */}
@@ -209,6 +209,7 @@ DefaultModal.propTypes = {
   contentStyles: PropTypes.object,
   onClose: PropTypes.func,
   disableSideClosing: PropTypes.bool,
+  enableScroll: PropTypes.bool
 };
 
 export default forwardRef(Modal);
