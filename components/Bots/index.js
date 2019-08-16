@@ -8,9 +8,10 @@ import {Table, Thead, Filters, LimitFilter, SearchFilter} from '../default/Table
 import { connect } from 'react-redux';
 import { getBots, launchInstance } from 'store/bot/actions';
 import Paginator from '../default/Paginator';
-import {NOTIFICATION_TYPES} from '../../config';
+import { NOTIFICATION_TYPES, notificationTimings } from 'config';
 import Modal from '../default/Modal';
 import { addNotification } from 'store/notification/actions';
+import Router from 'next/router';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -48,6 +49,9 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
 
     launchInstance(clickedBot.id).then(() => {
       addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
+      setTimeout(() => {
+        Router.push('/bots/running');
+      }, (notificationTimings.DURATION * 2) + notificationTimings.INFO_HIDE_DELAY);
     }).catch(() => {
       addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch' });
     }).finally(() => {

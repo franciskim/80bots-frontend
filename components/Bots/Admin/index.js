@@ -8,12 +8,13 @@ import { connect } from 'react-redux';
 import { adminGetBots, adminUpdateBot, addBot, adminLaunchInstance } from 'store/bot/actions';
 import Modal from 'components/default/Modal';
 import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES } from 'config';
+import { NOTIFICATION_TYPES, notificationTimings } from 'config';
 import Paginator from '../../default/Paginator';
 import { css } from '@emotion/core';
 import BotEditor from './components/BotEditor';
 import Icon from '../../default/icons';
 import { withTheme } from 'emotion-theming';
+import Router from 'next/router';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -82,16 +83,15 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
 
     adminLaunchInstance(clickedBot.id).then(() => {
       addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
+      setTimeout(() => {
+        Router.push('/admin/bots/running');
+      }, (notificationTimings.DURATION * 2) + notificationTimings.INFO_HIDE_DELAY);
     }).catch(() => {
       addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch' });
     }).finally(() => {
       setClickedBot(null);
     });
   };
-
-  useEffect(() => {
-    adminGetBots({ page, limit });
-  }, []);
 
   const convertBotData = botData => ({
     name: botData.botName,

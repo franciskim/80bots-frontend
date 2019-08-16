@@ -12,9 +12,10 @@ import Modal from '../default/Modal';
 import { connect } from 'react-redux';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
-import { getRunningBots, updateRunningBot } from 'store/bot/actions';
-import { createSchedule } from 'store/schedule/actions';
+import { botInstanceUpdated, getRunningBots, updateRunningBot } from 'store/bot/actions';
+import { addListener, removeAllListeners } from 'store/socket/actions';
 import Paginator from '../default/Paginator';
+import Loader from '../default/Loader';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -38,6 +39,13 @@ const modalStyles = css`
   overflow-y: visible;
 `;
 
+const selectStyles = {
+  container: provided => ({
+    ...provided,
+    minWidth: '90px'
+  })
+};
+
 const OPTIONS = [
   { value: 'pending', label: 'Pending', readOnly: true },
   { value: 'running', label: 'Running' },
@@ -45,8 +53,8 @@ const OPTIONS = [
   { value: 'terminated', label: 'Terminated' }
 ];
 
-const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot, createSchedule, botInstances, total }) => {
-
+const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot, botInstances,
+  total, user, addListener, removeAllListeners, botInstanceUpdated }) => {
   const [clickedBotInstance, setClickedBotInstance] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -55,6 +63,16 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
 
   useEffect(() => {
     getRunningBots({ page, limit });
+    addListener(`running.${user.id}`, 'InstanceLaunched', event => {
+      addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: `Bot ${event.instance.bot_name} successfully launched`
+      });
+      botInstanceUpdated(event.instance);
+    });
+    return () => {
+      removeAllListeners();
+    };
   }, []);
 
   const changeBotInstanceStatus = (option, id) => {
@@ -66,17 +84,21 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
+  const Loading = <Loader type={'bubbles'} width={45} height={45} color={theme.colors.primary} />;
+
   const renderRow = (botInstance, idx) => <tr key={idx}>
-    <td>{ botInstance.name }</td>
-    <td>{ botInstance.credits_used }</td>
-    <td>{ botInstance.ip }</td>
+    <td>{ botInstance.status !== 'pending' ? botInstance.name : Loading }</td>
+    <td>{ botInstance.status !== 'pending' ? botInstance.credits_used : Loading }</td>
+    <td>{ botInstance.status !== 'pending' ? botInstance.ip : Loading }</td>
     <td>
-      <Select options={OPTIONS} defaultValue={OPTIONS.find(item => item.value === botInstance.status)}
+      <Select options={OPTIONS} value={OPTIONS.find(item => item.value === botInstance.status)}
         onChange={option => changeBotInstanceStatus(option, botInstance.id)}
         isOptionDisabled={ (option) => option.readOnly }
+        isDisabled={botInstance.status === 'pending' || botInstance.status === 'terminated'}
+        styles={selectStyles}
       />
     </td>
-    <td>{ botInstance.launched_at }</td>
+    <td>{ botInstance.status !== 'pending' ? botInstance.launched_at : Loading }</td>
     <td>
       <IconButton type={'primary'}><Icon name={'eye'} color={theme.colors.white} /></IconButton>
       <IconButton type={'primary'} onClick={() => { setClickedBotInstance(botInstance); modal.current.open(); }}>
@@ -125,21 +147,27 @@ RunningBots.propTypes = {
   addNotification: PropTypes.func.isRequired,
   getRunningBots: PropTypes.func.isRequired,
   updateRunningBot: PropTypes.func.isRequired,
-  createSchedule: PropTypes.func.isRequired,
   botInstances: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired
+  total: PropTypes.number.isRequired,
+  addListener: PropTypes.func.isRequired,
+  removeAllListeners: PropTypes.func.isRequired,
+  botInstanceUpdated: PropTypes.func.isRequired,
+  user: PropTypes.object
 };
 
 const mapStateToProps = state => ({
   botInstances: state.bot.botInstances,
   total: state.bot.total,
+  user: state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   getRunningBots: query => dispatch(getRunningBots(query)),
   updateRunningBot: (id, data) => dispatch(updateRunningBot(id, data)),
-  createSchedule: (instanceId, timezone, details) => dispatch(createSchedule(instanceId, timezone, details)),
+  addListener: (room, eventName, handler) => dispatch(addListener(room, eventName, handler)),
+  removeAllListeners: () => dispatch(removeAllListeners()),
+  botInstanceUpdated: (botInstance) => dispatch(botInstanceUpdated(botInstance)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(RunningBots));

@@ -12,6 +12,7 @@ import {
   DOWNLOAD_INSTANCE_PEM_FILE,
   GET_TAGS
 } from './types';
+import { success } from 'redux-saga-requests';
 
 export const getBots = (query = { page: 1, limit: 1 }) => {
   Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
@@ -194,3 +195,8 @@ export const getTags = (query = { page: 1, limit: 1 }) => {
     }
   };
 };
+
+export const botInstanceUpdated = botInstance => ({
+  type: success(UPDATE_RUNNING_BOT),
+  data: botInstance
+});

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from 'components/default/Card';
@@ -11,8 +10,12 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
-import { adminGetRunningBots, updateAdminRunningBot, downloadInstancePemFile } from 'store/bot/actions';
-import Paginator from '../../default/Paginator';
+import {
+  adminGetRunningBots, updateAdminRunningBot, downloadInstancePemFile, botInstanceUpdated
+} from 'store/bot/actions';
+import { addListener, removeAllListeners } from 'store/socket/actions';
+import Paginator from 'components/default/Paginator';
+import Loader from '../../default/Loader';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -31,39 +34,15 @@ const IconButton = styled(Button)`
   }
 `;
 
-const modalStyles = css`
-  min-width: 500px;
-  overflow-y: visible;
-`;
-
 const selectStyles = {
-  container: (provided) => ({
+  container: provided => ({
     ...provided,
-    width: '100%'
+    minWidth: '150px'
   })
 };
 
-const SelectContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-`;
-
-const SelectWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-right: 10px;
-`;
-
-const Label = styled.label`
-  font-size: 13px;
-  margin-bottom: 5px;
-`;
-
 const OPTIONS = [
-  { value: 'pending', label: 'Pending' },
+  { value: 'pending', label: 'Pending', readOnly: true },
   { value: 'running', label: 'Running' },
   { value: 'stopped', label: 'Stopped' } ,
   { value: 'terminated', label: 'Terminated' }
@@ -81,7 +60,11 @@ const RunningBots = ({
   downloadInstancePemFile,
   updateAdminRunningBot,
   botInstances,
-  total
+  total,
+  user,
+  addListener,
+  removeAllListeners,
+  botInstanceUpdated
 }) => {
 
   const [list, setFilterList] = useState('all');
@@ -90,6 +73,16 @@ const RunningBots = ({
 
   useEffect(() => {
     adminGetRunningBots({ page, limit, list });
+    addListener(`running.${user.id}`, 'InstanceLaunched', event => {
+      addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: `Bot ${event.instance.bot_name} successfully launched`
+      });
+      botInstanceUpdated(event.instance);
+    });
+    return () => {
+      removeAllListeners();
+    };
   }, []);
 
   const downloadEventHandler = instance => {
@@ -118,18 +111,22 @@ const RunningBots = ({
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
+  const Loading = <Loader type={'bubbles'} width={45} height={45} color={theme.colors.primary} />;
+
   const renderRow = (botInstance, idx) => <tr key={idx}>
-    <td>{ botInstance.launched_by }</td>
-    <td>{ botInstance.name }</td>
-    <td>{ botInstance.instance_id }</td>
-    <td>{ botInstance.uptime }</td>
-    <td>{ botInstance.ip }</td>
+    <td>{ botInstance.status !== 'pending' ? botInstance.launched_by : Loading }</td>
+    <td>{ botInstance.status !== 'pending' ? botInstance.name : Loading }</td>
+    <td>{ botInstance.status !== 'pending' ? botInstance.instance_id : Loading }</td>
+    <td>{ botInstance.status !== 'pending' ? botInstance.uptime : Loading }</td>
+    <td>{ botInstance.status !== 'pending' ? botInstance.ip : Loading }</td>
     <td>
-      <Select options={OPTIONS} defaultValue={OPTIONS.find(item => item.value === botInstance.status)}
-        onChange={option => changeBotInstanceStatus(option, botInstance.id)}
+      <Select options={OPTIONS} value={OPTIONS.find(item => item.value === botInstance.status)}
+        onChange={option => changeBotInstanceStatus(option, botInstance.id)} styles={selectStyles}
+        isOptionDisabled={ (option) => option.readOnly }
+        isDisabled={botInstance.status === 'pending' || botInstance.status === 'terminated'}
       />
     </td>
-    <td>{ botInstance.launch_time }</td>
+    <td>{ botInstance.status !== 'pending' ? botInstance.launched_at : Loading }</td>
     <td>
       <IconButton type={'success'}
         onClick={() => downloadEventHandler(botInstance)}>
@@ -143,8 +140,12 @@ const RunningBots = ({
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); adminGetRunningBots({ page, limit: value, list }); }}/>
-            <ListFilter options={FILTERS_LIST_OPTIONS} onChange={({ value }) => {setFilterList(value); adminGetRunningBots({ page, limit, list: value }); }}/>
+            <LimitFilter
+              onChange={({ value }) => {setLimit(value); adminGetRunningBots({ page, limit: value, list }); }}
+            />
+            <ListFilter options={FILTERS_LIST_OPTIONS}
+              onChange={({ value }) => {setFilterList(value); adminGetRunningBots({ page, limit, list: value }); }}
+            />
             <SearchFilter onChange={console.log}/>
           </Filters>
           <Table>
@@ -179,13 +180,18 @@ RunningBots.propTypes = {
   adminGetRunningBots: PropTypes.func.isRequired,
   downloadInstancePemFile: PropTypes.func.isRequired,
   updateAdminRunningBot: PropTypes.func.isRequired,
+  addListener: PropTypes.func.isRequired,
+  removeAllListeners: PropTypes.func.isRequired,
+  botInstanceUpdated: PropTypes.func.isRequired,
   botInstances: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired
+  total: PropTypes.number.isRequired,
+  user: PropTypes.object
 };
 
 const mapStateToProps = state => ({
   botInstances: state.bot.botInstances,
-  total: state.bot.total
+  total: state.bot.total,
+  user: state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -193,6 +199,9 @@ const mapDispatchToProps = dispatch => ({
   adminGetRunningBots: query => dispatch(adminGetRunningBots(query)),
   downloadInstancePemFile: id => dispatch(downloadInstancePemFile(id)),
   updateAdminRunningBot: (id, data) => dispatch(updateAdminRunningBot(id, data)),
+  addListener: (room, eventName, handler) => dispatch(addListener(room, eventName, handler)),
+  removeAllListeners: () => dispatch(removeAllListeners()),
+  botInstanceUpdated: (botInstance) => dispatch(botInstanceUpdated(botInstance)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(RunningBots));
