@@ -9,7 +9,7 @@ import { getPlatforms, getInstanceTypes } from 'store/platform/actions';
 import { getTags } from 'store/bot/actions';
 import { getUsers } from 'store/user/actions';
 import Button from 'components/default/Button';
-import Input from 'components/default/Input';
+import Input, { StyledTextarea } from 'components/default/Input';
 
 const FormContainer = styled.div`
   display: flex;
@@ -204,24 +204,17 @@ const BotEditor = ({ getPlatforms, getInstanceTypes, getTags, platforms, types, 
           />
         </Row>
         <Row>
-          <InputWrap>
-            <Label>Startup Script</Label>
-            <textarea rows={10} className={'form-control'} value={startupScript}
-              onChange={e => setStartupScript(e.target.value)}/>
-          </InputWrap>
-          <InputWrap>
-            <Label>Bot Script</Label>
-            <textarea rows={10} className={'form-control'} value={botScript}
-              onChange={e => setBotScript(e.target.value)}/>
-          </InputWrap>
+          <StyledTextarea label={'Startup Script'} rows={10} value={startupScript}
+            onChange={e => setStartupScript(e.target.value)} styles={inputStyles}
+          />
+          <StyledTextarea label={'Bot Script'} rows={10} value={botScript}
+            onChange={e => setBotScript(e.target.value)} styles={inputStyles}
+          />
         </Row>
         <Row>
-          <TextareaWrap>
-            <Label>Description</Label>
-            <textarea rows={5} className={'form-control'} value={description}
-              onChange={e => setDescription(e.target.value)}
-            />
-          </TextareaWrap>
+          <StyledTextarea label={'Description'} rows={5} value={description}
+            onChange={e => setDescription(e.target.value)}
+          />
         </Row>
         <Row>
           <InputWrap>
