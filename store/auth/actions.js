@@ -1,5 +1,5 @@
 import {
-  AUTH_CHECK, LOGIN, REGISTER, LOGOUT
+  AUTH_CHECK, LOGIN, REGISTER, LOGOUT, RESET, RESET_PASSWORD
 } from './types';
 import Router from 'next/router';
 
@@ -19,14 +19,46 @@ export const login = (email, password) => {
   };
 };
 
-export const register = (email, password) => {
+export const register = (email, password, password_confirmation) => {
   return {
     type: REGISTER,
     request: {
       method: 'POST',
       url: '/auth/register',
       data: {
-        email, password
+        email, password, password_confirmation
+      }
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const reset = (email) => {
+  return {
+    type: RESET,
+    request: {
+      method: 'POST',
+      url: '/auth/password/email',
+      data: {
+        email
+      }
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const resetPassword = (token, email, password, password_confirmation) => {
+  return {
+    type: RESET_PASSWORD,
+    request: {
+      method: 'POST',
+      url: '/auth/password/reset',
+      data: {
+        token, email, password, password_confirmation
       }
     },
     meta: {

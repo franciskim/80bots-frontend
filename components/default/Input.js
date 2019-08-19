@@ -39,18 +39,20 @@ const ErrorSpan = styled.span`
 const Error = ({ children }) => {
   const [state, setState] = useState('closed');
   const [error, setError] = useState(children);
+  const [timer, setTimer] = useState(undefined);
 
   useEffect(() => {
-    if(children && state === 'closed') {
+    if(children && state !== 'in') {
+      clearTimeout(timer);
       setError(children);
       setState('in');
     }
-    if(!children) {
+    if(!children && state === 'in') {
       setState('out');
-      setTimeout(() => {
+      setTimer(setTimeout(() => {
         setState('closed');
         setError(null);
-      }, ERROR_ANIMATION_DURATION);
+      }, ERROR_ANIMATION_DURATION));
     }
   }, [children]);
 

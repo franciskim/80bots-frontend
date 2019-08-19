@@ -2,8 +2,9 @@ import React, { Fragment, useState } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { login } from 'store/auth/actions';
+import { login, reset } from 'store/auth/actions';
 import { addNotification } from 'store/notification/actions';
+import { NOTIFICATION_TYPES, notificationTimings } from 'config';
 import Router from 'next/router';
 import Link from 'next/link';
 import Head from 'components/default/layout/components/Head';
@@ -40,7 +41,7 @@ const Logo = styled.a`
   padding: 1rem 1.5rem; 
 `;
 
-const Login = ({ login }) => {
+const Login = ({ addNotification, login, reset }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formVisible, toggle] = useState(false);
@@ -48,6 +49,18 @@ const Login = ({ login }) => {
   const submit = (e) => {
     e.preventDefault();
     login(email, password).then(() => Router.push('/dashboard'));
+  };
+
+  const resetSubmit = (e) => {
+    e.preventDefault();
+    reset(email).then(() => {
+      addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'A fresh verification link has been sent to your email address.' });
+    } ).catch(({ error : { response } }) => {
+      if (response) {
+        const { errors: { email } } = response.data;
+        addNotification({ type: NOTIFICATION_TYPES.ERROR, message: email[0] });
+      }
+    });
   };
 
   const changeForms = () => {
@@ -97,9 +110,13 @@ const Login = ({ login }) => {
             <p className="text-center">Reset password link will be sent on email id</p>
             <div className="form-group">
               <label htmlFor="">Email</label>
-              <input type="email" name="email" className="form-control"/>
+              <input type="email" name="email"
+                onChange={e => setEmail(e.target.value)}
+                className="form-control"
+                value={email} required autoFocus
+              />
             </div>
-            <button type="submit" className="btn btn-primary btn-block text-uppercase mb-3">Send reset link</button>
+            <button type="submit" onClick={resetSubmit} className="btn btn-primary btn-block text-uppercase mb-3">Send reset link</button>
             <div>
               <a onClick={changeForms} href="#" className="text-dark text-decoration-none">Back to Sign In</a>
             </div>
@@ -119,11 +136,14 @@ const Login = ({ login }) => {
 };
 
 Login.propTypes = {
-  login: PropTypes.func
+  addNotification: PropTypes.func.isRequired,
+  login: PropTypes.func,
+  reset: PropTypes.func
 };
 
 const mapDispatchToProps = dispatch => ({
   login: (email, password) => dispatch(login(email, password)),
+  reset: email => dispatch(reset(email)),
   addNotification: payload => dispatch(addNotification(payload))
 });
 

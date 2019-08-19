@@ -1,10 +1,10 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import Head from 'components/default/layout/components/Head';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { register } from 'store/auth/actions';
+import { resetPassword } from 'store/auth/actions';
 import Router from 'next/router';
 import Link from 'next/link';
 import Input from 'components/default/Input';
@@ -32,7 +32,7 @@ const FormContainer = styled.div`
   margin-bottom: 1rem;
 `;
 
-const SignUpWrap = styled.div`
+const ResetWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,27 +50,46 @@ const inputStyles = {
   `
 };
 
-const Register = ({ addNotification, register }) => {
+const Reset = ({ addNotification, resetPassword }) => {
+  const [token, setToken] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
+  useEffect(() => {
+    setToken(Router.router.query.token || '');
+    setEmail(Router.router.query.email || '');
+  }, []);
+
   const submit = (e) => {
     e.preventDefault();
+
+    //console.log(Router.router.query);
+    //console.log(token, email);
 
     setEmailError('');
     setPasswordError('');
 
-    register(email, password, passwordConfirm)
+    resetPassword(token, email, password, passwordConfirm)
       .then(() => {
-        Router.push('/dashboard');
+        console.log('THEN');
+        //Router.push('/dashboard');
       })
       .catch(({ error : { response } }) => {
         if (response) {
-          response.data.email && setEmailError(response.data.email[0]);
-          response.data.password && setPasswordError(response.data.password[0]);
+
+          if (response.data.errors) {
+
+            //console.log(response.data.errors);
+
+            response.data.errors.email && setEmailError(response.data.errors.email[0]);
+            response.data.errors.password && setPasswordError(response.data.errors.password[0]);
+
+            addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Error' });
+          }
+
         } else {
           addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Connection error' });
         }
@@ -79,14 +98,14 @@ const Register = ({ addNotification, register }) => {
 
   return(
     <Fragment>
-      <Head title={'Sign Up'}/>
+      <Head title={'Reset Password'}/>
       <Container>
         <FormContainer>
           <form method="POST" className="flex-grow-1">
             <Logo href="/">
               <img src="/static/images/80bots.svg" alt=""/>
             </Logo>
-            <h4 className="text-center">Sign Up</h4>
+            <h4 className="text-center">Reset Password</h4>
 
             <Input label={'Email'} type="email" onChange={e => setEmail(e.target.value)}
               value={email} required autoFocus styles={inputStyles} error={emailError}/>
@@ -98,31 +117,31 @@ const Register = ({ addNotification, register }) => {
               value={passwordConfirm} required styles={inputStyles}/>
 
             <button type="submit" onClick={submit} className="btn btn-primary btn-block text-uppercase mb-3">
-              Sign Up
+              Reset Password
             </button>
           </form>
         </FormContainer>
-        <SignUpWrap>
+        <ResetWrap>
           <h5 className="text-white mb-0">
             Already a member?&nbsp;
             <Link href={'/login'}>
               <a href="#" className="text-white font-weight-bold">Sign In</a>
             </Link>
           </h5>
-        </SignUpWrap>
+        </ResetWrap>
       </Container>
     </Fragment>
   );
 };
 
-Register.propTypes = {
+Reset.propTypes = {
   addNotification: PropTypes.func.isRequired,
-  register: PropTypes.func
+  resetPassword: PropTypes.func
 };
 
 const mapDispatchToProps = dispatch => ({
-  register: (email, password, passwordConfirm) => dispatch(register(email, password, passwordConfirm)),
+  resetPassword: (token, email, password, passwordConfirm) => dispatch(resetPassword(token, email, password, passwordConfirm)),
   addNotification: payload => dispatch(addNotification(payload)),
 });
 
-export default connect(null, mapDispatchToProps)(Register);
+export default connect(null, mapDispatchToProps)(Reset);
