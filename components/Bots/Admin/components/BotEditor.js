@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import { css } from '@emotion/core';
 import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { connect } from 'react-redux';
@@ -8,6 +9,7 @@ import { getPlatforms, getInstanceTypes } from 'store/platform/actions';
 import { getTags } from 'store/bot/actions';
 import { getUsers } from 'store/user/actions';
 import Button from 'components/default/Button';
+import Input from 'components/default/Input';
 
 const FormContainer = styled.div`
   display: flex;
@@ -68,6 +70,17 @@ const selectStyles = {
     padding: '0 8px',
     borderColor: '#ced4da'
   })
+};
+
+const inputStyles = {
+  container: css`
+    &:first-of-type {
+      margin-right: 10px;
+    }
+    &:last-of-type {
+      margin-left: 10px;
+    }  
+  `,
 };
 
 const BotEditor = ({ getPlatforms, getInstanceTypes, getTags, platforms, types, tags, onSubmit, onClose,
@@ -175,32 +188,20 @@ const BotEditor = ({ getPlatforms, getInstanceTypes, getTags, platforms, types, 
           </InputWrap>
         </Row>
         <Row>
-          <InputWrap>
-            <Label>AMI Image ID *</Label>
-            <input type={'text'} className={'form-control'} value={imageId}
-              onChange={e => setImageId(e.target.value)}
-            />
-          </InputWrap>
-          <InputWrap>
-            <Label>AMI Name *</Label>
-            <input type={'text'} className={'form-control'} value={imageName}
-              onChange={e => setImageName(e.target.value)}
-            />
-          </InputWrap>
+          <Input type={'text'} label={'AMI Image ID *'} value={imageId} styles={inputStyles}
+            onChange={e => setImageId(e.target.value)}
+          />
+          <Input type={'text'} label={'AMI Name *'} value={imageName} styles={inputStyles}
+            onChange={e => setImageName(e.target.value)}
+          />
         </Row>
         <Row>
-          <InputWrap>
-            <Label>Bot Name *</Label>
-            <input type={'text'} className={'form-control'} value={botName}
-              onChange={e => setBotName(e.target.value)}
-            />
-          </InputWrap>
-          <InputWrap>
-            <Label>Storage GB *</Label>
-            <input type={'text'} className={'form-control'} value={storage}
-              onChange={e => setStorage(e.target.value)}
-            />
-          </InputWrap>
+          <Input type={'text'} label={'Bot Name *'} value={botName} styles={inputStyles}
+            onChange={e => setBotName(e.target.value)}
+          />
+          <Input type={'text'} label={'Storage GB *'} value={storage} styles={inputStyles}
+            onChange={e => setStorage(e.target.value)}
+          />
         </Row>
         <Row>
           <InputWrap>
