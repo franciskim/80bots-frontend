@@ -69,29 +69,27 @@ const Reset = ({ addNotification, resetPassword }) => {
     setPasswordError('');
 
     addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Password reset is disabled' });
-
-    /*    resetPassword(token, email, password, passwordConfirm)
+    /*
+    resetPassword(token, email, password, passwordConfirm)
       .then(() => {
-        console.log('THEN');
-        //Router.push('/dashboard');
+        Router.push('/dashboard');
       })
       .catch(({ error : { response } }) => {
         if (response) {
-
           if (response.data.errors) {
-
-            //console.log(response.data.errors);
-
+            response.data.errors.credentials && addNotification({
+              type: NOTIFICATION_TYPES.ERROR,
+              message: response.data.errors.credentials
+            });
             response.data.errors.email && setEmailError(response.data.errors.email[0]);
             response.data.errors.password && setPasswordError(response.data.errors.password[0]);
-
-            addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Error' });
           }
 
         } else {
           addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Connection error' });
         }
-      });*/
+      });
+      */
   };
 
   return(
