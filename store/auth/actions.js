@@ -81,3 +81,14 @@ export const checkAuth = () => dispatch => dispatch({
 export const logout = () => ({
   type: LOGOUT
 });
+
+export const createSubscription = () => dispatch => dispatch({
+  type: AUTH_CHECK,
+  request: {
+    method: 'GET',
+    url: '/auth/login'
+  },
+  meta: {
+    thunk: true
+  }
+}).catch(() => Router.push('/login'));

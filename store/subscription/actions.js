@@ -1,5 +1,5 @@
 import {
-  GET_SUBSCRIPTIONS, GET_SUBSCRIPTIONS_ADMIN, UPDATE_SUBSCRIPTION_ADMIN, DELETE_SUBSCRIPTION_ADMIN
+  GET_SUBSCRIPTIONS, GET_SUBSCRIPTIONS_ADMIN, UPDATE_SUBSCRIPTION_ADMIN, DELETE_SUBSCRIPTION_ADMIN, SUBSCRIBE
 } from './types';
 
 export const getSubscriptions = () => ({
@@ -7,6 +7,21 @@ export const getSubscriptions = () => ({
   request: {
     method: 'GET',
     url: '/subscriptions',
+  },
+  meta: {
+    thunk: true
+  }
+});
+
+export const subscribe = (planId, tokenId) =>({
+  type: SUBSCRIBE,
+  request: {
+    method: 'POST',
+    url: '/subscriptions/subscribe',
+    data: {
+      plan_id: planId,
+      token_id: tokenId
+    }
   },
   meta: {
     thunk: true

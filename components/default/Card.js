@@ -24,3 +24,11 @@ export const CardFooter = styled.div`
   background-color: rgba(0, 0, 0, 0.03);
   border-top: 1px solid rgba(0, 0, 0, 0.125);
 `;
+
+export const CardHeader = styled.div`
+  border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+  padding: .75rem 1.25rem;
+  margin-bottom: 0;
+  background-color: rgba(0,0,0,.03);
+  border-bottom: 1px solid rgba(0,0,0,.125);
+`;

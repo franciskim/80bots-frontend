@@ -13,7 +13,7 @@ import Modal from '../default/Modal';
 import { addNotification } from 'store/notification/actions';
 import Router from 'next/router';
 
-const Container = styled(Card)`
+const Container = styled(Card)` 
   border-radius: .25rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 `;

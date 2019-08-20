@@ -35,7 +35,7 @@ const Buttons = styled.div`
 
 const IconButton = styled(Button)`
   display: inline-flex;
-  justify-content: center;
+  justify-content: center; 
   padding: 2px;
   margin-right: 5px;
   width: 27px;

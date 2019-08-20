@@ -58,6 +58,19 @@ export const notificationTimings = {
   HELP_HIDE_DELAY: 5000
 };
 
+export const BILLING_DETAILS = {
+  company: '80bots',
+  image: 'static/images/logos/stripe.svg',
+  currency: 'USD',
+  locale: 'en',
+  shippingAddress: false,
+  billingDetails: false,
+  zipCode: false,
+  alipay: true,
+  bitcoin: true,
+  allowRememberMe: true,
+};
+
 export const SIDEBAR_ANIMATION_TIME = 250;
 
 export const globalStyles = css`
