@@ -48,7 +48,13 @@ const Login = ({ addNotification, login, reset }) => {
 
   const submit = (e) => {
     e.preventDefault();
-    login(email, password).then(() => Router.push('/dashboard'));
+    login(email, password).then(() => Router.push('/dashboard'))
+      .catch(({ error : { response } }) => {
+        if (response) {
+          const { message } = response.data;
+          addNotification({ type: NOTIFICATION_TYPES.ERROR, message });
+        }
+      });
   };
 
   const resetSubmit = (e) => {
