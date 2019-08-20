@@ -41,7 +41,7 @@ const UserName = styled.span`
 const Header = ({ user, sidebarOpened, onHamburgerClick, logout }) => {
   const onLogoutClick = () => {
     logout();
-    Router.push('/login');
+    Router.push('/');
   };
 
   return(

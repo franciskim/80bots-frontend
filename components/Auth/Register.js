@@ -8,9 +8,8 @@ import { register } from 'store/auth/actions';
 import Router from 'next/router';
 import Link from 'next/link';
 import Input from 'components/default/Input';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES, notificationTimings } from 'config';
+import { NOTIFICATION_TYPES } from 'config';
 
 const Container = styled.div`
   display: flex;
@@ -62,8 +61,8 @@ const Register = ({ addNotification, register }) => {
 
     setEmailError('');
     setPasswordError('');
-
-    register(email, password, passwordConfirm)
+    addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Registration is temporary disabled' });
+    /*    register(email, password, passwordConfirm)
       .then(() => {
         Router.push('/dashboard');
       })
@@ -74,7 +73,7 @@ const Register = ({ addNotification, register }) => {
         } else {
           addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Connection error' });
         }
-      });
+      });*/
   };
 
   return(

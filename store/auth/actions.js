@@ -76,7 +76,7 @@ export const checkAuth = () => dispatch => dispatch({
   meta: {
     thunk: true
   }
-}).catch(() => Router.push('/login'));
+}).catch(() => Router.push('/'));
 
 export const logout = () => ({
   type: LOGOUT

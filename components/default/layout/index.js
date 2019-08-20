@@ -9,8 +9,6 @@ import Loader from '../Loader';
 import { checkAuth } from 'store/auth/actions';
 import { connect } from 'react-redux';
 import { withTheme } from 'emotion-theming';
-import Router from 'next/router';
-import { ROUTES } from 'config';
 
 const Container = styled.div`
   display: flex;
@@ -64,7 +62,8 @@ AppLayout.propTypes = {
     colors: PropTypes.object.isRequired
   }).isRequired,
   children: PropTypes.any,
-  hideBanner: PropTypes.bool
+  hideBanner: PropTypes.bool,
+  user: PropTypes.object
 };
 
 const mapStateToProps = state => ({

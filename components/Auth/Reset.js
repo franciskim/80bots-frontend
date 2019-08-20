@@ -8,9 +8,8 @@ import { resetPassword } from 'store/auth/actions';
 import Router from 'next/router';
 import Link from 'next/link';
 import Input from 'components/default/Input';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES, notificationTimings } from 'config';
+import { NOTIFICATION_TYPES } from 'config';
 
 const Container = styled.div`
   display: flex;
@@ -66,13 +65,12 @@ const Reset = ({ addNotification, resetPassword }) => {
   const submit = (e) => {
     e.preventDefault();
 
-    //console.log(Router.router.query);
-    //console.log(token, email);
-
     setEmailError('');
     setPasswordError('');
 
-    resetPassword(token, email, password, passwordConfirm)
+    addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Password reset is disabled' });
+
+    /*    resetPassword(token, email, password, passwordConfirm)
       .then(() => {
         console.log('THEN');
         //Router.push('/dashboard');
@@ -93,7 +91,7 @@ const Reset = ({ addNotification, resetPassword }) => {
         } else {
           addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Connection error' });
         }
-      });
+      });*/
   };
 
   return(

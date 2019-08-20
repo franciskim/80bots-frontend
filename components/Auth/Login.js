@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { login, reset } from 'store/auth/actions';
 import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES, notificationTimings } from 'config';
+import { NOTIFICATION_TYPES } from 'config';
 import Router from 'next/router';
 import Link from 'next/link';
 import Head from 'components/default/layout/components/Head';
@@ -53,14 +53,15 @@ const Login = ({ addNotification, login, reset }) => {
 
   const resetSubmit = (e) => {
     e.preventDefault();
-    reset(email).then(() => {
+    addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Password reset is disabled' });
+    /*    reset(email).then(() => {
       addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'A fresh verification link has been sent to your email address.' });
     } ).catch(({ error : { response } }) => {
       if (response) {
         const { errors: { email } } = response.data;
         addNotification({ type: NOTIFICATION_TYPES.ERROR, message: email[0] });
       }
-    });
+    });*/
   };
 
   const changeForms = () => {
