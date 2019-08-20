@@ -48,20 +48,28 @@ const Login = ({ addNotification, login, reset }) => {
 
   const submit = (e) => {
     e.preventDefault();
-    login(email, password).then(() => Router.push('/dashboard'));
+    login(email, password).then(() => Router.push('/dashboard'))
+      .catch(({ error : { response } }) => {
+        if (response) {
+          const { message } = response.data;
+          addNotification({ type: NOTIFICATION_TYPES.ERROR, message });
+        }
+      });
   };
 
   const resetSubmit = (e) => {
     e.preventDefault();
     addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Password reset is disabled' });
-    /*    reset(email).then(() => {
+    /*
+    reset(email).then(() => {
       addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'A fresh verification link has been sent to your email address.' });
     } ).catch(({ error : { response } }) => {
       if (response) {
         const { errors: { email } } = response.data;
         addNotification({ type: NOTIFICATION_TYPES.ERROR, message: email[0] });
       }
-    });*/
+    });
+    */
   };
 
   const changeForms = () => {
