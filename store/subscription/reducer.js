@@ -1,13 +1,14 @@
 import { success, error } from 'redux-saga-requests';
 import {
-  GET_SUBSCRIPTIONS, GET_SUBSCRIPTIONS_ADMIN, UPDATE_SUBSCRIPTION_ADMIN
+  GET_SUBSCRIPTIONS, GET_SUBSCRIPTIONS_ADMIN, SUBSCRIBE, UPDATE_SUBSCRIPTION_ADMIN
 } from './types';
 
 const initialState = {
   plans: [],
   subscriptionEnded: true,
-  activePlan: null,
+  activePlan: {},
   loading: true,
+  subscribeLoading: false,
   error: null,
 };
 
@@ -17,6 +18,9 @@ export const reducer = (state = initialState, action) => {
     case GET_SUBSCRIPTIONS:
       return { ...state, loading: true, error: null };
 
+    case SUBSCRIBE:
+      return { ...state, subscribeLoading: true };
+
     case success(GET_SUBSCRIPTIONS):
       return {
         ...state,
@@ -25,6 +29,10 @@ export const reducer = (state = initialState, action) => {
         activePlan: action.data.activePlan,
         loading: false
       };
+
+    case success(SUBSCRIBE):
+    case error(SUBSCRIBE):
+      return { ...state, subscribeLoading: false };
 
     case success(GET_SUBSCRIPTIONS_ADMIN):
       return { ...state, plans: action.data, loading: false };

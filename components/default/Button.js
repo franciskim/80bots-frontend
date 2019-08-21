@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/core';
 import { theme } from 'config';
+import Loader from './Loader';
 
 const DefaultButton = styled.button`
   display: inline-block;
@@ -81,7 +82,7 @@ const btnDanger = css`
   }
 `;
 
-const Button = ({ rounded = false, type, children, ...props }) => {
+const Button = ({ rounded = false, loading = 'false', type, children, loaderWidth, loaderHeight, ...props }) => {
   const styles = css`
     ${ rounded && btnRound };
     ${ type === 'success' && btnSuccess };
@@ -89,13 +90,21 @@ const Button = ({ rounded = false, type, children, ...props }) => {
     ${ type === 'danger' && btnDanger };
   `;
 
-  return <DefaultButton styles={styles} {...props}>{ children }</DefaultButton>;
+  return <DefaultButton styles={styles} {...props}>{
+    loading === 'false'
+      ? children
+      : <Loader type={'spinning-bubbles'} color={theme.colors.white} width={loaderWidth} height={loaderHeight}/>
+  }
+  </DefaultButton>;
 };
 
 Button.propTypes = {
   type: PropTypes.oneOf(['success', 'primary', 'danger']).isRequired,
   rounded: PropTypes.bool,
-  children: PropTypes.any.isRequired
+  children: PropTypes.any.isRequired,
+  loading: PropTypes.oneOf(['true', 'false']),
+  loaderWidth: PropTypes.number,
+  loaderHeight: PropTypes.number,
 };
 
 export default Button;

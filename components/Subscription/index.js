@@ -7,8 +7,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withTheme } from 'emotion-theming';
 import StripeCheckout from 'components/default/StripeCheckout';
+import { addNotification } from 'store/notification/actions';
+import { NOTIFICATION_TYPES } from 'config';
 
-const Container = styled(Card)` 
+const Container = styled(Card)`  
   border-radius: .25rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 `;
@@ -70,17 +72,31 @@ const Title = styled.h5`
   text-align: start;
 `;
 
-const Subscription = ({ getSubscriptions, subscribe,  plans }) => {
+const Subscription = ({ getSubscriptions, addNotification, subscribe, plans, activePlan, loading }) => {
   const [selectedPlan, setPlan] = useState(null);
 
   useEffect(() => {
     getSubscriptions();
   }, []);
 
+  useEffect(() => {
+    setPlan(activePlan);
+  }, [activePlan]);
+
   const choosePlan = (tokenObj) => {
     subscribe(selectedPlan.id, tokenObj.id)
-      .then(console.log)
-      .catch(console.log);
+      .then(() => {
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `You have successfully subscribed to ${selectedPlan.name} plan`
+        });
+      })
+      .catch(() => {
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: `Can't subscribe to ${selectedPlan.name} plan`
+        });
+      });
   };
 
   const renderPlan = (plan, idx) => <div className={'col-4'} key={idx}>
@@ -91,7 +107,7 @@ const Subscription = ({ getSubscriptions, subscribe,  plans }) => {
         <PlanCredits>{ plan.credits }&nbsp;Credits</PlanCredits>
       </CardBody>
       <CardFooter>
-        <PlanButton type={plan === selectedPlan ? 'success' : 'primary'} onClick={() => setPlan(plan)}
+        <PlanButton type={plan.id === selectedPlan.id ? 'success' : 'primary'} onClick={() => setPlan(plan)}
           rounded
         >
           Select
@@ -116,7 +132,11 @@ const Subscription = ({ getSubscriptions, subscribe,  plans }) => {
           description={selectedPlan && ( selectedPlan.name + ', ' + selectedPlan.credits + ' credits') || ''}
           onSuccess={choosePlan}
         >
-          <Submit type={'primary'} disabled={!selectedPlan}>Submit</Submit>
+          <Submit type={'primary'} disabled={!selectedPlan || selectedPlan.id === activePlan.id}
+            loading={loading.toString()} loaderWidth={73} loaderHeight={32}
+          >
+            Submit
+          </Submit>
         </StripeCheckout>
       </SubmitContainer>
     </Container>
@@ -125,16 +145,22 @@ const Subscription = ({ getSubscriptions, subscribe,  plans }) => {
 
 Subscription.propTypes = {
   getSubscriptions: PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired,
   subscribe: PropTypes.func.isRequired,
-  plans: PropTypes.array.isRequired
+  plans: PropTypes.array.isRequired,
+  loading: PropTypes.bool.isRequired,
+  activePlan: PropTypes.object
 };
 
 const mapStateToProps = state => ({
-  plans: state.subscription.plans
+  plans: state.subscription.plans,
+  activePlan: state.subscription.activePlan,
+  loading: state.subscription.subscribeLoading
 });
 
 const mapDispatchToProps = dispatch => ({
   getSubscriptions: () => dispatch(getSubscriptions()),
+  addNotification: payload => dispatch(addNotification(payload)),
   subscribe: (planId, tokenId) => dispatch(subscribe(planId, tokenId))
 });
 
