@@ -87,6 +87,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
   const Loading = <Loader type={'bubbles'} width={45} height={45} color={theme.colors.primary} />;
 
   const renderRow = (botInstance, idx) => <tr key={idx}>
+    <td>{ botInstance.status !== 'pending' ? botInstance.region : Loading }</td>
     <td>{ botInstance.status !== 'pending' ? botInstance.name : Loading }</td>
     <td>{ botInstance.status !== 'pending' ? botInstance.credits_used : Loading }</td>
     <td>{ botInstance.status !== 'pending' ? botInstance.ip : Loading }</td>
@@ -118,6 +119,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
           <Table>
             <Thead>
               <tr>
+                <th>Region</th>
                 <th>Name</th>
                 <th>Credits Used</th>
                 <th>IP</th>
