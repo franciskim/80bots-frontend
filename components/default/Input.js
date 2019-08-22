@@ -6,14 +6,14 @@ import { theme } from 'config';
 
 const ERROR_ANIMATION_DURATION = 200;
 
-const Wrap = styled.div`
+export const Wrap = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
   ${ props => props.styles };
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   font-size: 16px;
   margin-bottom: 5px;
   ${ props => props.styles };
@@ -36,7 +36,7 @@ const ErrorSpan = styled.span`
   ${ props => props.styles };
 `;
 
-const Error = ({ children }) => {
+export const Error = ({ children }) => {
   const [state, setState] = useState('closed');
   const [error, setError] = useState(children);
   const [timer, setTimer] = useState(undefined);

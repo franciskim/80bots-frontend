@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import { css } from '@emotion/core';
 import Button from '../default/Button';
 import Badge from '../default/Badge';
 import { Card, CardBody } from '../default/Card';
-import {Table, Thead, Filters, LimitFilter, SearchFilter} from '../default/Table';
+import { Table, Thead, Filters, LimitFilter, SearchFilter } from '../default/Table';
 import { connect } from 'react-redux';
 import { getBots, launchInstance } from 'store/bot/actions';
 import Paginator from '../default/Paginator';
 import { NOTIFICATION_TYPES, notificationTimings } from 'config';
 import Modal from '../default/Modal';
 import { addNotification } from 'store/notification/actions';
+import LaunchEditor from './components/LaunchEditor';
 import Router from 'next/router';
 
 const Container = styled(Card)` 
@@ -29,12 +31,6 @@ const Tag = styled(Badge)`
   &:last-child {
     margin-right: 0;
   }
-`;
-
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 `;
 
 const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
@@ -100,11 +96,11 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
           <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getBots({ page, limit }); }}/>
         </CardBody>
       </Container>
-      <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}>
-        <Buttons>
-          <Button type={'primary'} onClick={launchBot}>Yes</Button>
-          <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
-        </Buttons>
+
+      <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}
+        contentStyles={css`overflow-y: visible`} disableSideClosing
+      >
+        <LaunchEditor bot={clickedBot} onClose={() => modal.current.close()} onSubmit={launchBot} />
       </Modal>
     </>
   );
