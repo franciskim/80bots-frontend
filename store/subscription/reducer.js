@@ -26,7 +26,7 @@ export const reducer = (state = initialState, action) => {
         ...state,
         plans: action.data.plans,
         subscriptionEnded: action.data.subscriptionEnded,
-        activePlan: action.data.activePlan,
+        activePlan: action.data.activePlan || {},
         loading: false
       };
 

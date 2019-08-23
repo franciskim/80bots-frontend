@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from '../default/Card';
 import { Table, Thead, Filters, LimitFilter } from '../default/Table';
@@ -27,7 +27,7 @@ const Sessions = ({ getSessions, sessions, total }) => {
     <td>{ session.user }</td>
     <td>{ session.instance_id }</td>
     <td>{ session.type }</td>
-    <td>{ moment(session.time).format('YYYY-MM-DD HH:mm:ss') }</td>
+    <td>{ dayjs(session.time).format('YYYY-MM-DD HH:mm:ss') }</td>
   </tr>;
 
   return(

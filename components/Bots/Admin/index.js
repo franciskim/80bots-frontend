@@ -15,6 +15,7 @@ import BotEditor from './components/BotEditor';
 import Icon from '../../default/icons';
 import { withTheme } from 'emotion-theming';
 import Router from 'next/router';
+import LaunchEditor from '../components/LaunchEditor';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -190,10 +191,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
       </Container>
 
       <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}>
-        <Buttons>
-          <Button type={'primary'} onClick={launchBot}>Yes</Button>
-          <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
-        </Buttons>
+        <LaunchEditor onSubmit={launchBot} onClose={() => modal.current.close()} bot={clickedBot} />
       </Modal>
 
       <Modal ref={addModal} title={'Add Bot'} contentStyles={modalStyles} containerStyles={modalContainerStyles}
@@ -230,7 +228,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   adminGetBots: query => dispatch(adminGetBots(query)),
   addNotification: payload => dispatch(addNotification(payload)),
-  adminLaunchInstance: id => dispatch(adminLaunchInstance(id)),
+  adminLaunchInstance: (id, params) => dispatch(adminLaunchInstance(id, params)),
   adminUpdateBot: (id, data) => dispatch(adminUpdateBot(id, data)),
   addBot: (data) => dispatch(addBot(data))
 });

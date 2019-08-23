@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { withTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
 import Button from '../default/Button';
@@ -54,10 +54,6 @@ const modalStyles = css`
   overflow-y: visible;
 `;
 
-const TEMP_USERS = [
-  { name: 'Loud', email: 'some@email.com', remaining_credits: 80, created_at: new Date().toString(), status: 'active' }
-];
-
 const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) => {
   const [clickedUser, setClickedUser] = useState(null);
   const [credits, setCredits] = useState(null);
@@ -106,7 +102,7 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
       </Badge>
     </td>
     <td>{ user.remaining_credits }</td>
-    <td>{ moment(user.created_at).format('YYYY-MM-DD HH:mm:ss') }</td>
+    <td>{ dayjs(user.created_at).format('YYYY-MM-DD HH:mm:ss') }</td>
     <td>
       <StatusButton type={user.status === 'active' ? 'success' : 'danger'} onClick={() => changeUserStatus(user)}>
         { user.status }

@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
-import { connect } from 'react-redux';
 import Button from 'components/default/Button';
 import Input, { Label } from 'components/default/Input';
 import StyledSelect from 'components/default/Select';
@@ -44,11 +43,19 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState([]);
 
+  useEffect(() => {
+    let botParams = {};
+    bot.parameters.forEach(param => {
+      if(param.type === 'Boolean') botParams[param.name] = false;
+    });
+    setValues(botParams);
+  }, [bot]);
+
   const submit = () => {
     let err = [];
     setErrors([]);
     bot.parameters.forEach(param => {
-      if (!values[param.name]) {
+      if (!values[param.name] && param.type !== 'Boolean' && values[param.name] !== 0) {
         err.push(param.name);
       }
     });
@@ -115,12 +122,4 @@ LaunchEditor.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-
-});
-
-const mapDispatchToProps = dispatch => ({
-
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(LaunchEditor);
+export default LaunchEditor;

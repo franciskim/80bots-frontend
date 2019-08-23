@@ -4,8 +4,9 @@ import Select from 'react-select';
 import Button from './Button';
 import Icon from './icons';
 import styled from '@emotion/styled';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { theme } from 'config';
+import { WEEKDAYS } from 'config';
 
 const Buttons = styled.div`
   display: flex;
@@ -77,16 +78,16 @@ const TYPE_OPTIONS = [
   { value: 'start', label: 'Start' }
 ];
 
-const DAY_OPTIONS = moment.weekdays().map(day => ({ value: day, label: day }));
+const DAY_OPTIONS = WEEKDAYS.map(day => ({ value: day, label: day }));
 
 const TIME_OPTIONS = (() => {
-  const startTime = moment('00:00', 'HH:mm');
-  const endTime = moment('23:30', 'HH:mm');
+  let startTime = dayjs().hour(0).minute(0).second(0);
+  const endTime = dayjs().hour(23).minute(30).second(0);
   let timeStops = [];
-  while(startTime <= endTime){
-    let stop = new moment(startTime).format('HH:mm');
+  while(startTime.isBefore(endTime) || startTime.isSame(endTime)) {
+    let stop = startTime.format('HH:mm');
     timeStops.push({ value: stop, label: stop });
-    startTime.add(30, 'minutes');
+    startTime = startTime.add(30, 'minute');
   }
   return timeStops;
 })();
