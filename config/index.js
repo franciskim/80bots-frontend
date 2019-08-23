@@ -73,6 +73,8 @@ export const BILLING_DETAILS = {
 
 export const SIDEBAR_ANIMATION_TIME = 250;
 
+export const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
 export const globalStyles = css`
   @font-face {
     font-family: Overpass, monospace;

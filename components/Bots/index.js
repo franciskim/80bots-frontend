@@ -40,10 +40,10 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
 
   const modal = useRef(null);
 
-  const launchBot = () => {
+  const launchBot = (params) => {
     modal.current.close();
 
-    launchInstance(clickedBot.id).then(() => {
+    launchInstance(clickedBot.id, params).then(() => {
       addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
       setTimeout(() => {
         Router.push('/bots/running');
@@ -122,7 +122,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getBots: query => dispatch(getBots(query)),
   addNotification: payload => dispatch(addNotification(payload)),
-  launchInstance: (id) => dispatch(launchInstance(id)),
+  launchInstance: (id, params) => dispatch(launchInstance(id, params)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Bots);

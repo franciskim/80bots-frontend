@@ -42,6 +42,7 @@ export const Error = ({ children }) => {
   const [timer, setTimer] = useState(undefined);
 
   useEffect(() => {
+    let id;
     if(children && state !== 'in') {
       clearTimeout(timer);
       setError(children);
@@ -49,12 +50,22 @@ export const Error = ({ children }) => {
     }
     if(!children && state === 'in') {
       setState('out');
-      setTimer(setTimeout(() => {
+      id = setTimeout(() => {
         setState('closed');
         setError(null);
-      }, ERROR_ANIMATION_DURATION));
+      }, ERROR_ANIMATION_DURATION);
+      setTimer(id);
     }
+    return () => {
+      clearTimeout(id);
+    };
   }, [children]);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   return state !== 'closed' && <ErrorSpan animation={state === 'out' ? errorAnimationOut : errorAnimationIn}>
     { error }

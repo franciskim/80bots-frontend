@@ -60,13 +60,13 @@ export const updateAdminRunningBot = (id, updateData) => {
   };
 };
 
-export const launchInstance = (id) => {
+export const launchInstance = (id, params) => {
   return {
     type: POST_LAUNCH_INSTANCE,
     request: {
       method: 'POST',
       url: '/instances/launch',
-      data: { bot_id: id }
+      data: { bot_id: id, params }
     },
     meta: {
       thunk: true
@@ -88,13 +88,13 @@ export const updateRunningBot = (id, updateData) => {
   };
 };
 
-export const adminLaunchInstance = (id) => {
+export const adminLaunchInstance = (id, params) => {
   return {
     type: ADMIN_POST_LAUNCH_INSTANCE,
     request: {
       method: 'POST',
       url: '/admin/instances/launch',
-      data: { bot_id: id }
+      data: { bot_id: id, params }
     },
     meta: {
       thunk: true
