@@ -140,11 +140,10 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
   };
 
   const renderRow = (bot, idx) => <tr key={idx}>
+    <td>{ bot.platform }</td>
     <td>{ bot.name }</td>
+    <td>{ bot.description }</td>
     <td>{ bot.ami_id }</td>
-    <td>{ bot.ami_name }</td>
-    <td>{ bot.instance_type }</td>
-    <td>{ bot.storage }&nbsp;GB</td>
     <td>
       <StatusButton type={bot.status === 'active' ? 'success' : 'danger'} onClick={() => changeBotStatus(bot)}>
         { bot.status }
@@ -172,11 +171,10 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
           <Table responsive>
             <Thead>
               <tr>
+                <th>Bot Platform</th>
                 <th>Bot Name</th>
+                <th>Description</th>
                 <th>AMI Image ID</th>
-                <th>AMI name</th>
-                <th>Instance Type</th>
-                <th>Storage GB</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>

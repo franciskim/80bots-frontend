@@ -60,9 +60,9 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
   }, []);
 
   const renderRow = (bot, idx) => <tr key={idx}>
+    <td>{ bot.platform }</td>
     <td>{ bot.name }</td>
     <td>{ bot.description }</td>
-    <td>{ bot.platform }</td>
     <td>{ bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag['name'] }</Tag>) }</td>
     <td>
       <Launch type={'primary'} onClick={() => { setClickedBot(bot); modal.current.open(); }}>
@@ -82,9 +82,9 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
           <Table responsive>
             <Thead>
               <tr>
-                <th>Name</th>
+                <th>Bot Platform</th>
+                <th>Bot Name</th>
                 <th>Description</th>
-                <th>Platform</th>
                 <th>Tags</th>
                 <th>Action</th>
               </tr>
