@@ -1,5 +1,5 @@
 import {
-  TIMEZONES, USERS, UPDATE_USER, UPDATE_USER_PROFILE
+  TIMEZONES, USERS, UPDATE_USER, UPDATE_USER_PROFILE, REGIONS
 } from './types';
 
 export const getTimezones = () => ({
@@ -7,6 +7,17 @@ export const getTimezones = () => ({
   request: {
     method: 'GET',
     url: '/user/timezone'
+  },
+  meta: {
+    thunk: true
+  }
+});
+
+export const getRegions = () => ({
+  type: REGIONS,
+  request: {
+    method: 'GET',
+    url: '/instances/regions'
   },
   meta: {
     thunk: true
