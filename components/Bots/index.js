@@ -103,7 +103,7 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
       </Container>
 
       <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}
-        contentStyles={css`overflow-y: visible`} disableSideClosing
+        contentStyles={css`overflow: visible;`} disableSideClosing
       >
         <LaunchEditor bot={clickedBot} onClose={() => modal.current.close()} onSubmit={launchBot} />
       </Modal>

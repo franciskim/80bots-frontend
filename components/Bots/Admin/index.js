@@ -98,10 +98,10 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
     adminGetBots({ page, limit });
   }, []);
 
-  const launchBot = () => {
+  const launchBot = (params) => {
     modal.current.close();
 
-    adminLaunchInstance(clickedBot.id).then(() => {
+    adminLaunchInstance(clickedBot.id, params).then(() => {
       addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
       setTimeout(() => {
         Router.push('/admin/bots/running');
@@ -216,7 +216,9 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
         </CardBody>
       </Container>
 
-      <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}>
+      <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}
+        contentStyles={css`overflow-x: visible; overflow-y: hidden;`}
+      >
         <LaunchEditor onSubmit={launchBot} onClose={() => modal.current.close()} bot={clickedBot} />
       </Modal>
 

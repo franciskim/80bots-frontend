@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import { theme } from 'config';
+import { Label, Wrap} from './Input';
 
 const thumbStyles = css`
   appearance: none;
@@ -49,7 +50,7 @@ const RangeValue = styled.span`
   line-height: 20px;
   text-align: center;
   border-radius: 3px;
-  background: ${ props => props.theme.colors.mediumGreen };
+  background: ${ props => props.theme.colors.primary };
   padding: 5px 10px;
   margin-left: 12px;
   &:after {
@@ -59,7 +60,7 @@ const RangeValue = styled.span`
     width: 0;
     height: 0;
     border-top: 7px solid transparent;
-    border-right: 7px solid ${ props => props.theme.colors.mediumGreen };
+    border-right: 7px solid ${ props => props.theme.colors.primary };
     border-bottom: 7px solid transparent;
     content: '';
   }
@@ -72,19 +73,36 @@ const RangeContainer = styled.div`
   ${ props => props.styles };
 `;
 
-export const Range = ({ styles, value, onChange, ...props }) => <RangeContainer styles={styles && styles.container}>
-  <DefaultRange {...props} type={'range'} value={value} onChange={e => onChange(e.target.value)}/>
-  <RangeValue>{value}</RangeValue>
-</RangeContainer>;
+export const Range = ({ styles, onChange, min, label, ...props }) => {
+  const [value, setValue] = useState(min || 0);
+
+  useEffect(() => {
+    onChange(value);
+  }, []);
+
+  const changeValue = e => {
+    onChange(Number(e.target.value));
+    setValue(Number(e.target.value));
+  };
+
+  return(
+    <Wrap styles={styles && styles.container}>
+      { label && <Label styles={styles && styles.label}>{ label }</Label> }
+      <RangeContainer>
+        <DefaultRange {...props} min={min} type={'range'} value={value} onChange={changeValue}/>
+        <RangeValue>{value}</RangeValue>
+      </RangeContainer>
+    </Wrap>
+  );
+};
 
 Range.propTypes = {
   label: PropTypes.string,
-  value: PropTypes.number.isRequired,
+  min: PropTypes.number,
   onChange: PropTypes.func.isRequired,
   styles: PropTypes.shape({
     container: PropTypes.object,
     label: PropTypes.object,
-    error: PropTypes.object,
     input: PropTypes.input
   })
 };

@@ -22,7 +22,7 @@ export const theme = {
   colors: {
     blue: '#007bff',
     darkBlue: '#3490dc',
-    primary: '#0492fe',
+    primary: 'hsl(200, 100%, 40%)',
     clearBlue: '#27a2ff',
     clearBlueTwo: '#5cb3f5',
     mediumGreen: '#35ad45',
