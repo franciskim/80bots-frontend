@@ -144,7 +144,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
     <td>{ bot.platform }</td>
     <td>{ bot.name }</td>
     <td>{ bot.description }</td>
-    <td>{ bot.ami_id }</td>
+    <td>{ bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag['name'] }</Tag>) }</td>
     <td>
       <StatusButton type={bot.status === 'active' ? 'success' : 'danger'} onClick={() => changeBotStatus(bot)}>
         { bot.status }
@@ -175,7 +175,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
                 <th>Bot Platform</th>
                 <th>Bot Name</th>
                 <th>Description</th>
-                <th>AMI Image ID</th>
+                <th>Tags</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
