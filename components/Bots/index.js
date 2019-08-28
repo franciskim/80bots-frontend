@@ -63,7 +63,14 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
     <td>{ bot.platform }</td>
     <td>{ bot.name }</td>
     <td>{ bot.description }</td>
-    <td>{ bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag['name'] }</Tag>) }</td>
+    <td>{ bot.platform }</td>
+    <td>
+      {
+        bot.tags && bot.tags.length > 0
+          ? bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag['name'] }</Tag>)
+          : '-'
+      }
+    </td>
     <td>
       <Launch type={'primary'} onClick={() => { setClickedBot(bot); modal.current.open(); }}>
       Launch

@@ -16,6 +16,7 @@ const DefaultBadge = styled.span`
   border-radius: .25rem;
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,
    box-shadow .15s ease-in-out;
+  color: ${ props => props.theme.colors.white };
   ${ props => props.styles };
 `;
 
@@ -26,13 +27,15 @@ const pillLikeBadge = css`
 `;
 
 const infoStyles = css`
-  color: ${ theme.colors.white };
   background-color: ${ theme.colors.darkBlue };
 `;
 
 const successStyles = css`
-  color: ${ theme.colors.white };
   background-color: #38c172;
+`;
+
+const dangerStyles = css`
+  background-color: ${ theme.colors.darkishPink };
 `;
 
 const Badge = ({ pill = false, type, ...props }) => {
@@ -40,6 +43,7 @@ const Badge = ({ pill = false, type, ...props }) => {
     ${ pill && pillLikeBadge };
     ${ type === 'info' && infoStyles };
     ${ type === 'success' && successStyles };
+    ${ type === 'danger' && dangerStyles };
   `;
 
   return <DefaultBadge styles={styles} {...props}/>;
@@ -47,7 +51,7 @@ const Badge = ({ pill = false, type, ...props }) => {
 
 Badge.propTypes = {
   pill: PropTypes.bool,
-  type: PropTypes.oneOf(['info', 'success'])
+  type: PropTypes.oneOf(['info', 'success', 'danger'])
 };
 
 export default Badge;

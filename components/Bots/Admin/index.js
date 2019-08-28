@@ -5,7 +5,8 @@ import Button from 'components/default/Button';
 import { Card, CardBody } from 'components/default/Card';
 import { Table, Thead, Filters, LimitFilter, SearchFilter } from 'components/default/Table';
 import { connect } from 'react-redux';
-import { adminGetBots, adminUpdateBot, addBot, adminLaunchInstance } from 'store/bot/actions';
+import { adminGetBots, adminUpdateBot, addBot, adminLaunchInstance, getBotSettings,
+  updateBotSettings } from 'store/bot/actions';
 import Modal from 'components/default/Modal';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES, notificationTimings } from 'config';
@@ -16,6 +17,8 @@ import Icon from '../../default/icons';
 import { withTheme } from 'emotion-theming';
 import Router from 'next/router';
 import LaunchEditor from '../components/LaunchEditor';
+import SettingsEditor from './components/SettingsEditor';
+import Badge from '../../default/Badge';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -26,12 +29,6 @@ const Launch = styled(Button)`
   padding: 0 10px;
   font-size: 16px;
   margin-right: 5px;
-`;
-
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 `;
 
 const IconButton = styled(Button)`
@@ -54,6 +51,24 @@ const AddButtonWrap = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 5px;
+  button {
+    &:last-child {
+      margin-left: 20px;
+    }
+  }
+`;
+
+const BotType = styled(Badge)`
+  font-size: 14px;
+  text-transform: uppercase;
+`;
+
+const Tag = styled(Badge)`
+  margin-right: .5rem;
+  font-size: 14px;
+  &:last-child {
+    margin-right: 0;
+  }
 `;
 
 const modalContainerStyles = css`
@@ -70,7 +85,8 @@ const modalStyles = css`
   }
 `;
 
-const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, addNotification, theme, ...props}) => {
+const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, addNotification, theme,
+  getBotSettings, botSettings, ...props}) => {
   const [clickedBot, setClickedBot] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -78,9 +94,11 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
   const modal = useRef(null);
   const addModal = useRef(null);
   const editModal = useRef(null);
+  const editSettingsModal = useRef(null);
 
   useEffect(() => {
     adminGetBots({ page, limit });
+    getBotSettings();
   }, []);
 
   const launchBot = () => {
@@ -143,8 +161,19 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
   const renderRow = (bot, idx) => <tr key={idx}>
     <td>{ bot.platform }</td>
     <td>{ bot.name }</td>
+    <td>
+      <BotType type={bot.type === 'public' ? 'info' : 'danger'} pill>
+        { bot.type }
+      </BotType>
+    </td>
     <td>{ bot.description }</td>
-    <td>{ bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag['name'] }</Tag>) }</td>
+    <td>
+      {
+        bot.tags && bot.tags.length > 0
+          ? bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag['name'] }</Tag>)
+          : '-'
+      }
+    </td>
     <td>
       <StatusButton type={bot.status === 'active' ? 'success' : 'danger'} onClick={() => changeBotStatus(bot)}>
         { bot.status }
@@ -161,7 +190,8 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
   return(
     <>
       <AddButtonWrap>
-        <Button type={'primary'} onClick={() => addModal.current.open()}>Add Bot</Button>
+        <Button type={'success'} onClick={() => addModal.current.open()}>Add Bot</Button>
+        <Button type={'primary'} onClick={() => editSettingsModal.current.open()}>Edit Global Bot Settings</Button>
       </AddButtonWrap>
       <Container>
         <CardBody>
@@ -174,8 +204,9 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
               <tr>
                 <th>Bot Platform</th>
                 <th>Bot Name</th>
-                <th>Description</th>
-                <th>Tags</th>
+                <th>Bot Type</th>
+                <th>Bot Description</th>
+                <th>Bot Tags</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -201,6 +232,10 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
       <Modal ref={editModal} title={'Edit Bot'} contentStyles={modalStyles} containerStyles={modalContainerStyles}>
         <BotEditor type={'add'} bot={clickedBot} onSubmit={updateBot} onClose={() => editModal.current.close()}/>
       </Modal>
+
+      <Modal ref={editSettingsModal} title={'Edit Global Settings'} containerStyles={modalContainerStyles}>
+        <SettingsEditor onClose={() => editSettingsModal.current.close()} />
+      </Modal>
     </>
   );
 };
@@ -213,6 +248,7 @@ Bots.propTypes = {
   }).isRequired,
   adminLaunchInstance: PropTypes.func.isRequired,
   bots: PropTypes.array.isRequired,
+  botSettings: PropTypes.object.isRequired,
   total: PropTypes.number.isRequired,
   addNotification: PropTypes.func.isRequired,
   addBot: PropTypes.func.isRequired
@@ -220,6 +256,7 @@ Bots.propTypes = {
 
 const mapStateToProps = state => ({
   bots: state.bot.bots,
+  botSettings: state.bot.botSettings,
   total: state.bot.total,
 });
 
@@ -228,7 +265,9 @@ const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   adminLaunchInstance: (id, params) => dispatch(adminLaunchInstance(id, params)),
   adminUpdateBot: (id, data) => dispatch(adminUpdateBot(id, data)),
-  addBot: (data) => dispatch(addBot(data))
+  addBot: (data) => dispatch(addBot(data)),
+  getBotSettings: () => dispatch(getBotSettings()),
+  updateBotSettings: (id, data) => dispatch(updateBotSettings(id, data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Bots));

@@ -10,7 +10,7 @@ import {
   ADMIN_UPDATE_BOT,
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
-  GET_TAGS
+  GET_TAGS, BOT_SETTINGS, UPDATE_BOT_SETTINGS
 } from './types';
 import { success } from 'redux-saga-requests';
 
@@ -199,4 +199,29 @@ export const getTags = (query = { page: 1, limit: 1 }) => {
 export const botInstanceUpdated = botInstance => ({
   type: success(UPDATE_RUNNING_BOT),
   data: botInstance
+});
+
+export const getBotSettings = () => ({
+  type: BOT_SETTINGS,
+  request: {
+    method: 'GET',
+    url: '/admin/aws'
+  },
+  meta: {
+    thunk: true,
+    admin: true
+  }
+});
+
+export const updateBotSettings = (id, data) => ({
+  type: UPDATE_BOT_SETTINGS,
+  request: {
+    method: 'PUT',
+    url: `/admin/aws/${id}`,
+    data: { update: data }
+  },
+  meta: {
+    thunk: true,
+    admin: true
+  }
 });

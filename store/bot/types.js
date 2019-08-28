@@ -12,3 +12,6 @@ export const DOWNLOAD_INSTANCE_PEM_FILE = 'DOWNLOAD_INSTANCE_PEM_FILE';
 
 export const GET_TAGS                   = 'GET_TAGS';
 export const ADD_BOT                    = 'ADD_BOT';
+
+export const BOT_SETTINGS               = 'BOT_SETTINGS';
+export const UPDATE_BOT_SETTINGS        = 'UPDATE_BOT_SETTINGS';

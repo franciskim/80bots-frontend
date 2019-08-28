@@ -33,7 +33,7 @@ const Profile = ({ user, getTimezones, getRegions, updateUser, addNotification, 
   useEffect(() => {
     if(!timezone && timezones.length > 0) {
       const defaultValue = timezones.find(item => item.timezone === user.timezone);
-      setTimezone({ value: defaultValue.id, label: defaultValue.timezone });
+      setTimezone({ value: defaultValue.id, label: defaultValue.value });
     }
   }, [timezones]);
 
@@ -110,7 +110,7 @@ const Profile = ({ user, getTimezones, getRegions, updateUser, addNotification, 
         </div>
         <div className="card-body">
           <Container>
-            <Select options={timezones.map(item => ({ value: item.id, label: item.timezone }))}
+            <Select options={timezones.map(item => ({ value: item.id, label: item.value }))}
               onChange={option => setTimezone(option)} value={timezone}
             />
             <ButtonContainer>
