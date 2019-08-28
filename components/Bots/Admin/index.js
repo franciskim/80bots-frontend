@@ -156,6 +156,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
   };
 
   const renderRow = (bot, idx) => <tr key={idx}>
+    <td>{ bot.platform }</td>
     <td>{ bot.name }</td>
     <td>
       <BotType type={bot.type === 'public' ? 'info' : 'danger'} pill>
@@ -198,6 +199,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
           <Table responsive>
             <Thead>
               <tr>
+                <th>Bot Platform</th>
                 <th>Bot Name</th>
                 <th>Bot Type</th>
                 <th>Bot Description</th>

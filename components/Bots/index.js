@@ -58,6 +58,7 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
   }, []);
 
   const renderRow = (bot, idx) => <tr key={idx}>
+    <td>{ bot.platform }</td>
     <td>{ bot.name }</td>
     <td>{ bot.description }</td>
     <td>{ bot.platform }</td>
@@ -86,9 +87,9 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
           <Table responsive>
             <Thead>
               <tr>
-                <th>Name</th>
+                <th>Bot Platform</th>
+                <th>Bot Name</th>
                 <th>Description</th>
-                <th>Platform</th>
                 <th>Tags</th>
                 <th>Action</th>
               </tr>
