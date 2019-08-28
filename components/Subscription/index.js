@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import styled from '@emotion/styled';
-import { Card, CardBody, CardFooter, CardHeader } from '../default/Card';
-import Button from 'components/default/Button';
-import { getSubscriptions, subscribe } from 'store/subscription/actions';
 import PropTypes from 'prop-types';
+import styled from '@emotion/styled';
+import Button from 'components/default/Button';
+import StripeCheckout from 'components/default/StripeCheckout';
+import { Card, CardBody, CardFooter, CardHeader } from '../default/Card';
+import { getSubscriptions, subscribe } from 'store/subscription/actions';
 import { connect } from 'react-redux';
 import { withTheme } from 'emotion-theming';
-import StripeCheckout from 'components/default/StripeCheckout';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
 

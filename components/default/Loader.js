@@ -10,7 +10,7 @@ const LoaderContainer = styled.div`
   align-items: center;
 `;
 
-const Loader = ({ type, ...props }) => {
+export const Loader = ({ type, ...props }) => {
   return(
     <LoaderContainer>
       <Icon name={type || 'bubbles'} {...props}/>

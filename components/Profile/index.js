@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { getTimezones, updateUserProfile, getRegions } from 'store/user/actions';
 import Select from 'react-select';
 import Button from '../default/Button';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
+import { connect } from 'react-redux';
+import { getTimezones, updateUserProfile, getRegions } from 'store/user/actions';
 
 const Container = styled.div`
   display: flex;

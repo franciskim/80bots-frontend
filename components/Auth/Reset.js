@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { resetPassword } from 'store/auth/actions';
 import Router from 'next/router';
 import Link from 'next/link';
-import Input from 'components/default/Input';
+import { Input } from 'components/default/inputs';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
 

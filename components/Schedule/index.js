@@ -1,22 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import { withTheme } from 'emotion-theming';
-import { Card, CardBody } from '../default/Card';
-import { Filters, LimitFilter, Table, Thead } from '../default/Table';
-import Button from '../default/Button';
-import Badge from '../default/Badge';
+import ScheduleEditor from '../default/ScheduleEditor';
+import AsyncSelect from 'react-select/async';
 import Icon from '../default/icons';
 import Modal from '../default/Modal';
 import { addNotification } from 'store/notification/actions';
 import { connect } from 'react-redux';
 import { NOTIFICATION_TYPES } from 'config';
-import Paginator from '../default/Paginator';
+import { Badge, Button, Paginator } from '../default';
 import { getSchedules, updateSchedule, deleteSchedule, createSchedule } from 'store/schedule/actions';
 import { getRunningBots } from 'store/bot/actions';
 import { css } from '@emotion/core';
-import ScheduleEditor from '../default/ScheduleEditor';
-import AsyncSelect from 'react-select/async';
+import { withTheme } from 'emotion-theming';
+import { Card, CardBody } from '../default/Card';
+import { Filters, LimitFilter, Table, Thead } from '../default/Table';
 
 const Container = styled(Card)`
   border-radius: .25rem;

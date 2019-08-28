@@ -38,7 +38,7 @@ const dangerStyles = css`
   background-color: ${ theme.colors.darkishPink };
 `;
 
-const Badge = ({ pill = false, type, ...props }) => {
+export const Badge = ({ pill = false, type, ...props }) => {
   const styles = css`
     ${ pill && pillLikeBadge };
     ${ type === 'info' && infoStyles };

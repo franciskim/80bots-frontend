@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { css } from '@emotion/core';
 import Button from 'components/default/Button';
-import Input, { Label } from 'components/default/Input';
-import StyledSelect from 'components/default/Select';
+import { css } from '@emotion/core';
+import { Input, Label, Select, Range } from 'components/default/inputs';
 
 const Buttons = styled.div`
   display: flex;
@@ -84,25 +83,38 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   };
 
   const renderParams = (item, idx) => {
-    return item.enum
-      ? <StyledSelect options={item.enum.map(toOptions)} key={idx}
-        label={item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-        error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
-        onChange={({ value }) => changeValue(item.name, value)} styles={selectStyles}
-      />
-      : item.type === 'Boolean'
-        ? <InputWrap key={idx}>
+    switch (item.type) {
+      case 'enum': return(
+        <Select options={item.enum.map(toOptions)} key={idx}
+          label={item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+          error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
+          onChange={({ value }) => changeValue(item.name, value)} styles={selectStyles}
+        />
+      );
+      case 'bool': return(
+        <InputWrap key={idx}>
           <Label>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</Label>
           <StatusButton type={values[item.name] ? 'primary' : 'danger'}
-            onClick={() => changeValue(item.name, !values[item.name])}>
+            onClick={() => changeValue(item.name, !values[item.name])}
+          >
             { values[item.name] ? 'Yes' : 'No' }
           </StatusButton>
         </InputWrap>
-        : <Input key={idx} type={getInputType(item.type)} label={item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+      );
+      case 'text': return(
+        <Input key={idx} type={getInputType(item.type)} label={item.name.charAt(0).toUpperCase() + item.name.slice(1)}
           styles={inputStyle} min={item.range && item.range[0]} max={item.range && item.range[1]}
           onChange={e => changeValue(item.name, e.target.value)}
           error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
-        />;
+        />
+      );
+      case 'range': return(
+        <Range key={idx} label={item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+          styles={inputStyle} min={item.range && item.range[0]} max={item.range && item.range[1]}
+          onChange={e => changeValue(item.name, e.target.value)} value={values[item.name]}
+        />
+      );
+    }
   };
 
   return(

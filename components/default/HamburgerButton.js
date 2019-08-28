@@ -2,7 +2,6 @@ import React from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/core';
-import { SIDEBAR_ANIMATION_TIME } from '../../config';
 
 const hamburgerBaseStyle = css`
   content: '';

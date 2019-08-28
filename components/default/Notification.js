@@ -4,7 +4,7 @@ import { css, keyframes } from '@emotion/core';
 import { connect } from 'react-redux';
 import Icon from '../default/icons';
 import PropTypes from 'prop-types';
-import { NOTIFICATION_TYPES, notificationTimings } from 'config';
+import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
 import { removeLastNotification, hideNotification } from 'store/notification/actions';
 import { withTheme } from 'emotion-theming';
 
@@ -88,7 +88,7 @@ const Notification = props => {
     : status === ERROR ? `linear-gradient(to left, ${darkishPink}, ${pink})`
       : `linear-gradient(to left, ${clearBlue}, ${clearBlueTwo})`};
       right: ${hide ? 'calc(-2rem - 250px)' : '2rem'};
-      animation: ${animation} ${notificationTimings.DURATION}ms ease;
+      animation: ${animation} ${NOTIFICATION_TIMINGS.DURATION}ms ease;
     `;
   };
 
@@ -96,13 +96,13 @@ const Notification = props => {
     clearTimeout(timer);
     !notification.hide
       ? hideNotification()
-      : setTimeout(removeNotification, notification.duration || notificationTimings.DURATION);
+      : setTimeout(removeNotification, notification.duration || NOTIFICATION_TIMINGS.DURATION);
   };
 
   const renderInfoNotification = (notification) => {
     const timer = !notification.hide
-      ? setTimeout(hideNotification, notification.hideDelay || notificationTimings.INFO_HIDE_DELAY)
-      : setTimeout(removeNotification, notificationTimings.DURATION);
+      ? setTimeout(hideNotification, notification.hideDelay || NOTIFICATION_TIMINGS.INFO_HIDE_DELAY)
+      : setTimeout(removeNotification, NOTIFICATION_TIMINGS.DURATION);
     return (
       <InfoNotificationDiv css={getStyle(notification.hide, notification.type)}>
         <InfoClose onClick={() => closeNotification(timer)}><Icon name={'cross'}/></InfoClose>

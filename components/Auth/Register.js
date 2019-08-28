@@ -1,15 +1,15 @@
 import React, { Fragment, useState } from 'react';
 import Head from 'components/default/layout/components/Head';
 import styled from '@emotion/styled';
-import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { register } from 'store/auth/actions';
 import Router from 'next/router';
 import Link from 'next/link';
-import Input from 'components/default/Input';
+import { Input } from 'components/default/inputs';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
+import { css } from '@emotion/core';
+import { connect } from 'react-redux';
+import { register } from 'store/auth/actions';
 
 const Container = styled.div`
   display: flex;

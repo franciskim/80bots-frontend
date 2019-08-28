@@ -30,7 +30,7 @@ const ListItem = styled.li`
   }
 `;
 
-const Paginator = props => {
+export const Paginator = props => {
   const [total, setTotal] = useState(props.total || 0);
   const [currentPage, setCurrentPage] = useState(props.initialPage || 1);
   const [pageSize, setPageSize] = useState(props.pageSize || 10);

@@ -1,11 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
-import { withTheme } from 'emotion-theming';
-import { Card, CardBody } from '../default/Card';
-import {Table, Thead, Filters, LimitFilter, SearchFilter} from '../default/Table';
-import Button from '../default/Button';
 import Icon from '../default/icons';
 import Select from 'react-select';
 import Modal from '../default/Modal';
@@ -14,8 +9,11 @@ import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { botInstanceUpdated, getRunningBots, updateRunningBot } from 'store/bot/actions';
 import { addListener, removeAllListeners } from 'store/socket/actions';
-import Paginator from '../default/Paginator';
-import Loader from '../default/Loader';
+import { Paginator, Loader, Button } from '../default';
+import { withTheme } from 'emotion-theming';
+import { Card, CardBody } from '../default/Card';
+import { Table, Thead, Filters, LimitFilter, SearchFilter } from '../default/Table';
+import { css } from '@emotion/core';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -31,6 +29,20 @@ const IconButton = styled(Button)`
   height: 30px;
   &:last-child {
     margin-right: 0;
+  }
+`;
+
+const Td = styled.td`
+  position: absolute;
+  left: 20px;
+  width: calc(100% - 40px);
+  background-color: rgba(221, 221, 221, .5);
+`;
+
+const Tr = styled.tr`
+  position: relative;
+  td {
+    white-space: nowrap;
   }
 `;
 
@@ -86,11 +98,11 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
 
   const Loading = <Loader type={'bubbles'} width={45} height={45} color={theme.colors.primary} />;
 
-  const renderRow = (botInstance, idx) => <tr key={idx}>
-    <td>{ botInstance.status !== 'pending' ? botInstance.region : Loading }</td>
-    <td>{ botInstance.status !== 'pending' ? botInstance.name : Loading }</td>
-    <td>{ botInstance.status !== 'pending' ? botInstance.credits_used : Loading }</td>
-    <td>{ botInstance.status !== 'pending' ? botInstance.ip : Loading }</td>
+  const renderRow = (botInstance, idx) => <Tr key={idx}>
+    <td>{ botInstance.region }</td>
+    <td>{ botInstance.name }</td>
+    <td>{ botInstance.credits_used }</td>
+    <td>{ botInstance.ip }</td>
     <td>
       <Select options={OPTIONS} value={OPTIONS.find(item => item.value === botInstance.status)}
         onChange={option => changeBotInstanceStatus(option, botInstance.id)}
@@ -99,14 +111,15 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
         styles={selectStyles}
       />
     </td>
-    <td>{ botInstance.status !== 'pending' ? botInstance.launched_at : Loading }</td>
+    <td>{ botInstance.launched_at }</td>
     <td>
       <IconButton type={'primary'}><Icon name={'eye'} color={theme.colors.white} /></IconButton>
       <IconButton type={'primary'} onClick={() => { setClickedBotInstance(botInstance); modal.current.open(); }}>
         <Icon name={'edit'} color={theme.colors.white} />
       </IconButton>
     </td>
-  </tr>;
+    { botInstance.status === 'pending' && <Td colSpan={'9'}>{ Loading }</Td> }
+  </Tr>;
 
   return(
     <>

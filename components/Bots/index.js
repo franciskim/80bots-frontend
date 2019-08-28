@@ -1,19 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import LaunchEditor from './components/LaunchEditor';
+import Router from 'next/router';
+import Modal from '../default/Modal';
 import { css } from '@emotion/core';
-import Button from '../default/Button';
-import Badge from '../default/Badge';
+import { Button, Badge, Paginator } from '../default';
 import { Card, CardBody } from '../default/Card';
 import { Table, Thead, Filters, LimitFilter, SearchFilter } from '../default/Table';
 import { connect } from 'react-redux';
 import { getBots, launchInstance } from 'store/bot/actions';
-import Paginator from '../default/Paginator';
-import { NOTIFICATION_TYPES, notificationTimings } from 'config';
-import Modal from '../default/Modal';
+import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
 import { addNotification } from 'store/notification/actions';
-import LaunchEditor from './components/LaunchEditor';
-import Router from 'next/router';
 
 const Container = styled(Card)` 
   border-radius: .25rem;
@@ -47,7 +45,7 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
       addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
       setTimeout(() => {
         Router.push('/bots/running');
-      }, (notificationTimings.DURATION * 2) + notificationTimings.INFO_HIDE_DELAY);
+      }, (NOTIFICATION_TIMINGS.DURATION * 2) + NOTIFICATION_TIMINGS.INFO_HIDE_DELAY);
     }).catch(() => {
       addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch' });
     }).finally(() => {

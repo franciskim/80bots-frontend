@@ -1,13 +1,13 @@
 import React, { Fragment, useState } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
+import Link from 'next/link';
+import Head from 'components/default/layout/components/Head';
 import { connect } from 'react-redux';
 import { login, reset } from 'store/auth/actions';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
-import Router from 'next/router';
-import Link from 'next/link';
-import Head from 'components/default/layout/components/Head';
 
 const Container = styled.div`
   display: flex;

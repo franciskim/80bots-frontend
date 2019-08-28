@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
+import Loader from './Loader';
 import { css } from '@emotion/core';
 import { theme } from 'config';
-import Loader from './Loader';
 
 const DefaultButton = styled.button`
   display: inline-block;
@@ -82,7 +82,7 @@ const btnDanger = css`
   }
 `;
 
-const Button = ({ rounded = false, loading = 'false', type, children, loaderWidth, loaderHeight, ...props }) => {
+export const Button = ({ rounded = false, loading = 'false', type, children, loaderWidth, loaderHeight, ...props }) => {
   const styles = css`
     ${ rounded && btnRound };
     ${ type === 'success' && btnSuccess };

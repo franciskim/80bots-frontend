@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withTheme } from 'emotion-theming';
 import styled from '@emotion/styled';
 import Head from '../default/layout/components/Head';
+import { connect } from 'react-redux';
+import { withTheme } from 'emotion-theming';
 
 const Container = styled.div`
   display: flex;

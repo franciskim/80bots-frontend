@@ -2,20 +2,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import dayjs from 'dayjs';
+import Icon from '../default/icons';
+import Modal from '../default/Modal';
 import { withTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
-import Button from '../default/Button';
+import { Paginator, Button, Badge } from '../default';
 import { Card, CardBody } from '../default/Card';
 import { Table, Thead, Filters, SearchFilter, LimitFilter } from '../default/Table';
-import Modal from '../default/Modal';
 import { addNotification } from 'store/notification/actions';
 import { updateUser } from 'store/user/actions';
 import { getUsers } from 'store/user/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { connect } from 'react-redux';
-import Icon from '../default/icons';
-import Paginator from '../default/Paginator';
-import Badge from '../default/Badge';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -47,6 +45,11 @@ const Buttons = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+`;
+
+const Role = styled(Badge)`
+  font-size: 14px;
+  text-transform: uppercase;
 `;
 
 const modalStyles = css`
@@ -97,9 +100,9 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
     <td>{ user.name }</td>
     <td>{ user.email }</td>
     <td>
-      <Badge type={user.role === 'Admin' ? 'success' : 'info'} pill>
+      <Role type={user.role === 'Admin' ? 'success' : 'info'} pill>
         { user.role }
-      </Badge>
+      </Role>
     </td>
     <td>{ user.remaining_credits }</td>
     <td>{ dayjs(user.created_at).format('YYYY-MM-DD HH:mm:ss') }</td>

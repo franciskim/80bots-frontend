@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
+import { default as ReactSelect }  from 'react-select';
 import { Wrap, Label, Error } from './Input';
 import { theme } from 'config';
 
@@ -41,13 +41,13 @@ const errorStyles = {
   })
 };
 
-const StyledSelect = ({ styles, label, error, ...props }) => <Wrap styles={styles && styles.container}>
+export const Select = ({ styles, label, error, ...props }) => <Wrap styles={styles && styles.container}>
   { label && <Label styles={styles && styles.label}>{ label }</Label> }
-  <Select styles={{...(error ? errorStyles : selectStyles), ...(styles && styles.select)}} {...props} />
+  <ReactSelect styles={{...(error ? errorStyles : selectStyles), ...(styles && styles.select)}} {...props} />
   <Error styles={styles && styles.error}>{ error }</Error>
 </Wrap>;
 
-StyledSelect.propTypes = {
+Select.propTypes = {
   label: PropTypes.string,
   error: PropTypes.string,
   styles: PropTypes.shape({
@@ -58,4 +58,4 @@ StyledSelect.propTypes = {
   })
 };
 
-export default StyledSelect;
+export default Select;

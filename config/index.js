@@ -52,7 +52,7 @@ export const NOTIFICATION_TYPES = {
   INFO: 'info'
 };
 
-export const notificationTimings = {
+export const NOTIFICATION_TIMINGS = {
   DURATION: 200,
   INFO_HIDE_DELAY: 2000,
   HELP_HIDE_DELAY: 5000

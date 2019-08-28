@@ -1,24 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import Button from 'components/default/Button';
+import BotEditor from './components/BotEditor';
+import Icon from 'components/default/icons';
+import Router from 'next/router';
+import LaunchEditor from '../components/LaunchEditor';
+import SettingsEditor from './components/SettingsEditor';
+import Modal from 'components/default/Modal';
+import { Button, Badge, Paginator } from 'components/default';
 import { Card, CardBody } from 'components/default/Card';
 import { Table, Thead, Filters, LimitFilter, SearchFilter } from 'components/default/Table';
 import { connect } from 'react-redux';
 import { adminGetBots, adminUpdateBot, addBot, adminLaunchInstance, getBotSettings,
   updateBotSettings } from 'store/bot/actions';
-import Modal from 'components/default/Modal';
 import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES, notificationTimings } from 'config';
-import Paginator from '../../default/Paginator';
+import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
 import { css } from '@emotion/core';
-import BotEditor from './components/BotEditor';
-import Icon from '../../default/icons';
 import { withTheme } from 'emotion-theming';
-import Router from 'next/router';
-import LaunchEditor from '../components/LaunchEditor';
-import SettingsEditor from './components/SettingsEditor';
-import Badge from '../../default/Badge';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -85,8 +83,8 @@ const modalStyles = css`
   }
 `;
 
-const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, addNotification, theme,
-  getBotSettings, botSettings, ...props}) => {
+const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, addNotification, theme
+  , ...props}) => {
   const [clickedBot, setClickedBot] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -98,7 +96,6 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
 
   useEffect(() => {
     adminGetBots({ page, limit });
-    getBotSettings();
   }, []);
 
   const launchBot = () => {
@@ -108,7 +105,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
       addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
       setTimeout(() => {
         Router.push('/admin/bots/running');
-      }, (notificationTimings.DURATION * 2) + notificationTimings.INFO_HIDE_DELAY);
+      }, (NOTIFICATION_TIMINGS.DURATION * 2) + NOTIFICATION_TIMINGS.INFO_HIDE_DELAY);
     }).catch(() => {
       addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch' });
     }).finally(() => {
@@ -246,7 +243,6 @@ Bots.propTypes = {
   }).isRequired,
   adminLaunchInstance: PropTypes.func.isRequired,
   bots: PropTypes.array.isRequired,
-  botSettings: PropTypes.object.isRequired,
   total: PropTypes.number.isRequired,
   addNotification: PropTypes.func.isRequired,
   addBot: PropTypes.func.isRequired
@@ -254,7 +250,6 @@ Bots.propTypes = {
 
 const mapStateToProps = state => ({
   bots: state.bot.bots,
-  botSettings: state.bot.botSettings,
   total: state.bot.total,
 });
 

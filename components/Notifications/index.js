@@ -1,21 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import Button from '../default/Button';
+import Modal from '../default/Modal';
+import Icon from '../default/icons';
+import Select from 'react-select';
+import Paginator from '../default/Paginator';
 import { withTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
-import Button from '../default/Button';
-import { Card, CardBody } from '../default/Card';
-import { Table, Thead, Filters, LimitFilter, SearchFilter } from '../default/Table';
-import Modal from '../default/Modal';
 import { addNotification } from 'store/notification/actions';
 import {
   getLowCreditNotifications, addLowCreditNotifications, deleteLowCreditNotification
 } from 'store/eventNotification/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { connect } from 'react-redux';
-import Icon from '../default/icons';
-import Select from 'react-select';
-import Paginator from '../default/Paginator';
+import { Card, CardBody } from '../default/Card';
+import { Table, Thead, Filters, LimitFilter, SearchFilter } from '../default/Table';
 
 const Container = styled(Card)`
   border-radius: .25rem;

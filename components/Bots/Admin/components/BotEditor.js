@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { css } from '@emotion/core';
 import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
+import { css } from '@emotion/core';
 import { connect } from 'react-redux';
 import { getPlatforms, getInstanceTypes } from 'store/platform/actions';
 import { getTags } from 'store/bot/actions';
 import { getUsers } from 'store/user/actions';
-import Button from 'components/default/Button';
-import Input, { StyledTextarea } from 'components/default/Input';
+import { Button } from 'components/default';
+import { Textarea, Input } from 'components/default/inputs';
 
 const FormContainer = styled.div`
   display: flex;
@@ -204,15 +204,15 @@ const BotEditor = ({ getPlatforms, getInstanceTypes, getTags, platforms, types, 
           />
         </Row>
         <Row>
-          <StyledTextarea label={'Startup Script'} rows={10} value={startupScript}
+          <Textarea label={'Startup Script'} rows={10} value={startupScript}
             onChange={e => setStartupScript(e.target.value)} styles={inputStyles}
           />
-          <StyledTextarea label={'Bot Script'} rows={10} value={botScript}
+          <Textarea label={'Bot Script'} rows={10} value={botScript}
             onChange={e => setBotScript(e.target.value)} styles={inputStyles}
           />
         </Row>
         <Row>
-          <StyledTextarea label={'Description'} rows={5} value={description}
+          <Textarea label={'Description'} rows={5} value={description}
             onChange={e => setDescription(e.target.value)}
           />
         </Row>
