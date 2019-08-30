@@ -286,7 +286,10 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
         </Buttons>
       </Modal>
 
-      <Modal ref={editSettingsModal} title={'Edit Global Settings'} containerStyles={modalContainerStyles}>
+      <Modal ref={editSettingsModal} title={'Edit Global Settings'}
+        containerStyles={modalContainerStyles}
+        contentStyles={css`min-width: 600px;`}
+      >
         <SettingsEditor onClose={() => editSettingsModal.current.close()} />
       </Modal>
     </>

@@ -7,7 +7,7 @@ import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { css } from '@emotion/core';
 import { Button } from 'components/default';
-import { Input, Select } from 'components/default/inputs';
+import { Input, Select, Textarea } from 'components/default/inputs';
 
 const Buttons = styled.div`
   display: flex;
@@ -35,6 +35,7 @@ const SettingsEditor = ({
   const [amiId, setAmiId] = useState(null);
   const [instanceType, setInstanceType] = useState(botSettings.type || '');
   const [storage, setStorage] = useState(botSettings.storage || 0);
+  const [script, setScript] = useState(botSettings.script || '');
 
   const toOption = item => ({
     value: item.id, label: item.name
@@ -52,10 +53,11 @@ const SettingsEditor = ({
     }
     setInstanceType(botSettings.type || '');
     setStorage(botSettings.storage || '');
+    setScript(botSettings.script || '');
   }, [botSettings, amis]);
 
   const submit = () => {
-    updateBotSettings(botSettings.id, { image_id: amiId.value, type: instanceType, storage })
+    updateBotSettings(botSettings.id, { image_id: amiId.value, type: instanceType, storage, script })
       .then(() => {
         addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Settings updated' });
         onClose();
@@ -75,6 +77,9 @@ const SettingsEditor = ({
       />
       <Input label={'Storage GB'} type={'number'} styles={inputStyles} value={storage}
         onChange={e => setStorage(e.target.value)}
+      />
+      <Textarea label={'Startup Script'} rows={20} styles={inputStyles} value={script}
+        onChange={e => setScript(e.target.value)}
       />
       <Buttons>
         <Button type={'primary'} onClick={submit}>Submit</Button>
