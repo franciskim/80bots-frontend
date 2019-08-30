@@ -41,8 +41,13 @@ const Td = styled.td`
 
 const Tr = styled.tr`
   position: relative;
-  td {
-    white-space: nowrap;
+`;
+
+const Ip = styled.span`
+  color: ${ props => props.theme.colors.clearBlue };
+  cursor: pointer;
+  &:hover {
+    border-bottom: 1px solid ${ props => props.theme.colors.clearBlue };
   }
 `;
 
@@ -134,6 +139,11 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Can\'t start sync sequence' }));
   };
 
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text)
+      .then(() => addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Copied to clipboard' }));
+  };
+
   const Loading = <Loader type={'bubbles'} width={40} height={40} color={theme.colors.primary} />;
 
   const renderRow = (botInstance, idx) => <Tr key={idx}>
@@ -142,7 +152,9 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
     <td>{ botInstance.name }</td>
     <td>{ botInstance.instance_id }</td>
     <td>{ botInstance.uptime }&nbsp;min</td>
-    <td>{ botInstance.ip }</td>
+    <td>
+      <Ip onClick={() => copyToClipboard(botInstance.ip)}>{ botInstance.ip }</Ip>
+    </td>
     <td>
       <Select options={OPTIONS} value={OPTIONS.find(item => item.value === botInstance.status)}
         onChange={option => changeBotInstanceStatus(option, botInstance.id)} styles={selectStyles}
@@ -152,7 +164,7 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
     </td>
     <td>{ botInstance.launched_at }</td>
     <td>
-      <IconButton title={'View Bot'} type={'primary'} onClick={() => downloadEventHandler(botInstance)}>
+      <IconButton title={'View Bot'} type={'primary'}>
         <Icon name={'eye'} color={'white'}/>
       </IconButton>
       <IconButton title={'Download PEM'} type={'success'} onClick={() => downloadEventHandler(botInstance)}>

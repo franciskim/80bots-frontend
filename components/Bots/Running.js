@@ -46,6 +46,14 @@ const Tr = styled.tr`
   }
 `;
 
+const Ip = styled.span`
+  color: ${ props => props.theme.colors.clearBlue };
+  cursor: pointer;
+  &:hover {
+    border-bottom: 1px solid ${ props => props.theme.colors.clearBlue };
+  }
+`;
+
 const modalStyles = css`
   min-width: 500px;
   overflow-y: visible;
@@ -96,13 +104,20 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text)
+      .then(() => addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Copied to clipboard' }));
+  };
+
   const Loading = <Loader type={'bubbles'} width={45} height={45} color={theme.colors.primary} />;
 
   const renderRow = (botInstance, idx) => <Tr key={idx}>
     <td>{ botInstance.region }</td>
     <td>{ botInstance.name }</td>
     <td>{ botInstance.credits_used }</td>
-    <td>{ botInstance.ip }</td>
+    <td>
+      <Ip onClick={() => copyToClipboard(botInstance.ip)}>{ botInstance.ip }</Ip>
+    </td>
     <td>
       <Select options={OPTIONS} value={OPTIONS.find(item => item.value === botInstance.status)}
         onChange={option => changeBotInstanceStatus(option, botInstance.id)}
@@ -129,7 +144,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
             <LimitFilter onChange={({ value }) => {setLimit(value); getRunningBots({ page, limit: value }); }}/>
             <SearchFilter onChange={console.log}/>
           </Filters>
-          <Table>
+          <Table responsive>
             <Thead>
               <tr>
                 <th>Region</th>

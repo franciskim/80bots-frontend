@@ -208,15 +208,17 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
       </StatusButton>
     </td>
     <td>
-      <Launch type={'primary'} onClick={() => { setClickedBot(bot); modal.current.open(); }}>Launch</Launch>
-      <IconButton title={'Edit Bot'} type={'primary'} onClick={() => { setClickedBot(bot); editModal.current.open(); }}>
-        <Icon name={'edit'} color={theme.colors.white}/>
-      </IconButton>
-      <IconButton title={'Delete Bot'} type={'danger'}
-        onClick={() => { setClickedBot(bot); deleteModal.current.open(); }}
-      >
-        <Icon name={'garbage'} color={theme.colors.white}/>
-      </IconButton>
+      <Buttons>
+        <Launch type={'primary'} onClick={() => { setClickedBot(bot); modal.current.open(); }}>Launch</Launch>
+        <IconButton title={'Edit Bot'} type={'primary'} onClick={() => { setClickedBot(bot); editModal.current.open(); }}>
+          <Icon name={'edit'} color={theme.colors.white}/>
+        </IconButton>
+        <IconButton title={'Delete Bot'} type={'danger'}
+          onClick={() => { setClickedBot(bot); deleteModal.current.open(); }}
+        >
+          <Icon name={'garbage'} color={theme.colors.white}/>
+        </IconButton>
+      </Buttons>
     </td>
   </tr>;
 

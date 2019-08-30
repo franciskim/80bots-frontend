@@ -110,12 +110,17 @@ export const globalStyles = css`
     line-height: 1.6;
     &::-webkit-scrollbar {
       width: 5px;
+      height: 5px;
       background-color: transparent;
       border-radius: 10px;
     }
     &::-webkit-scrollbar-thumb {
       border-radius: 5px;
-      background-color: ${theme.colors.clearBlue}
+      background-color: ${theme.colors.primary};
+    }
+    &::-webkit-scrollbar-thumb:horizontal {
+      border-radius: 5px;
+      background-color: ${theme.colors.primary};
     }
   }
   #__next {
