@@ -83,22 +83,18 @@ const inputStyles = {
   `,
 };
 
-const BotEditor = ({ getPlatforms, getInstanceTypes, getTags, platforms, types, tags, onSubmit, onClose,
-  getUsers, users, type, bot }) => {
+const BotEditor = ({
+  getPlatforms, getTags, platforms, tags, onSubmit, onClose, getUsers, users, type, bot
+}) => {
   const [tagName, setTagName] = useState('');
   const [platformName, setPlatformName] = useState('');
   const [platform, setPlatform] = useState(null);
   const [botTags, setTags] = useState([]);
-  const [instanceType, setInstanceType] = useState(null);
   const [botName, setBotName] = useState(bot ? bot.name : '');
-  const [imageId, setImageId] = useState(bot ? bot.ami_id : '');
-  const [imageName, setImageName] = useState(bot ? bot.ami_name : '');
-  const [storage, setStorage] = useState(bot ? bot.storage : '');
-  const [startupScript, setStartupScript] = useState(bot ? bot.aws_startup_script : '');
   const [botScript, setBotScript] = useState(bot ? bot.aws_custom_script : '');
   const [description, setDescription] = useState(bot ? bot.description : '');
   const [isPrivate, setPrivate] = useState(bot ? bot.type === 'private' : false);
-  const [trustedUsers, setUsers] = useState(null);
+  const [trustedUsers, setUsers] = useState([]);
   const [error, setError] = useState(null);
 
   const toOptions = item => {
@@ -111,7 +107,6 @@ const BotEditor = ({ getPlatforms, getInstanceTypes, getTags, platforms, types, 
 
   useEffect(() => {
     getPlatforms({ page: 1, limit: 50 });
-    getInstanceTypes({ page: 1, limit: 50 });
     getTags({ page: 1, limit: 50 });
     getUsers({ page: 1, limit: 25 });
   }, []);
@@ -120,10 +115,9 @@ const BotEditor = ({ getPlatforms, getInstanceTypes, getTags, platforms, types, 
     if(bot) {
       setPlatform(toOptions(platforms.find(item => item.name === bot.platform)));
       setTags(tags.filter(item => bot.tags.indexOf(item.name) > -1).map(toOptions));
-      setInstanceType(toOptions(types.find(item => bot.instance_type === item)));
       setUsers(users.filter(item => bot.users.find(user => user.id === item.id)).map(toOptions));
     }
-  }, [tags, types, users, platforms]);
+  }, [tags, users, platforms]);
 
   const onUsersSearch = (value, callback) => {
     getUsers({ page: 1, limit: 25, search: value })
@@ -157,15 +151,14 @@ const BotEditor = ({ getPlatforms, getInstanceTypes, getTags, platforms, types, 
   };
 
   const submit = () => {
-    if(!platform || !instanceType || !imageId || !imageName || !storage || !botName) {
+    if(!platform || !botName) {
       setError('You must fill in required fields marked by \'*\'');
     } else {
       setError(null);
-      const users = isPrivate ? { users: trustedUsers } : {};
+      const users = isPrivate ? { users: trustedUsers } : { users: [] };
       onSubmit({
-        botName, storage, instanceType: instanceType.value, imageId, imageName, isPrivate, startupScript, botScript,
-        description, botTags: botTags.map(item => item.value), platform: platform.value,
-        ...users
+        botName, isPrivate, botScript, description, botTags: botTags.map(item => item.value),
+        platform: platform.value, ...users
       });
     }
   };
@@ -180,35 +173,13 @@ const BotEditor = ({ getPlatforms, getInstanceTypes, getTags, platforms, types, 
               onInputChange={onPlatformInputChange} options={getPlatformOptions()}
             />
           </InputWrap>
-          <InputWrap>
-            <Label>Instance Type *</Label>
-            <Select options={types.map(toOptions)} onChange={option => setInstanceType(option)} styles={selectStyles}
-              value={instanceType}
-            />
-          </InputWrap>
-        </Row>
-        <Row>
-          <Input type={'text'} label={'AMI Image ID *'} value={imageId} styles={inputStyles}
-            onChange={e => setImageId(e.target.value)}
-          />
-          <Input type={'text'} label={'AMI Name *'} value={imageName} styles={inputStyles}
-            onChange={e => setImageName(e.target.value)}
-          />
-        </Row>
-        <Row>
           <Input type={'text'} label={'Bot Name *'} value={botName} styles={inputStyles}
             onChange={e => setBotName(e.target.value)}
           />
-          <Input type={'text'} label={'Storage GB *'} value={storage} styles={inputStyles}
-            onChange={e => setStorage(e.target.value)}
-          />
         </Row>
         <Row>
-          <Textarea label={'Startup Script'} rows={10} value={startupScript}
-            onChange={e => setStartupScript(e.target.value)} styles={inputStyles}
-          />
           <Textarea label={'Bot Script'} rows={10} value={botScript}
-            onChange={e => setBotScript(e.target.value)} styles={inputStyles}
+            onChange={e => setBotScript(e.target.value)}
           />
         </Row>
         <Row>
@@ -254,11 +225,9 @@ BotEditor.propTypes = {
   type: PropTypes.oneOf(['edit', 'add']).isRequired,
   bot: PropTypes.object,
   platforms: PropTypes.array.isRequired,
-  types: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired,
   users: PropTypes.array.isRequired,
   getPlatforms: PropTypes.func.isRequired,
-  getInstanceTypes: PropTypes.func.isRequired,
   getTags: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
@@ -274,7 +243,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getPlatforms: query => dispatch(getPlatforms(query)),
-  getInstanceTypes: query => dispatch(getInstanceTypes(query)),
   getTags: query => dispatch(getTags(query)),
   getUsers: query => dispatch(getUsers(query))
 });

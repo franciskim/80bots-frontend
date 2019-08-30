@@ -11,12 +11,15 @@ import { Button, Badge, Paginator } from 'components/default';
 import { Card, CardBody } from 'components/default/Card';
 import { Table, Thead, Filters, LimitFilter, SearchFilter } from 'components/default/Table';
 import { connect } from 'react-redux';
-import { adminGetBots, adminUpdateBot, addBot, adminLaunchInstance, getBotSettings,
-  updateBotSettings } from 'store/bot/actions';
+import {
+  adminGetBots, adminUpdateBot, addBot, adminLaunchInstance, getBotSettings, updateBotSettings, adminDeleteBot,
+  syncLocalBots
+} from 'store/bot/actions';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
 import { css } from '@emotion/core';
 import { withTheme } from 'emotion-theming';
+import {addListener} from '../../../store/socket/actions';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -50,8 +53,9 @@ const AddButtonWrap = styled.div`
   justify-content: flex-end;
   margin-bottom: 5px;
   button {
+    margin-right: 20px;
     &:last-child {
-      margin-left: 20px;
+      margin-right: 0;
     }
   }
 `;
@@ -69,6 +73,12 @@ const Tag = styled(Badge)`
   }
 `;
 
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 const modalContainerStyles = css`
   margin-top: 0;
 `;
@@ -83,8 +93,8 @@ const modalStyles = css`
   }
 `;
 
-const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, addNotification, theme
-  , ...props}) => {
+const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, addNotification, theme, adminDeleteBot
+  , syncLocalBots, syncLoading, addListener, user, ...props}) => {
   const [clickedBot, setClickedBot] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -93,9 +103,14 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
   const addModal = useRef(null);
   const editModal = useRef(null);
   const editSettingsModal = useRef(null);
+  const deleteModal = useRef(null);
 
   useEffect(() => {
     adminGetBots({ page, limit });
+    addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
+      addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' });
+      adminGetBots({ page, limit });
+    });
   }, []);
 
   const launchBot = (params) => {
@@ -117,12 +132,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
     name: botData.botName,
     description: botData.description,
     platform: botData.platform,
-    aws_ami_image_id: botData.imageId,
-    aws_ami_name: botData.imageName,
-    aws_instance_type: botData.instanceType,
-    aws_startup_script: botData.startupScript,
     aws_custom_script: botData.botScript,
-    aws_storage_gb: botData.storage,
     tags: botData.botTags,
     users: botData.users.map(user => user.id),
     type: botData.isPrivate ? 'private' : 'public'
@@ -133,13 +143,17 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
       .then(() => {
         addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot added!' });
         addModal.current.close();
+        adminGetBots({ page, limit });
       })
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Add failed!' }));
   };
 
   const updateBot = botData => {
-    props.adminUpdateBot(clickedBot.id, convertBotData(botData))
-      .then(() => addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot updated!' }))
+    adminUpdateBot(clickedBot.id, convertBotData(botData))
+      .then(() => {
+        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot updated!' });
+        editModal.current.close();
+      })
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Update failed!' }));
   };
 
@@ -155,6 +169,23 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
+  const deleteBot = () => {
+    setClickedBot(null);
+    adminDeleteBot(clickedBot.id)
+      .then(() => {
+        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot removed!' });
+        adminGetBots({ page, limit });
+        deleteModal.current.close();
+      })
+      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Bot delete failed' }));
+  };
+
+  const sync = () => {
+    syncLocalBots()
+      .then(() => addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Sync started' }))
+      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Sync cannot be started' }));
+  };
+
   const renderRow = (bot, idx) => <tr key={idx}>
     <td>{ bot.platform }</td>
     <td>{ bot.name }</td>
@@ -167,7 +198,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
     <td>
       {
         bot.tags && bot.tags.length > 0
-          ? bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag['name'] }</Tag>)
+          ? bot.tags.map((tag, idx) => <Tag key={idx} pill type={'info'}>{ tag }</Tag>)
           : '-'
       }
     </td>
@@ -181,6 +212,11 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
       <IconButton title={'Edit Bot'} type={'primary'} onClick={() => { setClickedBot(bot); editModal.current.open(); }}>
         <Icon name={'edit'} color={theme.colors.white}/>
       </IconButton>
+      <IconButton title={'Delete Bot'} type={'danger'}
+        onClick={() => { setClickedBot(bot); deleteModal.current.open(); }}
+      >
+        <Icon name={'garbage'} color={theme.colors.white}/>
+      </IconButton>
     </td>
   </tr>;
 
@@ -189,6 +225,9 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
       <AddButtonWrap>
         <Button type={'success'} onClick={() => addModal.current.open()}>Add Bot</Button>
         <Button type={'primary'} onClick={() => editSettingsModal.current.open()}>Edit Global Bot Settings</Button>
+        <Button type={'primary'} onClick={sync} loading={`${syncLoading}`} loaderWidth={148}>
+          Sync Bots From Repo
+        </Button>
       </AddButtonWrap>
       <Container>
         <CardBody>
@@ -212,7 +251,9 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
               { bots.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); adminGetBots({ page, limit }); }}/>
+          <Paginator total={total} pageSize={limit}
+            onChangePage={(page) => { setPage(page); adminGetBots({ page, limit }); }}
+          />
         </CardBody>
       </Container>
 
@@ -229,7 +270,18 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
       </Modal>
 
       <Modal ref={editModal} title={'Edit Bot'} contentStyles={modalStyles} containerStyles={modalContainerStyles}>
-        <BotEditor type={'add'} bot={clickedBot} onSubmit={updateBot} onClose={() => editModal.current.close()}/>
+        <BotEditor type={'edit'} bot={clickedBot} onSubmit={updateBot} onClose={() => editModal.current.close()}/>
+      </Modal>
+
+      <Modal ref={deleteModal} title={'Delete Bot'} contentStyles={css`min-width: 300px;`}>
+        <Buttons>
+          <Button type={'primary'} onClick={deleteBot}>
+            Yes
+          </Button>
+          <Button type={'danger'} onClick={() => { setClickedBot(null); deleteModal.current.close(); }}>
+            Cancel
+          </Button>
+        </Buttons>
       </Modal>
 
       <Modal ref={editSettingsModal} title={'Edit Global Settings'} containerStyles={modalContainerStyles}>
@@ -240,21 +292,28 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
 };
 
 Bots.propTypes = {
-  adminGetBots: PropTypes.func.isRequired,
-  adminUpdateBot: PropTypes.func.isRequired,
+  bots:                PropTypes.array.isRequired,
+  total:               PropTypes.number.isRequired,
+  syncLoading:         PropTypes.bool.isRequired,
+  user:                PropTypes.object,
+  adminGetBots:        PropTypes.func.isRequired,
+  adminUpdateBot:      PropTypes.func.isRequired,
+  adminLaunchInstance: PropTypes.func.isRequired,
+  adminDeleteBot:      PropTypes.func.isRequired,
+  addNotification:     PropTypes.func.isRequired,
+  addBot:              PropTypes.func.isRequired,
+  syncLocalBots:       PropTypes.func.isRequired,
+  addListener:         PropTypes.func.isRequired,
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
-  adminLaunchInstance: PropTypes.func.isRequired,
-  bots: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
-  addNotification: PropTypes.func.isRequired,
-  addBot: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  bots: state.bot.bots,
-  total: state.bot.total,
+  bots:        state.bot.bots,
+  total:       state.bot.total,
+  syncLoading: state.bot.syncLoading,
+  user:        state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -262,9 +321,12 @@ const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   adminLaunchInstance: (id, params) => dispatch(adminLaunchInstance(id, params)),
   adminUpdateBot: (id, data) => dispatch(adminUpdateBot(id, data)),
+  adminDeleteBot: (id) => dispatch(adminDeleteBot(id)),
   addBot: (data) => dispatch(addBot(data)),
   getBotSettings: () => dispatch(getBotSettings()),
   updateBotSettings: (id, data) => dispatch(updateBotSettings(id, data)),
+  syncLocalBots: () => dispatch(syncLocalBots()),
+  addListener: (room, eventName, handler) => dispatch(addListener(room, eventName, handler)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Bots));

@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import {
-  adminGetRunningBots, updateAdminRunningBot, downloadInstancePemFile, botInstanceUpdated
+  adminGetRunningBots, updateAdminRunningBot, downloadInstancePemFile, botInstanceUpdated, syncBotInstances
 } from 'store/bot/actions';
 import { addListener, removeAllListeners } from 'store/socket/actions';
 import { Paginator, Loader, Button } from 'components/default';
@@ -46,6 +46,17 @@ const Tr = styled.tr`
   }
 `;
 
+const AddButtonWrap = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+  button {
+    &:last-child {
+      margin-left: 20px;
+    }
+  }
+`;
+
 const selectStyles = {
   container: provided => ({
     ...provided,
@@ -65,18 +76,8 @@ const FILTERS_LIST_OPTIONS = [
   { value: 'my', label: 'My Instances' },
 ];
 
-const RunningBots = ({
-  theme,
-  addNotification,
-  adminGetRunningBots,
-  downloadInstancePemFile,
-  updateAdminRunningBot,
-  botInstances,
-  total,
-  user,
-  addListener,
-  removeAllListeners,
-  botInstanceUpdated
+const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInstancePemFile, updateAdminRunningBot,
+  botInstances, total, user, addListener, removeAllListeners, botInstanceUpdated, syncBotInstances, syncLoading
 }) => {
 
   const [list, setFilterList] = useState('all');
@@ -91,6 +92,10 @@ const RunningBots = ({
         message: `Bot ${event.instance.bot_name} successfully launched`
       });
       botInstanceUpdated(event.instance);
+    });
+    addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
+      addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' });
+      adminGetRunningBots({ page, limit, list });
     });
     return () => {
       removeAllListeners();
@@ -123,6 +128,12 @@ const RunningBots = ({
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
+  const syncWithAWS = () => {
+    syncBotInstances()
+      .then(() => addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Sync sequence started' }))
+      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Can\'t start sync sequence' }));
+  };
+
   const Loading = <Loader type={'bubbles'} width={40} height={40} color={theme.colors.primary} />;
 
   const renderRow = (botInstance, idx) => <Tr key={idx}>
@@ -141,8 +152,10 @@ const RunningBots = ({
     </td>
     <td>{ botInstance.launched_at }</td>
     <td>
-      <IconButton type={'success'}
-        onClick={() => downloadEventHandler(botInstance)}>
+      <IconButton title={'View Bot'} type={'primary'} onClick={() => downloadEventHandler(botInstance)}>
+        <Icon name={'eye'} color={'white'}/>
+      </IconButton>
+      <IconButton title={'Download PEM'} type={'success'} onClick={() => downloadEventHandler(botInstance)}>
         <Icon name={'download'} color={'white'}/>
       </IconButton>
     </td>
@@ -152,6 +165,11 @@ const RunningBots = ({
 
   return(
     <>
+      <AddButtonWrap>
+        <Button type={'primary'} onClick={syncWithAWS} loading={`${syncLoading}`} loaderWidth={140}>
+          Sync Bot Instances
+        </Button>
+      </AddButtonWrap>
       <Container>
         <CardBody>
           <Filters>
@@ -174,7 +192,7 @@ const RunningBots = ({
                 <th>IP</th>
                 <th>Status</th>
                 <th>Launch Time</th>
-                <th>Download PEM</th>
+                <th>Actions</th>
               </tr>
             </Thead>
             <tbody>
@@ -189,25 +207,28 @@ const RunningBots = ({
 };
 
 RunningBots.propTypes = {
+  addNotification:         PropTypes.func.isRequired,
+  adminGetRunningBots:     PropTypes.func.isRequired,
+  downloadInstancePemFile: PropTypes.func.isRequired,
+  updateAdminRunningBot:   PropTypes.func.isRequired,
+  addListener:             PropTypes.func.isRequired,
+  removeAllListeners:      PropTypes.func.isRequired,
+  botInstanceUpdated:      PropTypes.func.isRequired,
+  syncBotInstances:        PropTypes.func.isRequired,
+  botInstances:            PropTypes.array.isRequired,
+  total:                   PropTypes.number.isRequired,
+  syncLoading:             PropTypes.bool.isRequired,
+  user:                    PropTypes.object,
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
-  addNotification: PropTypes.func.isRequired,
-  adminGetRunningBots: PropTypes.func.isRequired,
-  downloadInstancePemFile: PropTypes.func.isRequired,
-  updateAdminRunningBot: PropTypes.func.isRequired,
-  addListener: PropTypes.func.isRequired,
-  removeAllListeners: PropTypes.func.isRequired,
-  botInstanceUpdated: PropTypes.func.isRequired,
-  botInstances: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
-  user: PropTypes.object
 };
 
 const mapStateToProps = state => ({
   botInstances: state.bot.botInstances,
-  total: state.bot.total,
-  user: state.auth.user
+  total:        state.bot.total,
+  user:         state.auth.user,
+  syncLoading:  state.bot.syncLoading
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -218,6 +239,7 @@ const mapDispatchToProps = dispatch => ({
   addListener: (room, eventName, handler) => dispatch(addListener(room, eventName, handler)),
   removeAllListeners: () => dispatch(removeAllListeners()),
   botInstanceUpdated: (botInstance) => dispatch(botInstanceUpdated(botInstance)),
+  syncBotInstances: () => dispatch(syncBotInstances()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(RunningBots));

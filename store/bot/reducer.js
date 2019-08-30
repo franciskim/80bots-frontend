@@ -10,17 +10,19 @@ import {
   ADMIN_POST_LAUNCH_INSTANCE,
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
-  GET_TAGS, BOT_SETTINGS
+  GET_TAGS, BOT_SETTINGS, SYNC_BOT_INSTANCES, AMIS, SYNC_BOTS
 } from './types';
 
 const initialState = {
   bots: [],
   tags: [],
+  amis: [],
   botInstances: [],
   platforms: [],
   botSettings: {},
   total: 0,
   loading: true,
+  syncLoading: false,
   error: null,
 };
 
@@ -37,6 +39,10 @@ export const reducer = (state = initialState, action) => {
     case ADMIN_UPDATE_RUNNING_BOT:
     case DOWNLOAD_INSTANCE_PEM_FILE:
       return { ...state, loading: true, error: null };
+
+    case SYNC_BOT_INSTANCES:
+    case SYNC_BOTS:
+      return { ...state, syncLoading: true };
 
     case success(GET_BOTS):
     case success(ADMIN_GET_BOTS):
@@ -62,8 +68,8 @@ export const reducer = (state = initialState, action) => {
       return { ...state, loading: false };
 
     case success(ADMIN_UPDATE_BOT): {
-      const userIdx = state.bots.findIndex(item => item.id === action.data.id);
-      if(userIdx || userIdx === 0) state.bots[userIdx] = action.data;
+      const botIdx = state.bots.findIndex(item => item.id === action.data.id);
+      if(botIdx || botIdx === 0) state.bots[botIdx] = action.data;
       return { ...state, bots: [...state.bots], loading: false };
     }
 
@@ -79,6 +85,15 @@ export const reducer = (state = initialState, action) => {
 
     case success(BOT_SETTINGS):
       return { ...state, botSettings: action.data.settings };
+
+    case success(SYNC_BOT_INSTANCES):
+    case success(SYNC_BOTS):
+    case error(SYNC_BOT_INSTANCES):
+    case error(SYNC_BOTS):
+      return { ...state, syncLoading: false };
+
+    case success(AMIS):
+      return { ...state, amis: action.data.data };
 
     case error(GET_BOTS):
     case error(ADMIN_GET_BOTS):

@@ -10,7 +10,7 @@ import {
   ADMIN_UPDATE_BOT,
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
-  GET_TAGS, BOT_SETTINGS, UPDATE_BOT_SETTINGS
+  GET_TAGS, BOT_SETTINGS, UPDATE_BOT_SETTINGS, SYNC_BOT_INSTANCES, ADMIN_DELETE_BOT, AMIS, SYNC_BOTS
 } from './types';
 import { success } from 'redux-saga-requests';
 
@@ -219,6 +219,56 @@ export const updateBotSettings = (id, data) => ({
     method: 'PUT',
     url: `/admin/aws/${id}`,
     data: { update: data }
+  },
+  meta: {
+    thunk: true,
+    admin: true
+  }
+});
+
+export const syncBotInstances = (id, data) => ({
+  type: SYNC_BOT_INSTANCES,
+  request: {
+    method: 'GET',
+    url: '/admin/instances/sync',
+    data: { update: data }
+  },
+  meta: {
+    thunk: true,
+    admin: true
+  }
+});
+
+export const adminDeleteBot = (id) => ({
+  type: ADMIN_DELETE_BOT,
+  request: {
+    method: 'DELETE',
+    url: `/admin/bots/${id}`
+  },
+  meta: {
+    thunk: true,
+    admin: true
+  }
+});
+
+export const getAMIs = (params = { region: 2 }) => ({
+  type: AMIS,
+  request: {
+    method: 'GET',
+    url: '/admin/instances/amis',
+    params: params
+  },
+  meta: {
+    thunk: true,
+    admin: true
+  }
+});
+
+export const syncLocalBots = () => ({
+  type: SYNC_BOTS,
+  request: {
+    method: 'GET',
+    url: '/admin/bots/sync'
   },
   meta: {
     thunk: true,
