@@ -63,7 +63,8 @@ const selectStyles = {
   container: provided => ({
     ...provided,
     minWidth: '90px'
-  })
+  }),
+  menuPortal: base => ({ ...base, zIndex: 1 })
 };
 
 const OPTIONS = [
@@ -124,6 +125,8 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
         isOptionDisabled={ (option) => option.readOnly }
         isDisabled={botInstance.status === 'pending' || botInstance.status === 'terminated'}
         styles={selectStyles}
+        menuPortalTarget={document.body}
+        menuPosition={'absolute'} menuPlacement={'bottom'}
       />
     </td>
     <td>{ botInstance.launched_at }</td>
@@ -144,7 +147,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
             <LimitFilter onChange={({ value }) => {setLimit(value); getRunningBots({ page, limit: value }); }}/>
             <SearchFilter onChange={console.log}/>
           </Filters>
-          <Table responsive>
+          <Table>
             <Thead>
               <tr>
                 <th>Region</th>

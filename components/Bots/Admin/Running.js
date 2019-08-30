@@ -66,7 +66,8 @@ const selectStyles = {
   container: provided => ({
     ...provided,
     minWidth: '150px'
-  })
+  }),
+  menuPortal: base => ({ ...base, zIndex: 1 })
 };
 
 const OPTIONS = [
@@ -160,6 +161,8 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
         onChange={option => changeBotInstanceStatus(option, botInstance.id)} styles={selectStyles}
         isOptionDisabled={ (option) => option.readOnly }
         isDisabled={botInstance.status === 'pending' || botInstance.status === 'terminated'}
+        menuPortalTarget={document.body}
+        menuPosition={'absolute'} menuPlacement={'bottom'}
       />
     </td>
     <td>{ botInstance.launched_at }</td>
