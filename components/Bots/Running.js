@@ -105,7 +105,10 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
-  const copyToClipboard = (text) => {
+  const copyToClipboard = (bot) => {
+    const text = process.env.NODE_ENV === 'development'
+      ? `chmod 400 ${bot.instance_id} && ssh -i ${bot.instance_id} ubuntu@${bot.ip}`
+      : bot.ip;
     navigator.clipboard.writeText(text)
       .then(() => addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Copied to clipboard' }));
   };
@@ -117,7 +120,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
     <td>{ botInstance.name }</td>
     <td>{ botInstance.credits_used }</td>
     <td>
-      <Ip onClick={() => copyToClipboard(botInstance.ip)}>{ botInstance.ip }</Ip>
+      <Ip onClick={() => copyToClipboard(botInstance)}>{ botInstance.ip }</Ip>
     </td>
     <td>
       <Select options={OPTIONS} value={OPTIONS.find(item => item.value === botInstance.status)}

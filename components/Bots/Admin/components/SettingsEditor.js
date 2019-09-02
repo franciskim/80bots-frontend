@@ -9,6 +9,13 @@ import { css } from '@emotion/core';
 import { Button } from 'components/default';
 import { Input, Select, Textarea } from 'components/default/inputs';
 
+const VALIDATION = {
+  AMI: 'ami_id',
+  SCRIPT: 'script',
+  TYPE: 'instance_type',
+  STORAGE: 'storage'
+};
+
 const Buttons = styled.div`
   display: flex;
   flex-direction: row;
@@ -36,6 +43,7 @@ const SettingsEditor = ({
   const [instanceType, setInstanceType] = useState(botSettings.type || '');
   const [storage, setStorage] = useState(botSettings.storage || 0);
   const [script, setScript] = useState(botSettings.script || '');
+  const [errors, setErrors] = useState([]);
 
   const toOption = item => ({
     value: item.id, label: item.name
@@ -56,13 +64,28 @@ const SettingsEditor = ({
     setScript(botSettings.script || '');
   }, [botSettings, amis]);
 
+  const validate = () => {
+    setErrors([]);
+    let err = [];
+    if(!amiId) err.push(VALIDATION.AMI);
+    if(!instanceType) err.push(VALIDATION.TYPE);
+    if(!storage) err.push(VALIDATION.STORAGE);
+    if(!script) err.push(VALIDATION.SCRIPT);
+    return err;
+  };
+
   const submit = () => {
-    updateBotSettings(botSettings.id, { image_id: amiId.value, type: instanceType, storage, script })
-      .then(() => {
-        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Settings updated' });
-        onClose();
-      })
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Can\'t update settings right now' }));
+    const err = validate();
+
+    if(err.length > 0)
+      setErrors(err);
+    else
+      updateBotSettings(botSettings.id, { image_id: amiId.value, type: instanceType, storage, script })
+        .then(() => {
+          addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Settings updated' });
+          onClose();
+        })
+        .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Can\'t update settings right now' }));
   };
 
   return(
@@ -71,15 +94,19 @@ const SettingsEditor = ({
         onChange={option => setAmiId(option)} options={amis.map(toOption)}
         menuPortalTarget={document.body}
         menuPosition={'absolute'} menuPlacement={'bottom'}
+        error={errors.indexOf(VALIDATION.AMI) > -1 ? 'This field is required' : ''}
       />
       <Input label={'Instance Type'} styles={inputStyles} value={instanceType}
         onChange={e => setInstanceType(e.target.value)}
+        error={errors.indexOf(VALIDATION.TYPE) > -1 ? 'This field is required' : ''}
       />
       <Input label={'Storage GB'} type={'number'} styles={inputStyles} value={storage}
         onChange={e => setStorage(e.target.value)}
+        error={errors.indexOf(VALIDATION.STORAGE) > -1 ? 'This field is required' : ''}
       />
       <Textarea label={'Startup Script'} rows={10} styles={inputStyles} value={script}
         onChange={e => setScript(e.target.value)}
+        error={errors.indexOf(VALIDATION.SCRIPT) > -1 ? 'This field is required' : ''}
       />
       <Buttons>
         <Button type={'primary'} onClick={submit}>Submit</Button>
