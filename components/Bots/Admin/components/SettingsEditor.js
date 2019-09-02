@@ -78,7 +78,7 @@ const SettingsEditor = ({
       <Input label={'Storage GB'} type={'number'} styles={inputStyles} value={storage}
         onChange={e => setStorage(e.target.value)}
       />
-      <Textarea label={'Startup Script'} rows={20} styles={inputStyles} value={script}
+      <Textarea label={'Startup Script'} rows={10} styles={inputStyles} value={script}
         onChange={e => setScript(e.target.value)}
       />
       <Buttons>
