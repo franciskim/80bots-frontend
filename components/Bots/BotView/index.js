@@ -13,9 +13,6 @@ const Container = styled(Card)`
 
 const BotView = ({ addExternalListener }) => {
   useEffect(() => {
-    addExternalListener('localhost:6002', 'room', 'data', (data) => {
-      console.log(data);
-    });
   }, []);
 
   return(

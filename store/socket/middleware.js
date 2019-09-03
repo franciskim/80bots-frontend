@@ -52,7 +52,7 @@ export default function createWebSocketMiddleware() {
 
         case ADD_EXTERNAL_LISTENER: {
           if(!externalSocket) initExternal(action.data.url);
-          externalSocket.on('reconnect', () => socket.emit('join', action.data.room));
+          externalSocket.on('reconnect', () => externalSocket.emit('join', action.data.room));
           externalSocket.emit('join', action.data.room);
           externalSocket.on(action.data.eventName, action.data.handler);
           break;
