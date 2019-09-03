@@ -89,6 +89,8 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
 
       case 'range': return 'range';
 
+      case 'password': return 'password';
+
       case 'boolean':
       case 'Boolean':
       case 'bool': return 'checkbox';
@@ -101,7 +103,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
 
     switch (item.type) {
       case 'enum': return(
-        <Select key={idx} options={item.enum.map(toOptions)} label={label}
+        <Select key={idx} options={item.values.map(toOptions)} label={label}
           error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
           onChange={({ value }) => changeValue(item.name, value)} styles={selectStyles}
           menuPortalTarget={document.body}
@@ -132,6 +134,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
       );
 
       case 'String':
+      case 'password':
       case 'string': return(
         <Input key={idx} type={type} label={label} styles={inputStyle}
           onChange={e => changeValue(item.name, e.target.value)}
