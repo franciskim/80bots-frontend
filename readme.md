@@ -22,17 +22,17 @@ You can find node and npm/yarn versions in `package.json`
     - `yarn start`
     
 ### Available input types at the moment
-- Text input: `string`* or `text` type**<br/>
+- Text input: `string`* or `text` type**<br/><br/>
 ![Text](static/images/misc/text.png)<br/><br/>
-- Password input: `password`<br/>
+- Password input: `password`<br/><br/>
 ![Password](static/images/misc/password.png)<br/><br/>
-- Small range slider: `range`. Use `range` string field to provide range, like `'1-9'`<br/>
+- Small range slider: `range`. Use `range` string field to provide range, like `'1-9'`<br/><br/>
 ![Slider](static/images/misc/slider.png)<br/><br/>
-- Large range input: `number`. Use `range` string field to provide range, like `'0-99999'`<br/>
+- Large range input: `number` or `integer`. Use `range` string field to provide range, like `'0-99999'`<br/><br/>
 ![Slider](static/images/misc/number.png)<br/><br/>
-- Select: `enum`. Use `values` array to provide params for it, like `['val1', 'val2']`<br/>
+- Select: `enum`. Use `values` array to provide params for it, like `['val1', 'val2']`<br/><br/>
 ![Select](static/images/misc/select.png)<br/><br/>
-- CheckBox-Button: `boolean`<br/>
+- CheckBox-Button: `boolean`<br/><br/>
 ![Checkbox-Button](static/images/misc/checkbox-button.png)<br/><br/>
 
 <sup>* - types are `case sensitive`!</sup><br/>
