@@ -1,4 +1,4 @@
-import App, { Container } from 'next/app';
+import App from 'next/app';
 import React from 'react';
 import withReduxStore from '../lib/connectRedux';
 import { Provider } from 'react-redux';
@@ -12,15 +12,13 @@ class MyApp extends App {
   render () {
     const { Component, pageProps, reduxStore } = this.props;
     return (
-      <Container>
-        <Provider store={reduxStore}>
-          <ThemeProvider theme={theme}>
-            <Global styles={globalStyles}/>
-            <Notification/>
-            <Component {...pageProps} />
-          </ThemeProvider>
-        </Provider>
-      </Container>
+      <Provider store={reduxStore}>
+        <ThemeProvider theme={theme}>
+          <Global styles={globalStyles}/>
+          <Notification/>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </Provider>
     );
   }
 }

@@ -107,7 +107,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
 
   const copyToClipboard = (bot) => {
     const text = process.env.NODE_ENV === 'development'
-      ? `chmod 400 ${bot.instance_id} && ssh -i ${bot.instance_id} ubuntu@${bot.ip}`
+      ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
       : bot.ip;
     navigator.clipboard.writeText(text)
       .then(() => addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Copied to clipboard' }));

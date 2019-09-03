@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import Icon from 'components/default/icons';
 import Select from 'react-select';
+import Router from 'next/router';
+import Link from 'next/link';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from 'components/default/Card';
 import { Table, Thead, Filters, LimitFilter, ListFilter, SearchFilter } from 'components/default/Table';
@@ -60,6 +62,11 @@ const AddButtonWrap = styled.div`
       margin-left: 20px;
     }
   }
+`;
+
+const A = styled.a`
+  color: inherit;
+  text-decoration: none;
 `;
 
 const selectStyles = {
@@ -142,7 +149,7 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
 
   const copyToClipboard = (bot) => {
     const text = process.env.NODE_ENV === 'development'
-      ? `chmod 400 ${bot.instance_id} && ssh -i ${bot.instance_id} ubuntu@${bot.ip}`
+      ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
       : bot.ip;
     navigator.clipboard.writeText(text)
       .then(() => addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Copied to clipboard' }));
@@ -173,7 +180,9 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
     <td>{ botInstance.launched_at }</td>
     <td>
       <IconButton title={'View Bot'} type={'primary'}>
-        <Icon name={'eye'} color={'white'}/>
+        <Link href={'/admin/bots/running/[id]'} as={`/admin/bots/running/${botInstance.id}`}>
+          <A><Icon name={'eye'} color={'white'}/></A>
+        </Link>
       </IconButton>
       <IconButton title={'Download PEM'} type={'success'} onClick={() => downloadEventHandler(botInstance)}>
         <Icon name={'download'} color={'white'}/>
@@ -219,7 +228,9 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
               { botInstances.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); adminGetRunningBots({ page, limit, list }); }}/>
+          <Paginator total={total} pageSize={limit}
+            onChangePage={(page) => { setPage(page); adminGetRunningBots({ page, limit, list }); }}
+          />
         </CardBody>
       </Container>
     </>

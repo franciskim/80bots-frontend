@@ -1,11 +1,14 @@
 import io from 'socket.io-client';
 import Echo from 'laravel-echo';
-
-import { ADD_LISTENER, REMOVE_LISTENER, REMOVE_ALL_LISTENERS, EMIT_MESSAGE } from './types';
+import {
+  ADD_LISTENER, REMOVE_LISTENER, REMOVE_ALL_LISTENERS, EMIT_MESSAGE, ADD_EXTERNAL_LISTENER, REMOVE_EXTERNAL_LISTENER,
+  REMOVE_ALL_EXTERNAL_LISTENERS
+} from './types';
 
 export default function createWebSocketMiddleware() {
   return ({ dispatch }) => {
     let socket;
+    let externalSocket;
     let rooms = {};
 
     const init = () => {
@@ -19,6 +22,10 @@ export default function createWebSocketMiddleware() {
           }
         }
       });
+    };
+
+    const initExternal = (url) => {
+      externalSocket = io(url);
     };
 
     return next => action => {
@@ -42,6 +49,22 @@ export default function createWebSocketMiddleware() {
         }
         case EMIT_MESSAGE:
           return socket.emit(action.data.eventName, action.data.message);
+
+        case ADD_EXTERNAL_LISTENER: {
+          if(!externalSocket) initExternal(action.data.url);
+          externalSocket.on('reconnect', () => socket.emit('join', action.data.room));
+          externalSocket.emit('join', action.data.room);
+          externalSocket.on(action.data.eventName, action.data.handler);
+          break;
+        }
+        case REMOVE_EXTERNAL_LISTENER:
+          return externalSocket.removeListener(action.data.eventName);
+        case REMOVE_ALL_EXTERNAL_LISTENERS: {
+          externalSocket.removeAllListeners();
+          externalSocket = null;
+          break;
+        }
+
         default: return next(action);
       }
     };
