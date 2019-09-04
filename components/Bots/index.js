@@ -61,7 +61,6 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
     <td>{ bot.platform }</td>
     <td>{ bot.name }</td>
     <td>{ bot.description }</td>
-    <td>{ bot.platform }</td>
     <td>
       {
         bot.tags && bot.tags.length > 0
