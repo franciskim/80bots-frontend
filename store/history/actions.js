@@ -10,7 +10,7 @@ export const getCreditUsageHistory = (query = { page: 1, limit: 1 }) => {
     type: GET_CREDIT_USAGE,
     request: {
       method: 'GET',
-      url: '/schedule',
+      url: '/history/credits',
       params: query
     },
     meta: {

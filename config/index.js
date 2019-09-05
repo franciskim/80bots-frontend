@@ -14,7 +14,8 @@ export const ROUTES = {
     { name: 'Running Bots', href: '/bots/running' },
     { name: 'Available Bots', href: '/bots' },
     { name: 'Bots Schedule', href: '/schedule' },
-    { name: 'My Subscription', href: '/subscription' }
+    { name: 'My Subscription', href: '/subscription' },
+    { name: 'Credit Usage History', href: '/history' }
   ]
 };
 

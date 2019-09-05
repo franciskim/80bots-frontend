@@ -80,13 +80,16 @@ const LIMIT_OPTIONS = [
 ];
 
 const selectStyles = {
-  container: (provided) => ({ ...provided, minWidth: '75px' })
+  container: (provided) => ({ ...provided, minWidth: '75px' }),
+  menuPortal: base => ({ ...base, zIndex: 5 })
 };
 
 export const LimitFilter = ({ onChange }) => <FilterBox>
   <Label>Show</Label>
   <Select components={{ IndicatorSeparator: () => null }} options={LIMIT_OPTIONS}
     defaultValue={LIMIT_OPTIONS[0]} onChange={onChange} styles={selectStyles}
+    menuPortalTarget={document.body}
+    menuPosition={'absolute'} menuPlacement={'bottom'}
   />
   <Label>entries</Label>
 </FilterBox>;
@@ -96,13 +99,16 @@ LimitFilter.propTypes = {
 };
 
 const selectListFilterStyles = {
-  container: (provided) => ({ ...provided, minWidth: '200px' })
+  container: (provided) => ({ ...provided, minWidth: '200px' }),
+  menuPortal: base => ({ ...base, zIndex: 5 })
 };
 
 export const ListFilter = ({ options, onChange }) => <FilterBox>
-  <Label>Show</Label>
+  <Label>Show&nbsp;</Label>
   <Select components={{ IndicatorSeparator: () => null }} options={options}
     defaultValue={options[0]} onChange={onChange} styles={selectListFilterStyles}
+    menuPortalTarget={document.body}
+    menuPosition={'absolute'} menuPlacement={'bottom'}
   />
 </FilterBox>;
 
