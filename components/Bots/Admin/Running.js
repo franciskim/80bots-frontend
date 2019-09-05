@@ -161,6 +161,7 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
     <td>{ botInstance.region }</td>
     <td>{ botInstance.launched_by }</td>
     <td>{ botInstance.name }</td>
+    <td>{ botInstance.bot_name }</td>
     <td>{ botInstance.instance_id }</td>
     <td>{ botInstance.uptime }&nbsp;min</td>
     <td>
@@ -216,6 +217,7 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
                 <th>Region</th>
                 <th>Launched By</th>
                 <th>Name</th>
+                <th>Script</th>
                 <th>Instance Id</th>
                 <th>Uptime</th>
                 <th>IP</th>
