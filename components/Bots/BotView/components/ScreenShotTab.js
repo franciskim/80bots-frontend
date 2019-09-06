@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import ScreenShot from './ScreenShot';
 import { css } from '@emotion/core';
+import { withTheme } from 'emotion-theming';
 import { connect } from 'react-redux';
 import { CardBody } from 'components/default/Card';
 import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from 'store/socket/actions';
-import { Button, Paginator } from 'components/default';
+import { Loader, Button, Paginator } from 'components/default';
 
 const EVENTS = {
   FOLDERS: 'folders',
-  SCREENSHOTS: 'screenshots'
+  SCREENSHOTS: 'screenshots',
+  SCREENSHOT: 'screenshot'
 };
 
 const MESSAGES = {
@@ -53,38 +55,63 @@ const Back = styled(Button)`
 `;
 
 const ScreenShotTab = ({
-  botInstance, addExternalListener, removeAllExternalListeners, emitExternalMessage, setCustomBack
+  botInstance, addExternalListener, removeAllExternalListeners, emitExternalMessage, setCustomBack, theme
 }) => {
   const [folders, setFolders] = useState([]);
-  const [images, setImages] = useState([]);
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(20);
+  const [loading, setLoading] = useState(true);
   const [currentFolder, setCurrentFolder] = useState(null);
   const [currentImage, setCurrentImage] = useState(null);
+
+  const initialImageState = [];
+  const imagesReducer = (state, action) => {
+    switch (action.type) {
+      case EVENTS.SCREENSHOTS:
+        return [...action.data];
+      case EVENTS.SCREENSHOT: {
+        let temp = [...state];
+        temp.pop();
+        return [action.data, ...temp];
+      }
+    }
+  };
+
+  const [images, setImages] = useReducer(imagesReducer, initialImageState);
 
   const BackButton = <Back type={'primary'} onClick={() => setCurrentFolder(null)}>Back</Back>;
 
   useEffect(() => {
-    return () => { removeAllExternalListeners(); };
+    return () => removeAllExternalListeners();
   }, []);
 
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
       addExternalListener(`${botInstance.ip}:6002`, 'default', EVENTS.FOLDERS, (folders) => {
+        setLoading(false);
         setFolders(folders.map(toImage));
       });
       addExternalListener(`${botInstance.ip}:6002`, 'default', EVENTS.SCREENSHOTS, (screenshots) => {
-        setImages(screenshots.map(toImage));
+        setLoading(false);
+        setImages({ type: EVENTS.SCREENSHOTS, data: screenshots.map(toImage) });
+      });
+      addExternalListener(`${botInstance.ip}:6002`, 'default', EVENTS.SCREENSHOT, (screenshot) => {
+        if(offset === 0) {
+          setImages({ type: EVENTS.SCREENSHOT, data: toImage(screenshot) });
+        } else {
+          emitExternalMessage(MESSAGES.GET_SCREENSHOTS, { date: currentFolder.date, offset, limit });
+        }
       });
     }
   }, [botInstance]);
 
   useEffect(() => {
     if(currentFolder) {
+      setLoading(true);
       emitExternalMessage(MESSAGES.GET_SCREENSHOTS, { date: currentFolder.date, offset, limit });
       setCustomBack(BackButton);
     } else {
-      setImages([]);
+      setImages({ type: EVENTS.SCREENSHOTS, data: [] });
       setCustomBack(null);
     }
   }, [currentFolder, offset]);
@@ -99,11 +126,13 @@ const ScreenShotTab = ({
     <>
       <Content styles={!currentFolder && css`justify-content: flex-start;`}>
         {
-          !currentFolder
-            ? folders.map((item, idx) => <Image key={idx} src={item.src} caption={item.caption}
-              onClick={() => setCurrentFolder(item)} />)
-            : images.map((item, idx) => <Image styles={css`margin-right: 0`} key={idx} src={item.src}
-              caption={item.caption} onClick={() => setCurrentImage(item)} />)
+          loading
+            ? <Loader type={'spinning-bubbles'} width={100} height={100} color={theme.colors.primary}/>
+            : !currentFolder
+              ? folders.map((item, idx) => <Image key={idx} src={item.src} caption={item.caption}
+                onClick={() => setCurrentFolder(item)} />)
+              : images.map((item, idx) => <Image styles={css`margin-right: 0`} key={idx} src={item.src}
+                caption={item.caption} onClick={() => setCurrentImage(item)} />)
         }
       </Content>
       {
@@ -125,7 +154,8 @@ ScreenShotTab.propTypes = {
   emitExternalMessage:        PropTypes.func.isRequired,
   removeAllExternalListeners: PropTypes.func.isRequired,
   setCustomBack:              PropTypes.func.isRequired,
-  botInstance:                PropTypes.object.isRequired
+  botInstance:                PropTypes.object.isRequired,
+  theme:                      PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired
 };
 
 const mapStateToProps = state => ({
@@ -138,4 +168,4 @@ const mapDispatchToProps = dispatch => ({
   removeAllExternalListeners: () => dispatch(removeAllExternalListeners())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ScreenShotTab);
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ScreenShotTab));

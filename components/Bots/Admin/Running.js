@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import Icon from 'components/default/icons';
 import Select from 'react-select';
-import Router from 'next/router';
 import Link from 'next/link';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from 'components/default/Card';
