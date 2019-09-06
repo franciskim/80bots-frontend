@@ -89,7 +89,7 @@ const Profile = ({ user, getTimezones, getRegions, updateUser, addNotification, 
             <div className="col-md-6 col-sm-12">
               <div className="form-group">
                 <label htmlFor="">Remaining Credits</label>
-                <input type="text" name="remaining_credits" value={user.remaining_credits} readOnly
+                <input type="text" name="credits" value={user.credits} readOnly
                   className="form-control"
                 />
               </div>
