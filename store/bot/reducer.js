@@ -10,7 +10,7 @@ import {
   ADMIN_POST_LAUNCH_INSTANCE,
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
-  GET_TAGS, BOT_SETTINGS, SYNC_BOT_INSTANCES, AMIS, SYNC_BOTS
+  GET_TAGS, BOT_SETTINGS, SYNC_BOT_INSTANCES, AMIS, SYNC_BOTS, GET_BOT
 } from './types';
 
 const initialState = {
@@ -18,6 +18,7 @@ const initialState = {
   tags: [],
   amis: [],
   botInstances: [],
+  botInstance: {},
   platforms: [],
   botSettings: {},
   total: 0,
@@ -28,6 +29,7 @@ const initialState = {
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_BOT:
     case GET_BOTS:
     case ADMIN_GET_BOTS:
     case GET_RUNNING_BOTS:
@@ -43,6 +45,9 @@ export const reducer = (state = initialState, action) => {
     case SYNC_BOT_INSTANCES:
     case SYNC_BOTS:
       return { ...state, syncLoading: true };
+
+    case success(GET_BOT):
+      return { ...state, botInstance: action.data, loading: false };
 
     case success(GET_BOTS):
     case success(ADMIN_GET_BOTS):
@@ -95,6 +100,7 @@ export const reducer = (state = initialState, action) => {
     case success(AMIS):
       return { ...state, amis: action.data.data };
 
+    case error(GET_BOT):
     case error(GET_BOTS):
     case error(ADMIN_GET_BOTS):
     case error(GET_RUNNING_BOTS):

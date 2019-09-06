@@ -1,5 +1,6 @@
 import {
   GET_BOTS,
+  GET_BOT,
   ADMIN_GET_BOTS,
   ADD_BOT,
   GET_RUNNING_BOTS,
@@ -269,6 +270,30 @@ export const syncLocalBots = () => ({
   request: {
     method: 'GET',
     url: '/admin/bots/sync'
+  },
+  meta: {
+    thunk: true,
+    admin: true
+  }
+});
+
+export const getBot = (id) => ({
+  type: GET_BOT,
+  request: {
+    method: 'GET',
+    url: `/instances/${id}`
+  },
+  meta: {
+    thunk: true,
+    admin: true
+  }
+});
+
+export const adminGetBot = (id) => ({
+  type: GET_BOT,
+  request: {
+    method: 'GET',
+    url: `/admin/instances/${id}`
   },
   meta: {
     thunk: true,

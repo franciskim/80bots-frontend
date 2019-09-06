@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import Echo from 'laravel-echo';
 import {
   ADD_LISTENER, REMOVE_LISTENER, REMOVE_ALL_LISTENERS, EMIT_MESSAGE, ADD_EXTERNAL_LISTENER, REMOVE_EXTERNAL_LISTENER,
-  REMOVE_ALL_EXTERNAL_LISTENERS
+  REMOVE_ALL_EXTERNAL_LISTENERS, EMIT_EXTERNAL_MESSAGE
 } from './types';
 
 export default function createWebSocketMiddleware() {
@@ -57,6 +57,11 @@ export default function createWebSocketMiddleware() {
           externalSocket.on(action.data.eventName, action.data.handler);
           break;
         }
+        case EMIT_EXTERNAL_MESSAGE: {
+          if(!externalSocket) initExternal(action.data.url);
+          return externalSocket.emit(action.data.eventName, action.data.message);
+        }
+
         case REMOVE_EXTERNAL_LISTENER:
           return externalSocket.removeListener(action.data.eventName);
         case REMOVE_ALL_EXTERNAL_LISTENERS: {

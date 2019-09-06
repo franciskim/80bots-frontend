@@ -14,6 +14,7 @@ import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from '../default/Card';
 import { Table, Thead, Filters, LimitFilter, SearchFilter } from '../default/Table';
 import { css } from '@emotion/core';
+import Link from 'next/link';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -52,6 +53,11 @@ const Ip = styled.span`
   &:hover {
     border-bottom: 1px solid ${ props => props.theme.colors.clearBlue };
   }
+`;
+
+const A = styled.a`
+  color: inherit;
+  text-decoration: none;
 `;
 
 const modalStyles = css`
@@ -134,7 +140,11 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
     </td>
     <td>{ botInstance.launched_at }</td>
     <td>
-      <IconButton type={'primary'}><Icon name={'eye'} color={theme.colors.white} /></IconButton>
+      <IconButton title={'View Bot'} type={'primary'}>
+        <Link href={'/bots/running/[id]'} as={`/bots/running/${botInstance.id}`}>
+          <A><Icon name={'eye'} color={'white'}/></A>
+        </Link>
+      </IconButton>
       <IconButton type={'primary'} onClick={() => { setClickedBotInstance(botInstance); modal.current.open(); }}>
         <Icon name={'edit'} color={theme.colors.white} />
       </IconButton>
