@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import Icon from 'components/default/icons';
@@ -45,10 +45,10 @@ const Tr = styled.tr`
 `;
 
 const Ip = styled.span`
-  color: ${ props => props.theme.colors.clearBlue };
+  color: ${props => props.theme.colors.clearBlue};
   cursor: pointer;
   &:hover {
-    border-bottom: 1px solid ${ props => props.theme.colors.clearBlue };
+    border-bottom: 1px solid ${props => props.theme.colors.clearBlue};
   }
 `;
 
@@ -73,31 +73,31 @@ const selectStyles = {
     ...provided,
     minWidth: '150px'
   }),
-  menuPortal: base => ({ ...base, zIndex: 1 })
+  menuPortal: base => ({...base, zIndex: 1})
 };
 
 const OPTIONS = [
-  { value: 'pending', label: 'Pending', readOnly: true },
-  { value: 'running', label: 'Running' },
-  { value: 'stopped', label: 'Stopped' } ,
-  { value: 'terminated', label: 'Terminated' }
+  {value: 'pending', label: 'Pending', readOnly: true},
+  {value: 'running', label: 'Running'},
+  {value: 'stopped', label: 'Stopped'},
+  {value: 'terminated', label: 'Terminated'}
 ];
 
 const FILTERS_LIST_OPTIONS = [
-  { value: 'all', label: 'All Instances' },
-  { value: 'my', label: 'My Instances' },
+  {value: 'all', label: 'All Instances'},
+  {value: 'my', label: 'My Instances'},
 ];
 
-const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInstancePemFile, updateAdminRunningBot,
+const RunningBots = ({
+  theme, addNotification, adminGetRunningBots, downloadInstancePemFile, updateAdminRunningBot,
   botInstances, total, user, addListener, removeAllListeners, botInstanceUpdated, syncBotInstances, syncLoading
 }) => {
-
   const [list, setFilterList] = useState('all');
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    adminGetRunningBots({ page, limit, list });
+    adminGetRunningBots({page, limit, list});
     addListener(`running.${user.id}`, 'InstanceLaunched', event => {
       addNotification({
         type: NOTIFICATION_TYPES.SUCCESS,
@@ -106,8 +106,8 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
       botInstanceUpdated(event.instance);
     });
     addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
-      addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' });
-      adminGetRunningBots({ page, limit, list });
+      addNotification({type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed'});
+      adminGetRunningBots({page, limit, list});
     });
     return () => {
       removeAllListeners();
@@ -115,8 +115,8 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
   }, []);
 
   const downloadEventHandler = instance => {
-    downloadInstancePemFile(instance.id).then(({ data }) => {
-      const blob = new Blob([data], { type: 'application/x-pem-file' });
+    downloadInstancePemFile(instance.id).then(({data}) => {
+      const blob = new Blob([data], {type: 'application/x-pem-file'});
       const file = new File([blob], `${instance.instance_id}.pem`, {
         type: 'application/x-pem-file'
       });
@@ -125,25 +125,28 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
       a.download = `${instance.instance_id}.pem`;
       document.body.appendChild(a);
       a.click();
-      setTimeout(function() {
+      setTimeout(function () {
         document.body.removeChild(a);
       }, 0);
-    }).catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred while downloading file' }));
+    }).catch(() => addNotification({
+      type: NOTIFICATION_TYPES.ERROR,
+      message: 'Error occurred while downloading file'
+    }));
   };
 
   const changeBotInstanceStatus = (option, id) => {
-    updateAdminRunningBot(id, { status: option.value })
+    updateAdminRunningBot(id, {status: option.value})
       .then(() => addNotification({
         type: NOTIFICATION_TYPES.SUCCESS,
         message: `Instance was successfully ${option.value}`
       }))
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
+      .catch(() => addNotification({type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed'}));
   };
 
   const syncWithAWS = () => {
     syncBotInstances()
-      .then(() => addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Sync sequence started' }))
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Can\'t start sync sequence' }));
+      .then(() => addNotification({type: NOTIFICATION_TYPES.INFO, message: 'Sync sequence started'}))
+      .catch(() => addNotification({type: NOTIFICATION_TYPES.ERROR, message: 'Can\'t start sync sequence'}));
   };
 
   const copyToClipboard = (bot) => {
@@ -151,33 +154,33 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
       ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
       : bot.ip;
     navigator.clipboard.writeText(text)
-      .then(() => addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Copied to clipboard' }));
+      .then(() => addNotification({type: NOTIFICATION_TYPES.INFO, message: 'Copied to clipboard'}));
   };
 
-  const Loading = <Loader type={'bubbles'} width={40} height={40} color={theme.colors.primary} />;
+  const Loading = <Loader type={'bubbles'} width={40} height={40} color={theme.colors.primary}/>;
 
   const renderRow = (botInstance, idx) => <Tr key={idx} disabled={botInstance.status === 'pending'}>
-    <td>{ botInstance.region }</td>
-    <td>{ botInstance.launched_by }</td>
-    <td>{ botInstance.name }</td>
-    <td>{ botInstance.bot_name }</td>
-    <td>{ botInstance.instance_id }</td>
-    <td>{ botInstance.uptime }&nbsp;min</td>
+    <td>{botInstance.region}</td>
+    <td>{botInstance.launched_by}</td>
+    <td>{botInstance.name}</td>
+    <td>{botInstance.bot_name}</td>
+    <td>{botInstance.instance_id}</td>
+    <td>{botInstance.uptime}&nbsp;min</td>
     <td>
       <Ip onClick={() => copyToClipboard(botInstance)}>
-        { botInstance.ip }
+        {botInstance.ip}
       </Ip>
     </td>
     <td>
       <Select options={OPTIONS} value={OPTIONS.find(item => item.value === botInstance.status)}
         onChange={option => changeBotInstanceStatus(option, botInstance.id)} styles={selectStyles}
-        isOptionDisabled={ (option) => option.readOnly }
+        isOptionDisabled={(option) => option.readOnly}
         isDisabled={botInstance.status === 'pending' || botInstance.status === 'terminated'}
         menuPortalTarget={document.body}
         menuPosition={'absolute'} menuPlacement={'bottom'}
       />
     </td>
-    <td>{ botInstance.launched_at }</td>
+    <td>{botInstance.launched_at}</td>
     <td>
       <IconButton title={'View Bot'} type={'primary'}>
         <Link href={'/admin/bots/running/[id]'} as={`/admin/bots/running/${botInstance.id}`}>
@@ -188,69 +191,78 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
         <Icon name={'download'} color={'white'}/>
       </IconButton>
     </td>
-    { botInstance.status === 'pending' && <Td colSpan={'9'}>{ Loading }</Td> }
+    {botInstance.status === 'pending' && <Td colSpan={'9'}>{Loading}</Td>}
   </Tr>
-  ;
+    ;
 
-  return(
-    <>
-      <AddButtonWrap>
-        <Button type={'primary'} onClick={syncWithAWS} loading={`${syncLoading}`} loaderWidth={140}>
-          Sync Bot Instances
-        </Button>
-      </AddButtonWrap>
-      <Container>
-        <CardBody>
-          <Filters>
-            <LimitFilter
-              onChange={({ value }) => {setLimit(value); adminGetRunningBots({ page, limit: value, list }); }}
-            />
-            <ListFilter options={FILTERS_LIST_OPTIONS}
-              onChange={({ value }) => {setFilterList(value); adminGetRunningBots({ page, limit, list: value }); }}
-            />
-            <SearchFilter onChange={console.log}/>
-          </Filters>
-          <Table>
-            <Thead>
-              <tr>
-                <th>Region</th>
-                <th>Launched By</th>
-                <th>Name</th>
-                <th>Script</th>
-                <th>Instance Id</th>
-                <th>Uptime</th>
-                <th>IP</th>
-                <th>Status</th>
-                <th>Launch Time</th>
-                <th>Actions</th>
-              </tr>
-            </Thead>
-            <tbody>
-              { botInstances.map(renderRow) }
-            </tbody>
-          </Table>
-          <Paginator total={total} pageSize={limit}
-            onChangePage={(page) => { setPage(page); adminGetRunningBots({ page, limit, list }); }}
-          />
-        </CardBody>
-      </Container>
-    </>
+  return (
+        <>
+            <AddButtonWrap>
+              <Button type={'primary'} onClick={syncWithAWS} loading={`${syncLoading}`} loaderWidth={140}>
+                    Sync Bot Instances
+              </Button>
+            </AddButtonWrap>
+            <Container>
+              <CardBody>
+                <Filters>
+                  <LimitFilter
+                    onChange={({value}) => {
+                      setLimit(value);
+                      adminGetRunningBots({page, limit: value, list});
+                    }}
+                  />
+                  <ListFilter options={FILTERS_LIST_OPTIONS}
+                    onChange={({value}) => {
+                      setFilterList(value);
+                      adminGetRunningBots({page, limit, list: value});
+                    }}
+                  />
+                  <SearchFilter onChange={console.log}/>
+                </Filters>
+                <Table>
+                  <Thead>
+                    <tr>
+                      <th>Region</th>
+                      <th>Launched By</th>
+                      <th>Name</th>
+                      <th>Script</th>
+                      <th>Instance Id</th>
+                      <th>Uptime</th>
+                      <th>IP</th>
+                      <th>Status</th>
+                      <th>Launch Time</th>
+                      <th>Actions</th>
+                    </tr>
+                  </Thead>
+                  <tbody>
+                    {botInstances.map(renderRow)}
+                  </tbody>
+                </Table>
+                <Paginator total={total} pageSize={limit}
+                  onChangePage={(page) => {
+                    setPage(page);
+                    adminGetRunningBots({page, limit, list});
+                  }}
+                />
+              </CardBody>
+            </Container>
+        </>
   );
 };
 
 RunningBots.propTypes = {
-  addNotification:         PropTypes.func.isRequired,
-  adminGetRunningBots:     PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired,
+  adminGetRunningBots: PropTypes.func.isRequired,
   downloadInstancePemFile: PropTypes.func.isRequired,
-  updateAdminRunningBot:   PropTypes.func.isRequired,
-  addListener:             PropTypes.func.isRequired,
-  removeAllListeners:      PropTypes.func.isRequired,
-  botInstanceUpdated:      PropTypes.func.isRequired,
-  syncBotInstances:        PropTypes.func.isRequired,
-  botInstances:            PropTypes.array.isRequired,
-  total:                   PropTypes.number.isRequired,
-  syncLoading:             PropTypes.bool.isRequired,
-  user:                    PropTypes.object,
+  updateAdminRunningBot: PropTypes.func.isRequired,
+  addListener: PropTypes.func.isRequired,
+  removeAllListeners: PropTypes.func.isRequired,
+  botInstanceUpdated: PropTypes.func.isRequired,
+  syncBotInstances: PropTypes.func.isRequired,
+  botInstances: PropTypes.array.isRequired,
+  total: PropTypes.number.isRequired,
+  syncLoading: PropTypes.bool.isRequired,
+  user: PropTypes.object,
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
@@ -258,9 +270,9 @@ RunningBots.propTypes = {
 
 const mapStateToProps = state => ({
   botInstances: state.bot.botInstances,
-  total:        state.bot.total,
-  user:         state.auth.user,
-  syncLoading:  state.bot.syncLoading
+  total: state.bot.total,
+  user: state.auth.user,
+  syncLoading: state.bot.syncLoading
 });
 
 const mapDispatchToProps = dispatch => ({
