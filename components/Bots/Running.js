@@ -37,14 +37,11 @@ const Td = styled.td`
   position: absolute;
   left: 20px;
   width: calc(100% - 40px);
-  background-color: rgba(221, 221, 221, .5);
 `;
 
 const Tr = styled.tr`
   position: relative;
-  td {
-    white-space: nowrap;
-  }
+  background-color: ${ props => props.disabled ? 'rgba(221, 221, 221, .5)' : 'none' };
 `;
 
 const Ip = styled.span`
@@ -121,7 +118,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
 
   const Loading = <Loader type={'bubbles'} width={45} height={45} color={theme.colors.primary} />;
 
-  const renderRow = (botInstance, idx) => <Tr key={idx}>
+  const renderRow = (botInstance, idx) => <Tr key={idx} disabled={botInstance.status === 'pending'}>
     <td>{ botInstance.region }</td>
     <td>{ botInstance.name }</td>
     <td>{ botInstance.credits_used }</td>
@@ -176,7 +173,9 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
               { botInstances.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getRunningBots({ page, limit }); }}/>
+          <Paginator total={total} pageSize={limit}
+            onChangePage={(page) => { setPage(page); getRunningBots({ page, limit }); }}
+          />
         </CardBody>
       </Container>
       <Modal ref={modal} title={'Edit Bot'} contentStyles={modalStyles} onClose={() => {}}>

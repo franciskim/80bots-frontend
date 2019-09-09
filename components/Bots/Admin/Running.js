@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import Icon from 'components/default/icons';
@@ -37,11 +37,11 @@ const Td = styled.td`
   position: absolute;
   left: 20px;
   width: calc(100% - 40px);
-  background-color: rgba(221, 221, 221, .5);
 `;
 
 const Tr = styled.tr`
   position: relative;
+  background-color: ${ props => props.disabled ? 'rgba(221, 221, 221, .5)' : 'none' };
 `;
 
 const Ip = styled.span`
@@ -156,7 +156,7 @@ const RunningBots = ({ theme, addNotification, adminGetRunningBots, downloadInst
 
   const Loading = <Loader type={'bubbles'} width={40} height={40} color={theme.colors.primary} />;
 
-  const renderRow = (botInstance, idx) => <Tr key={idx}>
+  const renderRow = (botInstance, idx) => <Tr key={idx} disabled={botInstance.status === 'pending'}>
     <td>{ botInstance.region }</td>
     <td>{ botInstance.launched_by }</td>
     <td>{ botInstance.name }</td>

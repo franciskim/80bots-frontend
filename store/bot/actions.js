@@ -11,7 +11,7 @@ import {
   ADMIN_UPDATE_BOT,
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
-  GET_TAGS, BOT_SETTINGS, UPDATE_BOT_SETTINGS, SYNC_BOT_INSTANCES, ADMIN_DELETE_BOT, AMIS, SYNC_BOTS
+  GET_TAGS, BOT_SETTINGS, UPDATE_BOT_SETTINGS, SYNC_BOT_INSTANCES, ADMIN_DELETE_BOT, AMIS, SYNC_BOTS, CLEAR_BOT
 } from './types';
 import { success } from 'redux-saga-requests';
 
@@ -299,4 +299,8 @@ export const adminGetBot = (id) => ({
     thunk: true,
     admin: true
   }
+});
+
+export const clearBot = () => ({
+  type: CLEAR_BOT,
 });
