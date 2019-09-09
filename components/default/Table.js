@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 export const Table = styled.table`
-  font-size: 11px;
+  font-size: 16px;
   width: 100%;
   color: #212529;
   border-collapse: collapse;
@@ -17,7 +17,7 @@ export const Table = styled.table`
 `;
 
 Table.propTypes = {
-    responsive: PropTypes.bool
+  responsive: PropTypes.bool
 };
 
 export const Thead = styled.thead`
@@ -54,60 +54,60 @@ const Label = styled.label`
 `;
 
 export const SearchFilter = props => {
-    const [term, setTerm] = useState('');
+  const [term, setTerm] = useState('');
 
-    const onChange = e => {
-        setTerm(e.target.value);
-        props.onChange(e.target.value);
-    };
+  const onChange = e => {
+    setTerm(e.target.value);
+    props.onChange(e.target.value);
+  };
 
-    return (
-        <FilterBox>
-            <Label>Search:</Label>
-            <input type={'text'} className={'form-control'} value={term} onChange={onChange}/>
-        </FilterBox>
-    );
+  return (
+    <FilterBox>
+      <Label>Search:</Label>
+      <input type={'text'} className={'form-control'} value={term} onChange={onChange}/>
+    </FilterBox>
+  );
 };
 
 SearchFilter.propTypes = {
-    onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired
 };
 
 const LIMIT_OPTIONS = [
-    {value: 10, label: 10},
-    {value: 25, label: 25},
-    {value: 50, label: 50},
-    {value: 100, label: 100},
+  {value: 10, label: 10},
+  {value: 25, label: 25},
+  {value: 50, label: 50},
+  {value: 100, label: 100},
 ];
 
 const selectStyles = {
-    container: (provided) => ({...provided, minWidth: '75px'})
+  container: (provided) => ({...provided, minWidth: '75px'})
 };
 
 export const LimitFilter = ({onChange}) => <FilterBox>
-    <Label>Show</Label>
-    <Select components={{IndicatorSeparator: () => null}} options={LIMIT_OPTIONS}
-            defaultValue={LIMIT_OPTIONS[0]} onChange={onChange} styles={selectStyles}
-    />
-    <Label>entries</Label>
+  <Label>Show</Label>
+  <Select components={{IndicatorSeparator: () => null}} options={LIMIT_OPTIONS}
+    defaultValue={LIMIT_OPTIONS[0]} onChange={onChange} styles={selectStyles}
+  />
+  <Label>entries</Label>
 </FilterBox>;
 
 LimitFilter.propTypes = {
-    onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired
 };
 
 const selectListFilterStyles = {
-    container: (provided) => ({...provided, minWidth: '200px'})
+  container: (provided) => ({...provided, minWidth: '200px'})
 };
 
 export const ListFilter = ({options, onChange}) => <FilterBox>
-    <Label>Show</Label>
-    <Select components={{IndicatorSeparator: () => null}} options={options}
-            defaultValue={options[0]} onChange={onChange} styles={selectListFilterStyles}
-    />
+  <Label>Show</Label>
+  <Select components={{IndicatorSeparator: () => null}} options={options}
+    defaultValue={options[0]} onChange={onChange} styles={selectListFilterStyles}
+  />
 </FilterBox>;
 
 ListFilter.propTypes = {
-    options: PropTypes.array.isRequired,
-    onChange: PropTypes.func.isRequired
+  options: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired
 };
