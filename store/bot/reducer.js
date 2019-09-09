@@ -10,7 +10,7 @@ import {
   ADMIN_POST_LAUNCH_INSTANCE,
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
-  GET_TAGS, BOT_SETTINGS, SYNC_BOT_INSTANCES, AMIS, SYNC_BOTS, GET_BOT
+  GET_TAGS, BOT_SETTINGS, SYNC_BOT_INSTANCES, AMIS, SYNC_BOTS, GET_BOT, CLEAR_BOT
 } from './types';
 
 const initialState = {
@@ -45,6 +45,9 @@ export const reducer = (state = initialState, action) => {
     case SYNC_BOT_INSTANCES:
     case SYNC_BOTS:
       return { ...state, syncLoading: true };
+
+    case CLEAR_BOT:
+      return { ...state, botInstance: {} };
 
     case success(GET_BOT):
       return { ...state, botInstance: action.data, loading: false };

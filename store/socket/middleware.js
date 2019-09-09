@@ -58,7 +58,11 @@ export default function createWebSocketMiddleware() {
           break;
         }
         case EMIT_EXTERNAL_MESSAGE: {
-          if(!externalSocket) initExternal(action.data.url);
+          if(!externalSocket) {
+            initExternal(action.data.url);
+            console.log(externalSocket);
+            externalSocket.on('connected', console.log);
+          }
           return externalSocket.emit(action.data.eventName, action.data.message);
         }
 

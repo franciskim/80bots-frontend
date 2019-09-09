@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { useRouter } from 'next/router';
 import { withTheme } from 'emotion-theming';
 import { Card, CardHeader, CardBody } from 'components/default/Card';
-import { adminGetBot, getBot } from 'store/bot/actions';
+import { adminGetBot, getBot, clearBot } from 'store/bot/actions';
 import { Button, Loader } from 'components/default';
 
 const UnderConstruction = () => <CardBody>Under construction!!</CardBody>;
@@ -20,7 +20,7 @@ const TABS = {
   },
   LOGS: {
     title: 'Logs',
-    component: UnderConstruction
+    component: LogsTab
   },
   OUTPUTS: {
     title: 'Outputs',
@@ -67,8 +67,8 @@ const A = styled.a`
   text-decoration: none;
 `;
 
-const BotView = ({ botInstance, user, getBot, adminGetBot, theme }) => {
-  const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
+const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme }) => {
+  const [activeTab, setActiveTab] = useState(TABS.LOGS);
   const [customBack, setCustomBack] = useState(null);
   const router = useRouter();
 
@@ -76,6 +76,7 @@ const BotView = ({ botInstance, user, getBot, adminGetBot, theme }) => {
     user.role === 'Admin'
       ? adminGetBot(router.query.id)
       : getBot(router.query.id);
+    return () => clearBot();
   }, []);
 
   useEffect(() => {
@@ -115,6 +116,7 @@ const BotView = ({ botInstance, user, getBot, adminGetBot, theme }) => {
 BotView.propTypes = {
   getBot:      PropTypes.func.isRequired,
   adminGetBot: PropTypes.func.isRequired,
+  clearBot:    PropTypes.func.isRequired,
   botInstance: PropTypes.object.isRequired,
   user:        PropTypes.object,
   theme:       PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired
@@ -127,6 +129,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getBot: (id) => dispatch(getBot(id)),
+  clearBot: () => dispatch(clearBot()),
   adminGetBot: (id) => dispatch(adminGetBot(id))
 });
 

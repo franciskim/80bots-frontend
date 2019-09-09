@@ -1,5 +1,6 @@
 export const GET_BOTS                   = 'GET_BOTS';
 export const GET_BOT                    = 'GET_BOT';
+export const CLEAR_BOT                  = 'CLEAR_BOT';
 export const GET_RUNNING_BOTS           = 'GET_RUNNING_BOTS';
 export const POST_LAUNCH_INSTANCE       = 'POST_LAUNCH_INSTANCE';
 export const UPDATE_RUNNING_BOT         = 'UPDATE_RUNNING_BOT';

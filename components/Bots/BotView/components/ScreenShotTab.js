@@ -44,7 +44,7 @@ const ImageViewer = styled.div`
   height: 100vh;
   background-color: rgba(0, 0, 0, .8);
   img {
-    width: calc(100vw - 400px);
+    width: calc(100vw - 400px); 
     height: calc(100vh - 200px);
   }
 `;
@@ -58,13 +58,12 @@ const ScreenShotTab = ({
   botInstance, addExternalListener, removeAllExternalListeners, emitExternalMessage, setCustomBack, theme
 }) => {
   const [folders, setFolders] = useState([]);
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useReducer((state, offset) => offset, 0);
   const [limit, setLimit] = useState(20);
   const [loading, setLoading] = useState(true);
   const [currentFolder, setCurrentFolder] = useState(null);
   const [currentImage, setCurrentImage] = useState(null);
 
-  const initialImageState = [];
   const imagesReducer = (state, action) => {
     switch (action.type) {
       case EVENTS.SCREENSHOTS:
@@ -77,7 +76,7 @@ const ScreenShotTab = ({
     }
   };
 
-  const [images, setImages] = useReducer(imagesReducer, initialImageState);
+  const [images, setImages] = useReducer(imagesReducer, []);
 
   const BackButton = <Back type={'primary'} onClick={() => setCurrentFolder(null)}>Back</Back>;
 
