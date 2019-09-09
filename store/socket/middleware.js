@@ -66,6 +66,7 @@ export default function createWebSocketMiddleware() {
           return externalSocket.removeListener(action.data.eventName);
         case REMOVE_ALL_EXTERNAL_LISTENERS: {
           externalSocket.removeAllListeners();
+          externalSocket.disconnect();
           externalSocket = null;
           break;
         }

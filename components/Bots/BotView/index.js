@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Link from 'next/link';
 import ScreenShotTab from './components/ScreenShotTab';
+import LogsTab from './components/LogsTab';
 import { connect } from 'react-redux';
 import { useRouter } from 'next/router';
 import { withTheme } from 'emotion-theming';
@@ -76,6 +77,10 @@ const BotView = ({ botInstance, user, getBot, adminGetBot, theme }) => {
       ? adminGetBot(router.query.id)
       : getBot(router.query.id);
   }, []);
+
+  useEffect(() => {
+    setCustomBack(null);
+  }, [activeTab]);
 
   const renderTab = (item, idx) => <Tab type={activeTab.title === TABS[item].title ? 'success' : 'primary'}
     key={idx} onClick={() => setActiveTab(TABS[item])}
