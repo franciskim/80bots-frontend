@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 export const Table = styled.table`
-  font-size: 16px;
+  font-size: 11px;
   width: 100%;
   color: #212529;
   border-collapse: collapse;
@@ -81,13 +81,13 @@ const LIMIT_OPTIONS = [
 ];
 
 const selectStyles = {
-  container: (provided) => ({ ...provided, minWidth: '75px' }),
-  menuPortal: base => ({ ...base, zIndex: 5 })
+  container: (provided) => ({...provided, minWidth: '75px'}),
+  menuPortal: base => ({...base, zIndex: 5})
 };
 
-export const LimitFilter = ({ onChange }) => <FilterBox>
+export const LimitFilter = ({onChange}) => <FilterBox>
   <Label>Show</Label>
-  <Select components={{ IndicatorSeparator: () => null }} options={LIMIT_OPTIONS}
+  <Select components={{IndicatorSeparator: () => null}} options={LIMIT_OPTIONS}
     defaultValue={LIMIT_OPTIONS[0]} onChange={onChange} styles={selectStyles}
     menuPortalTarget={document.body}
     menuPosition={'absolute'} menuPlacement={'bottom'}
@@ -100,13 +100,13 @@ LimitFilter.propTypes = {
 };
 
 const selectListFilterStyles = {
-  container: (provided) => ({ ...provided, minWidth: '200px' }),
-  menuPortal: base => ({ ...base, zIndex: 5 })
+  container: (provided) => ({...provided, minWidth: '200px'}),
+  menuPortal: base => ({...base, zIndex: 5})
 };
 
-export const ListFilter = ({ options, onChange }) => <FilterBox>
+export const ListFilter = ({options, onChange}) => <FilterBox>
   <Label>Show&nbsp;</Label>
-  <Select components={{ IndicatorSeparator: () => null }} options={options}
+  <Select components={{IndicatorSeparator: () => null}} options={options}
     defaultValue={options[0]} onChange={onChange} styles={selectListFilterStyles}
     menuPortalTarget={document.body}
     menuPosition={'absolute'} menuPlacement={'bottom'}
