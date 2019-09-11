@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { getBots, launchInstance } from 'store/bot/actions';
 import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
 import { addNotification } from 'store/notification/actions';
+import { Range } from '../default/inputs';
 
 const Container = styled(Card)` 
   border-radius: .25rem;
@@ -31,14 +32,33 @@ const Tag = styled(Badge)`
   }
 `;
 
+const inputStyle = {
+  container: css`
+    margin-top: 10px;
+  `,
+};
+
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
+`;
+
 const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
   const [clickedBot, setClickedBot] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+  const [instances, setInstances] = useState(1);
 
   const modal = useRef(null);
+  const modalSetParams = useRef(null);
 
   const launchBot = (params) => {
+
+    console.log(instances);
+    return false;
+
     modal.current.close();
 
     launchInstance(clickedBot.id, params).then(() => {
@@ -59,6 +79,10 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
   useEffect(() => {
     getBots({ limit, page });
   }, []);
+
+  const setInstancesParams = () => {
+    console.log(instances);
+  };
 
   const renderRow = (bot, idx) => <tr key={idx}>
     <td>{ bot.platform }</td>
@@ -104,11 +128,29 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
         </CardBody>
       </Container>
 
-      <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}
+      <Modal ref={modal} title={'Launch selected bot?'}
         contentStyles={css`overflow: visible;`} disableSideClosing
       >
-        <LaunchEditor bot={clickedBot} onClose={() => modal.current.close()} onSubmit={launchBot} />
+        <Range label={'Select the number of instances to run'} styles={inputStyle}
+          min={1} max={10}
+          onChange={value => setInstances(value) } value={instances}
+        />
+        <Buttons>
+          <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
+          <Button type={'primary'} onClick={() => { modal.current.close(); modalSetParams.current.open(); }}>Next</Button>
+        </Buttons>
       </Modal>
+
+      <Modal ref={modalSetParams} title={'Input the parameters for instance #1'} onClose={() => setClickedBot(null)}
+        contentStyles={css`overflow: visible;`} disableSideClosing
+      >
+        <LaunchEditor bot={clickedBot} onClose={() => modalSetParams.current.close()} onSubmit={launchBot}/>
+      </Modal>
+      {/*<Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}*/}
+      {/*  contentStyles={css`overflow: visible;`} disableSideClosing*/}
+      {/*>*/}
+      {/*  <LaunchEditor bot={clickedBot} onClose={() => modal.current.close()} onSubmit={launchBot} />*/}
+      {/*</Modal>*/}
     </>
   );
 };
