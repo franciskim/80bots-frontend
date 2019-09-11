@@ -43,7 +43,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
 
   useEffect(() => {
     let botParams = {};
-    bot.parameters.forEach(param => {
+    bot && bot.parameters.forEach(param => {
       if(getInputType(param.type) === 'checkbox') botParams[param.name] = false;
       if(getInputType(param.type) === 'range') botParams[param.name] = Number(param.range[0]);
     });
@@ -53,7 +53,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   const submit = () => {
     let err = [];
     setErrors([]);
-    bot.parameters.forEach(param => {
+    bot && bot.parameters.forEach(param => {
       if (!values[param.name] && getInputType(param.type) !== 'checkbox' && getInputType(param.type) !== 'range'
         && values[param.name] !== 0) {
         err.push(param.name);
@@ -153,7 +153,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
 
   return(
     <>
-      { bot.parameters.map(renderParams) }
+      { bot && bot.parameters.map(renderParams) }
       <Buttons>
         <Button type={'primary'} onClick={submit}>Launch</Button>
         <Button type={'danger'} onClick={onClose}>Cancel</Button>

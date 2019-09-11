@@ -107,7 +107,7 @@ const Subscription = ({ getSubscriptions, addNotification, subscribe, plans, act
         <PlanCredits>{ plan.credits }&nbsp;Credits</PlanCredits>
       </CardBody>
       <CardFooter>
-        <PlanButton type={plan.id === selectedPlan.id ? 'success' : 'primary'} onClick={() => setPlan(plan)}
+        <PlanButton type={selectedPlan && plan.id === selectedPlan.id ? 'success' : 'primary'} onClick={() => setPlan(plan)}
           rounded
         >
           Select

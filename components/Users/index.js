@@ -14,6 +14,7 @@ import { updateUser } from 'store/user/actions';
 import { getUsers } from 'store/user/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { connect } from 'react-redux';
+import Link from 'next/link';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -57,6 +58,11 @@ const modalStyles = css`
   overflow-y: visible;
 `;
 
+const A = styled.a`
+  color: inherit;
+  text-decoration: none;
+`;
+
 const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) => {
   const [clickedUser, setClickedUser] = useState(null);
   const [credits, setCredits] = useState(null);
@@ -71,7 +77,7 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
 
   const openEditModal = user => {
     setClickedUser(user);
-    setCredits(user.remaining_credits);
+    setCredits(user.credits);
     modal.current.open();
   };
 
@@ -89,7 +95,7 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
   };
 
   const updateCredits = () => {
-    updateUser(clickedUser.id, { remaining_credits: credits })
+    updateUser(clickedUser.id, { credits: credits })
       .then(() => {
         addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `User remaining credits was set to ${credits}` });
         modal.current.close();
@@ -104,7 +110,7 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
         { user.role }
       </Role>
     </td>
-    <td>{ user.remaining_credits }</td>
+    <td>{ user.credits }</td>
     <td>{ dayjs(user.created_at).format('YYYY-MM-DD HH:mm:ss') }</td>
     <td>
       <StatusButton type={user.status === 'active' ? 'success' : 'danger'} onClick={() => changeUserStatus(user)}>
@@ -112,6 +118,11 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
       </StatusButton>
     </td>
     <td>
+      <IconButton title={'View Credit Usage'} type={'primary'}>
+        <Link href={'/admin/users/[id]/history'} as={`/admin/users/${user.id}/history`}>
+          <A><Icon name={'dollar'} color={theme.colors.white}/></A>
+        </Link>
+      </IconButton>
       <IconButton title={'View Running Bots'} type={'primary'}>
         <Icon name={'eye'} color={theme.colors.white} />
       </IconButton>

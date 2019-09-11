@@ -46,10 +46,13 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
       setTimeout(() => {
         Router.push('/bots/running');
       }, (NOTIFICATION_TIMINGS.DURATION * 2) + NOTIFICATION_TIMINGS.INFO_HIDE_DELAY);
-    }).catch(() => {
-      addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch' });
+    }).catch(({ error : { response } }) => {
+      if (response && response.data) {
+        addNotification({type: NOTIFICATION_TYPES.ERROR, message: response.data.message});
+      } else {
+        addNotification({type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch'});
+      }
     }).finally(() => {
-      setClickedBot(null);
     });
   };
 

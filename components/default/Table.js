@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 export const Table = styled.table`
-  font-size: 16px;
+  font-size: 12px;
   width: 100%;
   color: #212529;
   border-collapse: collapse;
@@ -13,6 +13,9 @@ export const Table = styled.table`
     text-align: start;
     padding: 0.75rem;
     border-top: 1px solid #dee2e6;
+  }
+  @media(max-width: 1400px) {
+    font-size: 16px;
   }
 `;
 
@@ -81,13 +84,16 @@ const LIMIT_OPTIONS = [
 ];
 
 const selectStyles = {
-  container: (provided) => ({...provided, minWidth: '75px'})
+  container: (provided) => ({...provided, minWidth: '75px'}),
+  menuPortal: base => ({...base, zIndex: 5})
 };
 
 export const LimitFilter = ({onChange}) => <FilterBox>
   <Label>Show</Label>
   <Select components={{IndicatorSeparator: () => null}} options={LIMIT_OPTIONS}
     defaultValue={LIMIT_OPTIONS[0]} onChange={onChange} styles={selectStyles}
+    menuPortalTarget={document.body}
+    menuPosition={'absolute'} menuPlacement={'bottom'}
   />
   <Label>entries</Label>
 </FilterBox>;
@@ -97,13 +103,16 @@ LimitFilter.propTypes = {
 };
 
 const selectListFilterStyles = {
-  container: (provided) => ({...provided, minWidth: '200px'})
+  container: (provided) => ({...provided, minWidth: '200px'}),
+  menuPortal: base => ({...base, zIndex: 5})
 };
 
 export const ListFilter = ({ options, onChange, defaultValue, ...props }) => <FilterBox { ...props }>
-  <Label>Show</Label>
+  <Label>Show&nbsp;</Label>
   <Select components={{IndicatorSeparator: () => null}} options={options}
     defaultValue={defaultValue ? defaultValue : options[0]} onChange={onChange} styles={selectListFilterStyles}
+    menuPortalTarget={document.body}
+    menuPosition={'absolute'} menuPlacement={'bottom'}
   />
 </FilterBox>;
 
