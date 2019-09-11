@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Modal from 'components/default/Modal';
@@ -9,7 +9,6 @@ import { addExternalListener, emitExternalMessage, removeAllExternalListeners } 
 import { Button } from 'components/default';
 import { Select } from 'components/default/inputs';
 import { css } from '@emotion/core';
-import { parse } from 'json2csv';
 import { arrayToCsv } from 'lib/helpers';
 
 const EVENTS = {
