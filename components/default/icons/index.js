@@ -13,6 +13,7 @@ import Help from './Help';
 import SpinningBubbles from './SpinningBubbles';
 import Plus from './Plus';
 import User from './User';
+import Dollar from './Dollar';
 
 export default class Icon extends Component {
 
@@ -29,6 +30,7 @@ export default class Icon extends Component {
     'spinning-bubbles': SpinningBubbles,
     plus: Plus,
     user: User,
+    dollar: Dollar
   };
 
   static propTypes = {
@@ -36,7 +38,7 @@ export default class Icon extends Component {
     width: PropTypes.number,
     height: PropTypes.number,
     name: PropTypes.oneOf(['cross', 'exit', 'user', 'arrow', 'bubbles', 'spinning-bubbles', 'edit', 'eye',
-      'garbage', 'plus', 'download', 'help'
+      'garbage', 'plus', 'download', 'help', 'dollar'
     ]).isRequired //  coding assistance in IDE to find need icon when typing `name="...`
   };
 

@@ -14,6 +14,7 @@ import { updateUser } from 'store/user/actions';
 import { getUsers } from 'store/user/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { connect } from 'react-redux';
+import Link from 'next/link';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -55,6 +56,11 @@ const Role = styled(Badge)`
 const modalStyles = css`
   min-width: 300px;
   overflow-y: visible;
+`;
+
+const A = styled.a`
+  color: inherit;
+  text-decoration: none;
 `;
 
 const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) => {
@@ -112,6 +118,11 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
       </StatusButton>
     </td>
     <td>
+      <IconButton title={'View Credit Usage'} type={'primary'}>
+        <Link href={'/admin/users/[id]/history'} as={`/admin/users/${user.id}/history`}>
+          <A><Icon name={'dollar'} color={theme.colors.white}/></A>
+        </Link>
+      </IconButton>
       <IconButton title={'View Running Bots'} type={'primary'}>
         <Icon name={'eye'} color={theme.colors.white} />
       </IconButton>
