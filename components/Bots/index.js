@@ -5,7 +5,7 @@ import LaunchEditor from './components/LaunchEditor';
 import Router from 'next/router';
 import Modal from '../default/Modal';
 import { css } from '@emotion/core';
-import { Button, Badge, Paginator } from '../default';
+import { Button, Badge, Paginator, MultiStep } from '../default';
 import { Card, CardBody } from '../default/Card';
 import { Table, Thead, Filters, LimitFilter, SearchFilter } from '../default/Table';
 import { connect } from 'react-redux';
@@ -56,24 +56,23 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
 
   const launchBot = (params) => {
 
-    console.log(instances);
-    return false;
+    console.log('launchBot');
 
-    modal.current.close();
-
-    launchInstance(clickedBot.id, params).then(() => {
-      addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
-      setTimeout(() => {
-        Router.push('/bots/running');
-      }, (NOTIFICATION_TIMINGS.DURATION * 2) + NOTIFICATION_TIMINGS.INFO_HIDE_DELAY);
-    }).catch(({ error : { response } }) => {
-      if (response && response.data) {
-        addNotification({type: NOTIFICATION_TYPES.ERROR, message: response.data.message});
-      } else {
-        addNotification({type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch'});
-      }
-    }).finally(() => {
-    });
+    // modal.current.close();
+    //
+    // launchInstance(clickedBot.id, params).then(() => {
+    //   addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
+    //   setTimeout(() => {
+    //     Router.push('/bots/running');
+    //   }, (NOTIFICATION_TIMINGS.DURATION * 2) + NOTIFICATION_TIMINGS.INFO_HIDE_DELAY);
+    // }).catch(({ error : { response } }) => {
+    //   if (response && response.data) {
+    //     addNotification({type: NOTIFICATION_TYPES.ERROR, message: response.data.message});
+    //   } else {
+    //     addNotification({type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch'});
+    //   }
+    // }).finally(() => {
+    // });
   };
 
   useEffect(() => {
@@ -141,16 +140,13 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
         </Buttons>
       </Modal>
 
-      <Modal ref={modalSetParams} title={'Input the parameters for instance #1'} onClose={() => setClickedBot(null)}
+      <Modal ref={modalSetParams} title={'Input the parameters for instances'} onClose={() => setClickedBot(null)}
         contentStyles={css`overflow: visible;`} disableSideClosing
       >
-        <LaunchEditor bot={clickedBot} onClose={() => modalSetParams.current.close()} onSubmit={launchBot}/>
+        <MultiStep count={instances}>
+          <LaunchEditor bot={clickedBot} onClose={() => modal.modalSetParams.close()} onSubmit={launchBot} />
+        </MultiStep>
       </Modal>
-      {/*<Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}*/}
-      {/*  contentStyles={css`overflow: visible;`} disableSideClosing*/}
-      {/*>*/}
-      {/*  <LaunchEditor bot={clickedBot} onClose={() => modal.current.close()} onSubmit={launchBot} />*/}
-      {/*</Modal>*/}
     </>
   );
 };

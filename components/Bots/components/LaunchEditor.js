@@ -154,10 +154,10 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   return(
     <>
       { bot && bot.parameters.map(renderParams) }
-      <Buttons>
-        <Button type={'primary'} onClick={submit}>Launch</Button>
-        <Button type={'danger'} onClick={onClose}>Cancel</Button>
-      </Buttons>
+      {/*<Buttons>*/}
+      {/*  <Button type={'primary'} onClick={submit}>Launch</Button>*/}
+      {/*  <Button type={'danger'} onClick={onClose}>Cancel</Button>*/}
+      {/*</Buttons>*/}
     </>
   );
 };
