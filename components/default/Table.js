@@ -14,7 +14,7 @@ export const Table = styled.table`
     padding: 0.75rem;
     border-top: 1px solid #dee2e6;
   }
-  @media(max-width: 1400px) {
+  @media(min-width: 1400px) {
     font-size: 16px;
   }
 `;
