@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 export const Table = styled.table`
-  font-size: 11px;
+  font-size: 12px;
   width: 100%;
   color: #212529;
   border-collapse: collapse;
