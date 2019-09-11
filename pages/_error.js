@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/browser';
 
 Sentry.init({ dsn: process.env.SENTRY_DSN });
 
-const notifySentry = (err, req, statusCode) => {
+const notifySentry = (err, req, statusCode, user) => {
   Sentry.configureScope((scope) => {
     if (!req) {
       scope.setTag('ssr', false);
@@ -16,10 +16,9 @@ const notifySentry = (err, req, statusCode) => {
       scope.setExtra('query', req.query);
       scope.setExtra('statusCode', statusCode);
       scope.setExtra('headers', req.headers);
-
-      if (req.user) {
-        scope.setUser({ id: req.user.id, email: req.user.email });
-      }
+    }
+    if (user) {
+      scope.setUser({ id: user.id, email: user.email });
     }
   });
 
@@ -28,7 +27,7 @@ const notifySentry = (err, req, statusCode) => {
 
 const ErrorPage = ({ statusCode }) => <Error statusCode={statusCode} />;
 
-ErrorPage.getInitialProps = async ({ req, res, err }) => {
+ErrorPage.getInitialProps = async ({ req, res, err, reduxStore }) => {
   let statusCode;
   if (res) {
     ({ statusCode } = res);
@@ -38,7 +37,9 @@ ErrorPage.getInitialProps = async ({ req, res, err }) => {
     statusCode = null;
   }
 
-  notifySentry(err, req, statusCode);
+  const user = reduxStore.getState().auth.user;
+
+  notifySentry(err, req, statusCode, user);
 
   return { statusCode };
 };

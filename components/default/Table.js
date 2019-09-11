@@ -100,14 +100,15 @@ const selectListFilterStyles = {
   container: (provided) => ({...provided, minWidth: '200px'})
 };
 
-export const ListFilter = ({options, onChange}) => <FilterBox>
+export const ListFilter = ({ options, onChange, defaultValue, ...props }) => <FilterBox { ...props }>
   <Label>Show</Label>
   <Select components={{IndicatorSeparator: () => null}} options={options}
-    defaultValue={options[0]} onChange={onChange} styles={selectListFilterStyles}
+    defaultValue={defaultValue ? defaultValue : options[0]} onChange={onChange} styles={selectListFilterStyles}
   />
 </FilterBox>;
 
 ListFilter.propTypes = {
   options: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  defaultValue: PropTypes.any
 };
