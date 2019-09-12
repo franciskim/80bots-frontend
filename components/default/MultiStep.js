@@ -29,6 +29,23 @@ const CircleStep = styled.span`
   ${ props => props.idx < props.step ? completedStepStyles : props.idx === props.step ? activeStepStyles : null };
 `;
 
+export const Steps = ({ amount, step, ...props }) => <BlockCircleSteps {...props}>
+  {
+    (() => {
+      let arr = [];
+      for (let i = 0; i < amount; i++) {
+        arr.push(<CircleStep key={i} idx={i} step={step}/>);
+      }
+      return arr;
+    })()
+  }
+</BlockCircleSteps>;
+
+Steps.propTypes = {
+  amount: PropTypes.number.isRequired,
+  step:   PropTypes.number.isRequired
+};
+
 /* Mark the active step: */
 const activeStepStyles = css`
   opacity: 1;
@@ -54,10 +71,6 @@ const Buttons = styled.div`
 export const MultiStep = ({ count, children, ...props }) => {
 
   const [step, setStep] = useState(0);
-
-  const styles = css`
-    ${ activeStepStyles };
-  `;
 
   let listCircleStep = [];
 

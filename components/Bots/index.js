@@ -127,35 +127,10 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
         </CardBody>
       </Container>
 
-      <Modal ref={modal} title={'Launch selected bot?'}
-        contentStyles={css`overflow: visible;`} disableSideClosing
+      <Modal ref={modal} title={'Launch selected bot?'} onClose={() => setClickedBot(null)}
+        contentStyles={css`overflow-x: visible; overflow-y: hidden;`}
       >
-        <Range label={'Select the number of instances to run'} styles={inputStyle}
-          min={1} max={10}
-          onChange={value => setInstances(value) } value={instances}
-        />
-        <Buttons>
-          <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
-          <Button type={'primary'} onClick={() => { modal.current.close(); modalSetParams.current.open(); }}>Next</Button>
-        </Buttons>
-      </Modal>
-
-      <Modal ref={modalSetParams} title={'Input the parameters for instances'} onClose={() => setClickedBot(null)}
-        contentStyles={css`overflow: visible;`} disableSideClosing
-      >
-        <MultiStep count={instances}>
-          {
-            (() => {
-              let arr = [];
-              for(let i = 0; i < instances; i++) {
-                arr.push(
-                  <LaunchEditor bot={clickedBot} onClose={() => modal.modalSetParams.close()} onSubmit={(launchBot)} />
-                );
-              }
-              return arr;
-            })()
-          }
-        </MultiStep>
+        <LaunchEditor onSubmit={launchBot} onClose={() => modal.current.close()} bot={clickedBot} />
       </Modal>
     </>
   );

@@ -38,37 +38,70 @@ const selectStyles = {
 };
 
 const LaunchEditor = ({ bot, onSubmit, onClose }) => {
+  const [result, setResult] = useState({});
   const [values, setValues] = useState({});
+  const [combinedResult, setCombinedResult] = useState([]);
   const [errors, setErrors] = useState([]);
+  const [step, setStep] = useState(1);
+  const [amount, setAmount] = useState(1);
+  const [isAmountSet, amountSet] = useState(false);
 
   useEffect(() => {
+    initValues();
+  }, [bot]);
+
+  const initValues = () => {
     let botParams = {};
     bot && bot.parameters.forEach(param => {
       if(getInputType(param.type) === 'checkbox') botParams[param.name] = false;
       if(getInputType(param.type) === 'range') botParams[param.name] = Number(param.range[0]);
+      if(getInputType(param.type) === 'text' || getInputType(param.type) === 'number') botParams[param.name] = '';
     });
+    console.log(botParams);
+    setResult(botParams);
     setValues(botParams);
-  }, [bot]);
+  };
 
   const submit = () => {
     let err = [];
     setErrors([]);
     bot && bot.parameters.forEach(param => {
-      if (!values[param.name] && getInputType(param.type) !== 'checkbox' && getInputType(param.type) !== 'range'
-        && values[param.name] !== 0) {
+      if (!result[param.name] && getInputType(param.type) !== 'checkbox' && getInputType(param.type) !== 'range'
+        && result[param.name] !== 0) {
         err.push(param.name);
       }
     });
     if(err.length > 0) setErrors(err);
     else {
-      onSubmit(values);
+      if(amount === 1) {
+        onSubmit(values);
+      } else {
+        initValues();
+        setCombinedResult([...combinedResult, result]);
+        setStep(step + 1);
+        if(step === amount) onSubmit([...combinedResult, result]);
+      }
     }
   };
 
-  const changeValue = (field, value) => {
+  const cancel = () => {
+    if(amount > 1) {
+      setStep(step - 1);
+      const prevResult = combinedResult[step - 2];
+      setValues(prevResult);
+      setResult(prevResult);
+    } else {
+      onClose();
+    }
+  };
+
+  const changeValue = (field, value, option) => {
     let valuesCopy = {...values};
-    valuesCopy[field] = value;
+    let resultCopy = {...result};
+    valuesCopy[field] = option || value;
+    resultCopy[field] = option ? option.value : value;
     setValues(valuesCopy);
+    setResult(resultCopy);
   };
 
   const toOptions = value => ({
@@ -104,8 +137,9 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
     switch (item.type) {
       case 'enum': return(
         <Select key={idx} options={item.values.map(toOptions)} label={label}
+          value={values[item.name]}
           error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
-          onChange={({ value }) => changeValue(item.name, value)} styles={selectStyles}
+          onChange={option => changeValue(item.name, option.value, option)} styles={selectStyles}
           menuPortalTarget={document.body}
           menuPosition={'absolute'} menuPlacement={'top'}
         />
@@ -113,7 +147,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
 
       case 'integer':
       case 'Integer': return(
-        <Input key={idx} type={type} label={label} styles={inputStyle}
+        <Input key={idx} type={type} label={label} styles={inputStyle} value={values[item.name]}
           min={item.range && Number(item.range[0])} max={item.range && Number(item.range[1])}
           onChange={e => changeValue(item.name, Number(e.target.value))}
           error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
@@ -136,7 +170,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
       case 'String':
       case 'password':
       case 'string': return(
-        <Input key={idx} type={type} label={label} styles={inputStyle}
+        <Input key={idx} type={type} label={label} styles={inputStyle} value={values[item.name]}
           onChange={e => changeValue(item.name, e.target.value)}
           error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
         />
@@ -152,20 +186,32 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   };
 
   return(
-    <>
+    !isAmountSet
+      ? <>
+        <Range label={'Choose amount of instances to launch'} styles={inputStyle} min={1} max={10}
+          onChange={value => setAmount(value)}
+        />
+        <Buttons>
+          <Button type={'primary'} onClick={() => amountSet(true)}>Submit</Button>
+          <Button type={'danger'} onClick={onClose}>Cancel</Button>
+        </Buttons>
+      </>
+      : <>
       { bot && bot.parameters.map(renderParams) }
-      {/*<Buttons>*/}
-      {/*  <Button type={'primary'} onClick={submit}>Launch</Button>*/}
-      {/*  <Button type={'danger'} onClick={onClose}>Cancel</Button>*/}
-      {/*</Buttons>*/}
+      <Buttons>
+        <Button disabled={amount > 1 && step === 1} type={'danger'} onClick={cancel}>
+          { amount === 1 ? 'Cancel' : 'Previous' }
+        </Button>
+        <Button type={'primary'} onClick={submit}>{ step === amount ? 'Launch' : 'Next' }</Button>
+      </Buttons>
     </>
   );
 };
 
 LaunchEditor.propTypes = {
-  bot: PropTypes.object,
+  bot:      PropTypes.object,
   onSubmit: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
+  onClose:  PropTypes.func.isRequired
 };
 
 export default LaunchEditor;

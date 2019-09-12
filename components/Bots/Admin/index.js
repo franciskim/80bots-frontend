@@ -20,6 +20,7 @@ import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
 import { css } from '@emotion/core';
 import { withTheme } from 'emotion-theming';
 import {addListener} from '../../../store/socket/actions';
+import {Range} from '../../default/inputs';
 
 const Container = styled(Card)`
   border-radius: .25rem;

@@ -73,24 +73,28 @@ const RangeContainer = styled.div`
   ${ props => props.styles };
 `;
 
-export const Range = ({ styles, onChange, min, label, ...props }) => {
-  const [value, setValue] = useState(min || 0);
+export const Range = ({ styles, onChange, min, label, value, ...props }) => {
+  const [val, setVal] = useState(min || 0);
 
   useEffect(() => {
-    onChange(value);
+    onChange(val);
   }, []);
+
+  useEffect(() => {
+    if(value) setVal(value);
+  }, [value]);
 
   const changeValue = e => {
     onChange(Number(e.target.value));
-    setValue(Number(e.target.value));
+    setVal(Number(e.target.value));
   };
 
   return(
     <Wrap styles={styles && styles.container}>
       { label && <Label styles={styles && styles.label}>{ label }</Label> }
       <RangeContainer>
-        <DefaultRange {...props} min={min} type={'range'} value={value} onChange={changeValue}/>
-        <RangeValue>{value}</RangeValue>
+        <DefaultRange {...props} min={min} type={'range'} value={val} onChange={changeValue}/>
+        <RangeValue>{val}</RangeValue>
       </RangeContainer>
     </Wrap>
   );
@@ -99,6 +103,7 @@ export const Range = ({ styles, onChange, min, label, ...props }) => {
 Range.propTypes = {
   label: PropTypes.string,
   min: PropTypes.number,
+  value: PropTypes.number,
   onChange: PropTypes.func.isRequired,
   styles: PropTypes.shape({
     container: PropTypes.object,

@@ -27,7 +27,7 @@ const IconButton = styled(Button)`
   padding: 2px;
   margin-right: 5px;
   width: 30px;
-  height: 30px;
+  height: 30px; 
   &:last-child {
     margin-right: 0;
   }
