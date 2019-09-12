@@ -21,3 +21,5 @@ export const ADD_BOT                    = 'ADD_BOT';
 
 export const BOT_SETTINGS               = 'BOT_SETTINGS';
 export const UPDATE_BOT_SETTINGS        = 'UPDATE_BOT_SETTINGS';
+
+export const ADMIN_REGIONS              = 'ADMIN_REGIONS';
