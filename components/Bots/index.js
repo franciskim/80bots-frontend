@@ -144,7 +144,17 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
         contentStyles={css`overflow: visible;`} disableSideClosing
       >
         <MultiStep count={instances}>
-          <LaunchEditor bot={clickedBot} onClose={() => modal.modalSetParams.close()} onSubmit={launchBot} />
+          {
+            (() => {
+              let arr = [];
+              for(let i = 0; i < instances; i++) {
+                arr.push(
+                  <LaunchEditor bot={clickedBot} onClose={() => modal.modalSetParams.close()} onSubmit={(launchBot)} />
+                );
+              }
+              return arr;
+            })()
+          }
         </MultiStep>
       </Modal>
     </>

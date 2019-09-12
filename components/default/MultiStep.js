@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/core';
 import { theme } from 'config';
-import {Button} from './Button';
+import { Button } from './Button';
 
 const Container = styled.div`
   position: relative;
@@ -26,11 +26,17 @@ const CircleStep = styled.span`
   border-radius: 50%;
   display: inline-block;
   opacity: 0.5;
+  ${ props => props.idx < props.step ? completedStepStyles : props.idx === props.step ? activeStepStyles : null };
 `;
 
 /* Mark the active step: */
 const activeStepStyles = css`
   opacity: 1;
+`;
+
+const completedStepStyles = css`
+  opacity: 1;
+  background-color: ${ theme.colors.clearGreen };
 `;
 
 /* Hide all steps by default: */
@@ -47,7 +53,7 @@ const Buttons = styled.div`
 
 export const MultiStep = ({ count, children, ...props }) => {
 
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
 
   const styles = css`
     ${ activeStepStyles };
@@ -56,7 +62,7 @@ export const MultiStep = ({ count, children, ...props }) => {
   let listCircleStep = [];
 
   for (let i = 0; i < count; i++) {
-    listCircleStep.push(<CircleStep key={i} />);
+    listCircleStep.push(<CircleStep key={i} idx={i} step={step}/>);
   }
 
   return(
@@ -67,12 +73,23 @@ export const MultiStep = ({ count, children, ...props }) => {
       </BlockCircleSteps>
 
       <TabStep>
-        {children}
+        {children[step]}
       </TabStep>
 
       <Buttons>
-        <Button type={'primary'} onClick={() => console.log('Previous')}>Previous</Button>
-        <Button type={'danger'} onClick={() => console.log('Next')}>Next</Button>
+        <Button disabled={step === 0} type={'primary'} onClick={() => setStep(step > 0 ? step - 1 : step)}>
+          Previous
+        </Button>
+        {
+          (() => {
+            return step === count-1 ? <Button type={'danger'} onClick={() => { console.log('COMPLETE'); }}>
+              Complete
+            </Button> : <Button type={'danger'} onClick={() => setStep(step < count ? step + 1 : step)}>
+              Next
+            </Button>;
+          })()
+        }
+
       </Buttons>
 
     </Container>
