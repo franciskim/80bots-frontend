@@ -14,6 +14,9 @@ export const Table = styled.table`
     padding: 0.75rem;
     border-top: 1px solid #dee2e6;
   }
+  @media(min-width: 1400px) {
+    font-size: 16px;
+  }
 `;
 
 Table.propTypes = {
@@ -104,10 +107,10 @@ const selectListFilterStyles = {
   menuPortal: base => ({...base, zIndex: 5})
 };
 
-export const ListFilter = ({options, onChange}) => <FilterBox>
+export const ListFilter = ({ options, onChange, defaultValue, ...props }) => <FilterBox { ...props }>
   <Label>Show&nbsp;</Label>
   <Select components={{IndicatorSeparator: () => null}} options={options}
-    defaultValue={options[0]} onChange={onChange} styles={selectListFilterStyles}
+    defaultValue={defaultValue ? defaultValue : options[0]} onChange={onChange} styles={selectListFilterStyles}
     menuPortalTarget={document.body}
     menuPosition={'absolute'} menuPlacement={'bottom'}
   />
@@ -115,5 +118,6 @@ export const ListFilter = ({options, onChange}) => <FilterBox>
 
 ListFilter.propTypes = {
   options: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  defaultValue: PropTypes.any
 };

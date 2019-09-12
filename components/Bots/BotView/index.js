@@ -4,14 +4,14 @@ import styled from '@emotion/styled';
 import Link from 'next/link';
 import ScreenShotTab from './components/ScreenShotTab';
 import LogsTab from './components/LogsTab';
+import OutputTab from './components/OutputTab';
+import DisplayTab from './components/DisplayTab';
 import { connect } from 'react-redux';
 import { useRouter } from 'next/router';
 import { withTheme } from 'emotion-theming';
 import { Card, CardHeader, CardBody } from 'components/default/Card';
 import { adminGetBot, getBot, clearBot } from 'store/bot/actions';
 import { Button, Loader } from 'components/default';
-
-const UnderConstruction = () => <CardBody>Under construction!!</CardBody>;
 
 const TABS = {
   SCREENSHOTS: {
@@ -24,7 +24,11 @@ const TABS = {
   },
   OUTPUTS: {
     title: 'Outputs',
-    component: UnderConstruction
+    component: OutputTab
+  },
+  DISPLAY: {
+    title: 'Display',
+    component: DisplayTab
   }
 };
 
@@ -68,7 +72,7 @@ const A = styled.a`
 `;
 
 const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme }) => {
-  const [activeTab, setActiveTab] = useState(TABS.LOGS);
+  const [activeTab, setActiveTab] = useState(TABS.OUTPUTS);
   const [customBack, setCustomBack] = useState(null);
   const router = useRouter();
 

@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { Textarea } from 'components/default/inputs';
-import { css } from '@emotion/core';
 import { connect } from 'react-redux';
 import { CardBody } from 'components/default/Card';
 import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from 'store/socket/actions';
@@ -18,14 +17,15 @@ const MESSAGES = {
 
 const Content = styled(CardBody)`
   display: flex;
+  height: 85vh;
   flex-flow: row wrap;
   justify-content: space-between;
   ${ props => props.styles };
 `;
 
-const Back = styled(Button)`
-  padding: 0 5px;
-  margin-right: 10px;
+const TextArea = styled(Textarea)`
+  flex: 1 1 auto;
+  font-size: 14px;
 `;
 
 const LogsTab = ({
@@ -49,9 +49,7 @@ const LogsTab = ({
   return(
     <>
       <Content>
-        <Textarea rows={20} disabled={true} value={logs}>
-
-        </Textarea>
+        <TextArea disabled={true} value={logs}/>
       </Content>
     </>
   );

@@ -5,6 +5,7 @@ export const ROUTES = {
     { name: 'Users', href: '/admin/users' },
     { name: 'Running Bots', href: '/admin/bots/running' },
     { name: 'Available Bots', href: '/admin/bots' },
+    { name: 'Bots Settings', href: '/admin/bots/settings' },
     { name: 'Bots Schedule', href: '/admin/schedule' },
     { name: 'Bots Sessions', href: '/admin/sessions' },
     { name: 'Subscription Plans', href: '/admin/subscriptions' },

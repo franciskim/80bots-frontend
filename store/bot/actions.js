@@ -11,7 +11,8 @@ import {
   ADMIN_UPDATE_BOT,
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
-  GET_TAGS, BOT_SETTINGS, UPDATE_BOT_SETTINGS, SYNC_BOT_INSTANCES, ADMIN_DELETE_BOT, AMIS, SYNC_BOTS, CLEAR_BOT
+  GET_TAGS, BOT_SETTINGS, UPDATE_BOT_SETTINGS, SYNC_BOT_INSTANCES, ADMIN_DELETE_BOT, AMIS, SYNC_BOTS, CLEAR_BOT,
+  ADMIN_REGIONS
 } from './types';
 import { success } from 'redux-saga-requests';
 
@@ -303,4 +304,16 @@ export const adminGetBot = (id) => ({
 
 export const clearBot = () => ({
   type: CLEAR_BOT,
+});
+
+export const adminGetRegions = (query) => ({
+  type: ADMIN_REGIONS,
+  request: {
+    method: 'GET',
+    url: '/admin/instances/regions',
+    params: query
+  },
+  meta: {
+    thunk: true
+  }
 });
