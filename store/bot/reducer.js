@@ -10,7 +10,8 @@ import {
   ADMIN_POST_LAUNCH_INSTANCE,
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
-  GET_TAGS, BOT_SETTINGS, SYNC_BOT_INSTANCES, AMIS, SYNC_BOTS, GET_BOT, CLEAR_BOT, ADMIN_REGIONS
+  GET_TAGS, BOT_SETTINGS, SYNC_BOT_INSTANCES, AMIS, SYNC_BOTS, GET_BOT, CLEAR_BOT,
+  ADMIN_REGIONS, ADMIN_UPDATE_REGION
 } from './types';
 
 const initialState = {
@@ -42,6 +43,7 @@ export const reducer = (state = initialState, action) => {
     case ADMIN_UPDATE_BOT:
     case ADMIN_UPDATE_RUNNING_BOT:
     case DOWNLOAD_INSTANCE_PEM_FILE:
+    case ADMIN_UPDATE_REGION:
       return { ...state, loading: true, error: null };
 
     case SYNC_BOT_INSTANCES:
@@ -90,6 +92,12 @@ export const reducer = (state = initialState, action) => {
       return { ...state, botInstances: [...state.botInstances], loading: false };
     }
 
+    case success(ADMIN_UPDATE_REGION): {
+      const userIdx = state.regions.findIndex(item => item.id === action.data.id);
+      if(userIdx || userIdx === 0) state.regions[userIdx] = action.data;
+      return { ...state, regions: [...state.regions], loading: false };
+    }
+
     case success(GET_TAGS):
       return { ...state, tags: action.data.data };
 
@@ -119,6 +127,7 @@ export const reducer = (state = initialState, action) => {
     case error(ADMIN_UPDATE_BOT):
     case error(ADMIN_UPDATE_RUNNING_BOT):
     case error(DOWNLOAD_INSTANCE_PEM_FILE):
+    case error(ADMIN_UPDATE_REGION):
       return { ...state, loading: false, error: action.error };
 
     default: return state;
