@@ -23,3 +23,4 @@ export const BOT_SETTINGS               = 'BOT_SETTINGS';
 export const UPDATE_BOT_SETTINGS        = 'UPDATE_BOT_SETTINGS';
 
 export const ADMIN_REGIONS              = 'ADMIN_REGIONS';
+export const ADMIN_UPDATE_REGION        = 'ADMIN_UPDATE_REGION';

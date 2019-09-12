@@ -1,64 +1,205 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { Filters, LimitFilter, SearchFilter, Table, Thead } from 'components/default/Table';
 import { Card, CardBody } from 'components/default/Card';
 import { connect } from 'react-redux';
-import { adminGetRegions } from 'store/bot/actions';
-import { Paginator } from 'components/default';
+import { adminGetRegions, adminUpdateRegion } from 'store/bot/actions';
+import { Button, Paginator } from 'components/default';
+import { withTheme } from 'emotion-theming';
+import { Select } from 'components/default/inputs';
+import Link from 'next/link';
+import Icon from '../../default/icons';
+import Modal from '../../default/Modal';
+import {css} from '@emotion/core';
+import {NOTIFICATION_TYPES} from '../../../config';
+import { addNotification } from 'store/notification/actions';
 
 const Container = styled(Card)` 
   border-radius: .25rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 `;
 
-const Settings = ({ regions, total, getRegions }) => {
+const IconButton = styled(Button)`
+  display: inline-flex;
+  justify-content: center;
+  padding: 2px;
+  margin-right: 5px;
+  width: 30px;
+  height: 30px;
+  &:last-child {
+    margin-right: 0;
+  }
+`;
+
+const modalStyles = css`
+  min-width: 300px;
+  overflow-y: visible;
+`;
+
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0 10px 0;
+`;
+
+const Row = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  margin-bottom: 10px;
+`;
+
+const InputWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  &:first-of-type {
+    margin-right: 10px;
+  }
+  &:last-of-type {
+    margin-left: 10px;
+  }
+`;
+
+const Label = styled.label`
+  font-size: 16px;
+  margin-bottom: 5px;
+`;
+
+const selectStyles = {
+  container: css`margin: 20px 0;`,
+  select: {
+    valueContainer: (provided) => ({
+      ...provided,
+      padding: '0 8px',
+      borderColor: '#ced4da'
+    })
+  }
+};
+
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const Settings = ({ theme, addNotification, regions, total, getRegions, updateRegion }) => {
+  const [clickedRegion, setClickedRegion] = useState(null);
+  const [amis, setAmis] = useState([]);
+  const [defaultAmi, setDefaultAmi] = useState(null);
   const [limit, setLimit] = useState(20);
   const [page, setPage] = useState(1);
+
+  const modal = useRef(null);
 
   useEffect(() => {
     getRegions({ page, limit });
   }, []);
+
+  const toOption = item => ({
+    value: item.image_id, label: `${item.name} | ${item.image_id}`
+  });
+
+  const openEditModal = region => {
+    setClickedRegion(region);
+    setAmis(region.amis);
+    setDefaultAmi(region.default_ami);
+    modal.current.open();
+  };
+
+  const onModalClose = () => {
+    setClickedRegion(null);
+    setDefaultAmi(null);
+    setAmis([]);
+  };
+
+  const getCurrentSelect = () => {
+    const value = amis.find((item) => {
+      return item.image_id === defaultAmi;
+    });
+    return value ? { value: value.image_id, label: `${value.name} | ${value.image_id}` } : null;
+  };
+
+  const changeRegionAmi = () => {
+
+    updateRegion(clickedRegion.id, {default_ami: defaultAmi})
+      .then(() => {
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `Region ami was successfully ${defaultAmi}`
+        });
+        modal.current.close();
+      })
+      .catch(() => addNotification({type: NOTIFICATION_TYPES.ERROR, message: 'Ami update failed'}));
+  };
 
   const renderRow = (region, idx) => <tr key={idx}>
     <td>{ region.name }</td>
     <td>{ region.code }</td>
     <td>{ region.limit }</td>
     <td>{ region.created_instances }</td>
+    <td>{ region.show_default_ami }</td>
+    <td>
+      <IconButton title={'Edit Region AMI'} type={'primary'} onClick={() => openEditModal(region)}>
+        <Icon name={'edit'} color={theme.colors.white} />
+      </IconButton>
+    </td>
   </tr>;
 
   return(
-    <Container>
-      <CardBody>
-        <Filters>
-          <LimitFilter onChange={({ value }) => {setLimit(value); getRegions({ page, limit: value }); }}/>
-          <SearchFilter onChange={console.log}/>
-        </Filters>
-        <Table responsive>
-          <Thead>
-            <tr>
-              <th>Name</th>
-              <th>Code</th>
-              <th>Limit</th>
-              <th>Used Limit</th>
-            </tr>
-          </Thead>
-          <tbody>
-            { regions.map(renderRow) }
-          </tbody>
-        </Table>
-        <Paginator total={total} pageSize={limit}
-          onChangePage={(page) => { setPage(page); getRegions({ page, limit }); }}
+    <>
+      <Container>
+        <CardBody>
+          <Filters>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getRegions({ page, limit: value }); }}/>
+            <SearchFilter onChange={console.log}/>
+          </Filters>
+          <Table responsive>
+            <Thead>
+              <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Limit</th>
+                <th>Used Limit</th>
+                <th>Default AMI</th>
+                <th>Actions</th>
+              </tr>
+            </Thead>
+            <tbody>
+              { regions.map(renderRow) }
+            </tbody>
+          </Table>
+          <Paginator total={total} pageSize={limit}
+            onChangePage={(page) => { setPage(page); getRegions({ page, limit }); }}
+          />
+        </CardBody>
+      </Container>
+
+      <Modal ref={modal} title={'Edit Default AMI'} contentStyles={modalStyles}
+        onClose={onModalClose}
+      >
+        <Select label={'AMI'} onChange={option => setDefaultAmi(option.value)} styles={selectStyles}
+           options={amis.map(toOption)} value={getCurrentSelect()}
         />
-      </CardBody>
-    </Container>
+        <Buttons>
+          <Button type={'primary'} onClick={changeRegionAmi}>Update</Button>
+          <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
+        </Buttons>
+      </Modal>
+    </>
   );
 };
 
 Settings.propTypes = {
+  theme: PropTypes.shape({
+    colors: PropTypes.object.isRequired
+  }).isRequired,
+  addNotification: PropTypes.func.isRequired,
   regions:    PropTypes.array.isRequired,
   total:      PropTypes.number.isRequired,
-  getRegions: PropTypes.func.isRequired
+  getRegions: PropTypes.func.isRequired,
+  updateRegion: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -67,7 +208,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getRegions: (...args) => dispatch(adminGetRegions(...args))
+  addNotification: payload => dispatch(addNotification(payload)),
+  getRegions: (...args) => dispatch(adminGetRegions(...args)),
+  updateRegion: (id, data) => dispatch(adminUpdateRegion(id, data)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Settings));

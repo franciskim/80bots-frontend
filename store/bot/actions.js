@@ -12,7 +12,7 @@ import {
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
   GET_TAGS, BOT_SETTINGS, UPDATE_BOT_SETTINGS, SYNC_BOT_INSTANCES, ADMIN_DELETE_BOT, AMIS, SYNC_BOTS, CLEAR_BOT,
-  ADMIN_REGIONS
+  ADMIN_REGIONS, ADMIN_UPDATE_REGION
 } from './types';
 import { success } from 'redux-saga-requests';
 
@@ -312,6 +312,18 @@ export const adminGetRegions = (query) => ({
     method: 'GET',
     url: '/admin/instances/regions',
     params: query
+  },
+  meta: {
+    thunk: true
+  }
+});
+
+export const adminUpdateRegion = (id, data) => ({
+  type: ADMIN_UPDATE_REGION,
+  request: {
+    method: 'PUT',
+    url: `/admin/instances/regions/${id}`,
+    data: { update: data }
   },
   meta: {
     thunk: true
