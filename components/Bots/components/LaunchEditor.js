@@ -46,22 +46,30 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
     bot && bot.parameters.forEach(param => {
       if(getInputType(param.type) === 'checkbox') botParams[param.name] = false;
       if(getInputType(param.type) === 'range') botParams[param.name] = Number(param.range[0]);
+      if(param.type === 'multiselect') botParams[param.name] = { term: '', options: [] };
     });
     setValues(botParams);
   }, [bot]);
 
   const submit = () => {
     let err = [];
+    let result = { ...values };
     setErrors([]);
     bot && bot.parameters.forEach(param => {
       if (!values[param.name] && getInputType(param.type) !== 'checkbox' && getInputType(param.type) !== 'range'
         && values[param.name] !== 0) {
         err.push(param.name);
+      } else {
+        if(param.type === 'multiselect') {
+          !(result[param.name].options && result[param.name].options.length)
+            ? err.push(param.name)
+            : result[param.name] = (result[param.name].options.map(item => item.value));
+        }
       }
     });
     if(err.length > 0) setErrors(err);
     else {
-      onSubmit(values);
+      onSubmit(result);
     }
   };
 
@@ -95,6 +103,28 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
       case 'Boolean':
       case 'bool': return 'checkbox';
     }
+  };
+
+  const getMultiSelectOptions = (paramName) => {
+    let options = values[paramName] ? values[paramName].options: [];
+    const term = values[paramName] ? values[paramName].term : '';
+    if(term && !options.find(item => item.label.match(new RegExp(term, 'ig')))) {
+      options = [{ value: term, label: term }].concat(options);
+    }
+    return options;
+  };
+
+  const changeMultiSelectValue = (field, options) => {
+    let valuesCopy = {...values};
+    valuesCopy[field].options = options;
+    setValues(valuesCopy);
+  };
+
+  const onMultiSelectChange = (field, newValue) => {
+    const inputValue = newValue.replace(/\W/g, '');
+    let valuesCopy = { ...values };
+    valuesCopy[field].term = inputValue;
+    setValues(valuesCopy);
   };
 
   const renderParams = (item, idx) => {
@@ -131,6 +161,16 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             { values[item.name] ? 'Yes' : 'No' }
           </StatusButton>
         </InputWrap>
+      );
+
+      case 'multiselect': return(
+        <Select key={idx} label={label} isMulti error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
+          onChange={(options) => changeMultiSelectValue(item.name, options)} styles={selectStyles}
+          options={getMultiSelectOptions(item.name)}
+          onInputChange={input => onMultiSelectChange(item.name, input)}
+          menuPortalTarget={document.body}
+          menuPosition={'absolute'} menuPlacement={'bottom'}
+        />
       );
 
       case 'String':

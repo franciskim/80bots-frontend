@@ -34,6 +34,8 @@ You can find node and npm/yarn versions in `package.json`
 ![Select](static/images/misc/select.png)<br/><br/>
 - CheckBox-Button: `boolean`<br/><br/>
 ![Checkbox-Button](static/images/misc/checkbox-button.png)<br/><br/>
+- MultiSelect: `multiselect`<br/><br/>
+![Checkbox-Button](static/images/misc/multiselect.png)<br/><br/>
 
 <sup>* - types are `case sensitive`!</sup><br/>
 <sup>** - which type to use at bot script `PARAMS` section</sup>
