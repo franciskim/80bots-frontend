@@ -12,7 +12,6 @@ import { connect } from 'react-redux';
 import { getBots, launchInstance } from 'store/bot/actions';
 import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
 import { addNotification } from 'store/notification/actions';
-import { Range } from '../default/inputs';
 
 const Container = styled(Card)` 
   border-radius: .25rem;
@@ -32,56 +31,34 @@ const Tag = styled(Badge)`
   }
 `;
 
-const inputStyle = {
-  container: css`
-    margin-top: 10px;
-  `,
-};
-
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 20px;
-`;
-
 const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
   const [clickedBot, setClickedBot] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
-  const [instances, setInstances] = useState(1);
 
   const modal = useRef(null);
-  const modalSetParams = useRef(null);
 
   const launchBot = (params) => {
+    modal.current.close();
 
-    console.log('launchBot');
-
-    // modal.current.close();
-    //
-    // launchInstance(clickedBot.id, params).then(() => {
-    //   addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
-    //   setTimeout(() => {
-    //     Router.push('/bots/running');
-    //   }, (NOTIFICATION_TIMINGS.DURATION * 2) + NOTIFICATION_TIMINGS.INFO_HIDE_DELAY);
-    // }).catch(({ error : { response } }) => {
-    //   if (response && response.data) {
-    //     addNotification({type: NOTIFICATION_TYPES.ERROR, message: response.data.message});
-    //   } else {
-    //     addNotification({type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch'});
-    //   }
-    // }).finally(() => {
-    // });
+    launchInstance(clickedBot.id, params).then(() => {
+      addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
+      setTimeout(() => {
+        Router.push('/bots/running');
+      }, (NOTIFICATION_TIMINGS.DURATION * 2) + NOTIFICATION_TIMINGS.INFO_HIDE_DELAY);
+    }).catch(({ error : { response } }) => {
+      if (response && response.data) {
+        addNotification({type: NOTIFICATION_TYPES.ERROR, message: response.data.message});
+      } else {
+        addNotification({type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch'});
+      }
+    }).finally(() => {
+    });
   };
 
   useEffect(() => {
     getBots({ limit, page });
   }, []);
-
-  const setInstancesParams = () => {
-    console.log(instances);
-  };
 
   const renderRow = (bot, idx) => <tr key={idx}>
     <td>{ bot.platform }</td>

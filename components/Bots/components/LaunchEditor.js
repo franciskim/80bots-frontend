@@ -74,14 +74,10 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
     });
     if(err.length > 0) setErrors(err);
     else {
-      if(amount === 1) {
-        onSubmit(result);
-      } else {
-        initValues();
-        setCombinedResult([...combinedResult, result]);
-        setStep(step + 1);
-        if(step === amount) onSubmit([...combinedResult, result]);
-      }
+      initValues();
+      setCombinedResult([...combinedResult, result]);
+      setStep(step + 1);
+      if(step === amount) onSubmit([...combinedResult, result]);
     }
   };
 
@@ -229,8 +225,8 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
           onChange={value => setAmount(value)}
         />
         <Buttons>
-          <Button type={'primary'} onClick={() => amountSet(true)}>Submit</Button>
           <Button type={'danger'} onClick={onClose}>Cancel</Button>
+          <Button type={'primary'} onClick={() => amountSet(true)}>Submit</Button>
         </Buttons>
       </>
       : <>
