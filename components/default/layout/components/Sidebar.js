@@ -61,11 +61,7 @@ const Sidebar = ({ opened = false, userRole }) => {
 
   return(
     <Container opened={opened}>
-      <LinkWrap>
-        <Link href={'/'}>
-          <img src="/static/images/80bots.svg" alt=""/>
-        </Link>
-      </LinkWrap>
+      <img src="/static/images/80bots.svg" alt=""/>
       <Ul>
         { userRole && ROUTES[userRole].map(renderLink) }
       </Ul>
