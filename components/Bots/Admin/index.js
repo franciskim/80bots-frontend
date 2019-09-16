@@ -284,13 +284,6 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
           </Button>
         </Buttons>
       </Modal>
-
-      <Modal ref={editSettingsModal} title={'Edit Global Settings'} disableSideClosing
-        containerStyles={modalContainerStyles}
-        contentStyles={css`min-width: 600px;`}
-      >
-        <SettingsEditor onClose={() => editSettingsModal.current.close()} />
-      </Modal>
     </>
   );
 };

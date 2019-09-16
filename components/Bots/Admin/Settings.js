@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import SettingsEditor from './components/SettingsEditor';
+import Icon from 'components/default/icons';
+import Modal from 'components/default/Modal';
 import { Filters, LimitFilter, SearchFilter, Table, Thead } from 'components/default/Table';
 import { Card, CardBody } from 'components/default/Card';
 import { connect } from 'react-redux';
@@ -8,11 +11,8 @@ import { adminGetRegions, adminUpdateRegion } from 'store/bot/actions';
 import { Button, Paginator } from 'components/default';
 import { withTheme } from 'emotion-theming';
 import { Select } from 'components/default/inputs';
-import Link from 'next/link';
-import Icon from '../../default/icons';
-import Modal from '../../default/Modal';
-import {css} from '@emotion/core';
-import {NOTIFICATION_TYPES} from '../../../config';
+import { css } from '@emotion/core';
+import { NOTIFICATION_TYPES } from 'config';
 import { addNotification } from 'store/notification/actions';
 
 const Container = styled(Card)` 
@@ -37,34 +37,16 @@ const modalStyles = css`
   overflow-y: visible;
 `;
 
-const FormContainer = styled.div`
+const ButtonWrap = styled.div`
   display: flex;
-  flex-direction: column;
-  margin: 20px 0 10px 0;
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  margin-bottom: 10px;
-`;
-
-const InputWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  &:first-of-type {
-    margin-right: 10px;
-  }
-  &:last-of-type {
-    margin-left: 10px;
-  }
-`;
-
-const Label = styled.label`
-  font-size: 16px;
+  justify-content: flex-end;
   margin-bottom: 5px;
+  button {
+    margin-right: 20px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 `;
 
 const selectStyles = {
@@ -92,6 +74,7 @@ const Settings = ({ theme, addNotification, regions, total, getRegions, updateRe
   const [page, setPage] = useState(1);
 
   const modal = useRef(null);
+  const editSettingsModal = useRef(null);
 
   useEffect(() => {
     getRegions({ page, limit });
@@ -149,6 +132,9 @@ const Settings = ({ theme, addNotification, regions, total, getRegions, updateRe
 
   return(
     <>
+      <ButtonWrap>
+        <Button type={'primary'} onClick={() => editSettingsModal.current.open()}>Edit Global Bot Settings</Button>
+      </ButtonWrap>
       <Container>
         <CardBody>
           <Filters>
@@ -180,12 +166,18 @@ const Settings = ({ theme, addNotification, regions, total, getRegions, updateRe
         onClose={onModalClose}
       >
         <Select label={'AMI'} onChange={option => setDefaultAmi(option.value)} styles={selectStyles}
-           options={amis.map(toOption)} value={getCurrentSelect()}
+          options={amis.map(toOption)} value={getCurrentSelect()}
         />
         <Buttons>
           <Button type={'primary'} onClick={changeRegionAmi}>Update</Button>
           <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
         </Buttons>
+      </Modal>
+
+      <Modal ref={editSettingsModal} title={'Edit Global Settings'} disableSideClosing
+        containerStyles={css`margin-top: 0;`} contentStyles={css`min-width: 600px;`}
+      >
+        <SettingsEditor onClose={() => editSettingsModal.current.close()} />
       </Modal>
     </>
   );
