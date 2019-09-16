@@ -16,6 +16,7 @@ const Container = styled.div`
 
 const LinkWrap = styled.div`
   padding: 1rem 1.5rem;
+  cursor: pointer;
 `;
 
 const Ul = styled.ul`
@@ -61,7 +62,11 @@ const Sidebar = ({ opened = false, userRole }) => {
 
   return(
     <Container opened={opened}>
-      <img src="/static/images/80bots.svg" alt=""/>
+      <LinkWrap>
+        <Link href={'/dashboard'}>
+          <img src="/static/images/80bots.svg" alt=""/>
+        </Link>
+      </LinkWrap>
       <Ul>
         { userRole && ROUTES[userRole].map(renderLink) }
       </Ul>
