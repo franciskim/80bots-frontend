@@ -1,5 +1,5 @@
 import {
-  TIMEZONES, USERS, UPDATE_USER, UPDATE_USER_PROFILE, REGIONS
+  TIMEZONES, USERS, UPDATE_USER, UPDATE_USER_PROFILE, REGIONS, SUPPORT_EMAIL
 } from './types';
 
 export const getTimezones = () => ({
@@ -63,5 +63,17 @@ export const updateUserProfile = (updateData) => ({
   },
   meta: {
     thunk: true
+  }
+});
+
+export const supportEmail = data => ({
+  type: SUPPORT_EMAIL,
+  request: {
+    method: 'POST',
+    url: '/user/feedback',
+    data
+  },
+  meta: {
+    thunk: true,
   }
 });

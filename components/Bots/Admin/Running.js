@@ -65,7 +65,7 @@ const AddButtonWrap = styled.div`
 
 const A = styled.a`
   color: inherit;
-  text-decoration: none;
+  text-decoration: none; 
 `;
 
 const selectStyles = {
