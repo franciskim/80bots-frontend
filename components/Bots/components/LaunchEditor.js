@@ -38,7 +38,6 @@ const selectStyles = {
 };
 
 const LaunchEditor = ({ bot, onSubmit, onClose }) => {
-  const [result, setResult] = useState({});
   const [values, setValues] = useState({});
   const [combinedResult, setCombinedResult] = useState([]);
   const [errors, setErrors] = useState([]);
@@ -47,10 +46,10 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   const [isAmountSet, amountSet] = useState(false);
 
   useEffect(() => {
-    initValues();
+    initializeValues();
   }, [bot]);
 
-  const initValues = () => {
+  const initializeValues = () => {
     let botParams = {};
     bot && bot.parameters.forEach(param => {
       if(getInputType(param.type) === 'checkbox') botParams[param.name] = false;
@@ -59,25 +58,50 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
         getInputType(param.type) === 'password') botParams[param.name] = '';
       if(param.type === 'multiselect') botParams[param.name] = { term: '', options: [] };
     });
-    setResult({});
     setValues(botParams);
   };
 
-  const submit = () => {
+  const validateValues = () => {
     let err = [];
     setErrors([]);
     bot && bot.parameters.forEach(param => {
-      if (!result[param.name] && getInputType(param.type) !== 'checkbox' && getInputType(param.type) !== 'range'
-        && result[param.name] !== 0) {
+      if (!values[param.name] && getInputType(param.type) !== 'checkbox' && getInputType(param.type) !== 'range'
+        && values[param.name] !== 0 || (param.type === 'multiselect' && !values[param.name].options)) {
         err.push(param.name);
       }
     });
-    if(err.length > 0) setErrors(err);
-    else {
-      initValues();
-      setCombinedResult([...combinedResult, result]);
+    if(err.length) setErrors(err);
+    return !err.length;
+  };
+
+  const valuesToResult = (values) => {
+    let result = {};
+    let combined = [];
+    values.forEach(val => {
+      bot.parameters.forEach(({ name, type }) => {
+        switch (type) {
+          case 'multiselect': { result[name] = (values[name].options.map(item => item.value)); break; }
+          case 'enum': { result[name] = values[name].value; break; }
+          default: { result[name] = values[name]; break; }
+        }
+      });
+      combined.push(val);
+    });
+
+    return combined;
+  };
+
+  const submit = () => {
+    if(validateValues()) {
+      if(!combinedResult[step])
+        initializeValues();
+      else
+        setValues(combinedResult[step]);
+      let result = [...combinedResult];
+      result[step - 1] = values;
+      setCombinedResult(result);
       setStep(step + 1);
-      if(step === amount) onSubmit([...combinedResult, result]);
+      //if(step === amount) onSubmit(valuesToResult(result));
     }
   };
 
@@ -86,7 +110,6 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
       setStep(step - 1);
       const prevResult = combinedResult[step - 2];
       setValues(prevResult);
-      setResult(prevResult);
     } else {
       onClose();
     }
@@ -94,11 +117,8 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
 
   const changeValue = (field, value, option) => {
     let valuesCopy = {...values};
-    let resultCopy = {...result};
     valuesCopy[field] = option || value;
-    resultCopy[field] = option ? option.value : value;
     setValues(valuesCopy);
-    setResult(resultCopy);
   };
 
   const toOptions = value => ({
@@ -138,11 +158,8 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
 
   const changeMultiSelectValue = (field, options) => {
     let valuesCopy = {...values};
-    let resultCopy = {...result};
     valuesCopy[field].options = options;
-    resultCopy[field] = options ? options.map(item => item.value) : [];
     setValues(valuesCopy);
-    setResult(resultCopy);
   };
 
   const onMultiSelectChange = (field, newValue) => {
