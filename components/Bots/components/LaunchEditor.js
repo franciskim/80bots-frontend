@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { Button } from 'components/default';
 import { css } from '@emotion/core';
 import { Input, Label, Select, Range } from 'components/default/inputs';
+import { Button, Steps } from 'components/default';
 
 const Buttons = styled.div`
   display: flex;
@@ -230,6 +230,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
         </Buttons>
       </>
       : <>
+      <Steps amount={amount} step={step}/>
       { bot && bot.parameters.map(renderParams) }
       <Buttons>
         <Button disabled={amount > 1 && step === 1} type={'danger'} onClick={cancel}>
