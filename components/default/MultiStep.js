@@ -33,7 +33,7 @@ export const Steps = ({ amount, step, ...props }) => <BlockCircleSteps {...props
   {
     (() => {
       let arr = [];
-      for (let i = 0; i < amount; i++) {
+      for (let i = 1; i <= amount; i++) {
         arr.push(<CircleStep key={i} idx={i} step={step}/>);
       }
       return arr;
