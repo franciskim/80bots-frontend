@@ -5,7 +5,6 @@ import BotEditor from './components/BotEditor';
 import Icon from 'components/default/icons';
 import Router from 'next/router';
 import LaunchEditor from '../components/LaunchEditor';
-import SettingsEditor from './components/SettingsEditor';
 import Modal from 'components/default/Modal';
 import { Button, Badge, Paginator } from 'components/default';
 import { Card, CardBody } from 'components/default/Card';
@@ -19,8 +18,7 @@ import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
 import { css } from '@emotion/core';
 import { withTheme } from 'emotion-theming';
-import {addListener} from '../../../store/socket/actions';
-import {Range} from '../../default/inputs';
+import { addListener } from 'store/socket/actions';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -45,8 +43,9 @@ const IconButton = styled(Button)`
   }
 `;
 
-const StatusButton = styled(Button)`
+const StatusButton = styled(Launch)`
   text-transform: uppercase;
+  margin-right: 0;
 `;
 
 const AddButtonWrap = styled.div`
@@ -103,7 +102,6 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
   const modal = useRef(null);
   const addModal = useRef(null);
   const editModal = useRef(null);
-  const editSettingsModal = useRef(null);
   const deleteModal = useRef(null);
 
   useEffect(() => {
@@ -225,7 +223,6 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
     <>
       <AddButtonWrap>
         <Button type={'success'} onClick={() => addModal.current.open()}>Add Bot</Button>
-        <Button type={'primary'} onClick={() => editSettingsModal.current.open()}>Edit Global Bot Settings</Button>
         <Button type={'primary'} onClick={sync} loading={`${syncLoading}`} loaderWidth={148}>
           Sync Bots From Repo
         </Button>

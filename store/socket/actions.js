@@ -8,9 +8,9 @@ export const emitMessage = (eventName, message) => ({
   data: { eventName, message }
 });
 
-export const emitExternalMessage = (eventName, message, url) => ({
+export const emitExternalMessage = (eventName, message, url, payload) => ({
   type: EMIT_EXTERNAL_MESSAGE,
-  data: { eventName, message, url }
+  data: { eventName, message, url, payload }
 });
 
 export const removeAllListeners = () => ({
@@ -26,9 +26,9 @@ export const addListener = (room, eventName, handler) => ({
   data: { room, eventName, handler }
 });
 
-export const addExternalListener = (url, room, eventName, handler) => ({
+export const addExternalListener = (url, payload, eventName, handler) => ({
   type: ADD_EXTERNAL_LISTENER,
-  data: { url, room, eventName, handler }
+  data: { url, payload, eventName, handler }
 });
 
 export const removeListener = (eventName) => ({

@@ -98,9 +98,7 @@ const selectStyles = {
   }
 };
 
-const OutputTab = ({
-  botInstance, addExternalListener, removeAllExternalListeners, emitExternalMessage, setCustomBack
-}) => {
+const OutputTab = ({ botInstance, addExternalListener, removeAllExternalListeners, emitExternalMessage }) => {
   const [output, setOutput] = useState([]);
   const [folders, setFolders] = useState([]);
   const [currentFolder, setCurrentFolder] = useState(null);
@@ -116,17 +114,18 @@ const OutputTab = ({
 
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
-      addExternalListener(`${botInstance.ip}:6002`, 'default', EVENTS.OUTPUT, (output) => {
+      const handshake = { id: botInstance.instance_id };
+      addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.OUTPUT, (output) => {
         setOutput(output);
       });
-      addExternalListener(`${botInstance.ip}:6002`, 'default', EVENTS.FOLDERS, (folders) => {
+      addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.FOLDERS, (folders) => {
         setFolders(folders);
         if(folders.length > 0) setCurrentFolder(folders[folders.length - 1]);
       });
-      addExternalListener(`${botInstance.ip}:6002`, 'default', EVENTS.FULL, (data) => {
+      addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.FULL, (data) => {
         if(data) setFullOutput(data);
       });
-      emitExternalMessage(MESSAGES.GET_FOLDERS, null, `${botInstance.ip}:6002`);
+      emitExternalMessage(MESSAGES.GET_FOLDERS, null, `${botInstance.ip}:6002`, handshake);
     }
   }, [botInstance]);
 

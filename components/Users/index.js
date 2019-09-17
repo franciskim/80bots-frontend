@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import dayjs from 'dayjs';
 import Icon from '../default/icons';
 import Modal from '../default/Modal';
+import Link from 'next/link';
 import { withTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
 import { Paginator, Button, Badge } from '../default';
@@ -14,7 +15,6 @@ import { updateUser } from 'store/user/actions';
 import { getUsers } from 'store/user/actions';
 import { NOTIFICATION_TYPES } from 'config';
 import { connect } from 'react-redux';
-import Link from 'next/link';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -34,6 +34,8 @@ const IconButton = styled(Button)`
 `;
 
 const StatusButton = styled(Button)`
+  padding: 2px 10px;
+  font-size: 16px;
   text-transform: uppercase;
 `;
 

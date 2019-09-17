@@ -86,15 +86,16 @@ const ScreenShotTab = ({
 
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
-      addExternalListener(`${botInstance.ip}:6002`, 'default', EVENTS.FOLDERS, (folders) => {
+      const handshake = { id: botInstance.instance_id };
+      addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.FOLDERS, (folders) => {
         setLoading(false);
         setFolders(folders.map(toImage));
       });
-      addExternalListener(`${botInstance.ip}:6002`, 'default', EVENTS.SCREENSHOTS, (screenshots) => {
+      addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.SCREENSHOTS, (screenshots) => {
         setLoading(false);
         setImages({ type: EVENTS.SCREENSHOTS, data: screenshots.map(toImage) });
       });
-      addExternalListener(`${botInstance.ip}:6002`, 'default', EVENTS.SCREENSHOT, (screenshot) => {
+      addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.SCREENSHOT, (screenshot) => {
         if(offset === 0) {
           setImages({ type: EVENTS.SCREENSHOT, data: toImage(screenshot) });
         } else {

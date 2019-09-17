@@ -37,6 +37,8 @@ const AddButtonWrap = styled.div`
 `;
 
 const StatusButton = styled(Button)`
+  padding: 2px 10px;
+  font-size: 16px;
   text-transform: uppercase;
 `;
 

@@ -24,8 +24,8 @@ export default function createWebSocketMiddleware() {
       });
     };
 
-    const initExternal = (url) => {
-      externalSocket = io(url);
+    const initExternal = (url, data = {}) => {
+      externalSocket = io(url, data);
     };
 
     return next => action => {
@@ -39,7 +39,6 @@ export default function createWebSocketMiddleware() {
           return rooms[action.data.room] && rooms[action.data.room].stopListening(action.data.eventName);
         case REMOVE_ALL_LISTENERS: {
           for(let key in rooms) {
-            // eslint-disable-next-line no-prototype-builtins
             if (rooms.hasOwnProperty(key)) {
               socket.leave(key);
             }
@@ -51,18 +50,14 @@ export default function createWebSocketMiddleware() {
           return socket.emit(action.data.eventName, action.data.message);
 
         case ADD_EXTERNAL_LISTENER: {
-          if(!externalSocket) initExternal(action.data.url);
+          if(!externalSocket) initExternal(action.data.url, { query: action.data.payload } );
           externalSocket.on('reconnect', () => externalSocket.emit('join', action.data.room));
           externalSocket.emit('join', action.data.room);
           externalSocket.on(action.data.eventName, action.data.handler);
           break;
         }
         case EMIT_EXTERNAL_MESSAGE: {
-          if(!externalSocket) {
-            initExternal(action.data.url);
-            console.log(externalSocket);
-            externalSocket.on('connected', console.log);
-          }
+          if(!externalSocket) initExternal(action.data.url, action.data.payload);
           return externalSocket.emit(action.data.eventName, action.data.message);
         }
 
