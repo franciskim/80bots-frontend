@@ -9,7 +9,7 @@ import DisplayTab from './components/DisplayTab';
 import { connect } from 'react-redux';
 import { useRouter } from 'next/router';
 import { withTheme } from 'emotion-theming';
-import { Card, CardHeader, CardBody } from 'components/default/Card';
+import { Card, CardHeader } from 'components/default/Card';
 import { adminGetBot, getBot, clearBot } from 'store/bot/actions';
 import { Button, Loader } from 'components/default';
 
@@ -72,7 +72,7 @@ const A = styled.a`
 `;
 
 const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme }) => {
-  const [activeTab, setActiveTab] = useState(TABS.OUTPUTS);
+  const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
   const [customBack, setCustomBack] = useState(null);
   const router = useRouter();
 

@@ -101,7 +101,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
       result[step - 1] = values;
       setCombinedResult(result);
       setStep(step + 1);
-      //if(step === amount) onSubmit(valuesToResult(result));
+      if(step === amount) onSubmit(valuesToResult(result));
     }
   };
 
@@ -247,7 +247,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
         </Buttons>
       </>
       : <>
-      <Steps amount={amount} step={step}/>
+      { amount > 1 && <Steps amount={amount} step={step}/> }
       { bot && bot.parameters.map(renderParams) }
       <Buttons>
         <Button disabled={amount > 1 && step === 1} type={'danger'} onClick={cancel}>
