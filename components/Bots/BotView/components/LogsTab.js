@@ -58,7 +58,6 @@ const LogsTab = ({
   useEffect(() => {
     setLogs({ type: 'new', data: '' });
     if(botInstance && Object.keys(botInstance).length > 0) {
-      botInstance.ip = 'localhost';
       const handshake = { id: botInstance.instance_id };
       emitExternalMessage(MESSAGES.GET_LOGS, { init: folder.value === 'init' }, `${botInstance.ip}:6002`, handshake);
     }
@@ -66,7 +65,6 @@ const LogsTab = ({
 
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
-      botInstance.ip = 'localhost';
       const handshake = { id: botInstance.instance_id };
       addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.LOG, (chunk) => {
         setLogs({ type: 'add', data: String.fromCharCode.apply(null, new Uint8Array(chunk)) });
