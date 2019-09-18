@@ -72,7 +72,7 @@ const A = styled.a`
 `;
 
 const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme }) => {
-  const [activeTab, setActiveTab] = useState(TABS.LOGS);
+  const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
   const [customBack, setCustomBack] = useState(null);
   const router = useRouter();
 
