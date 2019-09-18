@@ -39,7 +39,7 @@ const LogsTab = ({
 
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
-      const handshake = { id: botInstance.id };
+      const handshake = { id: botInstance.instance_id };
       addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.LOG, (chunk) => {
         setLogs(String.fromCharCode.apply(null, new Uint8Array(chunk)));
       });
