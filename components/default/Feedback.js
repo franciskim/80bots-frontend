@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import Modal from 'components/default/Modal';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { Button } from 'components/default';
+import { Button, FilesDropZone } from 'components/default';
 import { Input, Select, Textarea } from 'components/default/inputs';
 import { css } from '@emotion/core';
 import { connect } from 'react-redux';
@@ -56,6 +56,8 @@ const Feedback = ({ send, notify, ...props }) => {
   const [category, setCategory] = useState(null);
   const [otherCategory, setOtherCategory] = useState('');
   const [message, setMessage] = useState('');
+  const [files, setFiles] = useState([]);
+
   const modal = useRef(null);
 
   const submit = () => {
@@ -79,7 +81,7 @@ const Feedback = ({ send, notify, ...props }) => {
 
   return(
     <>
-      <Modal containerStyle={css`max-width: 400px;`} ref={modal} title={'Feedback'}>
+      <Modal contentStyles={css`max-width: 420px; min-width: 420px;`} ref={modal} title={'Feedback'}>
         <SubTitle>
           Bug report or improvement suggestions
         </SubTitle>
@@ -103,6 +105,9 @@ const Feedback = ({ send, notify, ...props }) => {
             onChange={e => setMessage(e.target.value)}
             error={!message ? 'Write your message here' : ''}
           />
+        }
+        {
+          category && <FilesDropZone onChange={files => setFiles(files)} hint={'Drop some related screenshots here'}/>
         }
         <Button disabled={!message} type={'primary'} onClick={submit}>Send</Button>
       </Modal>

@@ -34,14 +34,15 @@ const ModalDiv = styled.div`
   flex-direction: column;
   border-radius: 5px;
   margin-top: 10rem;
+  max-height: 80vh;
+  overflow-y: scroll;
   background-color: ${ props => props.theme.colors.paleGrey };
   box-shadow: 0 0 10px ${ props => props.theme.colors.silver };
   border: 1px solid ${ props => props.theme.colors.silver };
   ${ props => props.styles };
   
-  @media (max-width: 900px) {
+  @media (max-width: 900px), (max-height: 980px) {
     margin-top: 50px;
-    min-width: 90%;
   }
 `;
 

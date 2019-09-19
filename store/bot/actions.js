@@ -12,7 +12,7 @@ import {
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
   GET_TAGS, BOT_SETTINGS, UPDATE_BOT_SETTINGS, SYNC_BOT_INSTANCES, ADMIN_DELETE_BOT, AMIS, SYNC_BOTS, CLEAR_BOT,
-  ADMIN_REGIONS, ADMIN_UPDATE_REGION
+  ADMIN_REGIONS, ADMIN_UPDATE_REGION, BOT_REPORT, REPORT_UPLOAD_PROGRESS
 } from './types';
 import { success } from 'redux-saga-requests';
 
@@ -30,7 +30,6 @@ export const getBots = (query = { page: 1, limit: 1 }) => {
     }
   };
 };
-
 
 export const getRunningBots = (query = { page: 1, limit: 1 }) => {
   Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
@@ -329,3 +328,19 @@ export const adminUpdateRegion = (id, data) => ({
     thunk: true
   }
 });
+
+export const reportBot = (formData) => dispatch => dispatch({
+  type: BOT_REPORT,
+  request: {
+    method: 'PUT',
+    url: '/bots/report',
+    data: formData,
+    onUploadProgress: e => dispatch({
+      type: REPORT_UPLOAD_PROGRESS, data: { progress: Math.round((e.loaded / e.total) * 100) }
+    })
+  },
+  meta: {
+    thunk: true
+  }
+});
+

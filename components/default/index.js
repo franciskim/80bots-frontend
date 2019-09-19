@@ -4,3 +4,6 @@ export * from './Loader';
 export * from './Paginator';
 export * from './Tooltip';
 export * from './MultiStep';
+export * from './CircleProgressBar';
+export * from './DragDropContainer';
+export * from './FilesDropZone';

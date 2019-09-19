@@ -24,3 +24,6 @@ export const UPDATE_BOT_SETTINGS        = 'UPDATE_BOT_SETTINGS';
 
 export const ADMIN_REGIONS              = 'ADMIN_REGIONS';
 export const ADMIN_UPDATE_REGION        = 'ADMIN_UPDATE_REGION';
+
+export const BOT_REPORT                 = 'BOT_REPORT';
+export const REPORT_UPLOAD_PROGRESS     = 'REPORT_UPLOAD_PROGRESS';

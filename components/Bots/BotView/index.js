@@ -68,7 +68,7 @@ const Tab = styled(Back)`
 
 const A = styled.a`
   color: inherit;
-  text-decoration: none;
+  text-decoration: none; 
 `;
 
 const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme }) => {
