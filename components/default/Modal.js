@@ -33,7 +33,7 @@ const ModalDiv = styled.div`
   position: fixed;
   flex-direction: column;
   border-radius: 5px;
-  margin-top: 10rem;
+  margin-top: 10vh;
   max-height: 80vh;
   overflow-y: scroll;
   background-color: ${ props => props.theme.colors.paleGrey };
