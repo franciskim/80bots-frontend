@@ -109,6 +109,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
     addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
       addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' });
       adminGetBots({ page, limit });
+      setPage(1);
     });
   }, []);
 
@@ -249,7 +250,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
               { bots.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={limit}
+          <Paginator total={total} pageSize={limit} initialPage={page}
             onChangePage={(page) => { setPage(page); adminGetBots({ page, limit }); }}
           />
         </CardBody>
