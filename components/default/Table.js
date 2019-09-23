@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 export const Table = styled.table`
-  font-size: 11px;
+  font-size: 12px;
   width: 100%;
   color: #212529;
   border-collapse: collapse;
@@ -15,7 +15,7 @@ export const Table = styled.table`
     border-top: 1px solid #dee2e6;
   }
   @media(min-width: 1400px) {
-    font-size: 16px;
+    font-size: 14px;
   }
 `;
 
