@@ -166,8 +166,8 @@ const ScreenShotTab = ({
   }, [currentFolder, offset]);
 
   const toFile = (item) => {
-    const blob = new Blob([item.thumbnail || item.data], { type: 'image/png' });
-    return new File([blob], 'image.png', { type: 'image/png' });
+    const blob = new Blob([item.thumbnail || item.data], { type: 'image/jpg' });
+    return new File([blob], item.name, { type: 'image/jpg' });
   };
 
   const toImage = (item) => ({ src: URL.createObjectURL(toFile(item)), caption: item.name, ...item });
@@ -225,7 +225,7 @@ const ScreenShotTab = ({
       <Modal ref={reportModal} title={'Report Issue'} contentStyles={css`min-width: 420px; max-width: 420px;`}
         onClose={() => setReportMode(false)}
       >
-        <ReportEditor screenshots={issuedScreenshots.map(toFile)}/>
+        <ReportEditor bot={botInstance} screenshots={issuedScreenshots.map(toFile)}/>
       </Modal>
     </>
   );

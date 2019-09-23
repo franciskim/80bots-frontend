@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import { connect } from 'react-redux';
 import { Textarea } from 'components/default/inputs';
 import { css } from '@emotion/core';
 import { Button, FilesDropZone } from 'components/default';
+import { reportBot } from 'store/bot/actions';
+import { addNotification } from 'store/notification/actions';
+import { NOTIFICATION_TYPES } from 'config';
 
 const Buttons = styled.div`
   display: flex;
@@ -11,12 +15,21 @@ const Buttons = styled.div`
   justify-content: space-between;
 `;
 
-const ReportIssue = ({ bot, screenshots, onClose, ...props }) => {
+const ReportIssue = ({ bot, screenshots, report, notify, onClose, ...props }) => {
   const [message, setMessage] = useState('');
   const [files, setFiles] = useState([]);
 
   const submit = () => {
-    console.log(message, files);
+    let data = new FormData();
+    data.append('message', message);
+    files.forEach(file => data.append('screenshots[]', file));
+    notify({ type: NOTIFICATION_TYPES.INFO, message: 'Uploading Report...' });
+    report(bot.id, data)
+      .then(() => {
+        notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Issue report sent' });
+        onClose && onClose();
+      })
+      .catch(err => notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Report failed, please try again later' }));
   };
 
   return(
@@ -34,9 +47,16 @@ const ReportIssue = ({ bot, screenshots, onClose, ...props }) => {
 };
 
 ReportIssue.propTypes = {
+  report:      PropTypes.func.isRequired,
+  notify:      PropTypes.func.isRequired,
   bot:         PropTypes.object,
   onClose:     PropTypes.func,
   screenshots: PropTypes.array
 };
 
-export default ReportIssue;
+const mapDispatchToProps = dispatch => ({
+  notify: payload   => dispatch(addNotification(payload)),
+  report: (...args) => dispatch(reportBot(...args)),
+});
+
+export default connect(null, mapDispatchToProps)(ReportIssue);

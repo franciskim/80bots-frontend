@@ -45,10 +45,7 @@ const styles = {
       margin-top: 20px;
     }
     margin-bottom: 20px;
-  `,
-  select: {
-    menuPortal: base => ({ ...base, zIndex: 5 })
-  }
+  `
 };
 
 const Feedback = ({ send, notify, ...props }) => {
@@ -86,13 +83,11 @@ const Feedback = ({ send, notify, ...props }) => {
           Bug report or improvement suggestions
         </SubTitle>
         <Select styles={styles} placeholder={'Select report type'} options={toOptions(TYPES)}
-          onChange={({ value }) => setType(value)} menuPortalTarget={document.body}
-          menuPosition={'absolute'} menuPlacement={'bottom'}
+          onChange={({ value }) => setType(value)}
         />
         {
           type && <Select styles={styles} placeholder={'Select category'} options={toOptions(CATEGORIES)}
-            onChange={({ value }) => setCategory(value)} menuPortalTarget={document.body}
-            menuPosition={'absolute'} menuPlacement={'bottom'}
+            onChange={({ value }) => setCategory(value)}
           />
         }
         {

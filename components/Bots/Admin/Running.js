@@ -73,7 +73,7 @@ const selectStyles = {
     ...provided,
     minWidth: '150px'
   }),
-  menuPortal: base => ({...base, zIndex: 1})
+  menuPortal: base => ({ ...base, zIndex: 5 }),
 };
 
 const OPTIONS = [
@@ -176,8 +176,7 @@ const RunningBots = ({
         onChange={option => changeBotInstanceStatus(option, botInstance.id)} styles={selectStyles}
         isOptionDisabled={(option) => option.readOnly}
         isDisabled={botInstance.status === 'pending' || botInstance.status === 'terminated'}
-        menuPortalTarget={document.body}
-        menuPosition={'absolute'} menuPlacement={'bottom'}
+        menuPortalTarget={document.body} menuPosition={'absolute'} menuPlacement={'bottom'}
       />
     </td>
     <td>{botInstance.launched_at}</td>
@@ -196,57 +195,57 @@ const RunningBots = ({
     ;
 
   return (
-        <>
-            <AddButtonWrap>
-              <Button type={'primary'} onClick={syncWithAWS} loading={`${syncLoading}`} loaderWidth={140}>
-                    Sync Bot Instances
-              </Button>
-            </AddButtonWrap>
-            <Container>
-              <CardBody>
-                <Filters>
-                  <LimitFilter
-                    onChange={({value}) => {
-                      setLimit(value);
-                      adminGetRunningBots({page, limit: value, list});
-                    }}
-                  />
-                  <ListFilter options={FILTERS_LIST_OPTIONS}
-                    onChange={({value}) => {
-                      setFilterList(value);
-                      adminGetRunningBots({page, limit, list: value});
-                    }}
-                  />
-                  <SearchFilter onChange={console.log}/>
-                </Filters>
-                <Table>
-                  <Thead>
-                    <tr>
-                      <th>Region</th>
-                      <th>Launched By</th>
-                      <th>Name</th>
-                      <th>Script</th>
-                      <th>Instance Id</th>
-                      <th>Uptime</th>
-                      <th>IP</th>
-                      <th>Status</th>
-                      <th>Launch Time</th>
-                      <th>Actions</th>
-                    </tr>
-                  </Thead>
-                  <tbody>
-                    {botInstances.map(renderRow)}
-                  </tbody>
-                </Table>
-                <Paginator total={total} pageSize={limit}
-                  onChangePage={(page) => {
-                    setPage(page);
-                    adminGetRunningBots({page, limit, list});
-                  }}
-                />
-              </CardBody>
-            </Container>
-        </>
+    <>
+      <AddButtonWrap>
+        <Button type={'primary'} onClick={syncWithAWS} loading={`${syncLoading}`} loaderWidth={140}>
+              Sync Bot Instances
+        </Button>
+      </AddButtonWrap>
+      <Container>
+        <CardBody>
+          <Filters>
+            <LimitFilter
+              onChange={({value}) => {
+                setLimit(value);
+                adminGetRunningBots({page, limit: value, list});
+              }}
+            />
+            <ListFilter options={FILTERS_LIST_OPTIONS}
+              onChange={({value}) => {
+                setFilterList(value);
+                adminGetRunningBots({page, limit, list: value});
+              }}
+            />
+            <SearchFilter onChange={console.log}/>
+          </Filters>
+          <Table>
+            <Thead>
+              <tr>
+                <th>Region</th>
+                <th>Launched By</th>
+                <th>Name</th>
+                <th>Script</th>
+                <th>Instance Id</th>
+                <th>Uptime</th>
+                <th>IP</th>
+                <th>Status</th>
+                <th>Launch Time</th>
+                <th>Actions</th>
+              </tr>
+            </Thead>
+            <tbody>
+              {botInstances.map(renderRow)}
+            </tbody>
+          </Table>
+          <Paginator total={total} pageSize={limit}
+            onChangePage={(page) => {
+              setPage(page);
+              adminGetRunningBots({page, limit, list});
+            }}
+          />
+        </CardBody>
+      </Container>
+  </>
   );
 };
 
