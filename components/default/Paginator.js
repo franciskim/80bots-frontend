@@ -85,7 +85,7 @@ export const Paginator = props => {
   }, []);
 
   useEffect(() => {
-    if(props.initialPage !== currentPage) setPaginator(props.initialPage);
+    if(props.initialPage && props.initialPage !== currentPage) setPaginator(props.initialPage);
   }, [props.initialPage]);
 
   useEffect(() => {
