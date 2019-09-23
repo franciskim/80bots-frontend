@@ -80,14 +80,13 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
     values.forEach(val => {
       bot.parameters.forEach(({ name, type }) => {
         switch (type) {
-          case 'multiselect': { result[name] = (values[name].options.map(item => item.value)); break; }
-          case 'enum': { result[name] = values[name].value; break; }
-          default: { result[name] = values[name]; break; }
+          case 'multiselect': { result[name] = (val[name].options.map(item => item.value)); break; }
+          case 'enum': { result[name] = val[name].value; break; }
+          default: { result[name] = val[name]; break; }
         }
       });
-      combined.push(val);
+      combined.push(result);
     });
-
     return combined;
   };
 
@@ -100,8 +99,10 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
       let result = [...combinedResult];
       result[step - 1] = values;
       setCombinedResult(result);
-      setStep(step + 1);
-      if(step === amount) onSubmit(valuesToResult(result));
+      if(step === amount)
+        onSubmit(valuesToResult(result));
+      else
+        setStep(step + 1);
     }
   };
 
