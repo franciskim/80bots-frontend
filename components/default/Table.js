@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
@@ -85,15 +85,14 @@ const LIMIT_OPTIONS = [
 
 const selectStyles = {
   container: (provided) => ({...provided, minWidth: '75px'}),
-  menuPortal: base => ({...base, zIndex: 5})
+  menuPortal: base => ({ ...base, zIndex: 5 }),
 };
 
 export const LimitFilter = ({onChange}) => <FilterBox>
   <Label>Show</Label>
   <Select components={{IndicatorSeparator: () => null}} options={LIMIT_OPTIONS}
     defaultValue={LIMIT_OPTIONS[0]} onChange={onChange} styles={selectStyles}
-    menuPortalTarget={document.body}
-    menuPosition={'absolute'} menuPlacement={'bottom'}
+    menuPortalTarget={document.body} menuPosition={'absolute'} menuPlacement={'bottom'}
   />
   <Label>entries</Label>
 </FilterBox>;
@@ -103,16 +102,14 @@ LimitFilter.propTypes = {
 };
 
 const selectListFilterStyles = {
-  container: (provided) => ({...provided, minWidth: '200px'}),
-  menuPortal: base => ({...base, zIndex: 5})
+  container: (provided) => ({...provided, minWidth: '200px'})
 };
 
 export const ListFilter = ({ options, onChange, defaultValue, ...props }) => <FilterBox { ...props }>
   <Label>Show&nbsp;</Label>
   <Select components={{IndicatorSeparator: () => null}} options={options}
     defaultValue={defaultValue ? defaultValue : options[0]} onChange={onChange} styles={selectListFilterStyles}
-    menuPortalTarget={document.body}
-    menuPosition={'absolute'} menuPlacement={'bottom'}
+    menuPortalTarget={document.body} menuPosition={'absolute'} menuPlacement={'bottom'}
   />
 </FilterBox>;
 

@@ -93,8 +93,7 @@ const Inputs = styled.div`
 const selectStyles = {
   container: css`align-items: flex-start; margin-bottom: 10px;`,
   select: {
-    container: (provided) => ({ ...provided, width: '100%' }),
-    menuPortal: base => ({...base, zIndex: 4})
+    container: (provided) => ({ ...provided, width: '100%' })
   }
 };
 
@@ -240,13 +239,9 @@ const OutputTab = ({ botInstance, addExternalListener, removeAllExternalListener
         <Inputs>
           <Select label={'Export Variant'} options={EXPORT_VARIANTS} value={exportVariant}
             onChange={(option) => setExportVariant(option)} styles={selectStyles}
-            menuPortalTarget={document.body}
-            menuPosition={'absolute'} menuPlacement={'bottom'}
           />
           <Select label={'Export Data Type'} options={EXPORT_TYPES} defaultValue={exportType}
             onChange={(option) => setExportType(option)} styles={selectStyles}
-            menuPortalTarget={document.body}
-            menuPosition={'absolute'} menuPlacement={'bottom'}
           />
         </Inputs>
         <Buttons>

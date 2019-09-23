@@ -5,6 +5,7 @@ import { Wrap, Label, Error } from './Input';
 import { theme } from 'config';
 
 const selectStyles = {
+  menuPortal: base => ({ ...base, zIndex: 5 }),
   container: (provided, state) => ({
     ...provided,
     boxShadow: state.isFocused && '0 0 0 0.2rem rgba(0,123,255,.25)',
@@ -43,7 +44,9 @@ const errorStyles = {
 
 export const Select = ({ styles, label, error, ...props }) => <Wrap styles={styles && styles.container}>
   { label && <Label styles={styles && styles.label}>{ label }</Label> }
-  <ReactSelect styles={{...(error ? errorStyles : selectStyles), ...(styles && styles.select)}} {...props} />
+  <ReactSelect styles={{...(error ? errorStyles : selectStyles), ...(styles && styles.select)}}
+    menuPortalTarget={document.body} menuPosition={'absolute'} menuPlacement={'bottom'} {...props}
+  />
   <Error styles={styles && styles.error}>{ error }</Error>
 </Wrap>;
 

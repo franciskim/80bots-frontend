@@ -87,7 +87,7 @@ const Image = ({ src, onCancel, ...props }) => <ImageDivFilled imgSrc={src} {...
   <Icon name={'cross'} width={10} height={10} color={theme.colors.white} onClick={onCancel}/>
 </ImageDivFilled>;
 
-export const FilesDropZone = ({ onChange, hint, ...props }) => {
+export const FilesDropZone = ({ onChange, predefined, hint, ...props }) => {
   const [files, setFiles] = useState([]);
 
   const fileInput = useRef(null);
@@ -95,6 +95,12 @@ export const FilesDropZone = ({ onChange, hint, ...props }) => {
   useEffect(() => {
     onChange(files);
   }, [files]);
+
+  useEffect(() => {
+    if(predefined.length) {
+      setFiles(predefined);
+    }
+  }, [predefined]);
 
   const removeFile = (idx) => {
     setFiles([...files.slice(0, idx), ...files.slice(idx + 1)]);
@@ -129,8 +135,12 @@ export const FilesDropZone = ({ onChange, hint, ...props }) => {
 };
 
 FilesDropZone.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  hint:     PropTypes.string
+  onChange:   PropTypes.func.isRequired,
+  predefined: PropTypes.arrayOf(PropTypes.shape({
+    size: PropTypes.number.isRequired,
+    type: PropTypes.string.isRequired
+  })),
+  hint:       PropTypes.string
 };
 
 Add.propTypes = {

@@ -33,8 +33,7 @@ const inputStyle = {
 const selectStyles = {
   container: css`
     margin-top: 10px;
-  `,
-  select: { menuPortal: base => ({ ...base, zIndex: 5 }) }
+  `
 };
 
 const LaunchEditor = ({ bot, onSubmit, onClose }) => {
@@ -180,8 +179,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
           value={values[item.name]}
           error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
           onChange={option => changeValue(item.name, option.value, option)} styles={selectStyles}
-          menuPortalTarget={document.body}
-          menuPosition={'absolute'} menuPlacement={'top'}
+          menuPlacement={'top'}
         />
       );
 
@@ -212,8 +210,6 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
           onChange={options => changeMultiSelectValue(item.name, options)} styles={selectStyles}
           options={getMultiSelectOptions(item.name)}
           onInputChange={input => onMultiSelectChange(item.name, input)}
-          menuPortalTarget={document.body}
-          menuPosition={'absolute'} menuPlacement={'bottom'}
           value={values[item.name].options}
         />
       );

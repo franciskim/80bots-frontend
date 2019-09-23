@@ -329,12 +329,12 @@ export const adminUpdateRegion = (id, data) => ({
   }
 });
 
-export const reportBot = (formData) => dispatch => dispatch({
+export const reportBot = (id, data) => dispatch => dispatch({
   type: BOT_REPORT,
   request: {
-    method: 'PUT',
-    url: '/bots/report',
-    data: formData,
+    method: 'POST',
+    url: `/instances/${id}/report`,
+    data,
     onUploadProgress: e => dispatch({
       type: REPORT_UPLOAD_PROGRESS, data: { progress: Math.round((e.loaded / e.total) * 100) }
     })
