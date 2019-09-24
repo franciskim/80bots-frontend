@@ -35,7 +35,7 @@ export const Thead = styled.thead`
   }
 `;
 
-export const Th = ({ order, children, onClick, ...props }) => {
+export const Th = ({ order, field, children, onClick, ...props }) => {
   const theme = useTheme();
 
   const Th = styled.th`
@@ -51,7 +51,7 @@ export const Th = ({ order, children, onClick, ...props }) => {
 
   const handle = () => {
     const newOrder = order === '' || order === 'desc' ? 'asc' : 'desc';
-    onClick && onClick(children, newOrder);
+    onClick && onClick(field || children, newOrder);
   };
 
   return(
@@ -154,5 +154,6 @@ SearchFilter.propTypes = {
 Th.propTypes = {
   order:    PropTypes.oneOf(['asc', 'desc', '']),
   children: PropTypes.string,
+  field:    PropTypes.string,
   onClick:  PropTypes.func
 };

@@ -151,9 +151,16 @@ const RunningBots = ({ theme, notify, getRunningBots, updateRunningBot, botInsta
     { botInstance.status === 'pending' && <Td colSpan={'9'}>{ Loading }</Td> }
   </Tr>;
 
+  const onOrderChange = (field, value) => {
+    setOrder({ field, value });
+    getRunningBots({ page, limit, sort: order.field, order: order.value });
+  };
+
   // eslint-disable-next-line react/prop-types
-  const OrderTh = props => <Th {...props} order={props.children === order.field ? order.value : ''}
-    onClick={(field, value) => setOrder({ field, value })}
+  const OrderTh = props => <Th {...props}
+    // eslint-disable-next-line react/prop-types
+    order={(props.field === order.field) || (props.children === order.field) ? order.value : ''}
+    onClick={onOrderChange}
   />;
 
   return(
@@ -167,12 +174,12 @@ const RunningBots = ({ theme, notify, getRunningBots, updateRunningBot, botInsta
           <Table>
             <Thead>
               <tr>
-                <OrderTh>Region</OrderTh>
-                <OrderTh>Name</OrderTh>
-                <OrderTh>Credits Used</OrderTh>
-                <OrderTh>IP</OrderTh>
-                <OrderTh>Status</OrderTh>
-                <OrderTh>Launched At</OrderTh>
+                <OrderTh field={'region'}>Region</OrderTh>
+                <OrderTh field={'name'}>Name</OrderTh>
+                <OrderTh field={'credits_used'}>Credits Used</OrderTh>
+                <OrderTh field={'ip'}>IP</OrderTh>
+                <OrderTh field={'status'}>Status</OrderTh>
+                <OrderTh field={'launched_at'}>Launched At</OrderTh>
                 <th>Actions</th>
               </tr>
             </Thead>

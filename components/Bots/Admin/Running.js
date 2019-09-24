@@ -98,7 +98,7 @@ const RunningBots = ({
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    adminGetRunningBots({page, limit, list});
+    adminGetRunningBots({ page, limit, list });
     addListener(`running.${user.id}`, 'InstanceLaunched', event => {
       if(event.instance) {
         const status = event.instance.status === 'running' ? 'launched' : event.instance.status;
@@ -201,9 +201,15 @@ const RunningBots = ({
   </Tr>
     ;
 
-  // eslint-disable-next-line react/prop-types
-  const OrderTh = props => <Th {...props} order={props.children === order.field ? order.value : ''}
-    onClick={(field, value) => setOrder({ field, value })}
+  const onOrderChange = (field, value) => {
+    setOrder({ field, value });
+    adminGetRunningBots({ page, limit, list, sort: order.field, order: order.value });
+  };
+
+  const OrderTh = props => <Th {...props}
+    // eslint-disable-next-line react/prop-types
+    order={(props.field === order.field) || (props.children === order.field) ? order.value : ''}
+    onClick={onOrderChange}
   />;
 
   return (
@@ -233,15 +239,15 @@ const RunningBots = ({
           <Table>
             <Thead>
               <tr>
-                <OrderTh>Region</OrderTh>
-                <OrderTh>Launched By</OrderTh>
-                <OrderTh>Name</OrderTh>
-                <OrderTh>Script</OrderTh>
-                <OrderTh>Instance Id</OrderTh>
-                <OrderTh>Uptime</OrderTh>
-                <OrderTh>IP</OrderTh>
-                <OrderTh>Status</OrderTh>
-                <OrderTh>Launch Time</OrderTh>
+                <OrderTh field={'region'}>Region</OrderTh>
+                <OrderTh field={'launched_by'}>Launched By</OrderTh>
+                <OrderTh field={'name'}>Name</OrderTh>
+                <OrderTh field={'bot_name'}>Script</OrderTh>
+                <OrderTh field={'instance_id'}>Instance Id</OrderTh>
+                <OrderTh field={'uptime'}>Uptime</OrderTh>
+                <OrderTh field={'ip'}>IP</OrderTh>
+                <OrderTh field={'status'}>Status</OrderTh>
+                <OrderTh field={'launched_at'}>Launch Time</OrderTh>
                 <th>Actions</th>
               </tr>
             </Thead>
