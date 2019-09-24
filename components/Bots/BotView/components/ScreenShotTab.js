@@ -183,7 +183,7 @@ const ScreenShotTab = ({
 
   return(
     <>
-      <Content styles={!currentFolder && css`justify-content: flex-start;`}>
+      <Content>
         {
           !loading && currentFolder && <FiltersSection>
             { reportMode && <Hint>Select issued screenshots |&nbsp;</Hint> }
@@ -198,7 +198,7 @@ const ScreenShotTab = ({
             }
           </FiltersSection>
         }
-        <ScreenShots>
+        <ScreenShots styles={!currentFolder && css`justify-content: flex-start;`}>
           {
             loading
               ? <Loader type={'spinning-bubbles'} width={100} height={100} color={theme.colors.primary}/>
