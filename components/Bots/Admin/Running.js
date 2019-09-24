@@ -109,6 +109,9 @@ const RunningBots = ({
         botInstanceUpdated(event.instance);
       }
     });
+    addListener(`running.${user.id}`, 'InstanceStatusUpdated', () => {
+      adminGetRunningBots({page: 1, limit, list});
+    });
     addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
       notify({type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed'});
       adminGetRunningBots({page, limit, list});
