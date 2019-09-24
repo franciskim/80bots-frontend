@@ -89,7 +89,7 @@ const FILTERS_LIST_OPTIONS = [
 ];
 
 const RunningBots = ({
-  theme, addNotification, adminGetRunningBots, downloadInstancePemFile, updateAdminRunningBot,
+  theme, notify, adminGetRunningBots, downloadInstancePemFile, updateAdminRunningBot,
   botInstances, total, user, addListener, removeAllListeners, botInstanceUpdated, syncBotInstances, syncLoading
 }) => {
   const [list, setFilterList] = useState('all');
@@ -99,14 +99,17 @@ const RunningBots = ({
   useEffect(() => {
     adminGetRunningBots({page, limit, list});
     addListener(`running.${user.id}`, 'InstanceLaunched', event => {
-      addNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: `Bot ${event.instance.bot_name} successfully launched`
-      });
-      botInstanceUpdated(event.instance);
+      if(event.instance) {
+        const status = event.instance.status === 'running' ? 'launched' : event.instance.status;
+        notify({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `Bot ${event.instance.bot_name} successfully ${status}`
+        });
+        botInstanceUpdated(event.instance);
+      }
     });
     addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
-      addNotification({type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed'});
+      notify({type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed'});
       adminGetRunningBots({page, limit, list});
     });
     return () => {
@@ -128,7 +131,7 @@ const RunningBots = ({
       setTimeout(function () {
         document.body.removeChild(a);
       }, 0);
-    }).catch(() => addNotification({
+    }).catch(() => notify({
       type: NOTIFICATION_TYPES.ERROR,
       message: 'Error occurred while downloading file'
     }));
@@ -136,17 +139,17 @@ const RunningBots = ({
 
   const changeBotInstanceStatus = (option, id) => {
     updateAdminRunningBot(id, {status: option.value})
-      .then(() => addNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: `Instance was successfully ${option.value}`
+      .then(() => notify({
+        type: NOTIFICATION_TYPES.INFO,
+        message: `Enqueued status change: ${option.value}`
       }))
-      .catch(() => addNotification({type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed'}));
+      .catch(() => notify({type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed'}));
   };
 
   const syncWithAWS = () => {
     syncBotInstances()
-      .then(() => addNotification({type: NOTIFICATION_TYPES.INFO, message: 'Sync sequence started'}))
-      .catch(() => addNotification({type: NOTIFICATION_TYPES.ERROR, message: 'Can\'t start sync sequence'}));
+      .then(() => notify({type: NOTIFICATION_TYPES.INFO, message: 'Sync sequence started'}))
+      .catch(() => notify({type: NOTIFICATION_TYPES.ERROR, message: 'Can\'t start sync sequence'}));
   };
 
   const copyToClipboard = (bot) => {
@@ -154,7 +157,7 @@ const RunningBots = ({
       ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
       : bot.ip;
     navigator.clipboard.writeText(text)
-      .then(() => addNotification({type: NOTIFICATION_TYPES.INFO, message: 'Copied to clipboard'}));
+      .then(() => notify({type: NOTIFICATION_TYPES.INFO, message: 'Copied to clipboard'}));
   };
 
   const Loading = <Loader type={'bubbles'} width={40} height={40} color={theme.colors.primary}/>;
@@ -168,7 +171,7 @@ const RunningBots = ({
     <td>{botInstance.uptime}&nbsp;min</td>
     <td>
       <Ip onClick={() => copyToClipboard(botInstance)}>
-        {botInstance.ip}
+        { botInstance.ip }
       </Ip>
     </td>
     <td>
@@ -250,18 +253,18 @@ const RunningBots = ({
 };
 
 RunningBots.propTypes = {
-  addNotification: PropTypes.func.isRequired,
-  adminGetRunningBots: PropTypes.func.isRequired,
+  notify:                  PropTypes.func.isRequired,
+  adminGetRunningBots:     PropTypes.func.isRequired,
   downloadInstancePemFile: PropTypes.func.isRequired,
-  updateAdminRunningBot: PropTypes.func.isRequired,
-  addListener: PropTypes.func.isRequired,
-  removeAllListeners: PropTypes.func.isRequired,
-  botInstanceUpdated: PropTypes.func.isRequired,
-  syncBotInstances: PropTypes.func.isRequired,
-  botInstances: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
-  syncLoading: PropTypes.bool.isRequired,
-  user: PropTypes.object,
+  updateAdminRunningBot:   PropTypes.func.isRequired,
+  addListener:             PropTypes.func.isRequired,
+  removeAllListeners:      PropTypes.func.isRequired,
+  botInstanceUpdated:      PropTypes.func.isRequired,
+  syncBotInstances:        PropTypes.func.isRequired,
+  botInstances:            PropTypes.array.isRequired,
+  total:                   PropTypes.number.isRequired,
+  syncLoading:             PropTypes.bool.isRequired,
+  user:                    PropTypes.object,
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
@@ -275,7 +278,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addNotification: payload => dispatch(addNotification(payload)),
+  notify: payload => dispatch(addNotification(payload)),
   adminGetRunningBots: query => dispatch(adminGetRunningBots(query)),
   downloadInstancePemFile: id => dispatch(downloadInstancePemFile(id)),
   updateAdminRunningBot: (id, data) => dispatch(updateAdminRunningBot(id, data)),

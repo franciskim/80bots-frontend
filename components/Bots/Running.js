@@ -88,11 +88,14 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
   useEffect(() => {
     getRunningBots({ page, limit });
     addListener(`running.${user.id}`, 'InstanceLaunched', event => {
-      addNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: `Bot ${event.instance.bot_name} successfully launched`
-      });
-      botInstanceUpdated(event.instance);
+      if(event.instance) {
+        const status = event.instance.status === 'running' ? 'launched' : event.instance.status;
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `Bot ${event.instance.bot_name} successfully ${status}`
+        });
+        botInstanceUpdated(event.instance);
+      }
     });
     return () => {
       removeAllListeners();
@@ -102,8 +105,8 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
   const changeBotInstanceStatus = (option, id) => {
     updateRunningBot(id, { status: option.value })
       .then(() => addNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: `Instance was successfully ${option.value}`
+        type: NOTIFICATION_TYPES.INFO,
+        message: `Enqueued status change: ${option.value}`
       }))
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
