@@ -5,6 +5,7 @@ export const GET_RUNNING_BOTS           = 'GET_RUNNING_BOTS';
 export const POST_LAUNCH_INSTANCE       = 'POST_LAUNCH_INSTANCE';
 export const UPDATE_RUNNING_BOT         = 'UPDATE_RUNNING_BOT';
 export const AMIS                       = 'GET_AMIS';
+export const LIMIT_CHANGE               = 'LIMIT_CHANGE';
 
 export const ADMIN_GET_BOTS             = 'ADMIN_GET_BOTS';
 export const ADMIN_GET_RUNNING_BOTS     = 'ADMIN_GET_RUNNING_BOTS';

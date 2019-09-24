@@ -8,11 +8,11 @@ import LaunchEditor from '../components/LaunchEditor';
 import Modal from 'components/default/Modal';
 import { Button, Badge, Paginator } from 'components/default';
 import { Card, CardBody } from 'components/default/Card';
-import { Table, Thead, Filters, LimitFilter, SearchFilter } from 'components/default/Table';
+import { Table, Thead, Filters, LimitFilter, SearchFilter, Th } from 'components/default/Table';
 import { connect } from 'react-redux';
 import {
   adminGetBots, adminUpdateBot, addBot, adminLaunchInstance, getBotSettings, updateBotSettings, adminDeleteBot,
-  syncLocalBots
+  syncLocalBots, setBotLimit
 } from 'store/bot/actions';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
@@ -94,10 +94,10 @@ const modalStyles = css`
 `;
 
 const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, notify, theme, adminDeleteBot
-  , syncLocalBots, syncLoading, addListener, user, ...props}) => {
+  , syncLocalBots, syncLoading, addListener, user, limit, setLimit, ...props}) => {
   const [clickedBot, setClickedBot] = useState(null);
-  const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+  const [order, setOrder] = useState({ value: '', field: '' });
 
   const modal = useRef(null);
   const addModal = useRef(null);
@@ -224,6 +224,11 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
     </td>
   </tr>;
 
+  // eslint-disable-next-line react/prop-types
+  const OrderTh = props => <Th {...props} order={props.children === order.field ? order.value : ''}
+    onClick={(field, value) => setOrder({ field, value })}
+  />;
+
   return(
     <>
       <AddButtonWrap>
@@ -235,18 +240,20 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); adminGetBots({ page, limit: value }); }}/>
+            <LimitFilter defaultValue={limit}
+              onChange={({ value }) => {setLimit(value); adminGetBots({ page, limit: value }); }}
+            />
             <SearchFilter onChange={console.log}/>
           </Filters>
           <Table responsive>
             <Thead>
               <tr>
-                <th>Bot Platform</th>
-                <th>Bot Name</th>
-                <th>Bot Type</th>
-                <th>Bot Description</th>
-                <th>Bot Tags</th>
-                <th>Status</th>
+                <OrderTh>Bot Platform</OrderTh>
+                <OrderTh>Bot Name</OrderTh>
+                <OrderTh>Bot Type</OrderTh>
+                <OrderTh>Bot Description</OrderTh>
+                <OrderTh>Bot Tags</OrderTh>
+                <OrderTh>Status</OrderTh>
                 <th>Action</th>
               </tr>
             </Thead>
@@ -293,6 +300,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
 Bots.propTypes = {
   bots:                PropTypes.array.isRequired,
   total:               PropTypes.number.isRequired,
+  limit:               PropTypes.number.isRequired,
   syncLoading:         PropTypes.bool.isRequired,
   user:                PropTypes.object,
   adminGetBots:        PropTypes.func.isRequired,
@@ -300,6 +308,7 @@ Bots.propTypes = {
   adminLaunchInstance: PropTypes.func.isRequired,
   adminDeleteBot:      PropTypes.func.isRequired,
   notify:              PropTypes.func.isRequired,
+  setLimit:            PropTypes.func.isRequired,
   addBot:              PropTypes.func.isRequired,
   syncLocalBots:       PropTypes.func.isRequired,
   addListener:         PropTypes.func.isRequired,
@@ -312,7 +321,8 @@ const mapStateToProps = state => ({
   bots:        state.bot.bots,
   total:       state.bot.total,
   syncLoading: state.bot.syncLoading,
-  user:        state.auth.user
+  user:        state.auth.user,
+  limit:       state.bot.limit
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -326,6 +336,7 @@ const mapDispatchToProps = dispatch => ({
   updateBotSettings: (id, data) => dispatch(updateBotSettings(id, data)),
   syncLocalBots: () => dispatch(syncLocalBots()),
   addListener: (room, eventName, handler) => dispatch(addListener(room, eventName, handler)),
+  setLimit: limit => dispatch(setBotLimit(limit))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Bots));

@@ -5,11 +5,11 @@ import LaunchEditor from './components/LaunchEditor';
 import Router from 'next/router';
 import Modal from '../default/Modal';
 import { css } from '@emotion/core';
-import { Button, Badge, Paginator, MultiStep } from '../default';
-import { Card, CardBody } from '../default/Card';
-import { Table, Thead, Filters, LimitFilter, SearchFilter } from '../default/Table';
+import { Button, Badge, Paginator } from 'components/default';
+import { Card, CardBody } from 'components/default/Card';
+import {Table, Thead, Filters, LimitFilter, SearchFilter, Th} from 'components/default/Table';
 import { connect } from 'react-redux';
-import { getBots, launchInstance } from 'store/bot/actions';
+import { getBots, launchInstance, setBotLimit } from 'store/bot/actions';
 import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
 import { addNotification } from 'store/notification/actions';
 
@@ -31,10 +31,10 @@ const Tag = styled(Badge)`
   }
 `;
 
-const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
+const Bots = ({ notify, getBots, launchInstance, bots, total, limit, setLimit }) => {
   const [clickedBot, setClickedBot] = useState(null);
-  const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+  const [order, setOrder] = useState({ value: '', field: '' });
 
   const modal = useRef(null);
 
@@ -42,15 +42,15 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
     modal.current.close();
 
     launchInstance(clickedBot.id, params).then(() => {
-      addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
+      notify({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
       setTimeout(() => {
         Router.push('/bots/running');
       }, (NOTIFICATION_TIMINGS.DURATION * 2) + NOTIFICATION_TIMINGS.INFO_HIDE_DELAY);
     }).catch(({ error : { response } }) => {
       if (response && response.data) {
-        addNotification({type: NOTIFICATION_TYPES.ERROR, message: response.data.message});
+        notify({type: NOTIFICATION_TYPES.ERROR, message: response.data.message});
       } else {
-        addNotification({type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch'});
+        notify({type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch'});
       }
     }).finally(() => {
     });
@@ -78,6 +78,11 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
     </td>
   </tr>;
 
+  // eslint-disable-next-line react/prop-types
+  const OrderTh = props => <Th {...props} order={props.children === order.field ? order.value : ''}
+    onClick={(field, value) => setOrder({ field, value })}
+  />;
+
   return(
     <>
       <Container>
@@ -89,10 +94,10 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
           <Table responsive>
             <Thead>
               <tr>
-                <th>Bot Platform</th>
-                <th>Bot Name</th>
-                <th>Description</th>
-                <th>Tags</th>
+                <OrderTh>Bot Platform</OrderTh>
+                <OrderTh>Bot Name</OrderTh>
+                <OrderTh>Description</OrderTh>
+                <OrderTh>Tags</OrderTh>
                 <th>Action</th>
               </tr>
             </Thead>
@@ -114,11 +119,13 @@ const Bots = ({ addNotification, getBots, launchInstance, bots, total }) => {
 };
 
 Bots.propTypes = {
-  getBots: PropTypes.func.isRequired,
-  launchInstance: PropTypes.func.isRequired,
-  bots: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
-  addNotification: PropTypes.func.isRequired
+  launchInstance:  PropTypes.func.isRequired,
+  setLimit:        PropTypes.func.isRequired,
+  getBots:         PropTypes.func.isRequired,
+  notify:          PropTypes.func.isRequired,
+  total:           PropTypes.number.isRequired,
+  limit:           PropTypes.number.isRequired,
+  bots:            PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -128,8 +135,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getBots: query => dispatch(getBots(query)),
-  addNotification: payload => dispatch(addNotification(payload)),
+  notify: payload => dispatch(addNotification(payload)),
   launchInstance: (id, params) => dispatch(launchInstance(id, params)),
+  setLimit: limit => dispatch(setBotLimit(limit)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Bots);

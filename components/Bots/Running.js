@@ -4,17 +4,17 @@ import PropTypes from 'prop-types';
 import Icon from '../default/icons';
 import Select from 'react-select';
 import Modal from '../default/Modal';
+import Link from 'next/link';
 import { connect } from 'react-redux';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
-import { botInstanceUpdated, getRunningBots, updateRunningBot } from 'store/bot/actions';
+import { botInstanceUpdated, getRunningBots, updateRunningBot, setBotLimit } from 'store/bot/actions';
 import { addListener, removeAllListeners } from 'store/socket/actions';
 import { Paginator, Loader, Button } from '../default';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from '../default/Card';
-import { Table, Thead, Filters, LimitFilter, SearchFilter } from '../default/Table';
+import { Table, Thead, Th, Filters, LimitFilter, SearchFilter } from '../default/Table';
 import { css } from '@emotion/core';
-import Link from 'next/link';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -77,10 +77,10 @@ const OPTIONS = [
   { value: 'terminated', label: 'Terminated' }
 ];
 
-const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot, botInstances,
-  total, user, addListener, removeAllListeners, botInstanceUpdated }) => {
+const RunningBots = ({ theme, notify, getRunningBots, updateRunningBot, botInstances,
+  total, user, addListener, removeAllListeners, botInstanceUpdated, setLimit, limit }) => {
   const [clickedBotInstance, setClickedBotInstance] = useState(null);
-  const [limit, setLimit] = useState(10);
+  const [order, setOrder] = useState({ value: '', field: '' });
   const [page, setPage] = useState(1);
 
   const modal = useRef(null);
@@ -90,7 +90,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
     addListener(`running.${user.id}`, 'InstanceLaunched', event => {
       if(event.instance) {
         const status = event.instance.status === 'running' ? 'launched' : event.instance.status;
-        addNotification({
+        notify({
           type: NOTIFICATION_TYPES.SUCCESS,
           message: `Bot ${event.instance.bot_name} successfully ${status}`
         });
@@ -104,11 +104,11 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
 
   const changeBotInstanceStatus = (option, id) => {
     updateRunningBot(id, { status: option.value })
-      .then(() => addNotification({
+      .then(() => notify({
         type: NOTIFICATION_TYPES.INFO,
         message: `Enqueued status change: ${option.value}`
       }))
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
+      .catch(() => notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
   const copyToClipboard = (bot) => {
@@ -116,7 +116,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
       ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
       : bot.ip;
     navigator.clipboard.writeText(text)
-      .then(() => addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Copied to clipboard' }));
+      .then(() => notify({ type: NOTIFICATION_TYPES.INFO, message: 'Copied to clipboard' }));
   };
 
   const Loading = <Loader type={'bubbles'} width={45} height={45} color={theme.colors.primary} />;
@@ -151,6 +151,11 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
     { botInstance.status === 'pending' && <Td colSpan={'9'}>{ Loading }</Td> }
   </Tr>;
 
+  // eslint-disable-next-line react/prop-types
+  const OrderTh = props => <Th {...props} order={props.children === order.field ? order.value : ''}
+    onClick={(field, value) => setOrder({ field, value })}
+  />;
+
   return(
     <>
       <Container>
@@ -162,12 +167,12 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
           <Table>
             <Thead>
               <tr>
-                <th>Region</th>
-                <th>Name</th>
-                <th>Credits Used</th>
-                <th>IP</th>
-                <th>Status</th>
-                <th>Launched At</th>
+                <OrderTh>Region</OrderTh>
+                <OrderTh>Name</OrderTh>
+                <OrderTh>Credits Used</OrderTh>
+                <OrderTh>IP</OrderTh>
+                <OrderTh>Status</OrderTh>
+                <OrderTh>Launched At</OrderTh>
                 <th>Actions</th>
               </tr>
             </Thead>
@@ -188,33 +193,37 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
 };
 
 RunningBots.propTypes = {
+  removeAllListeners: PropTypes.func.isRequired,
+  botInstanceUpdated: PropTypes.func.isRequired,
+  updateRunningBot:   PropTypes.func.isRequired,
+  getRunningBots:     PropTypes.func.isRequired,
+  botInstances:       PropTypes.array.isRequired,
+  addListener:        PropTypes.func.isRequired,
+  setLimit:           PropTypes.func.isRequired,
+  notify:             PropTypes.func.isRequired,
+  total:              PropTypes.number.isRequired,
+  limit:              PropTypes.number.isRequired,
+  user:               PropTypes.object,
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
-  addNotification: PropTypes.func.isRequired,
-  getRunningBots: PropTypes.func.isRequired,
-  updateRunningBot: PropTypes.func.isRequired,
-  botInstances: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
-  addListener: PropTypes.func.isRequired,
-  removeAllListeners: PropTypes.func.isRequired,
-  botInstanceUpdated: PropTypes.func.isRequired,
-  user: PropTypes.object
 };
 
 const mapStateToProps = state => ({
   botInstances: state.bot.botInstances,
   total: state.bot.total,
-  user: state.auth.user
+  user:  state.auth.user,
+  limit: state.bot.limit
 });
 
 const mapDispatchToProps = dispatch => ({
-  addNotification: payload => dispatch(addNotification(payload)),
+  notify: payload => dispatch(addNotification(payload)),
   getRunningBots: query => dispatch(getRunningBots(query)),
   updateRunningBot: (id, data) => dispatch(updateRunningBot(id, data)),
   addListener: (room, eventName, handler) => dispatch(addListener(room, eventName, handler)),
   removeAllListeners: () => dispatch(removeAllListeners()),
   botInstanceUpdated: (botInstance) => dispatch(botInstanceUpdated(botInstance)),
+  setLimit: limit => dispatch(setBotLimit(limit))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(RunningBots));

@@ -6,7 +6,7 @@ import Select from 'react-select';
 import Link from 'next/link';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from 'components/default/Card';
-import { Table, Thead, Filters, LimitFilter, ListFilter, SearchFilter } from 'components/default/Table';
+import { Table, Thead, Th, Filters, LimitFilter, ListFilter, SearchFilter } from 'components/default/Table';
 import { connect } from 'react-redux';
 import { addNotification } from 'store/notification/actions';
 import { NOTIFICATION_TYPES } from 'config';
@@ -94,6 +94,7 @@ const RunningBots = ({
 }) => {
   const [list, setFilterList] = useState('all');
   const [limit, setLimit] = useState(10);
+  const [order, setOrder] = useState({ value: '', field: '' });
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -197,11 +198,16 @@ const RunningBots = ({
   </Tr>
     ;
 
+  // eslint-disable-next-line react/prop-types
+  const OrderTh = props => <Th {...props} order={props.children === order.field ? order.value : ''}
+    onClick={(field, value) => setOrder({ field, value })}
+  />;
+
   return (
     <>
       <AddButtonWrap>
         <Button type={'primary'} onClick={syncWithAWS} loading={`${syncLoading}`} loaderWidth={140}>
-              Sync Bot Instances
+          Sync Bot Instances
         </Button>
       </AddButtonWrap>
       <Container>
@@ -224,15 +230,15 @@ const RunningBots = ({
           <Table>
             <Thead>
               <tr>
-                <th>Region</th>
-                <th>Launched By</th>
-                <th>Name</th>
-                <th>Script</th>
-                <th>Instance Id</th>
-                <th>Uptime</th>
-                <th>IP</th>
-                <th>Status</th>
-                <th>Launch Time</th>
+                <OrderTh>Region</OrderTh>
+                <OrderTh>Launched By</OrderTh>
+                <OrderTh>Name</OrderTh>
+                <OrderTh>Script</OrderTh>
+                <OrderTh>Instance Id</OrderTh>
+                <OrderTh>Uptime</OrderTh>
+                <OrderTh>IP</OrderTh>
+                <OrderTh>Status</OrderTh>
+                <OrderTh>Launch Time</OrderTh>
                 <th>Actions</th>
               </tr>
             </Thead>

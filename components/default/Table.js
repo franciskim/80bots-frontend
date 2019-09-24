@@ -2,39 +2,65 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import Icon from './icons';
+import { useTheme } from 'emotion-theming';
 
 export const Table = styled.table`
   font-size: 12px;
   width: 100%;
-  color: #212529;
-  border-collapse: collapse;
+  color: ${ props => props.theme.colors.table.color };
+  border-collapse: collapse; 
   vertical-align: middle;
   td, th {
     text-align: start;
     padding: 0.75rem;
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid ${ props => props.theme.colors.table.border };
   }
   @media(min-width: 1400px) {
     font-size: 14px;
   }
 `;
 
-Table.propTypes = {
-  responsive: PropTypes.bool
-};
-
 export const Thead = styled.thead`
   tr {
-    background-color: #e8e9ef;
-    color: #868e96;
+    background-color: ${ props => props.theme.colors.table.headerBackground };
+    color: ${ props => props.theme.colors.table.headerColor };
     text-transform: uppercase;
     border: none;
+    white-space: nowrap;
     th {
       font-weight: 300;
       border: none;
     }
   }
 `;
+
+export const Th = ({ order, children, onClick, ...props }) => {
+  const theme = useTheme();
+
+  const Th = styled.th`
+    ${props};
+    font-weight: 300;
+    border: none;
+    cursor: pointer;
+    svg {
+      transform: ${ props => props.order === 'asc' ? 'rotate(-90deg);': 'rotate(90deg);' };
+      margin: 0 0 1px 4px;
+    }
+  `;
+
+  const handle = () => {
+    const newOrder = order === '' || order === 'desc' ? 'asc' : 'desc';
+    onClick && onClick(children, newOrder);
+  };
+
+  return(
+    <Th order={order} onClick={handle} {...props}>
+      {children}
+      {order && <Icon name={'arrow'} color={theme.colors.whiteGrey}/>}
+    </Th>
+  );
+};
 
 export const Filters = styled.div`
   display: flex;
@@ -72,10 +98,6 @@ export const SearchFilter = props => {
   );
 };
 
-SearchFilter.propTypes = {
-  onChange: PropTypes.func.isRequired
-};
-
 const LIMIT_OPTIONS = [
   {value: 10, label: 10},
   {value: 25, label: 25},
@@ -88,18 +110,15 @@ const selectStyles = {
   menuPortal: base => ({ ...base, zIndex: 5 }),
 };
 
-export const LimitFilter = ({onChange}) => <FilterBox>
+export const LimitFilter = ({ defaultValue, onChange }) => <FilterBox>
   <Label>Show</Label>
   <Select components={{IndicatorSeparator: () => null}} options={LIMIT_OPTIONS}
-    defaultValue={LIMIT_OPTIONS[0]} onChange={onChange} styles={selectStyles}
-    menuPortalTarget={document.body} menuPosition={'absolute'} menuPlacement={'bottom'}
+    defaultValue={defaultValue ? LIMIT_OPTIONS.find(item => item.value === defaultValue) : LIMIT_OPTIONS[0]}
+    onChange={onChange} styles={selectStyles} menuPortalTarget={document.body} menuPosition={'absolute'}
+    menuPlacement={'bottom'}
   />
   <Label>entries</Label>
 </FilterBox>;
-
-LimitFilter.propTypes = {
-  onChange: PropTypes.func.isRequired
-};
 
 const selectListFilterStyles = {
   container: (provided) => ({...provided, minWidth: '200px'})
@@ -117,4 +136,23 @@ ListFilter.propTypes = {
   options: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
   defaultValue: PropTypes.any
+};
+
+Table.propTypes = {
+  responsive: PropTypes.bool
+};
+
+LimitFilter.propTypes = {
+  onChange:     PropTypes.func.isRequired,
+  defaultValue: PropTypes.oneOf([10, 25, 50, 100])
+};
+
+SearchFilter.propTypes = {
+  onChange: PropTypes.func.isRequired
+};
+
+Th.propTypes = {
+  order:    PropTypes.oneOf(['asc', 'desc', '']),
+  children: PropTypes.string,
+  onClick:  PropTypes.func
 };

@@ -44,7 +44,13 @@ export const theme = {
     black: '#0a0a0a',
     white: '#ffffff',
     whiteGrey: '#eeeeee',
-    purple: '#6f42c1'
+    purple: '#6f42c1',
+    table: {
+      color: '#212529',
+      border: '#dee2e6',
+      headerColor: '#868e96',
+      headerBackground: '#e8e9ef'
+    }
   }
 };
 

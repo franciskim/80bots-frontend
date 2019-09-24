@@ -12,7 +12,7 @@ import {
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
   GET_TAGS, BOT_SETTINGS, UPDATE_BOT_SETTINGS, SYNC_BOT_INSTANCES, ADMIN_DELETE_BOT, AMIS, SYNC_BOTS, CLEAR_BOT,
-  ADMIN_REGIONS, ADMIN_UPDATE_REGION, BOT_REPORT, REPORT_UPLOAD_PROGRESS
+  ADMIN_REGIONS, ADMIN_UPDATE_REGION, BOT_REPORT, REPORT_UPLOAD_PROGRESS, LIMIT_CHANGE
 } from './types';
 import { success } from 'redux-saga-requests';
 
@@ -344,3 +344,7 @@ export const reportBot = (id, data) => dispatch => dispatch({
   }
 });
 
+export const setBotLimit = limit => ({
+  type: LIMIT_CHANGE,
+  data: limit
+});

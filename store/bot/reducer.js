@@ -11,7 +11,7 @@ import {
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
   GET_TAGS, BOT_SETTINGS, SYNC_BOT_INSTANCES, AMIS, SYNC_BOTS, GET_BOT, CLEAR_BOT,
-  ADMIN_REGIONS, ADMIN_UPDATE_REGION
+  ADMIN_REGIONS, ADMIN_UPDATE_REGION, LIMIT_CHANGE
 } from './types';
 
 const initialState = {
@@ -25,6 +25,7 @@ const initialState = {
   botSettings: {},
   totalRegions: 0,
   total: 0,
+  limit: 10,
   loading: true,
   syncLoading: false,
   error: null,
@@ -33,10 +34,6 @@ const initialState = {
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_BOT:
-    case GET_BOTS:
-    case ADMIN_GET_BOTS:
-    case GET_RUNNING_BOTS:
-    case ADMIN_GET_RUNNING_BOTS:
     case POST_LAUNCH_INSTANCE:
     case ADMIN_POST_LAUNCH_INSTANCE:
     case UPDATE_RUNNING_BOT:
@@ -46,12 +43,23 @@ export const reducer = (state = initialState, action) => {
     case ADMIN_UPDATE_REGION:
       return { ...state, loading: true, error: null };
 
+    case GET_BOTS:
+    case ADMIN_GET_BOTS:
+    case GET_RUNNING_BOTS:
+    case ADMIN_GET_RUNNING_BOTS:
+      return { ...state, loading: true, error: null, total: 0 };
+
     case SYNC_BOT_INSTANCES:
     case SYNC_BOTS:
       return { ...state, syncLoading: true };
 
     case CLEAR_BOT:
       return { ...state, botInstance: {} };
+
+    case LIMIT_CHANGE: {
+      localStorage.setItem('bot.limit', action.data);
+      return { ...state, limit: action.data };
+    }
 
     case success(GET_BOT):
       return { ...state, botInstance: action.data, loading: false };
