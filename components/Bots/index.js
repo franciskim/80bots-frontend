@@ -78,9 +78,15 @@ const Bots = ({ notify, getBots, launchInstance, bots, total, limit, setLimit })
     </td>
   </tr>;
 
-  // eslint-disable-next-line react/prop-types
-  const OrderTh = props => <Th {...props} order={props.children === order.field ? order.value : ''}
-    onClick={(field, value) => setOrder({ field, value })}
+  const onOrderChange = (field, value) => {
+    setOrder({ field, value });
+    getBots({ page, limit, sort: order.field, order: order.value });
+  };
+
+  const OrderTh = props => <Th {...props}
+    // eslint-disable-next-line react/prop-types
+    order={(props.field === order.field) || (props.children === order.field) ? order.value : ''}
+    onClick={onOrderChange}
   />;
 
   return(
@@ -94,10 +100,10 @@ const Bots = ({ notify, getBots, launchInstance, bots, total, limit, setLimit })
           <Table responsive>
             <Thead>
               <tr>
-                <OrderTh>Bot Platform</OrderTh>
-                <OrderTh>Bot Name</OrderTh>
-                <OrderTh>Description</OrderTh>
-                <OrderTh>Tags</OrderTh>
+                <OrderTh field={'platform'}>Bot Platform</OrderTh>
+                <OrderTh field={'name'}>Bot Name</OrderTh>
+                <OrderTh field={'description'}>Description</OrderTh>
+                <th>Tags</th>
                 <th>Action</th>
               </tr>
             </Thead>
