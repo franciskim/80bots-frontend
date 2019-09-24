@@ -74,7 +74,7 @@ const RangeContainer = styled.div`
 `;
 
 export const Range = ({ styles, onChange, min, label, value, ...props }) => {
-  const [val, setVal] = useState(min || 0);
+  const [val, setVal] = useState(value || min || 0);
 
   useEffect(() => {
     onChange(val);

@@ -134,7 +134,7 @@ const RunningBots = ({ theme, addNotification, getRunningBots, updateRunningBot,
         isOptionDisabled={ (option) => option.readOnly }
         isDisabled={botInstance.status === 'pending' || botInstance.status === 'terminated'}
         styles={selectStyles}
-              menuPortalTarget={document.body} menuPosition={'absolute'} menuPlacement={'bottom'}
+        menuPortalTarget={document.body} menuPosition={'absolute'} menuPlacement={'bottom'}
       />
     </td>
     <td>{ botInstance.launched_at }</td>

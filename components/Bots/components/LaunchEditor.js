@@ -52,7 +52,8 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
     let botParams = {};
     bot && bot.parameters.forEach(param => {
       if(getInputType(param.type) === 'checkbox') botParams[param.name] = false;
-      if(getInputType(param.type) === 'range') botParams[param.name] = Number(param.range[0]);
+      if(getInputType(param.type) === 'range')
+        botParams[param.name] = Number(Math.floor((Number(param.range[0]) + Number(param.range[1])) / 2));
       if(getInputType(param.type) === 'text' || getInputType(param.type) === 'number' ||
         getInputType(param.type) === 'password') botParams[param.name] = '';
       if(param.type === 'multiselect') botParams[param.name] = { term: '', options: [] };
