@@ -93,7 +93,7 @@ const modalStyles = css`
   }
 `;
 
-const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, addNotification, theme, adminDeleteBot
+const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, notify, theme, adminDeleteBot
   , syncLocalBots, syncLoading, addListener, user, ...props}) => {
   const [clickedBot, setClickedBot] = useState(null);
   const [limit, setLimit] = useState(10);
@@ -107,7 +107,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
   useEffect(() => {
     adminGetBots({ page, limit });
     addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
-      addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' });
+      notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' });
       adminGetBots({ page, limit });
       setPage(1);
     });
@@ -117,12 +117,16 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
     modal.current.close();
 
     adminLaunchInstance(clickedBot.id, params).then(() => {
-      addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
+      notify({ type: NOTIFICATION_TYPES.INFO, message: 'New instance is enqueued for launch' });
       setTimeout(() => {
         Router.push('/admin/bots/running');
       }, (NOTIFICATION_TIMINGS.DURATION * 2) + NOTIFICATION_TIMINGS.INFO_HIDE_DELAY);
-    }).catch(() => {
-      addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred during new instance launch' });
+    }).catch(action => {
+      notify({
+        type: NOTIFICATION_TYPES.ERROR,
+        message: action.error?.response?.data?.message || 'Error occurred during new instance launch',
+        delay: 1500
+      });
     });
   };
 
@@ -139,20 +143,20 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
   const addBot = botData => {
     props.addBot(convertBotData(botData))
       .then(() => {
-        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot added!' });
+        notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot added!' });
         addModal.current.close();
         adminGetBots({ page, limit });
       })
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Add failed!' }));
+      .catch(() => notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Add failed!' }));
   };
 
   const updateBot = botData => {
     adminUpdateBot(clickedBot.id, convertBotData(botData))
       .then(() => {
-        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot updated!' });
+        notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot updated!' });
         editModal.current.close();
       })
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Update failed!' }));
+      .catch(() => notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Update failed!' }));
   };
 
   const changeBotStatus = bot => {
@@ -160,28 +164,28 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
     const status = bot.status === 'active' ? 'inactive' : 'active';
 
     adminUpdateBot(bot.id, { status })
-      .then(() => addNotification({
+      .then(() => notify({
         type: NOTIFICATION_TYPES.SUCCESS,
         message: `Bot was successfully ${statusName}!`
       }))
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
+      .catch(() => notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
   const deleteBot = () => {
     setClickedBot(null);
     adminDeleteBot(clickedBot.id)
       .then(() => {
-        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot removed!' });
+        notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot removed!' });
         adminGetBots({ page, limit });
         deleteModal.current.close();
       })
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Bot delete failed' }));
+      .catch(() => notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Bot delete failed' }));
   };
 
   const sync = () => {
     syncLocalBots()
-      .then(() => addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Sync started' }))
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Sync cannot be started' }));
+      .then(() => notify({ type: NOTIFICATION_TYPES.INFO, message: 'Sync started' }))
+      .catch(() => notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Sync cannot be started' }));
   };
 
   const renderRow = (bot, idx) => <tr key={idx}>
@@ -295,7 +299,7 @@ Bots.propTypes = {
   adminUpdateBot:      PropTypes.func.isRequired,
   adminLaunchInstance: PropTypes.func.isRequired,
   adminDeleteBot:      PropTypes.func.isRequired,
-  addNotification:     PropTypes.func.isRequired,
+  notify:              PropTypes.func.isRequired,
   addBot:              PropTypes.func.isRequired,
   syncLocalBots:       PropTypes.func.isRequired,
   addListener:         PropTypes.func.isRequired,
@@ -313,7 +317,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   adminGetBots: query => dispatch(adminGetBots(query)),
-  addNotification: payload => dispatch(addNotification(payload)),
+  notify: payload => dispatch(addNotification(payload)),
   adminLaunchInstance: (id, params) => dispatch(adminLaunchInstance(id, params)),
   adminUpdateBot: (id, data) => dispatch(adminUpdateBot(id, data)),
   adminDeleteBot: (id) => dispatch(adminDeleteBot(id)),
