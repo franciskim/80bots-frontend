@@ -203,7 +203,7 @@ const RunningBots = ({
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value });
-    adminGetRunningBots({ page, limit, list, sort: order.field, order: order.value });
+    adminGetRunningBots({ page, limit, list, sort: field, order: value });
   };
 
   const OrderTh = props => <Th {...props}

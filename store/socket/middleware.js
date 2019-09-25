@@ -48,7 +48,6 @@ export default function createWebSocketMiddleware() {
         }
         case EMIT_MESSAGE:
           return socket.emit(action.data.eventName, action.data.message);
-
         case ADD_EXTERNAL_LISTENER: {
           if(!externalSocket) initExternal(action.data.url, { query: action.data.payload } );
           externalSocket.on('reconnect', () => externalSocket.emit('join', action.data.room));
@@ -60,7 +59,6 @@ export default function createWebSocketMiddleware() {
           if(!externalSocket) initExternal(action.data.url, { query: action.data.payload });
           return externalSocket.emit(action.data.eventName, action.data.message);
         }
-
         case REMOVE_EXTERNAL_LISTENER:
           return externalSocket.removeListener(action.data.eventName);
         case REMOVE_ALL_EXTERNAL_LISTENERS: {
