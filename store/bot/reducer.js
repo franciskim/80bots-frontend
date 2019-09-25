@@ -61,11 +61,8 @@ export const reducer = (state = initialState, action) => {
       return { ...state, limit: action.data };
     }
 
-    case success(GET_BOT): {
-      let data = action.data;
-      data.ip = 'localhost';
-      return { ...state, botInstance: data, loading: false };
-    }
+    case success(GET_BOT):
+      return { ...state, botInstance: action.data, loading: false };
 
     case success(GET_BOTS):
     case success(ADMIN_GET_BOTS):
