@@ -6,10 +6,11 @@ export default function createBotMiddleware() {
     return next => action => {
       if(!limitLoaded) {
         limitLoaded = true;
-        dispatch(setBotLimit(localStorage.getItem('bot.limit') !== 'null'
-          ? Number(localStorage.getItem('bot.limit'))
-          : 10
-        ));
+        dispatch(
+          setBotLimit(localStorage.getItem('bot.limit') !== 'null' && !localStorage.getItem('bot.limit')
+            ? Number(localStorage.getItem('bot.limit'))
+            : 10
+          ));
       }
       next(action);
     };

@@ -124,8 +124,8 @@ const selectListFilterStyles = {
   container: (provided) => ({...provided, minWidth: '200px'})
 };
 
-export const ListFilter = ({ options, onChange, defaultValue, ...props }) => <FilterBox { ...props }>
-  <Label>Show&nbsp;</Label>
+export const ListFilter = ({ options, label, onChange, defaultValue, ...props }) => <FilterBox { ...props }>
+  <Label>{ label || 'Show' }&nbsp;</Label>
   <Select components={{IndicatorSeparator: () => null}} options={options}
     defaultValue={defaultValue ? defaultValue : options[0]} onChange={onChange} styles={selectListFilterStyles}
     menuPortalTarget={document.body} menuPosition={'absolute'} menuPlacement={'bottom'}
@@ -135,7 +135,8 @@ export const ListFilter = ({ options, onChange, defaultValue, ...props }) => <Fi
 ListFilter.propTypes = {
   options: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
-  defaultValue: PropTypes.any
+  defaultValue: PropTypes.any,
+  label: PropTypes.string
 };
 
 Table.propTypes = {
