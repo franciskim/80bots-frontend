@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import SettingsEditor from './components/SettingsEditor';
 import Icon from 'components/default/icons';
 import Modal from 'components/default/Modal';
-import { Filters, LimitFilter, SearchFilter, Table, Thead } from 'components/default/Table';
+import {Filters, LimitFilter, SearchFilter, Table, Th, Thead} from 'components/default/Table';
 import { Card, CardBody } from 'components/default/Card';
 import { connect } from 'react-redux';
 import { adminGetRegions, adminUpdateRegion } from 'store/bot/actions';
@@ -72,6 +72,8 @@ const Settings = ({ theme, addNotification, regions, total, getRegions, updateRe
   const [defaultAmi, setDefaultAmi] = useState(null);
   const [limit, setLimit] = useState(20);
   const [page, setPage] = useState(1);
+  const [order, setOrder] = useState({ value: '', field: '' });
+  const [search, setSearch] = useState(null);
 
   const modal = useRef(null);
   const editSettingsModal = useRef(null);
@@ -117,6 +119,22 @@ const Settings = ({ theme, addNotification, regions, total, getRegions, updateRe
       .catch(() => addNotification({type: NOTIFICATION_TYPES.ERROR, message: 'Ami update failed'}));
   };
 
+  const onOrderChange = (field, value) => {
+    setOrder({ field, value });
+    getRegions({ page, limit, sort: field, order: value, search });
+  };
+
+  const OrderTh = props => <Th {...props}
+    // eslint-disable-next-line react/prop-types
+    order={(props.field === order.field) || (props.children === order.field) ? order.value : ''}
+    onClick={onOrderChange}
+  />;
+
+  const searchRegions = (value) => {
+    setSearch(value);
+    getRegions({ page, limit, sort: order.field, order: order.value, search: value });
+  };
+
   const renderRow = (region, idx) => <tr key={idx}>
     <td>{ region.name }</td>
     <td>{ region.code }</td>
@@ -138,16 +156,16 @@ const Settings = ({ theme, addNotification, regions, total, getRegions, updateRe
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); getRegions({ page, limit: value }); }}/>
-            <SearchFilter onChange={console.log}/>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getRegions({ page, limit: value, sort: order.field, order: order.value, search }); }}/>
+            <SearchFilter onChange={( value ) => { searchRegions(value); }}/>
           </Filters>
           <Table responsive>
             <Thead>
               <tr>
-                <th>Name</th>
-                <th>Code</th>
-                <th>Limit</th>
-                <th>Used Limit</th>
+                <OrderTh field={'name'}>Name</OrderTh>
+                <OrderTh field={'code'}>Code</OrderTh>
+                <OrderTh field={'limit'}>Limit</OrderTh>
+                <OrderTh field={'used_limit'}>Used Limit</OrderTh>
                 <th>Default AMI</th>
                 <th>Actions</th>
               </tr>
@@ -157,7 +175,7 @@ const Settings = ({ theme, addNotification, regions, total, getRegions, updateRe
             </tbody>
           </Table>
           <Paginator total={total} pageSize={limit}
-            onChangePage={(page) => { setPage(page); getRegions({ page, limit }); }}
+            onChangePage={(page) => { setPage(page); getRegions({ page, limit, sort: order.field, order: order.value, search }); }}
           />
         </CardBody>
       </Container>

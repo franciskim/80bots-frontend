@@ -98,6 +98,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
   const [clickedBot, setClickedBot] = useState(null);
   const [page, setPage] = useState(1);
   const [order, setOrder] = useState({ value: '', field: '' });
+  const [search, setSearch] = useState(null);
 
   const modal = useRef(null);
   const addModal = useRef(null);
@@ -108,7 +109,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
     adminGetBots({ page, limit });
     addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
       notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' });
-      adminGetBots({ page, limit });
+      adminGetBots({ page, limit, sort: order.field, order: order.value, search });
       setPage(1);
     });
   }, []);
@@ -145,7 +146,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
       .then(() => {
         notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot added!' });
         addModal.current.close();
-        adminGetBots({ page, limit });
+        adminGetBots({ page, limit, sort: order.field, order: order.value, search });
       })
       .catch(() => notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Add failed!' }));
   };
@@ -176,7 +177,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
     adminDeleteBot(clickedBot.id)
       .then(() => {
         notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot removed!' });
-        adminGetBots({ page, limit });
+        adminGetBots({ page, limit, sort: order.field, order: order.value, search });
         deleteModal.current.close();
       })
       .catch(() => notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Bot delete failed' }));
@@ -226,7 +227,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value });
-    adminGetBots({ page, limit, sort: order.field, order: order.value });
+    adminGetBots({ page, limit, sort: field, order: value, search });
   };
 
   const OrderTh = props => <Th {...props}
@@ -234,6 +235,11 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
     order={(props.field === order.field) || (props.children === order.field) ? order.value : ''}
     onClick={onOrderChange}
   />;
+
+  const searchBots = (value) => {
+    setSearch(value);
+    adminGetBots({ page, limit, sort: order.field, order: order.value, search: value });
+  };
 
   return(
     <>
@@ -247,9 +253,9 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
         <CardBody>
           <Filters>
             <LimitFilter defaultValue={limit}
-              onChange={({ value }) => {setLimit(value); adminGetBots({ page, limit: value }); }}
+              onChange={({ value }) => {setLimit(value); adminGetBots({ page, limit: value, sort: order.field, order: order.value, search }); }}
             />
-            <SearchFilter onChange={console.log}/>
+            <SearchFilter onChange={( value ) => { searchBots(value); }}/>
           </Filters>
           <Table responsive>
             <Thead>
@@ -268,7 +274,7 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
             </tbody>
           </Table>
           <Paginator total={total} pageSize={limit} initialPage={page}
-            onChangePage={(page) => { setPage(page); adminGetBots({ page, limit }); }}
+            onChangePage={(page) => { setPage(page); adminGetBots({ page, limit, sort: order.field, order: order.value, search }); }}
           />
         </CardBody>
       </Container>

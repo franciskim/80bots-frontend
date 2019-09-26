@@ -96,6 +96,7 @@ const RunningBots = ({
   const [limit, setLimit] = useState(10);
   const [order, setOrder] = useState({ value: '', field: '' });
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState(null);
 
   useEffect(() => {
     adminGetRunningBots({ page, limit, list });
@@ -110,11 +111,11 @@ const RunningBots = ({
       }
     });
     addListener(`running.${user.id}`, 'InstanceStatusUpdated', () => {
-      adminGetRunningBots({page: 1, limit, list});
+      adminGetRunningBots({ page: 1, limit, list, sort: order.field, order: order.value });
     });
     addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
       notify({type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed'});
-      adminGetRunningBots({page, limit, list});
+      adminGetRunningBots({ page, limit, list, sort: order.field, order: order.value });
     });
     return () => {
       removeAllListeners();
@@ -203,7 +204,7 @@ const RunningBots = ({
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value });
-    adminGetRunningBots({ page, limit, list, sort: order.field, order: order.value });
+    adminGetRunningBots({ page, limit, list, sort: field, order: value, search });
   };
 
   const OrderTh = props => <Th {...props}
@@ -211,6 +212,11 @@ const RunningBots = ({
     order={(props.field === order.field) || (props.children === order.field) ? order.value : ''}
     onClick={onOrderChange}
   />;
+
+  const searchRunningBots = (value) => {
+    setSearch(value);
+    adminGetRunningBots({ page, limit, list, sort: order.field, order: order.value, search: value });
+  };
 
   return (
     <>
@@ -225,16 +231,16 @@ const RunningBots = ({
             <LimitFilter
               onChange={({value}) => {
                 setLimit(value);
-                adminGetRunningBots({page, limit: value, list});
+                adminGetRunningBots({ page, limit: value, list, sort: order.field, order: order.value, search });
               }}
             />
             <ListFilter options={FILTERS_LIST_OPTIONS}
               onChange={({value}) => {
                 setFilterList(value);
-                adminGetRunningBots({page, limit, list: value});
+                adminGetRunningBots({ page, limit, list: value, sort: order.field, order: order.value, search });
               }}
             />
-            <SearchFilter onChange={console.log}/>
+            <SearchFilter onChange={( value ) => { searchRunningBots(value); }}/>
           </Filters>
           <Table>
             <Thead>
@@ -258,7 +264,7 @@ const RunningBots = ({
           <Paginator total={total} pageSize={limit}
             onChangePage={(page) => {
               setPage(page);
-              adminGetRunningBots({page, limit, list});
+              adminGetRunningBots({ page, limit, list, sort: order.field, order: order.value, search });
             }}
           />
         </CardBody>

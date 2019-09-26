@@ -9,7 +9,7 @@ import { withTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
 import { Paginator, Button, Badge } from '../default';
 import { Card, CardBody } from '../default/Card';
-import { Table, Thead, Filters, SearchFilter, LimitFilter } from '../default/Table';
+import {Table, Thead, Filters, SearchFilter, LimitFilter, Th} from '../default/Table';
 import { addNotification } from 'store/notification/actions';
 import { updateUser } from 'store/user/actions';
 import { getUsers } from 'store/user/actions';
@@ -70,6 +70,8 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
   const [credits, setCredits] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+  const [order, setOrder] = useState({ value: '', field: '' });
+  const [search, setSearch] = useState(null);
 
   const modal = useRef(null);
 
@@ -103,6 +105,22 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
         modal.current.close();
       });
   };
+
+  const searchUsers = (value) => {
+    setSearch(value);
+    getUsers({ page, limit, sort: order.field, order: order.value, search: value });
+  };
+
+  const onOrderChange = (field, value) => {
+    setOrder({ field, value });
+    getUsers({ page, limit, sort: field, order: value, search });
+  };
+
+  const OrderTh = props => <Th {...props}
+    // eslint-disable-next-line react/prop-types
+    order={(props.field === order.field) || (props.children === order.field) ? order.value : ''}
+    onClick={onOrderChange}
+  />;
 
   const renderRow = (user, idx) => <tr key={idx}>
     <td>{ user.name }</td>
@@ -139,18 +157,18 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); getUsers({ page, limit: value }); }}/>
-            <SearchFilter onChange={console.log}/>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getUsers({ page, limit: value, sort: order.field, order: order.value, search }); }}/>
+            <SearchFilter onChange={( value ) => { searchUsers(value); }}/>
           </Filters>
           <Table>
             <Thead>
               <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Credits</th>
-                <th>Register Date</th>
-                <th>Status</th>
+                <OrderTh field={'name'}>Name</OrderTh>
+                <OrderTh field={'email'}>Email</OrderTh>
+                <OrderTh field={'role'}>Role</OrderTh>
+                <OrderTh field={'credits'}>Credits</OrderTh>
+                <OrderTh field={'date'}>Register Date</OrderTh>
+                <OrderTh field={'status'}>Status</OrderTh>
                 <th>Actions</th>
               </tr>
             </Thead>
@@ -159,7 +177,7 @@ const Users = ({ theme, addNotification, getUsers, updateUser, users, total }) =
             </tbody>
           </Table>
           <Paginator total={total} pageSize={limit}
-            onChangePage={(page) => { setPage(page); getUsers({ page, limit }); }}
+            onChangePage={(page) => { setPage(page); getUsers({ page, limit, sort: order.field, order: order.value, search }); }}
           />
         </CardBody>
       </Container>

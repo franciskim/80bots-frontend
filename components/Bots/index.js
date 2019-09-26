@@ -35,6 +35,7 @@ const Bots = ({ notify, getBots, launchInstance, bots, total, limit, setLimit })
   const [clickedBot, setClickedBot] = useState(null);
   const [page, setPage] = useState(1);
   const [order, setOrder] = useState({ value: '', field: '' });
+  const [search, setSearch] = useState(null);
 
   const modal = useRef(null);
 
@@ -80,7 +81,7 @@ const Bots = ({ notify, getBots, launchInstance, bots, total, limit, setLimit })
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value });
-    getBots({ page, limit, sort: order.field, order: order.value });
+    getBots({ page, limit, sort: field, order: value, search });
   };
 
   const OrderTh = props => <Th {...props}
@@ -89,13 +90,18 @@ const Bots = ({ notify, getBots, launchInstance, bots, total, limit, setLimit })
     onClick={onOrderChange}
   />;
 
+  const searchBots = (value) => {
+    setSearch(value);
+    getBots({ page, limit, sort: order.field, order: order.value, search: value });
+  };
+
   return(
     <>
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); getBots({ page, limit: value }); }}/>
-            <SearchFilter onChange={console.log}/>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getBots({ page, limit: value, sort: order.field, order: order.value, search }); }}/>
+            <SearchFilter onChange={( value ) => { searchBots(value); }}/>
           </Filters>
           <Table responsive>
             <Thead>
@@ -111,7 +117,7 @@ const Bots = ({ notify, getBots, launchInstance, bots, total, limit, setLimit })
               { bots.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getBots({ page, limit }); }}/>
+          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getBots({ page, limit, sort: order.field, order: order.value, search }); }}/>
         </CardBody>
       </Container>
 

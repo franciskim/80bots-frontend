@@ -4,7 +4,7 @@ import {Card, CardBody} from '../default/Card';
 import {getCreditUsageHistory} from '../../store/history/actions';
 import {connect} from 'react-redux';
 import {withTheme} from 'emotion-theming';
-import {Filters, LimitFilter, ListFilter, Table, Thead} from '../default/Table';
+import {Filters, LimitFilter, ListFilter, Table, Th, Thead} from '../default/Table';
 import {Paginator} from '../default';
 import styled from '@emotion/styled';
 
@@ -24,10 +24,23 @@ const CreditUsage = ({ getCreditUsageHistory, credits, total }) => {
   const [action, setFilterAction] = useState('all');
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+  const [order, setOrder] = useState({ value: '', field: '' });
 
   useEffect(() => {
-    getCreditUsageHistory({ limit, page, action });
+    getCreditUsageHistory({ page, limit, action, sort: order.field, order: order.value });
   }, []);
+
+  const onOrderChange = (field, value) => {
+    setOrder({ field, value });
+    getCreditUsageHistory({ page, limit, action, sort: field, order: value });
+  };
+
+  // eslint-disable-next-line react/prop-types
+  const OrderTh = props => <Th {...props}
+    // eslint-disable-next-line react/prop-types
+    order={(props.field === order.field) || (props.children === order.field) ? order.value : ''}
+    onClick={onOrderChange}
+  />;
 
   const renderRow = (history, idx) => <tr key={idx}>
     <td>{ history.credits }</td>
@@ -42,26 +55,26 @@ const CreditUsage = ({ getCreditUsageHistory, credits, total }) => {
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); getCreditUsageHistory({ page, limit: value, action }); }}/>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getCreditUsageHistory({ page, limit: value, action, sort: order.field, order: order.value }); }}/>
             <ListFilter options={FILTERS_ACTION_OPTIONS}
-              onChange={({ value }) => {setFilterAction(value); getCreditUsageHistory({ page, limit, action: value }); }}
+              onChange={({ value }) => {setFilterAction(value); getCreditUsageHistory({ page, limit, action: value, sort: order.field, order: order.value }); }}
             />
           </Filters>
           <Table responsive>
             <Thead>
               <tr>
-                <th>Credits</th>
-                <th>Total</th>
-                <th>Action</th>
-                <th>Description</th>
-                <th>Date</th>
+                <OrderTh field={'credits'}>Credits</OrderTh>
+                <OrderTh field={'total'}>Total</OrderTh>
+                <OrderTh field={'action'}>Action</OrderTh>
+                <OrderTh field={'description'}>Description</OrderTh>
+                <OrderTh field={'date'}>Date</OrderTh>
               </tr>
             </Thead>
             <tbody>
               { credits.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getCreditUsageHistory({ page, limit, action }); }}/>
+          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getCreditUsageHistory({ page, limit, action, sort: order.field, order: order.value }); }}/>
         </CardBody>
       </Container>
     </>

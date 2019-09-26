@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from 'components/default/Card';
-import { Filters, LimitFilter, ListFilter, SearchFilter, Table, Thead } from 'components/default/Table';
+import {Filters, LimitFilter, ListFilter, SearchFilter, Table, Th, Thead} from 'components/default/Table';
 import Button from 'components/default/Button';
 import Badge from 'components/default/Badge';
 import Icon from 'components/default/icons';
@@ -93,7 +93,9 @@ const BotsSchedule = ({ theme, addNotification, adminGetSchedules, adminCreateSc
   const [list, setFilterList] = useState('all');
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+  const [order, setOrder] = useState({ value: '', field: '' });
   const [instanceId, setInstanceId] = useState(null);
+  const [search, setSearch] = useState(null);
 
   const modal = useRef(null);
   const addModal = useRef(null);
@@ -113,8 +115,8 @@ const BotsSchedule = ({ theme, addNotification, adminGetSchedules, adminCreateSc
   };
 
   const toOptions = bot => ({
-    value: bot.aws_instance_id,
-    label: bot.aws_instance_id + '|' + bot.name
+    value: bot.instance_id,
+    label: bot.instance_id + '|' + bot.name
   });
 
   const changeScheduleStatus = schedule => {
@@ -147,7 +149,7 @@ const BotsSchedule = ({ theme, addNotification, adminGetSchedules, adminCreateSc
     if(instanceId) {
       adminCreateSchedule({ instanceId })
         .then(() => {
-          adminGetSchedules({ page: 1, limit });
+          adminGetSchedules({ page: 1, limit, sort: order.field, order: order.value, search });
           addModal.current.close();
           addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully added' });
         });
@@ -168,6 +170,23 @@ const BotsSchedule = ({ theme, addNotification, adminGetSchedules, adminCreateSc
       .then(() => addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully deleted' }))
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Removal of Schedule failed' }))
       .finally(() => setClickedSchedule(null));
+  };
+
+  const onOrderChange = (field, value) => {
+    setOrder({ field, value });
+    adminGetSchedules({ page, limit, sort: field, order: value, search });
+  };
+
+  // eslint-disable-next-line react/prop-types
+  const OrderTh = props => <Th {...props}
+    // eslint-disable-next-line react/prop-types
+    order={(props.field === order.field) || (props.children === order.field) ? order.value : ''}
+    onClick={onOrderChange}
+  />;
+
+  const searchSchedules = (value) => {
+    setSearch(value);
+    adminGetSchedules({ page, limit, sort: order.field, order: order.value, search: value });
   };
 
   const renderRow = (schedule, idx) => <tr key={idx}>
@@ -208,16 +227,16 @@ const BotsSchedule = ({ theme, addNotification, adminGetSchedules, adminCreateSc
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); adminGetSchedules({ page, limit: value, list }); }}/>
-            <ListFilter options={FILTERS_LIST_OPTIONS} onChange={({ value }) => {setFilterList(value); adminGetSchedules({ page, limit, list: value }); }}/>
-            <SearchFilter onChange={console.log}/>
+            <LimitFilter onChange={({ value }) => {setLimit(value); adminGetSchedules({ page, limit: value, list, sort: order.field, order: order.value, search }); }}/>
+            <ListFilter options={FILTERS_LIST_OPTIONS} onChange={({ value }) => {setFilterList(value); adminGetSchedules({ page, limit, list: value, sort: order.field, order: order.value, search }); }}/>
+            <SearchFilter onChange={( value ) => { searchSchedules(value); }}/>
           </Filters>
           <Table>
             <Thead>
               <tr>
-                <th>Instance Id</th>
-                <th>Bot Name</th>
-                <th>Status</th>
+                <OrderTh field={'instance_id'}>Instance Id</OrderTh>
+                <OrderTh field={'bot_name'}>Bot Name</OrderTh>
+                <OrderTh field={'status'}>Status</OrderTh>
                 <th>Details</th>
                 <th>Actions</th>
               </tr>
@@ -227,7 +246,7 @@ const BotsSchedule = ({ theme, addNotification, adminGetSchedules, adminCreateSc
             </tbody>
           </Table>
           <Paginator total={total} pageSize={limit}
-            onChangePage={(page) => { setPage(page); adminGetSchedules({ page, limit, list }); }}
+            onChangePage={(page) => { setPage(page); adminGetSchedules({ page, limit, list, sort: order.field, order: order.value, search }); }}
           />
         </CardBody>
       </Container>

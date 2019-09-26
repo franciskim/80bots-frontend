@@ -14,7 +14,7 @@ import { getRunningBots } from 'store/bot/actions';
 import { css } from '@emotion/core';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from '../default/Card';
-import { Filters, LimitFilter, Table, Thead } from '../default/Table';
+import {Filters, LimitFilter, SearchFilter, Table, Th, Thead} from '../default/Table';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -85,7 +85,9 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, getRunningBots, cr
   const [clickedSchedule, setClickedSchedule] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+  const [order, setOrder] = useState({ value: '', field: '' });
   const [instanceId, setInstanceId] = useState(null);
+  const [search, setSearch] = useState(null);
 
   const modal = useRef(null);
   const addModal = useRef(null);
@@ -139,7 +141,7 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, getRunningBots, cr
     if(instanceId) {
       createSchedule({ instanceId })
         .then(() => {
-          getSchedules({ page: 1, limit });
+          getSchedules({ page: 1, limit, sort: order.field, order: order.value, search });
           addModal.current.close();
           addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully added' });
         });
@@ -160,6 +162,23 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, getRunningBots, cr
       .then(() => addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully deleted' }))
       .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Removal of Schedule failed' }))
       .finally(() => setClickedSchedule(null));
+  };
+
+  const onOrderChange = (field, value) => {
+    setOrder({ field, value });
+    getSchedules({ page, limit, sort: field, order: value, search });
+  };
+
+  // eslint-disable-next-line react/prop-types
+  const OrderTh = props => <Th {...props}
+    // eslint-disable-next-line react/prop-types
+    order={(props.field === order.field) || (props.children === order.field) ? order.value : ''}
+    onClick={onOrderChange}
+  />;
+
+  const searchSchedules = (value) => {
+    setSearch(value);
+    getSchedules({ page, limit, sort: order.field, order: order.value, search: value });
   };
 
   const renderRow = (schedule, idx) => <tr key={idx}>
@@ -200,15 +219,16 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, getRunningBots, cr
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); getSchedules({ page, limit: value }); }}/>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getSchedules({ page, limit: value, sort: order.field, order: order.value, search }); }}/>
+            <SearchFilter onChange={( value ) => { searchSchedules(value); }}/>
           </Filters>
           <Table>
             <Thead>
               <tr>
-                <th>Instance Id</th>
-                <th>Bot Name</th>
-                <th>Status</th>
-                <th>Details</th>
+                <OrderTh field={'instance_id'}>Instance Id</OrderTh>
+                <OrderTh field={'bot_name'}>Bot Name</OrderTh>
+                <OrderTh field={'status'}>Status</OrderTh>
+                <OrderTh field={'details'}>Details</OrderTh>
                 <th>Actions</th>
               </tr>
             </Thead>
@@ -217,7 +237,7 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, getRunningBots, cr
             </tbody>
           </Table>
           <Paginator total={total} pageSize={limit}
-            onChangePage={(page) => { setPage(page); getSchedules({ page, limit }); }}
+            onChangePage={(page) => { setPage(page); getSchedules({ page, limit, sort: order.field, order: order.value, search }); }}
           />
         </CardBody>
       </Container>

@@ -82,6 +82,7 @@ const RunningBots = ({ theme, notify, getRunningBots, updateRunningBot, botInsta
   const [clickedBotInstance, setClickedBotInstance] = useState(null);
   const [order, setOrder] = useState({ value: '', field: '' });
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState(null);
 
   const modal = useRef(null);
 
@@ -153,7 +154,7 @@ const RunningBots = ({ theme, notify, getRunningBots, updateRunningBot, botInsta
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value });
-    getRunningBots({ page, limit, sort: order.field, order: order.value });
+    getRunningBots({ page, limit, sort: field, order: value, search });
   };
 
   // eslint-disable-next-line react/prop-types
@@ -163,13 +164,18 @@ const RunningBots = ({ theme, notify, getRunningBots, updateRunningBot, botInsta
     onClick={onOrderChange}
   />;
 
+  const searchRunningBots = (value) => {
+    setSearch(value);
+    getRunningBots({ page, limit, sort: order.field, order: order.value, search: value });
+  };
+
   return(
     <>
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); getRunningBots({ page, limit: value }); }}/>
-            <SearchFilter onChange={console.log}/>
+            <LimitFilter onChange={({ value }) => {setLimit(value); getRunningBots({ page, limit: value, sort: order.field, order: order.value, search }); }}/>
+            <SearchFilter onChange={( value ) => { searchRunningBots(value); }}/>
           </Filters>
           <Table>
             <Thead>
@@ -188,7 +194,7 @@ const RunningBots = ({ theme, notify, getRunningBots, updateRunningBot, botInsta
             </tbody>
           </Table>
           <Paginator total={total} pageSize={limit}
-            onChangePage={(page) => { setPage(page); getRunningBots({ page, limit }); }}
+            onChangePage={(page) => { setPage(page); getRunningBots({ page, limit, sort: order.field, order: order.value, search }); }}
           />
         </CardBody>
       </Container>
