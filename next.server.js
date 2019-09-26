@@ -18,10 +18,11 @@ app.prepare().then(() => {
       '/favicon.ico': 'static/images/icons',
       '/pdf.worker.js': '.next/static/chunks',
       '/service-worker.js': '.next',
-      '/sitemap.xml': 'static'
+      '/sitemap.xml': 'static',
+      '/static/sitemap.xml': '',
     };
     if (rootStaticFiles[parsedUrl.pathname] || path.extname(parsedUrl.pathname) === '.xml'){
-      const fileFolder = path.extname(parsedUrl.pathname) === '.xml' && !rootStaticFiles[parsedUrl.pathname]
+      const fileFolder = path.extname(parsedUrl.pathname) !== '.xml' && !rootStaticFiles[parsedUrl.pathname]
         ? '.next'
         : rootStaticFiles[parsedUrl.pathname];
       const pathToFile = join(__dirname, fileFolder, parsedUrl.pathname);

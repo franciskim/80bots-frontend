@@ -33,6 +33,10 @@ const initialState = {
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_BOTS:
+    case ADMIN_GET_BOTS:
+    case GET_RUNNING_BOTS:
+    case ADMIN_GET_RUNNING_BOTS:
     case GET_BOT:
     case POST_LAUNCH_INSTANCE:
     case ADMIN_POST_LAUNCH_INSTANCE:
@@ -42,12 +46,6 @@ export const reducer = (state = initialState, action) => {
     case DOWNLOAD_INSTANCE_PEM_FILE:
     case ADMIN_UPDATE_REGION:
       return { ...state, loading: true, error: null };
-
-    case GET_BOTS:
-    case ADMIN_GET_BOTS:
-    case GET_RUNNING_BOTS:
-    case ADMIN_GET_RUNNING_BOTS:
-      return { ...state, loading: true, error: null, total: 0 };
 
     case SYNC_BOT_INSTANCES:
     case SYNC_BOTS:

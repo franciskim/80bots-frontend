@@ -41,6 +41,17 @@ const ModalDiv = styled.div`
   border: 1px solid ${ props => props.theme.colors.silver };
   ${ props => props.styles };
   
+  &::-webkit-scrollbar {
+    width: 5px;
+    background-color: transparent;
+    border-radius: 10px;
+
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: ${ props => props.theme.colors.clearBlue }
+  }
+  
   @media (max-width: 900px), (max-height: 980px) {
     margin-top: 50px;
   }
@@ -86,14 +97,6 @@ const ModalBodyContent = styled.div`
   min-height: 200px;
   max-height: 90%;
   overflow-y: scroll;
-  &::-webkit-scrollbar {
-    width: 5px;
-    background-color: transparent;border-radius: 10px;
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    background-color: ${ props => props.theme.colors.clearBlue }
-  }
   
   @media (max-width: 900px) {
     width: 100%;

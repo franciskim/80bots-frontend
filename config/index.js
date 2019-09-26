@@ -120,12 +120,15 @@ export const globalStyles = css`
     &::-webkit-scrollbar {
       width: 5px;
       height: 5px;
-      background-color: transparent;
       border-radius: 10px;
+      background: transparent;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
     }
     &::-webkit-scrollbar-thumb {
       border-radius: 5px;
-      background-color: ${theme.colors.primary};
+      background: ${theme.colors.primary};
     }
     &::-webkit-scrollbar-thumb:horizontal {
       border-radius: 5px;

@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Modal from 'components/default/Modal';
-import ScreenShot from '../ScreenShot';
-import { Table, Thead, Filters, ListFilter } from 'components/default/Table';
+import ImagesType from './components/ImagesType';
+import JsonType from './components/JsonType';
+import { Filters, ListFilter } from 'components/default/Table';
 import { connect } from 'react-redux';
 import { CardBody } from 'components/default/Card';
 import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from 'store/socket/actions';
-import { Button } from 'components/default';
+import {Button, Paginator} from 'components/default';
 import { Select } from 'components/default/inputs';
-import {css, keyframes} from '@emotion/core';
+import { css, keyframes } from '@emotion/core';
 import { arrayToCsv } from 'lib/helpers';
 
 const EVENTS = {
@@ -29,7 +30,8 @@ const MESSAGES = {
 
 const TYPES = {
   CSV: 'csv',
-  JSON: 'json'
+  JSON: 'json',
+  IMAGE: 'image'
 };
 
 const VARIANTS = {
@@ -40,11 +42,13 @@ const VARIANTS = {
 const OUTPUT_TYPES = {
   IMAGES: {
     value: 'images',
-    label: 'Images'
+    label: 'Images',
+    component: ImagesType
   },
   JSON: {
     value: 'json',
-    label: 'JSON'
+    label: 'JSON',
+    component: JsonType
   }
 };
 
@@ -56,20 +60,21 @@ const Content = styled(CardBody)`
   ${ props => props.styles };
 `;
 
-// useless right now
-const Tbody = styled.tbody`
-  overflow-y: scroll;
-`;
-
 const Actions = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
+const Fade = keyframes`
+  from { opacity: 0 }
+  to { opacity: 1 }
+`;
+
 const Action = styled(Button)`
-  padding: 5px 10px;
+  padding: 0 5px;
   margin-right: 10px;
+  animation: ${Fade} 200ms ease-in;
   &:last-child {
     margin-right: 0;
   }
@@ -80,6 +85,7 @@ const FiltersSection = styled(Filters)`
   width: 100%;
   align-self: flex-start;
   justify-content: space-between;
+  height: 39px;
 `;
 
 const Buttons = styled.div`
@@ -88,36 +94,14 @@ const Buttons = styled.div`
   justify-content: space-between;
 `;
 
-const Fade = keyframes`
-  from { opacity: 0 }
-  to { opacity: 1 }
+const Type = styled(Button)`
+  padding: 0 5px;
+  animation: ${Fade} 200ms ease-in;
 `;
 
-const Image = styled(ScreenShot)`
-  margin-bottom: 20px;
-  margin-right: 20px;
-  animation: ${Fade} 200ms ease-in-out;
-  ${ props => props.styles };
-  ${ props => props.selected && css`
-    box-shadow: 0 0 10px ${ props.theme.colors.darkishPink };
-    border: 1px solid ${ props.theme.colors.darkishPink };
-  `}
-`;
-
-const ImageViewer = styled.div`
-  top: 0;
-  left: 0;
-  display: flex;
-  position: fixed;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, .8);
-  img {
-    width: calc(100vw - 400px); 
-    height: calc(100vh - 200px);
-  }
+const Hint = styled.span`
+  font-size: 14px;
+  color: ${ props => props.theme.colors.grey };
 `;
 
 const EXPORT_TYPES = [
@@ -148,11 +132,13 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
   const [output, setOutput] = useState([]);
   const [folders, setFolders] = useState([]);
   const [currentFolder, setCurrentFolder] = useState(null);
+  const [types, setTypes] = useState([]);
   const [currentType, setCurrentType] = useState(OUTPUT_TYPES.JSON);
-  const [currentImage, setCurrentImage] = useState(null);
   const [exportVariant, setExportVariant] = useState(EXPORT_VARIANTS[0]);
   const [exportType, setExportType] = useState(EXPORT_TYPES[0]);
   const [fullOutput, setFullOutput] = useState(null);
+  const [offset, setOffset] = useReducer((state, offset) => offset, 0);
+  const [limit, setLimit] = useState(20);
 
   const exportModal = useRef(null);
 
@@ -163,6 +149,9 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
       const handshake = { id: botInstance.instance_id };
+      listen(`${botInstance.ip}:6002`, handshake, EVENTS.AVAILABLE, (types) => {
+        setTypes(types);
+      });
       listen(`${botInstance.ip}:6002`, handshake, EVENTS.OUTPUT, output => {
         setOutput(output);
       });
@@ -171,13 +160,9 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
         if(folders.length > 0) setCurrentFolder(folders[folders.length - 1]);
       });
       listen(`${botInstance.ip}:6002`, handshake, EVENTS.FULL, (data) => {
-        if(data) {
-          const parsed = data.reduce((all, current) =>
-            all.concat(current), []
-          );
-          setFullOutput(parsed);
-        }
+        if(data) setFullOutput(data);
       });
+      emit(MESSAGES.GET_AVAILABLE, null, `${botInstance.ip}:6002`, handshake);
     }
   }, [botInstance]);
 
@@ -187,44 +172,40 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
   }, [currentType, botInstance]);
 
   useEffect(() => {
-    if(currentFolder) emit(MESSAGES.GET_OUTPUT, { folder: currentFolder, type: currentType.value });
+    if(currentFolder) emit(MESSAGES.GET_OUTPUT, {
+      folder: currentFolder.name || currentFolder,
+      type: currentType.value, offset, limit
+    });
   }, [currentFolder]);
+
+  useEffect(() => {
+    if(currentFolder) {
+      emit(MESSAGES.GET_OUTPUT, {
+        folder: currentFolder.name || currentFolder,
+        type: currentType.value, offset, limit
+      });
+    }
+  }, [currentFolder, offset]);
 
   useEffect(() => {
     if(fullOutput) {
       switch (exportType.value) {
-        case TYPES.JSON:
-          return download(JSON.stringify(fullOutput), 'application/json', 'output.json');
-        case TYPES.CSV:
-          return download(arrayToCsv(fullOutput), 'text/csv', 'output.csv');
+        case TYPES.JSON: {
+          const parsed = fullOutput.reduce((all, current) => all.concat(current), []);
+          return download(JSON.stringify(parsed), 'application/json', 'output.json');
+        }
+        case TYPES.CSV: {
+          const parsed = fullOutput.reduce((all, current) => all.concat(current), []);
+          return download(arrayToCsv(parsed), 'text/csv', 'output.csv');
+        }
+        case TYPES.IMAGE: {
+          setExportType(EXPORT_TYPES[0]);
+          return download(fullOutput, 'application/zip', 'images.zip');
+        }
       }
       setFullOutput(null);
     }
   }, [fullOutput]);
-
-  const getHeader = (row) => {
-    let columns = [];
-    for (let key in row) {
-      if(row.hasOwnProperty(key)) {
-        columns.push(<th key={key}>{ key }</th>);
-      }
-    }
-    return columns;
-  };
-
-  const renderRow = (row, idx) => {
-    let rowData = [];
-    for (let key in row) {
-      if(row.hasOwnProperty(key)) {
-        rowData.push(<td key={row[key]}>{ row[key] }</td>);
-      }
-    }
-    return(
-      <tr key={idx}>
-        { rowData }
-      </tr>
-    );
-  };
 
   const download = (data, type, name) => {
     const blob = new Blob([data], { type });
@@ -237,6 +218,15 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
     setTimeout(function () {
       document.body.removeChild(a);
     }, 0);
+  };
+
+  const triggerExport = () => {
+    if(currentType.value === OUTPUT_TYPES.JSON.value) {
+      exportModal.current.open();
+    } else {
+      setExportType({ label: 'Image', value: TYPES.IMAGE });
+      exportOutput();
+    }
   };
 
   const exportOutput = () => {
@@ -256,59 +246,51 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
     }
   };
 
-  const toFile = (item) => {
-    const blob = new Blob([item.thumbnail || item.data], { type: 'image/jpg' });
-    return new File([blob], item.name, { type: 'image/jpg' });
-  };
-
-  const toImage = (item) => ({ src: URL.createObjectURL(toFile(item)), caption: item.name, ...item });
-
-  const renderImages = (item, idx) => {
-    if(item.data) {
-      item = toImage(item);
-      return <Image styles={css`margin-right: 0`} key={idx} src={item.src}
-        caption={item.caption} onClick={() => setCurrentImage(item)}
-      />;
+  const renderTypes = (Wrapper, current, idx) => {
+    const type = <Type key={idx} type={current.value === currentType.value ? 'success' : 'primary'}
+      onClick={() => { setCurrentType(current); setOutput([]); }} disabled={!types.includes(current.value)}
+    >
+      { current.label }
+    </Type>;
+    if(Wrapper.props?.children) {
+      Wrapper.props.children.push(
+        <Hint key={-idx}>&nbsp;|&nbsp;</Hint>,
+        type
+      );
+      return Wrapper;
+    } else {
+      return <Wrapper>{ [ type ] }</Wrapper>;
     }
   };
+
+  const CurrentType = currentType.component;
 
   return(
     <>
       <Content>
         {
-          <FiltersSection>
-            <ListFilter onChange={option => setCurrentType(option)} options={Object.values(OUTPUT_TYPES).reverse()} />
+          types.length ? <FiltersSection>
+            { Object.values(OUTPUT_TYPES).reverse().reduce(renderTypes, Actions) }
             {
-              folders.length > 0 && <ListFilter label={'Time'} onChange={({value}) => setCurrentFolder(value)}
+              folders.length > 0 && currentType.value === OUTPUT_TYPES.JSON.value &&
+              <ListFilter label={'Time'} onChange={({value}) => setCurrentFolder(value)}
                 options={folders.map(item => ({value: item, label: item})).reverse()}
+                value={{ value: currentFolder?.name || currentFolder, label: currentFolder?.name || currentFolder }}
               />
             }
             <Actions>
-              <Action type={'primary'} onClick={() => exportModal.current.open()}>Export</Action>
+              <Action type={'primary'} onClick={triggerExport}>Export</Action>
             </Actions>
           </FiltersSection>
+            : null
         }
-        {
-          currentType.value === OUTPUT_TYPES.JSON.value
-            ? <Table>
-              {
-                output[0] && <Thead>
-                  <tr>
-                    { getHeader(output[0]) }
-                  </tr>
-                </Thead>
-              }
-              <Tbody>
-                { output.map(renderRow) }
-              </Tbody>
-            </Table>
-            : output.map(renderImages)
-        }
+        <CurrentType output={output} />
       </Content>
       {
-        currentImage && <ImageViewer onClick={() => setCurrentImage(null)}>
-          <img onClick={e => e.stopPropagation()} alt={currentImage.caption} src={currentImage.src}/>
-        </ImageViewer>
+        currentType.value === OUTPUT_TYPES.IMAGES.value
+          ? <Paginator total={currentFolder?.total || 0} pageSize={limit}
+            onChangePage={page => setOffset((page * limit) - limit)}
+          /> : null
       }
       <Modal title={'Choose export options'} ref={exportModal} contentStyles={css`overflow: visible;`}>
         <Inputs>

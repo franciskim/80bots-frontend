@@ -42,6 +42,9 @@ const DefaultButton = styled.button`
   &:disabled {
     opacity: .65;
     cursor: default;
+    &:hover {
+      box-shadow: none;
+    }
   }
   
   ${ props => props.styles };
