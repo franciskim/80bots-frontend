@@ -7,13 +7,14 @@ import Modal from 'components/default/Modal';
 import {Filters, LimitFilter, SearchFilter, Table, Th, Thead} from 'components/default/Table';
 import { Card, CardBody } from 'components/default/Card';
 import { connect } from 'react-redux';
-import { adminGetRegions, adminUpdateRegion } from 'store/bot/actions';
+import { adminGetRegions, adminUpdateRegion, syncRegions } from 'store/bot/actions';
 import { Button, Paginator } from 'components/default';
 import { withTheme } from 'emotion-theming';
 import { Select } from 'components/default/inputs';
 import { css } from '@emotion/core';
 import { NOTIFICATION_TYPES } from 'config';
 import { addNotification } from 'store/notification/actions';
+import { addListener } from 'store/socket/actions';
 
 const Container = styled(Card)` 
   border-radius: .25rem;
@@ -66,7 +67,7 @@ const Buttons = styled.div`
   justify-content: space-between;
 `;
 
-const Settings = ({ theme, addNotification, regions, total, getRegions, updateRegion }) => {
+const Settings = ({ theme, addNotification, addListener, user, regions, total, getRegions, updateRegion, syncRegions, syncLoading }) => {
   const [clickedRegion, setClickedRegion] = useState(null);
   const [amis, setAmis] = useState([]);
   const [defaultAmi, setDefaultAmi] = useState(null);
@@ -80,6 +81,12 @@ const Settings = ({ theme, addNotification, regions, total, getRegions, updateRe
 
   useEffect(() => {
     getRegions({ page, limit });
+
+    addListener(`regions.${user.id}`, 'RegionsSyncSucceeded', () => {
+      addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' });
+      getRegions({ page, limit, sort: order.field, order: order.value, search });
+    });
+
   }, []);
 
   const toOption = item => ({
@@ -135,6 +142,12 @@ const Settings = ({ theme, addNotification, regions, total, getRegions, updateRe
     getRegions({ page, limit, sort: order.field, order: order.value, search: value });
   };
 
+  const sync = () => {
+    syncRegions()
+      .then(() => addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Sync started' }))
+      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Sync cannot be started' }));
+  };
+
   const renderRow = (region, idx) => <tr key={idx}>
     <td>{ region.name }</td>
     <td>{ region.code }</td>
@@ -152,6 +165,9 @@ const Settings = ({ theme, addNotification, regions, total, getRegions, updateRe
     <>
       <ButtonWrap>
         <Button type={'primary'} onClick={() => editSettingsModal.current.open()}>Edit Global Bot Settings</Button>
+        <Button type={'primary'} onClick={sync} loading={`${syncLoading}`} loaderWidth={148}>
+          Sync Regions
+        </Button>
       </ButtonWrap>
       <Container>
         <CardBody>
@@ -206,21 +222,29 @@ Settings.propTypes = {
     colors: PropTypes.object.isRequired
   }).isRequired,
   addNotification: PropTypes.func.isRequired,
-  regions:    PropTypes.array.isRequired,
-  total:      PropTypes.number.isRequired,
+  addListener: PropTypes.func.isRequired,
+  user: PropTypes.object,
+  regions: PropTypes.array.isRequired,
+  total: PropTypes.number.isRequired,
   getRegions: PropTypes.func.isRequired,
-  updateRegion: PropTypes.func.isRequired
+  updateRegion: PropTypes.func.isRequired,
+  syncRegions: PropTypes.func.isRequired,
+  syncLoading: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
+  user: state.auth.user,
   regions: state.bot.regions,
-  total: state.bot.totalRegions
+  total: state.bot.totalRegions,
+  syncLoading: state.bot.syncLoading,
 });
 
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
+  addListener: (room, eventName, handler) => dispatch(addListener(room, eventName, handler)),
   getRegions: (...args) => dispatch(adminGetRegions(...args)),
   updateRegion: (id, data) => dispatch(adminUpdateRegion(id, data)),
+  syncRegions: () => dispatch(syncRegions()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Settings));

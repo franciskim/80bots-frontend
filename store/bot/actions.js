@@ -12,7 +12,7 @@ import {
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
   GET_TAGS, BOT_SETTINGS, UPDATE_BOT_SETTINGS, SYNC_BOT_INSTANCES, ADMIN_DELETE_BOT, AMIS, SYNC_BOTS, CLEAR_BOT,
-  ADMIN_REGIONS, ADMIN_UPDATE_REGION, BOT_REPORT, REPORT_UPLOAD_PROGRESS, LIMIT_CHANGE
+  ADMIN_REGIONS, ADMIN_UPDATE_REGION, ADMIN_SYNC_REGIONS, BOT_REPORT, REPORT_UPLOAD_PROGRESS, LIMIT_CHANGE
 } from './types';
 import { success } from 'redux-saga-requests';
 
@@ -326,6 +326,18 @@ export const adminUpdateRegion = (id, data) => ({
   },
   meta: {
     thunk: true
+  }
+});
+
+export const syncRegions = () => ({
+  type: ADMIN_SYNC_REGIONS,
+  request: {
+    method: 'GET',
+    url: '/admin/instances/regions/sync'
+  },
+  meta: {
+    thunk: true,
+    admin: true
   }
 });
 
