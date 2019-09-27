@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { default as ReactSelect }  from 'react-select';
-import { Wrap, Label, Error } from './Input';
+import { Wrap, Label, Error, LabelWrap, Description } from './Input';
 import { theme } from 'config';
 
 const selectStyles = {
@@ -42,8 +42,11 @@ const errorStyles = {
   })
 };
 
-export const Select = ({ styles, label, error, ...props }) => <Wrap styles={styles && styles.container}>
-  { label && <Label styles={styles && styles.label}>{ label }</Label> }
+export const Select = ({ styles, label, error, description, ...props }) => <Wrap styles={styles && styles.container}>
+  <LabelWrap>
+    { label && <Label styles={styles && styles.label}>{ label }</Label> }
+    { description && <Description text={description} /> }
+  </LabelWrap>
   <ReactSelect styles={{...(error ? errorStyles : selectStyles), ...(styles && styles.select)}}
     menuPortalTarget={document.body} menuPosition={'absolute'} menuPlacement={'bottom'} {...props}
   />
@@ -53,6 +56,7 @@ export const Select = ({ styles, label, error, ...props }) => <Wrap styles={styl
 Select.propTypes = {
   label: PropTypes.string,
   error: PropTypes.string,
+  description: PropTypes.string,
   styles: PropTypes.shape({
     container: PropTypes.object,
     label: PropTypes.object,
