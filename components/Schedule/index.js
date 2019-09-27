@@ -244,8 +244,8 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, getRunningBots, cr
 
       <Modal ref={modal} title={'Delete this schedule?'} onClose={() => setClickedSchedule(null)}>
         <Buttons>
-          <Button type={'primary'} onClick={modalDeleteSchedule}>Yes</Button>
           <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
+          <Button type={'primary'} onClick={modalDeleteSchedule}>Yes</Button>
         </Buttons>
       </Modal>
 
@@ -257,8 +257,8 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, getRunningBots, cr
           <AsyncSelect onChange={onBotChange} loadOptions={searchBots} defaultOptions={runningBots.map(toOptions)}/>
         </SelectWrap>
         <Buttons>
-          <Button type={'primary'} onClick={addSchedule}>Add</Button>
           <Button type={'danger'} onClick={() => addModal.current.close()}>Cancel</Button>
+          <Button type={'primary'} onClick={addSchedule}>Add</Button>
         </Buttons>
       </Modal>
 

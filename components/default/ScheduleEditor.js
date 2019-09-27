@@ -203,8 +203,8 @@ const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
         )
       }
       <Buttons>
-        <Button type={'primary'} onClick={updateSchedule}>Update</Button>
         <Button type={'danger'} onClick={close}>Cancel</Button>
+        <Button type={'primary'} onClick={updateSchedule}>Update</Button>
       </Buttons>
     </>
   );

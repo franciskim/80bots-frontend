@@ -297,11 +297,11 @@ const Bots = ({ adminGetBots, adminUpdateBot, adminLaunchInstance, bots, total, 
 
       <Modal ref={deleteModal} title={'Delete Bot'} contentStyles={css`min-width: 300px;`}>
         <Buttons>
-          <Button type={'primary'} onClick={deleteBot}>
-            Yes
-          </Button>
           <Button type={'danger'} onClick={() => { setClickedBot(null); deleteModal.current.close(); }}>
             Cancel
+          </Button>
+          <Button type={'primary'} onClick={deleteBot}>
+            Yes
           </Button>
         </Buttons>
       </Modal>

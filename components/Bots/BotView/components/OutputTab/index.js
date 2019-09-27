@@ -288,8 +288,8 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
           />
         </Inputs>
         <Buttons>
-          <Button type={'primary'} onClick={exportOutput}>Export</Button>
           <Button type={'danger'} onClick={() => exportModal.current.close()}>Cancel</Button>
+          <Button type={'primary'} onClick={exportOutput}>Export</Button>
         </Buttons>
       </Modal>
     </>

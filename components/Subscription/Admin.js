@@ -224,15 +224,15 @@ const Subscriptions = ({ theme, addNotification, getSubscriptions, updateSubscri
           />
         </InputWrap>
         <Buttons>
-          <Button type={'primary'} onClick={addPlan}>Add</Button>
           <Button type={'danger'} onClick={() => addModal.current.close()}>Cancel</Button>
+          <Button type={'primary'} onClick={addPlan}>Add</Button>
         </Buttons>
       </Modal>
 
       <Modal ref={deleteModal} title={'Are you sure?'} contentStyles={modalStyles} onClose={onModalClose}>
         <Buttons>
-          <Button type={'primary'} onClick={deletePlan}>Delete</Button>
           <Button type={'danger'} onClick={() => deleteModal.current.close()}>Cancel</Button>
+          <Button type={'primary'} onClick={deletePlan}>Delete</Button>
         </Buttons>
       </Modal>
 

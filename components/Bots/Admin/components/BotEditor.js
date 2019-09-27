@@ -214,8 +214,8 @@ const BotEditor = ({
         { error && <Error>{ error }</Error> }
       </FormContainer>
       <Buttons>
-        <Button type={'primary'} onClick={submit}>{ type === 'add' ? 'Add' : 'Update' }</Button>
         <Button type={'danger'} onClick={onClose}>Cancel</Button>
+        <Button type={'primary'} onClick={submit}>{ type === 'add' ? 'Add' : 'Update' }</Button>
       </Buttons>
     </>
   );
