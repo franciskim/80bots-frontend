@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Head from '../default/layout/components/Head';
@@ -20,11 +20,6 @@ const Header = styled.h1`
 `;
 
 const Home = () => {
-
-  useEffect(() => {
-    throw new Error('testing source maps');
-  });
-
   return(
     <>
       <Head title={'Home'}/>
