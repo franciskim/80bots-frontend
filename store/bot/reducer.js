@@ -11,7 +11,7 @@ import {
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
   GET_TAGS, BOT_SETTINGS, SYNC_BOT_INSTANCES, AMIS, SYNC_BOTS, GET_BOT, CLEAR_BOT,
-  ADMIN_REGIONS, ADMIN_UPDATE_REGION, LIMIT_CHANGE, ADMIN_SYNC_REGIONS
+  ADMIN_REGIONS, ADMIN_UPDATE_REGION, LIMIT_CHANGE, ADMIN_SYNC_REGIONS, GET_ALL_BOTS
 } from './types';
 
 const initialState = {
@@ -35,6 +35,7 @@ export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_BOTS:
     case ADMIN_GET_BOTS:
+    case GET_ALL_BOTS:
     case GET_RUNNING_BOTS:
     case ADMIN_GET_RUNNING_BOTS:
     case GET_BOT:
@@ -72,6 +73,7 @@ export const reducer = (state = initialState, action) => {
         loading: false
       };
 
+    case success(GET_ALL_BOTS):
     case success(GET_RUNNING_BOTS):
     case success(ADMIN_GET_RUNNING_BOTS):
       return {
@@ -128,6 +130,7 @@ export const reducer = (state = initialState, action) => {
     case error(GET_BOT):
     case error(GET_BOTS):
     case error(ADMIN_GET_BOTS):
+    case error(GET_ALL_BOTS):
     case error(GET_RUNNING_BOTS):
     case error(ADMIN_GET_RUNNING_BOTS):
     case error(POST_LAUNCH_INSTANCE):

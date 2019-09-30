@@ -4,6 +4,7 @@ import {
   ADMIN_GET_BOTS,
   ADD_BOT,
   GET_RUNNING_BOTS,
+  GET_ALL_BOTS,
   ADMIN_GET_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
   ADMIN_POST_LAUNCH_INSTANCE,
@@ -38,6 +39,21 @@ export const getRunningBots = (query = { page: 1, limit: 1 }) => {
     request: {
       method: 'GET',
       url: '/bots/running',
+      params: query
+    },
+    meta: {
+      thunk: true,
+    }
+  };
+};
+
+export const getAllBots = (query = { page: 1, limit: 1 }) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  return {
+    type: GET_ALL_BOTS,
+    request: {
+      method: 'GET',
+      url: '/bots',
       params: query
     },
     meta: {
