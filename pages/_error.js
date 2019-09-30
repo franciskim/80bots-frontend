@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Error from 'next/error';
 import * as Sentry from '@sentry/browser';
 
-Sentry.init({ dsn: process.env.SENTRY_DSN, attachStacktrace: true, release: new Date().toDateString() + '1' });
+Sentry.init({ dsn: process.env.SENTRY_DSN, attachStacktrace: true, release: new Date().toDateString() });
 
 const notifySentry = (err, req, statusCode, user) => {
   Sentry.configureScope((scope) => {

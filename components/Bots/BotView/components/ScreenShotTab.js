@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import ScreenShot from './ScreenShot';
 import Modal from 'components/default/Modal';
+import ReportEditor from './ReportIssue';
 import { css, keyframes } from '@emotion/core';
 import { withTheme } from 'emotion-theming';
 import { connect } from 'react-redux';
@@ -10,7 +11,6 @@ import { CardBody } from 'components/default/Card';
 import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from 'store/socket/actions';
 import { Loader, Button, Paginator } from 'components/default';
 import { Filters } from 'components/default/Table';
-import ReportEditor from './ReportIssue';
 
 const EVENTS = {
   FOLDERS: 'folders',
@@ -91,9 +91,7 @@ const Hint = styled.span`
   color: ${ props => props.theme.colors.grey };
 `;
 
-const ScreenShotTab = ({
-  botInstance, addExternalListener, removeAllExternalListeners, emitExternalMessage, setCustomBack, theme
-}) => {
+const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack, theme }) => {
   const [folders, setFolders] = useState([]);
   const [offset, setOffset] = useReducer((state, offset) => offset, 0);
   const [limit, setLimit] = useState(20);
@@ -126,7 +124,7 @@ const ScreenShotTab = ({
   const BackButton = <Back type={'primary'} onClick={() => setCurrentFolder(null)}>Back</Back>;
 
   useEffect(() => {
-    return () => removeAllExternalListeners();
+    return () => removeAll();
   }, []);
 
   useEffect(() => {
@@ -136,19 +134,19 @@ const ScreenShotTab = ({
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
       const handshake = { id: botInstance.instance_id };
-      addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.FOLDERS, (folders) => {
+      listen(`${botInstance.ip}:6002`, handshake, EVENTS.FOLDERS, (folders) => {
         setLoading(false);
         setFolders(folders.map(toImage));
       });
-      addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.SCREENSHOTS, (screenshots) => {
+      listen(`${botInstance.ip}:6002`, handshake, EVENTS.SCREENSHOTS, (screenshots) => {
         setLoading(false);
         setImages({ type: EVENTS.SCREENSHOTS, data: screenshots.map(toImage) });
       });
-      addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.SCREENSHOT, (screenshot) => {
+      listen(`${botInstance.ip}:6002`, handshake, EVENTS.SCREENSHOT, (screenshot) => {
         if(offset === 0) {
           setImages({ type: EVENTS.SCREENSHOT, data: toImage(screenshot) });
         } else {
-          emitExternalMessage(MESSAGES.GET_SCREENSHOTS, { date: currentFolder.date, offset, limit });
+          emit(MESSAGES.GET_SCREENSHOTS, { date: currentFolder.date, offset, limit });
         }
       });
     }
@@ -157,7 +155,7 @@ const ScreenShotTab = ({
   useEffect(() => {
     if(currentFolder) {
       setLoading(true);
-      emitExternalMessage(MESSAGES.GET_SCREENSHOTS, { date: currentFolder.date, offset, limit });
+      emit(MESSAGES.GET_SCREENSHOTS, { date: currentFolder.date, offset, limit });
       setCustomBack(BackButton);
     } else {
       setImages({ type: EVENTS.SCREENSHOTS, data: [] });
@@ -192,9 +190,9 @@ const ScreenShotTab = ({
             </Report>
             {
               reportMode && <>
-              <Hint>&nbsp;|&nbsp;</Hint>
-              <Report type={'success'} onClick={() => reportModal.current.open()}>Proceed</Report>
-            </>
+                <Hint>&nbsp;|&nbsp;</Hint>
+                <Report type={'success'} onClick={() => reportModal.current.open()}>Proceed</Report>
+              </>
             }
           </FiltersSection>
         }
@@ -232,12 +230,12 @@ const ScreenShotTab = ({
 };
 
 ScreenShotTab.propTypes = {
-  addExternalListener:        PropTypes.func.isRequired,
-  emitExternalMessage:        PropTypes.func.isRequired,
-  removeAllExternalListeners: PropTypes.func.isRequired,
-  setCustomBack:              PropTypes.func.isRequired,
-  botInstance:                PropTypes.object.isRequired,
-  theme:                      PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired
+  setCustomBack: PropTypes.func.isRequired,
+  botInstance:   PropTypes.object.isRequired,
+  removeAll:     PropTypes.func.isRequired,
+  listen:        PropTypes.func.isRequired,
+  theme:         PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired,
+  emit:          PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -245,9 +243,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addExternalListener: (...args) => dispatch(addExternalListener(...args)),
-  emitExternalMessage: (...args) => dispatch(emitExternalMessage(...args)),
-  removeAllExternalListeners: () => dispatch(removeAllExternalListeners())
+  listen: (...args) => dispatch(addExternalListener(...args)),
+  emit: (...args) => dispatch(emitExternalMessage(...args)),
+  removeAll: () => dispatch(removeAllExternalListeners())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ScreenShotTab));

@@ -8,9 +8,9 @@ export const emitMessage = (eventName, message) => ({
   data: { eventName, message }
 });
 
-export const emitExternalMessage = (eventName, message, url, payload) => ({
+export const emitExternalMessage = (eventName, message, url, handshake) => ({
   type: EMIT_EXTERNAL_MESSAGE,
-  data: { eventName, message, url, payload }
+  data: { eventName, message, url, payload: handshake }
 });
 
 export const removeAllListeners = () => ({

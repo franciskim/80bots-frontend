@@ -7,7 +7,7 @@ import { DragDropContainer } from 'components/default';
 import { Card } from 'components/default/Card';
 import { css } from '@emotion/core';
 
-const ACCEPT_TYPES = ['image/png', 'image/jpeg'];
+const ACCEPT_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
 
 const THUMB_SIZE = '80px';
 
@@ -97,7 +97,7 @@ export const FilesDropZone = ({ onChange, predefined, hint, ...props }) => {
   }, [files]);
 
   useEffect(() => {
-    if(predefined.length) {
+    if(predefined?.length) {
       setFiles(predefined);
     }
   }, [predefined]);
@@ -136,11 +136,11 @@ export const FilesDropZone = ({ onChange, predefined, hint, ...props }) => {
 
 FilesDropZone.propTypes = {
   onChange:   PropTypes.func.isRequired,
+  hint:       PropTypes.string,
   predefined: PropTypes.arrayOf(PropTypes.shape({
     size: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired
-  })),
-  hint:       PropTypes.string
+  }))
 };
 
 Add.propTypes = {
