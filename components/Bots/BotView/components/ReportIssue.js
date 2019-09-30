@@ -39,8 +39,8 @@ const ReportIssue = ({ bot, screenshots, report, notify, onClose, ...props }) =>
       />
       <FilesDropZone predefined={screenshots} onChange={files => setFiles(files)} hint={'Drop screenshots below'} />
       <Buttons>
-        <Button type={'primary'} disabled={!message} onClick={submit}>Submit</Button>
         <Button type={'danger'} onClick={onClose}>Cancel</Button>
+        <Button type={'primary'} disabled={!message} onClick={submit}>Submit</Button>
       </Buttons>
     </>
   );

@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 import { CardBody } from 'components/default/Card';
 import { Filters } from 'components/default/Table';
+import { abtos } from 'lib/helpers';
 import { Textarea, Select } from 'components/default/inputs';
 import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from 'store/socket/actions';
 
@@ -67,7 +68,7 @@ const LogsTab = ({
     if(botInstance && Object.keys(botInstance).length > 0) {
       const handshake = { id: botInstance.instance_id };
       addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.LOG, (chunk) => {
-        setLogs({ type: 'add', data: String.fromCharCode.apply(null, new Uint8Array(chunk)) });
+        setLogs({ type: 'add', data: abtos(chunk) });
       });
     }
   }, [botInstance]);

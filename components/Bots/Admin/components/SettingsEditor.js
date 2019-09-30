@@ -84,8 +84,8 @@ const SettingsEditor = ({ getBotSettings, updateBotSettings, addNotification, bo
         error={errors.indexOf(VALIDATION.SCRIPT) > -1 ? 'This field is required' : ''}
       />
       <Buttons>
-        <Button type={'primary'} onClick={submit}>Submit</Button>
         <Button type={'danger'} onClick={onClose}>Cancel</Button>
+        <Button type={'primary'} onClick={submit}>Submit</Button>
       </Buttons>
     </>
   );

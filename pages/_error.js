@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import Error from 'next/error';
 import * as Sentry from '@sentry/browser';
 
-Sentry.init({ dsn: process.env.SENTRY_DSN });
+Sentry.init({ dsn: process.env.SENTRY_DSN, attachStacktrace: true, release: new Date().toDateString() });
 
 const notifySentry = (err, req, statusCode, user) => {
   Sentry.configureScope((scope) => {
+    if (err.message) {
+      scope.setFingerprint([err.message]);
+    }
     if (!req) {
       scope.setTag('ssr', false);
     } else {

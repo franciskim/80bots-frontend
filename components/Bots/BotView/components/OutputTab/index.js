@@ -8,10 +8,10 @@ import { Filters, ListFilter } from 'components/default/Table';
 import { connect } from 'react-redux';
 import { CardBody } from 'components/default/Card';
 import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from 'store/socket/actions';
-import {Button, Paginator} from 'components/default';
+import { Button, Paginator } from 'components/default';
 import { Select } from 'components/default/inputs';
 import { css, keyframes } from '@emotion/core';
-import { arrayToCsv } from 'lib/helpers';
+import { arrayToCsv, download } from 'lib/helpers';
 
 const EVENTS = {
   AVAILABLE: 'output.available',
@@ -192,33 +192,20 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
       switch (exportType.value) {
         case TYPES.JSON: {
           const parsed = fullOutput.reduce((all, current) => all.concat(current), []);
-          return download(JSON.stringify(parsed), 'application/json', 'output.json');
+          return download(JSON.stringify(parsed), 'output.json', 'application/json');
         }
         case TYPES.CSV: {
           const parsed = fullOutput.reduce((all, current) => all.concat(current), []);
-          return download(arrayToCsv(parsed), 'text/csv', 'output.csv');
+          return download(arrayToCsv(parsed), 'output.csv', 'text/csv');
         }
         case TYPES.IMAGE: {
           setExportType(EXPORT_TYPES[0]);
-          return download(fullOutput, 'application/zip', 'images.zip');
+          return download(fullOutput, 'images.zip', 'application/zip');
         }
       }
       setFullOutput(null);
     }
   }, [fullOutput]);
-
-  const download = (data, type, name) => {
-    const blob = new Blob([data], { type });
-    const file = new File([blob], name, { type });
-    let a = document.createElement('a');
-    a.href = URL.createObjectURL(file);
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(function () {
-      document.body.removeChild(a);
-    }, 0);
-  };
 
   const triggerExport = () => {
     if(currentType.value === OUTPUT_TYPES.JSON.value) {
@@ -234,10 +221,9 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
       case VARIANTS.CURRENT: {
         switch (exportType.value) {
           case TYPES.JSON:
-            return download(
-              JSON.stringify(output), 'application/json', `${currentFolder}.json`);
+            return download(JSON.stringify(output), `${currentFolder}.json`, 'application/json');
           case TYPES.CSV:
-            return download(arrayToCsv(output), 'text/csv', `${currentFolder}.csv`);
+            return download(arrayToCsv(output), `${currentFolder}.csv`, 'text/csv');
         }
         break;
       }
@@ -302,8 +288,8 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
           />
         </Inputs>
         <Buttons>
-          <Button type={'primary'} onClick={exportOutput}>Export</Button>
           <Button type={'danger'} onClick={() => exportModal.current.close()}>Cancel</Button>
+          <Button type={'primary'} onClick={exportOutput}>Export</Button>
         </Buttons>
       </Modal>
     </>

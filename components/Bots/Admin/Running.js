@@ -15,6 +15,7 @@ import {
 } from 'store/bot/actions';
 import { addListener, removeAllListeners } from 'store/socket/actions';
 import { Paginator, Loader, Button } from 'components/default';
+import { download } from 'lib/helpers';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -124,18 +125,7 @@ const RunningBots = ({
 
   const downloadEventHandler = instance => {
     downloadInstancePemFile(instance.id).then(({data}) => {
-      const blob = new Blob([data], {type: 'application/x-pem-file'});
-      const file = new File([blob], `${instance.instance_id}.pem`, {
-        type: 'application/x-pem-file'
-      });
-      let a = document.createElement('a');
-      a.href = URL.createObjectURL(file);
-      a.download = `${instance.instance_id}.pem`;
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(function () {
-        document.body.removeChild(a);
-      }, 0);
+      download(data, `${instance.instance_id}.pem`, 'application/x-pem-file');
     }).catch(() => notify({
       type: NOTIFICATION_TYPES.ERROR,
       message: 'Error occurred while downloading file'

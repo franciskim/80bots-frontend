@@ -165,8 +165,8 @@ const Notifications = ({ theme, addNotification, lowCreditNotifications, total, 
           defaultValue={clickedNotification && PERCENTAGES.find(item => item.value === clickedNotification.percentage)}
         />
         <Buttons>
-          <Button type={'primary'} onClick={updateNotification}>Update</Button>
           <Button type={'danger'} onClick={() => editModal.current.close()}>Cancel</Button>
+          <Button type={'primary'} onClick={updateNotification}>Update</Button>
         </Buttons>
       </Modal>
 
@@ -174,8 +174,8 @@ const Notifications = ({ theme, addNotification, lowCreditNotifications, total, 
         onClose={onModalClose}
       >
         <Buttons>
-          <Button type={'primary'} onClick={deleteNotification}>Delete</Button>
           <Button type={'danger'} onClick={() => editModal.current.close()}>Cancel</Button>
+          <Button type={'primary'} onClick={deleteNotification}>Delete</Button>
         </Buttons>
       </Modal>
 
@@ -184,8 +184,8 @@ const Notifications = ({ theme, addNotification, lowCreditNotifications, total, 
       >
         <Select options={PERCENTAGES} value={percentage} onChange={option => setPercentage(option)} />
         <Buttons>
-          <Button type={'primary'} onClick={addLowCreditNotification}>Add</Button>
           <Button type={'danger'} onClick={() => addModal.current.close()}>Cancel</Button>
+          <Button type={'primary'} onClick={addLowCreditNotification}>Add</Button>
         </Buttons>
       </Modal>
     </>

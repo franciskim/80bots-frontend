@@ -1,9 +1,9 @@
 const webpack = require('webpack');
 const { parsed: localEnv } = require('dotenv').config();
 const withCSS = require('@zeit/next-css');
-const withSourceMaps = require('@zeit/next-source-maps');
+const withSourceMaps = require('@zeit/next-source-maps')();
 
-const config = {
+const config = ({
   webpack: config => {
     config.plugins.push(new webpack.EnvironmentPlugin(localEnv));
     config.node = {
@@ -11,6 +11,6 @@ const config = {
     };
     return config;
   }
-};
+});
 
 module.exports = withSourceMaps(withCSS(config));

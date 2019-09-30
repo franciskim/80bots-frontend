@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
+import Icon from '../icons';
 import { theme } from 'config';
 import { css, keyframes } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
+import Tooltip from '../Tooltip';
 
 const ERROR_ANIMATION_DURATION = 200;
 
@@ -18,6 +21,20 @@ export const Label = styled.label`
   margin-bottom: 5px;
   ${ props => props.styles };
 `;
+
+export const LabelWrap = styled.div`
+  display: flex;
+`;
+
+export const Description = ({ text, position, ...props}) => {
+  const theme = useTheme();
+  const Component = styled(Icon)`
+    margin-left: 3px;
+  `;
+  return <Tooltip text={text} position={position}>
+    <Component {...props} name={'help'} color={theme.colors.grey} />
+  </Tooltip>;
+};
 
 const errorAnimationIn = keyframes`
   from { font-size: 0; }
@@ -106,13 +123,19 @@ export const errorFocusStyles = css`
    box-shadow: 0 0 0 0.2rem rgba(229, 77 , 147, .25);
 `;
 
-export const Input = ({ styles, label, error, ...props }) => <Wrap styles={styles && styles.container}>
-  { label && <Label styles={styles && styles.label}>{ label }</Label> }
-  <DefaultInput styles={styles && styles.input} {...props} isInputError={!!error} />
-  <Error styles={styles && styles.error}>{ error }</Error>
-</Wrap>;
+export const Input = ({ styles, label, description, descriptionPosition, error, ...props }) =>
+  <Wrap styles={styles && styles.container}>
+    <LabelWrap>
+      { label && <Label styles={styles && styles.label}>{ label }</Label> }
+      { description && <Description text={description} position={descriptionPosition} />}
+    </LabelWrap>
+    <DefaultInput styles={styles && styles.input} {...props} isInputError={!!error} />
+    <Error styles={styles && styles.error}>{ error }</Error>
+  </Wrap>;
 
 Input.propTypes = {
+  description: PropTypes.string,
+  descriptionPosition: PropTypes.oneOf(['top', 'bottom']),
   label: PropTypes.string,
   error: PropTypes.string,
   styles: PropTypes.shape({
@@ -125,6 +148,11 @@ Input.propTypes = {
 
 Error.propTypes = {
   children: PropTypes.string
+};
+
+Description.propTypes = {
+  text: PropTypes.string.isRequired,
+  position: PropTypes.string
 };
 
 export default Input;

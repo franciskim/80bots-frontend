@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/core';
 import { theme } from 'config';
-import { Label, Wrap} from './Input';
+import { Label, Wrap, LabelWrap, Description } from './Input';
 
 const thumbStyles = css`
   appearance: none;
@@ -73,7 +73,7 @@ const RangeContainer = styled.div`
   ${ props => props.styles };
 `;
 
-export const Range = ({ styles, onChange, min, label, value, ...props }) => {
+export const Range = ({ styles, onChange, min, label, value, description, ...props }) => {
   const [val, setVal] = useState(value || min || 0);
 
   useEffect(() => {
@@ -91,7 +91,10 @@ export const Range = ({ styles, onChange, min, label, value, ...props }) => {
 
   return(
     <Wrap styles={styles && styles.container}>
-      { label && <Label styles={styles && styles.label}>{ label }</Label> }
+      <LabelWrap>
+        { label && <Label styles={styles && styles.label}>{ label }</Label> }
+        { description && <Description text={description} /> }
+      </LabelWrap>
       <RangeContainer>
         <DefaultRange {...props} min={min} type={'range'} value={val} onChange={changeValue}/>
         <RangeValue>{val}</RangeValue>
@@ -102,6 +105,7 @@ export const Range = ({ styles, onChange, min, label, value, ...props }) => {
 
 Range.propTypes = {
   label: PropTypes.string,
+  description: PropTypes.string,
   min: PropTypes.number,
   value: PropTypes.number,
   onChange: PropTypes.func.isRequired,

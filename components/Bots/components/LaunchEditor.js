@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
-import { Input, Label, Select, Range } from 'components/default/inputs';
+import { Input, Label, LabelWrap, Description, Select, Range } from 'components/default/inputs';
 import { Button, Steps } from 'components/default';
 
 const Buttons = styled.div`
@@ -177,10 +177,9 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
     switch (item.type) {
       case 'enum': return(
         <Select key={idx} options={item.values.map(toOptions)} label={label}
-          value={values[item.name]}
-          error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
+          value={values[item.name]} menuPlacement={'top'}
+          error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''} description={item.description}
           onChange={option => changeValue(item.name, option.value, option)} styles={selectStyles}
-          menuPlacement={'top'}
         />
       );
 
@@ -188,8 +187,9 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
       case 'Integer': return(
         <Input key={idx} type={type} label={label} styles={inputStyle} value={values[item.name]}
           min={item.range && Number(item.range[0])} max={item.range && Number(item.range[1])}
-          onChange={e => changeValue(item.name, Number(e.target.value))}
+          onChange={e => changeValue(item.name, Number(e.target.value))} description={item.description}
           error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
+          descriptionPosition={idx === 0 ? 'bottom' : 'top'}
         />
       );
 
@@ -197,7 +197,10 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
       case 'boolean':
       case 'Boolean': return(
         <InputWrap key={idx}>
-          <Label>{ label }</Label>
+          <LabelWrap>
+            <Label>{ label }</Label>
+            { item.description && <Description text={item.description} position={idx === 0 ? 'bottom' : 'top'}/> }
+          </LabelWrap>
           <StatusButton type={values[item.name] ? 'primary' : 'danger'}
             onClick={() => changeValue(item.name, !values[item.name])}
           >
@@ -209,9 +212,9 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
       case 'multiselect': return(
         <Select key={idx} label={label} isMulti error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
           onChange={options => changeMultiSelectValue(item.name, options)} styles={selectStyles}
-          options={getMultiSelectOptions(item.name)}
-          onInputChange={input => onMultiSelectChange(item.name, input)}
-          value={values[item.name].options}
+          options={getMultiSelectOptions(item.name)} description={item.description}
+          onInputChange={input => onMultiSelectChange(item.name, input)} value={values[item.name].options}
+          descriptionPosition={idx === 0 ? 'bottom' : 'top'}
         />
       );
 
@@ -219,15 +222,17 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
       case 'password':
       case 'string': return(
         <Input key={idx} type={type} label={label} styles={inputStyle} value={values[item.name]}
-          onChange={e => changeValue(item.name, e.target.value)}
+          onChange={e => changeValue(item.name, e.target.value)} description={item.description}
           error={errors.indexOf(item.name) > -1 ? 'This field is required' : ''}
+          descriptionPosition={idx === 0 ? 'bottom' : 'top'}
         />
       );
 
       case 'range': return(
-        <Range key={idx} label={label} styles={inputStyle}
+        <Range key={idx} label={label} styles={inputStyle} description={item.description}
           min={item.range && Number(item.range[0])} max={item.range && Number(item.range[1])}
           onChange={value => changeValue(item.name, value)} value={values[item.name]}
+          descriptionPosition={idx === 0 ? 'bottom' : 'top'}
         />
       );
     }

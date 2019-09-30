@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Head from '../default/layout/components/Head';
@@ -21,12 +21,12 @@ const Header = styled.h1`
 
 const Home = () => {
   return(
-    <Fragment>
+    <>
       <Head title={'Home'}/>
       <Container>
         <Header>Home page here</Header>
       </Container>
-    </Fragment>
+    </>
   );
 };
 
