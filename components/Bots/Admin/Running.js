@@ -15,7 +15,7 @@ import {
 } from 'store/bot/actions';
 import { addListener, removeAllListeners } from 'store/socket/actions';
 import { Paginator, Loader, Button } from 'components/default';
-import { download } from 'lib/helpers';
+import { download, minToTime } from 'lib/helpers';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -38,6 +38,10 @@ const Td = styled.td`
   position: absolute;
   left: 20px;
   width: calc(100% - 40px);
+`;
+
+const NwTd = styled.td`
+  white-space: nowrap;
 `;
 
 const Tr = styled.tr`
@@ -163,7 +167,7 @@ const RunningBots = ({
     <td>{botInstance.name}</td>
     <td>{botInstance.bot_name}</td>
     <td>{botInstance.instance_id}</td>
-    <td>{botInstance.uptime}&nbsp;min</td>
+    <NwTd>{minToTime(botInstance.uptime)}</NwTd>
     <td>
       <Ip onClick={() => copyToClipboard(botInstance)}>
         { botInstance.ip }

@@ -106,7 +106,7 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme }) =>
         <H6>
           {
             Object.keys(botInstance).length
-              ? botInstance.name + ' | ' + botInstance.instance_id
+              ? botInstance.name + ' | ' + botInstance.bot_name
               : <Loader type={'bubbles'} width={20} height={20} color={theme.colors.primary}/>
           }
         </H6>

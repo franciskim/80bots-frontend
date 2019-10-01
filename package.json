@@ -23,7 +23,7 @@
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
     "react-redux": "^7.1.1",
-    "react-select": "^3.0.5",
+    "react-select": "3.0.7",
     "react-stripe-checkout": "^2.6.3",
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
@@ -38,8 +38,8 @@
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@zeit/next-source-maps": "0.0.4-canary.1",
     "babel-eslint": "^10.0.3",
-    "eslint": "^6.5.0",
-    "eslint-plugin-react": "^7.14.3",
+    "eslint": "6.5.1",
+    "eslint-plugin-react": "7.15.0",
     "redux-devtools-extension": "^2.13.8"
   },
   "engines": {
