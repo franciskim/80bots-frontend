@@ -146,16 +146,17 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack, th
         if(offset === 0) {
           setImages({ type: EVENTS.SCREENSHOT, data: toImage(screenshot) });
         } else {
-          emit(MESSAGES.GET_SCREENSHOTS, { date: currentFolder.date, offset, limit });
+          emit(MESSAGES.GET_SCREENSHOTS, { folder: currentFolder.date, offset, limit });
         }
       });
+      emit(MESSAGES.GET_FOLDERS);
     }
   }, [botInstance]);
 
   useEffect(() => {
     if(currentFolder) {
       setLoading(true);
-      emit(MESSAGES.GET_SCREENSHOTS, { date: currentFolder.date, offset, limit });
+      emit(MESSAGES.GET_SCREENSHOTS, { folder: currentFolder.date, offset, limit });
       setCustomBack(BackButton);
     } else {
       setImages({ type: EVENTS.SCREENSHOTS, data: [] });

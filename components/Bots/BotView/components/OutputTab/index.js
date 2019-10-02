@@ -55,8 +55,7 @@ const OUTPUT_TYPES = {
 const Content = styled(CardBody)`
   display: flex;
   height: 85vh;
-  flex-flow: row wrap;
-  justify-content: space-between;
+  flex-flow: column wrap;
   ${ props => props.styles };
 `;
 
@@ -119,6 +118,13 @@ const Inputs = styled.div`
   flex-direction: column;
   margin-top: 20px;
   margin-bottom: 10px;
+`;
+
+const Fallback = styled.p`
+  font-size: 20px;
+  text-align: center;
+  animation: ${Fade} 200ms ease-in;
+  animation-delay: 1000ms;
 `;
 
 const selectStyles = {
