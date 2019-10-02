@@ -39,9 +39,7 @@ const TextArea = styled(Textarea)`
   font-size: 14px;
 `;
 
-const LogsTab = ({
-  botInstance, addExternalListener, removeAllExternalListeners, emitExternalMessage, setCustomBack, user
-}) => {
+const LogsTab = ({ botInstance, listen, removeAll, emit, setCustomBack, user }) => {
   const logReducer = (state, action) => {
     switch (action.type) {
       case 'add': return state + action.data;
@@ -53,21 +51,19 @@ const LogsTab = ({
   const [folder, setFolder] = useState(LOG_TYPES[0]);
 
   useEffect(() => {
-    return () => { removeAllExternalListeners(); };
+    return () => { removeAll(); };
   }, []);
 
   useEffect(() => {
     setLogs({ type: 'new', data: '' });
     if(botInstance && Object.keys(botInstance).length > 0) {
-      const handshake = { id: botInstance.instance_id };
-      emitExternalMessage(MESSAGES.GET_LOGS, { init: folder.value === 'init' }, `${botInstance.ip}:6002`, handshake);
+      emit(MESSAGES.GET_LOGS, { init: folder.value === 'init' });
     }
   }, [folder, botInstance]);
 
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
-      const handshake = { id: botInstance.instance_id };
-      addExternalListener(`${botInstance.ip}:6002`, handshake, EVENTS.LOG, (chunk) => {
+      listen(EVENTS.LOG, chunk => {
         setLogs({ type: 'add', data: abtos(chunk) });
       });
     }
@@ -90,12 +86,12 @@ const LogsTab = ({
 };
 
 LogsTab.propTypes = {
-  addExternalListener:        PropTypes.func.isRequired,
-  emitExternalMessage:        PropTypes.func.isRequired,
-  removeAllExternalListeners: PropTypes.func.isRequired,
-  setCustomBack:              PropTypes.func.isRequired,
-  botInstance:                PropTypes.object.isRequired,
-  user:                       PropTypes.object.isRequired
+  listen:        PropTypes.func.isRequired,
+  emit:          PropTypes.func.isRequired,
+  removeAll:     PropTypes.func.isRequired,
+  setCustomBack: PropTypes.func.isRequired,
+  botInstance:   PropTypes.object.isRequired,
+  user:          PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -104,9 +100,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addExternalListener: (...args) => dispatch(addExternalListener(...args)),
-  emitExternalMessage: (...args) => dispatch(emitExternalMessage(...args)),
-  removeAllExternalListeners: () => dispatch(removeAllExternalListeners())
+  listen: (...args) => dispatch(addExternalListener(...args)),
+  emit: (...args) => dispatch(emitExternalMessage(...args)),
+  removeAll: () => dispatch(removeAllExternalListeners())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LogsTab);

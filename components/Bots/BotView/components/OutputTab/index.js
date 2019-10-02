@@ -55,7 +55,7 @@ const OUTPUT_TYPES = {
 const Content = styled(CardBody)`
   display: flex;
   height: 85vh;
-  flex-flow: column wrap;
+  flex-flow: column;
   ${ props => props.styles };
 `;
 
@@ -154,21 +154,20 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
 
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
-      const handshake = { id: botInstance.instance_id };
-      listen(`${botInstance.ip}:6002`, handshake, EVENTS.AVAILABLE, (types) => {
+      listen(EVENTS.AVAILABLE, (types) => {
         setTypes(types);
       });
-      listen(`${botInstance.ip}:6002`, handshake, EVENTS.OUTPUT, output => {
+      listen(EVENTS.OUTPUT, output => {
         setOutput(output);
       });
-      listen(`${botInstance.ip}:6002`, handshake, EVENTS.FOLDERS, (folders) => {
+      listen(EVENTS.FOLDERS, (folders) => {
         setFolders(folders);
         if(folders.length > 0) setCurrentFolder(folders[folders.length - 1]);
       });
-      listen(`${botInstance.ip}:6002`, handshake, EVENTS.FULL, (data) => {
+      listen(EVENTS.FULL, (data) => {
         if(data) setFullOutput(data);
       });
-      emit(MESSAGES.GET_AVAILABLE, null, `${botInstance.ip}:6002`, handshake);
+      emit(MESSAGES.GET_AVAILABLE);
     }
   }, [botInstance]);
 
@@ -256,10 +255,12 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
   };
 
   const CurrentType = currentType.component;
-
   return(
     <>
-      <Content>
+      <Content
+        styles={currentType.value === OUTPUT_TYPES.IMAGES.value
+        && css`justify-content: space-between; flex-flow: row wrap;`}
+      >
         {
           types.length ? <FiltersSection>
             { Object.values(OUTPUT_TYPES).reverse().reduce(renderTypes, Actions) }
