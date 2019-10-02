@@ -243,7 +243,7 @@ const RunningBots = ({
                 <OrderTh field={'launched_by'}>Launched By</OrderTh>
                 <OrderTh field={'name'}>Name</OrderTh>
                 <OrderTh field={'bot_name'}>Script</OrderTh>
-                <OrderTh field={'instance_id'}>Instance Id</OrderTh>
+                <th>Instance Id</th>
                 <OrderTh field={'uptime'}>Uptime</OrderTh>
                 <OrderTh field={'ip'}>IP</OrderTh>
                 <OrderTh field={'status'}>Status</OrderTh>
