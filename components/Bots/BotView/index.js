@@ -12,6 +12,7 @@ import { withTheme } from 'emotion-theming';
 import { Card, CardHeader } from 'components/default/Card';
 import { adminGetBot, getBot, clearBot } from 'store/bot/actions';
 import { Button, Loader } from 'components/default';
+import { initExternalConnection, closeExternalConnection } from 'store/socket/actions';
 
 const TABS = {
   SCREENSHOTS: {
@@ -71,16 +72,26 @@ const A = styled.a`
   text-decoration: none; 
 `;
 
-const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme }) => {
+const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, closeConnection, initConnection }) => {
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
   const [customBack, setCustomBack] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
+    if(botInstance?.ip) {
+      const handshake = { id: botInstance.instance_id };
+      initConnection(`${botInstance.ip}:6002`, handshake);
+    }
+  }, [botInstance]);
+
+  useEffect(() => {
     user.role === 'Admin'
       ? adminGetBot(router.query.id)
       : getBot(router.query.id);
-    return () => clearBot();
+    return () => {
+      clearBot();
+      closeConnection();
+    };
   }, []);
 
   useEffect(() => {
@@ -118,12 +129,14 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme }) =>
 };
 
 BotView.propTypes = {
-  getBot:      PropTypes.func.isRequired,
-  adminGetBot: PropTypes.func.isRequired,
-  clearBot:    PropTypes.func.isRequired,
-  botInstance: PropTypes.object.isRequired,
-  user:        PropTypes.object,
-  theme:       PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired
+  adminGetBot:     PropTypes.func.isRequired,
+  closeConnection: PropTypes.func.isRequired,
+  initConnection:  PropTypes.func.isRequired,
+  clearBot:        PropTypes.func.isRequired,
+  getBot:          PropTypes.func.isRequired,
+  botInstance:     PropTypes.object.isRequired,
+  user:            PropTypes.object,
+  theme:           PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired
 };
 
 const mapStateToProps = state => ({
@@ -134,7 +147,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getBot: (id) => dispatch(getBot(id)),
   clearBot: () => dispatch(clearBot()),
-  adminGetBot: (id) => dispatch(adminGetBot(id))
+  adminGetBot: (id) => dispatch(adminGetBot(id)),
+  initConnection: (...args) => dispatch(initExternalConnection(...args)),
+  closeConnection: () => dispatch(closeExternalConnection())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(BotView));

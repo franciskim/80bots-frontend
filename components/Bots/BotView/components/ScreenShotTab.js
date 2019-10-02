@@ -124,7 +124,7 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack, th
   const BackButton = <Back type={'primary'} onClick={() => setCurrentFolder(null)}>Back</Back>;
 
   useEffect(() => {
-    return () => removeAll();
+    return () => { removeAll(); };
   }, []);
 
   useEffect(() => {
@@ -133,29 +133,29 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack, th
 
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
-      const handshake = { id: botInstance.instance_id };
-      listen(`${botInstance.ip}:6002`, handshake, EVENTS.FOLDERS, (folders) => {
+      listen(EVENTS.FOLDERS, (folders) => {
         setLoading(false);
         setFolders(folders.map(toImage));
       });
-      listen(`${botInstance.ip}:6002`, handshake, EVENTS.SCREENSHOTS, (screenshots) => {
+      listen(EVENTS.SCREENSHOTS, (screenshots) => {
         setLoading(false);
         setImages({ type: EVENTS.SCREENSHOTS, data: screenshots.map(toImage) });
       });
-      listen(`${botInstance.ip}:6002`, handshake, EVENTS.SCREENSHOT, (screenshot) => {
+      listen(EVENTS.SCREENSHOT, (screenshot) => {
         if(offset === 0) {
           setImages({ type: EVENTS.SCREENSHOT, data: toImage(screenshot) });
         } else {
-          emit(MESSAGES.GET_SCREENSHOTS, { date: currentFolder.date, offset, limit });
+          emit(MESSAGES.GET_SCREENSHOTS, { folder: currentFolder.date, offset, limit });
         }
       });
+      emit(MESSAGES.GET_FOLDERS);
     }
   }, [botInstance]);
 
   useEffect(() => {
     if(currentFolder) {
       setLoading(true);
-      emit(MESSAGES.GET_SCREENSHOTS, { date: currentFolder.date, offset, limit });
+      emit(MESSAGES.GET_SCREENSHOTS, { folder: currentFolder.date, offset, limit });
       setCustomBack(BackButton);
     } else {
       setImages({ type: EVENTS.SCREENSHOTS, data: [] });

@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import Echo from 'laravel-echo';
 import {
   ADD_LISTENER, REMOVE_LISTENER, REMOVE_ALL_LISTENERS, EMIT_MESSAGE, ADD_EXTERNAL_LISTENER, REMOVE_EXTERNAL_LISTENER,
-  REMOVE_ALL_EXTERNAL_LISTENERS, EMIT_EXTERNAL_MESSAGE
+  REMOVE_ALL_EXTERNAL_LISTENERS, EMIT_EXTERNAL_MESSAGE, INIT_EXTERNAL_CONNECTION, CLOSE_EXTERNAL_CONNECTION
 } from './types';
 
 export default function createWebSocketMiddleware() {
@@ -48,22 +48,26 @@ export default function createWebSocketMiddleware() {
         }
         case EMIT_MESSAGE:
           return socket.emit(action.data.eventName, action.data.message);
-        case ADD_EXTERNAL_LISTENER: {
-          if(!externalSocket) initExternal(action.data.url, { query: action.data.payload } );
-          externalSocket.on('reconnect', () => externalSocket.emit('join', action.data.room));
-          externalSocket.emit('join', action.data.room);
-          externalSocket.on(action.data.eventName, action.data.handler);
+
+        case INIT_EXTERNAL_CONNECTION: {
+          initExternal(action.data.url, { query: action.data.handshake } );
           break;
         }
+        case ADD_EXTERNAL_LISTENER: {
+          return externalSocket?.on(action.data.eventName, action.data.handler);
+        }
         case EMIT_EXTERNAL_MESSAGE: {
-          if(!externalSocket) initExternal(action.data.url, { query: action.data.payload });
-          return externalSocket.emit(action.data.eventName, action.data.message);
+          return externalSocket?.emit(action.data.eventName, action.data.message);
         }
         case REMOVE_EXTERNAL_LISTENER:
-          return externalSocket.removeListener(action.data.eventName);
+          return externalSocket?.removeListener(action.data.eventName);
+
         case REMOVE_ALL_EXTERNAL_LISTENERS: {
-          externalSocket.removeAllListeners();
-          externalSocket.disconnect();
+          return externalSocket?.removeAllListeners();
+        }
+
+        case CLOSE_EXTERNAL_CONNECTION: {
+          externalSocket?.disconnect();
           externalSocket = null;
           break;
         }
