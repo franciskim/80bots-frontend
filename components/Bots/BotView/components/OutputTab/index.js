@@ -8,10 +8,11 @@ import { Filters, ListFilter } from 'components/default/Table';
 import { connect } from 'react-redux';
 import { CardBody } from 'components/default/Card';
 import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from 'store/socket/actions';
-import { Button, Paginator } from 'components/default';
+import {Button, Loader, Paginator} from 'components/default';
 import { Select } from 'components/default/inputs';
 import { css, keyframes } from '@emotion/core';
 import { arrayToCsv, download } from 'lib/helpers';
+import {theme} from '../../../../../config';
 
 const EVENTS = {
   AVAILABLE: 'output.available',
@@ -120,17 +121,40 @@ const Inputs = styled.div`
   margin-bottom: 10px;
 `;
 
-const Fallback = styled.p`
+const Span = styled.span`
   font-size: 20px;
-  text-align: center;
-  animation: ${Fade} 200ms ease-in;
-  animation-delay: 1000ms;
+  color: ${ props => props.theme.colors.blueGrey };
 `;
+
+const Fallback = (props) => {
+  const Div = styled.div`
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+  `;
+  return <Div><Span {...props}/></Div>;
+};
 
 const selectStyles = {
   container: css`align-items: flex-start; margin-bottom: 10px;`,
   select: {
     container: (provided) => ({ ...provided, width: '100%' })
+  }
+};
+
+const STATUSES = {
+  TYPES: {
+    label: 'Receiving Available Output Types',
+    color: theme.colors.darkishPink
+  },
+  FOLDERS: {
+    label: 'Receiving Folders',
+    color: theme.colors.primary
+  },
+  DATA: {
+    label: 'Receiving Data',
+    color: theme.colors.mediumGreen
   }
 };
 
@@ -145,6 +169,8 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
   const [fullOutput, setFullOutput] = useState(null);
   const [offset, setOffset] = useReducer((state, offset) => offset, 0);
   const [limit, setLimit] = useState(20);
+  const [status, setStatus] = useState(STATUSES.TYPES);
+  const [fallback, setFallback] = useState(null);
 
   const exportModal = useRef(null);
 
@@ -155,13 +181,19 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
       listen(EVENTS.AVAILABLE, (types) => {
+        setStatus(null);
         setTypes(types);
+        setFallback(!types.length && 'No available types was provided');
       });
       listen(EVENTS.OUTPUT, output => {
+        setStatus(null);
         setOutput(output);
+        setFallback(!output && 'No output was provided');
       });
       listen(EVENTS.FOLDERS, (folders) => {
+        setStatus(null);
         setFolders(folders);
+        setFallback(!folders.length && 'No folders are created');
         if(folders.length > 0) setCurrentFolder(folders[folders.length - 1]);
       });
       listen(EVENTS.FULL, (data) => {
@@ -172,16 +204,11 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
   }, [botInstance]);
 
   useEffect(() => {
-    if(currentType && botInstance && Object.keys(botInstance).length > 0)
+    if(currentType && Object.keys(botInstance).length > 0) {
       emit(MESSAGES.GET_FOLDERS, { type: currentType.value } );
+      setStatus(STATUSES.FOLDERS);
+    }
   }, [currentType, botInstance]);
-
-  useEffect(() => {
-    if(currentFolder) emit(MESSAGES.GET_OUTPUT, {
-      folder: currentFolder.name || currentFolder,
-      type: currentType.value, offset, limit
-    });
-  }, [currentFolder]);
 
   useEffect(() => {
     if(currentFolder) {
@@ -189,6 +216,7 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
         folder: currentFolder.name || currentFolder,
         type: currentType.value, offset, limit
       });
+      setStatus(STATUSES.DATA);
     }
   }, [currentFolder, offset]);
 
@@ -262,22 +290,29 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
         && css`justify-content: space-between; flex-flow: row wrap;`}
       >
         {
-          types.length ? <FiltersSection>
-            { Object.values(OUTPUT_TYPES).reverse().reduce(renderTypes, Actions) }
-            {
-              folders.length > 0 && currentType.value === OUTPUT_TYPES.JSON.value &&
-              <ListFilter label={'Time'} onChange={({value}) => setCurrentFolder(value)}
-                options={folders.map(item => ({value: item, label: item})).reverse()}
-                value={{ value: currentFolder?.name || currentFolder, label: currentFolder?.name || currentFolder }}
-              />
-            }
-            <Actions>
-              <Action type={'primary'} onClick={triggerExport}>Export</Action>
-            </Actions>
-          </FiltersSection>
-            : null
+          !status
+            ? <FiltersSection>
+              { Object.values(OUTPUT_TYPES).reverse().reduce(renderTypes, Actions) }
+              {
+                folders.length > 0 && currentType.value === OUTPUT_TYPES.JSON.value &&
+                <ListFilter label={'Time'} onChange={({value}) => setCurrentFolder(value)}
+                  options={folders.map(item => ({value: item, label: item})).reverse()}
+                  value={{ value: currentFolder?.name || currentFolder, label: currentFolder?.name || currentFolder }}
+                />
+              }
+              <Actions>
+                <Action type={'primary'} onClick={triggerExport}>Export</Action>
+              </Actions>
+            </FiltersSection>
+            : <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color}
+              caption={status.label}
+            />
         }
-        <CurrentType output={output} setCustomBack={setCustomBack}/>
+        {
+          !status
+            ? fallback ? <Fallback>{ fallback }</Fallback> : null
+            : <CurrentType output={output} setCustomBack={setCustomBack} />
+        }
       </Content>
       {
         currentType.value === OUTPUT_TYPES.IMAGES.value

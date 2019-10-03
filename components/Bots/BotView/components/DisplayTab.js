@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import { css } from '@emotion/core';
 import { connect } from 'react-redux';
 import { CardBody } from 'components/default/Card';
+import { Loader } from 'components/default';
+import { useTheme } from 'emotion-theming';
 
 const Content = styled(CardBody)`
   display: flex;
@@ -16,11 +19,30 @@ const Display = styled.iframe`
   display: flex;
   flex: 1 1;
   border: none;
+  ${ props => props.styles };
 `;
 
-const DisplayTab = ({ botInstance }) => <Content>
-  <Display src={`http://${botInstance.ip}:6080`}/>
-</Content>;
+const STATUSES = {
+  LOAD: 'Loading Display'
+};
+
+const DisplayTab = ({ botInstance }) => {
+  const [status, setStatus] = useState(STATUSES.LOAD);
+  const theme = useTheme();
+
+  return(
+    <Content>
+      <Display onLoad={() => setStatus(null)} styles={status && css`display: none;`} id={'display'}
+        src={`http://${botInstance.ip}:6080`}
+      />
+      {
+        status && <Loader type={'spinning-bubbles'} width={100} height={100} color={theme.colors.primary}
+          caption={status}
+        />
+      }
+    </Content>
+  );
+};
 
 DisplayTab.propTypes = {
   botInstance: PropTypes.object.isRequired

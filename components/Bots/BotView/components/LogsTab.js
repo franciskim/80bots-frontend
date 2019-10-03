@@ -7,6 +7,8 @@ import { Filters } from 'components/default/Table';
 import { abtos } from 'lib/helpers';
 import { Textarea, Select } from 'components/default/inputs';
 import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from 'store/socket/actions';
+import { theme } from 'config';
+import { Loader } from 'components/default';
 
 const EVENTS = {
   LOG: 'log'
@@ -39,7 +41,16 @@ const TextArea = styled(Textarea)`
   font-size: 14px;
 `;
 
+const STATUSES = {
+  DATA: {
+    label: 'Receiving Logs',
+    color: theme.colors.mediumGreen
+  }
+};
+
 const LogsTab = ({ botInstance, listen, removeAll, emit, setCustomBack, user }) => {
+  const [status, setStatus] = useState(STATUSES.DATA);
+
   const logReducer = (state, action) => {
     switch (action.type) {
       case 'add': return state + action.data;
@@ -57,6 +68,7 @@ const LogsTab = ({ botInstance, listen, removeAll, emit, setCustomBack, user }) 
   useEffect(() => {
     setLogs({ type: 'new', data: '' });
     if(botInstance && Object.keys(botInstance).length > 0) {
+      setStatus(STATUSES.DATA);
       emit(MESSAGES.GET_LOGS, { init: folder.value === 'init' });
     }
   }, [folder, botInstance]);
@@ -64,10 +76,17 @@ const LogsTab = ({ botInstance, listen, removeAll, emit, setCustomBack, user }) 
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
       listen(EVENTS.LOG, chunk => {
+        if(status) setStatus(null);
         setLogs({ type: 'add', data: abtos(chunk) });
       });
     }
   }, [botInstance]);
+
+  useEffect(() => {
+    if(logs) {
+      document.getElementById('logs').scrollTop = document.getElementById('logs').scrollHeight;
+    }
+  }, [logs]);
 
   return(
     <>
@@ -79,7 +98,13 @@ const LogsTab = ({ botInstance, listen, removeAll, emit, setCustomBack, user }) 
             />
           </FiltersSection>
         }
-        <TextArea disabled={true} value={logs}/>
+        {
+          !status
+            ? <TextArea id={'logs'} disabled={true} value={logs}/>
+            : <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color}
+              caption={status.label}
+            />
+        }
       </Content>
     </>
   );

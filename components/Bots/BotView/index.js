@@ -6,13 +6,14 @@ import ScreenShotTab from './components/ScreenShotTab';
 import LogsTab from './components/LogsTab';
 import OutputTab from './components/OutputTab';
 import DisplayTab from './components/DisplayTab';
+import { theme } from 'config';
 import { connect } from 'react-redux';
 import { useRouter } from 'next/router';
 import { withTheme } from 'emotion-theming';
-import { Card, CardHeader } from 'components/default/Card';
+import { Card, CardBody, CardHeader } from 'components/default/Card';
 import { adminGetBot, getBot, clearBot } from 'store/bot/actions';
 import { Badge, Button, Loader } from 'components/default';
-import { initExternalConnection, closeExternalConnection } from 'store/socket/actions';
+import { initExternalConnection, closeExternalConnection, addExternalListener } from 'store/socket/actions';
 
 const TABS = {
   SCREENSHOTS: {
@@ -30,6 +31,33 @@ const TABS = {
   DISPLAY: {
     title: 'Display',
     component: DisplayTab
+  }
+};
+
+const STATUSES = {
+  CONNECTING: {
+    label: 'Connecting',
+    color: theme.colors.orange
+  },
+  CONNECTED: {
+    label: 'Connected',
+    color: theme.colors.clearGreen
+  },
+  RECONNECT: {
+    label: 'Reconnecting',
+    color: theme.colors.orange
+  },
+  TIMEOUT: {
+    label: 'Instance Launching or Stopped',
+    color: theme.colors.darkishPink
+  },
+  ERROR: {
+    label: 'Stopped',
+    color: theme.colors.darkishPink
+  },
+  DISCONNECT: {
+    label: 'Disconnected',
+    color: theme.colors.darkishPink
   }
 };
 
@@ -58,6 +86,13 @@ const Status = styled(Badge)`
   justify-content: center;
   align-items: center;
   font-weight: 400;
+  background-color: ${ props => props.color };
+`;
+
+const Content = styled(CardBody)`
+  display: flex;
+  height: 85vh;
+  flex-flow: column;
 `;
 
 const H6 = styled.h6`
@@ -81,26 +116,45 @@ const A = styled.a`
   text-decoration: none; 
 `;
 
-const Hint = styled.span`
+const Hint = styled.span` 
   font-size: 14px;
   color: ${ props => props.theme.colors.grey };
 `;
 
-const ConnectionStatus = ({ status }) => <>
-  <Status type={'info'} pill>{ status }</Status>
+const ConnectionStatus = ({ status, color }) => <>
+  <Status type={'info'} color={color} pill>{ status }</Status>
   <Hint>&nbsp;|&nbsp;</Hint>
 </>;
 
-const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, closeConnection, initConnection }) => {
+const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, closeConnection, initConnection, listen }) => {
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
-  const [status, setStatus] = useState('ping');
+  const [status, setStatus] = useState(STATUSES.CONNECTING);
   const [customBack, setCustomBack] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
     if(botInstance?.ip) {
       const handshake = { id: botInstance.instance_id };
+      let timer;
       initConnection(`${botInstance.ip}:6002`, handshake);
+      listen('connect', () => {
+        setStatus(STATUSES.CONNECTED);
+        clearTimeout(timer);
+      });
+      listen('connect_error', () => {
+        setStatus(STATUSES.ERROR);
+      });
+      listen('connect_timeout', () => {
+        setStatus(STATUSES.TIMEOUT);
+      });
+      listen('reconnect_attempt', () => {
+        timer = setTimeout(() => {
+          setStatus(STATUSES.RECONNECT);
+        }, 1000);
+      });
+      listen('disconnect', () => {
+        setStatus(STATUSES.DISCONNECT);
+      });
     }
   }, [botInstance]);
 
@@ -142,10 +196,17 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
           }
         </H6>
         <Tabs>
+          <ConnectionStatus status={status.label} color={status.color} />
           { Object.keys(TABS).map(renderTab) }
         </Tabs>
       </Header>
-      <CurrentTab setCustomBack={setCustomBack}/>
+      {
+        status === STATUSES.CONNECTING
+          ? <Content>
+            <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color} caption={status.label} />
+          </Content>
+          : <CurrentTab setCustomBack={setCustomBack}/>
+      }
     </Container>
   );
 };
@@ -156,9 +217,15 @@ BotView.propTypes = {
   initConnection:  PropTypes.func.isRequired,
   clearBot:        PropTypes.func.isRequired,
   getBot:          PropTypes.func.isRequired,
+  listen:          PropTypes.func.isRequired,
   botInstance:     PropTypes.object.isRequired,
   user:            PropTypes.object,
   theme:           PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired
+};
+
+ConnectionStatus.propTypes = {
+  status: PropTypes.string.isRequired,
+  color:  PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -171,7 +238,8 @@ const mapDispatchToProps = dispatch => ({
   clearBot: () => dispatch(clearBot()),
   adminGetBot: (id) => dispatch(adminGetBot(id)),
   initConnection: (...args) => dispatch(initExternalConnection(...args)),
-  closeConnection: () => dispatch(closeExternalConnection())
+  closeConnection: () => dispatch(closeExternalConnection()),
+  listen: (...args) => dispatch(addExternalListener(...args))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(BotView));
