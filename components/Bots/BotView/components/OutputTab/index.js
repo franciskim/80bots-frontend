@@ -134,7 +134,7 @@ const selectStyles = {
   }
 };
 
-const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
+const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBack }) => {
   const [output, setOutput] = useState([]);
   const [folders, setFolders] = useState([]);
   const [currentFolder, setCurrentFolder] = useState(null);
@@ -277,7 +277,7 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit }) => {
           </FiltersSection>
             : null
         }
-        <CurrentType output={output} />
+        <CurrentType output={output} setCustomBack={setCustomBack}/>
       </Content>
       {
         currentType.value === OUTPUT_TYPES.IMAGES.value

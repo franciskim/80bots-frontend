@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { withTheme } from 'emotion-theming';
 import { Card, CardHeader } from 'components/default/Card';
 import { adminGetBot, getBot, clearBot } from 'store/bot/actions';
-import { Button, Loader } from 'components/default';
+import { Badge, Button, Loader } from 'components/default';
 import { initExternalConnection, closeExternalConnection } from 'store/socket/actions';
 
 const TABS = {
@@ -42,13 +42,22 @@ const Header = styled(CardHeader)`
   display: flex;
   flex-direction: row;
   align-items: center;
+  width: 100%;
 `;
 
 const Tabs = styled.div`
   display: flex;
   flex: 1;
+  align-items: center;
   justify-self: flex-end;
   justify-content: flex-end;
+`;
+
+const Status = styled(Badge)`
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 400;
 `;
 
 const H6 = styled.h6`
@@ -72,8 +81,19 @@ const A = styled.a`
   text-decoration: none; 
 `;
 
+const Hint = styled.span`
+  font-size: 14px;
+  color: ${ props => props.theme.colors.grey };
+`;
+
+const ConnectionStatus = ({ status }) => <>
+  <Status type={'info'} pill>{ status }</Status>
+  <Hint>&nbsp;|&nbsp;</Hint>
+</>;
+
 const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, closeConnection, initConnection }) => {
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
+  const [status, setStatus] = useState('ping');
   const [customBack, setCustomBack] = useState(null);
   const router = useRouter();
 
@@ -108,7 +128,7 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
 
   return(
     <Container>
-      <Header id={'back-portal'}>
+      <Header>
         {
           customBack || <Back type={'primary'}>
             <Link href={'/admin/bots/running'}><A>Back</A></Link>
@@ -121,7 +141,9 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
               : <Loader type={'bubbles'} width={20} height={20} color={theme.colors.primary}/>
           }
         </H6>
-        <Tabs>{ Object.keys(TABS).map(renderTab) }</Tabs>
+        <Tabs>
+          { Object.keys(TABS).map(renderTab) }
+        </Tabs>
       </Header>
       <CurrentTab setCustomBack={setCustomBack}/>
     </Container>
