@@ -9,7 +9,7 @@ const DefaultBadge = styled.span`
   padding: .25em .6em;
   font-size: 75%;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1; 
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;

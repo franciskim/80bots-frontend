@@ -11,6 +11,7 @@ import { CardBody } from 'components/default/Card';
 import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from 'store/socket/actions';
 import { Loader, Button, Paginator } from 'components/default';
 import { Filters } from 'components/default/Table';
+import { theme } from 'config';
 
 const EVENTS = {
   FOLDERS: 'folders',
@@ -32,6 +33,7 @@ const Content = styled(CardBody)`
   display: flex;
   flex-flow: column wrap;
   justify-content: space-between;
+  height: 85vh;
   ${ props => props.styles };
 `;
 
@@ -91,11 +93,38 @@ const Hint = styled.span`
   color: ${ props => props.theme.colors.grey };
 `;
 
-const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack, theme }) => {
+const Span = styled.span`
+  font-size: 20px;
+  color: ${ props => props.theme.colors.blueGrey };
+`;
+
+const Fallback = (props) => {
+  const Div = styled.div`
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+  `;
+  return <Div><Span {...props}/></Div>;
+};
+
+const STATUSES = {
+  FOLDERS: {
+    label: 'Receiving Folders',
+    color: theme.colors.primary
+  },
+  DATA: {
+    label: 'Receiving Data',
+    color: theme.colors.mediumGreen
+  }
+};
+
+const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack }) => {
   const [folders, setFolders] = useState([]);
   const [offset, setOffset] = useReducer((state, offset) => offset, 0);
   const [limit, setLimit] = useState(20);
-  const [loading, setLoading] = useState(true);
+  const [fallback, setFallback] = useState(null);
+  const [status, setStatus] = useState(STATUSES.FOLDERS);
   const [currentFolder, setCurrentFolder] = useState(null);
   const [currentImage, setCurrentImage] = useState(null);
   const [reportMode, setReportMode] = useState(false);
@@ -134,17 +163,19 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack, th
   useEffect(() => {
     if(botInstance && Object.keys(botInstance).length > 0) {
       listen(EVENTS.FOLDERS, (folders) => {
-        setLoading(false);
+        setStatus(null);
         setFolders(folders.map(toImage));
+        setFallback(!folders.length && 'No folders are created');
       });
       listen(EVENTS.SCREENSHOTS, (screenshots) => {
-        setLoading(false);
+        setStatus(null);
         setImages({ type: EVENTS.SCREENSHOTS, data: screenshots.map(toImage) });
       });
       listen(EVENTS.SCREENSHOT, (screenshot) => {
         if(offset === 0) {
           setImages({ type: EVENTS.SCREENSHOT, data: toImage(screenshot) });
         } else {
+          setStatus(STATUSES.DATA);
           emit(MESSAGES.GET_SCREENSHOTS, { folder: currentFolder.date, offset, limit });
         }
       });
@@ -154,7 +185,7 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack, th
 
   useEffect(() => {
     if(currentFolder) {
-      setLoading(true);
+      setStatus(STATUSES.DATA);
       emit(MESSAGES.GET_SCREENSHOTS, { folder: currentFolder.date, offset, limit });
       setCustomBack(BackButton);
     } else {
@@ -183,7 +214,7 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack, th
     <>
       <Content>
         {
-          !loading && currentFolder && <FiltersSection>
+          !status && currentFolder && <FiltersSection>
             { reportMode && <Hint>Select issued screenshots |&nbsp;</Hint> }
             <Report type={'danger'} onClick={() => setReportMode(!reportMode)}>
               { reportMode ? 'Cancel' : 'Report Issue' }
@@ -196,19 +227,25 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack, th
             }
           </FiltersSection>
         }
-        <ScreenShots styles={!currentFolder && css`justify-content: flex-start;`}>
-          {
-            loading
-              ? <Loader type={'spinning-bubbles'} width={100} height={100} color={theme.colors.primary}/>
-              : !currentFolder
-                ? folders.map((item, idx) => <Image key={idx} src={item.src} caption={item.caption}
-                  onClick={() => setCurrentFolder(item)} />)
-                : images.map((item, idx) => <Image styles={css`margin-right: 0`} key={idx} src={item.src}
-                  selected={issuedScreenshots.findIndex(image => item.name === image.name) > -1}
-                  caption={item.caption} onClick={() => reportMode ? selectImage(item) : setCurrentImage(item)}
-                />)
-          }
-        </ScreenShots>
+        {
+          !status
+            ? fallback
+              ? <Fallback>{ fallback }</Fallback>
+              : <ScreenShots styles={!currentFolder && css`justify-content: flex-start;`}>
+                {
+                  !currentFolder
+                    ? folders.map((item, idx) => <Image key={idx} src={item.src} caption={item.caption}
+                      onClick={() => setCurrentFolder(item)} />)
+                    : images.map((item, idx) => <Image styles={css`margin-right: 0`} key={idx} src={item.src}
+                      selected={issuedScreenshots.findIndex(image => item.name === image.name) > -1}
+                      caption={item.caption} onClick={() => reportMode ? selectImage(item) : setCurrentImage(item)}
+                    />)
+                }
+              </ScreenShots>
+            : <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color}
+              caption={status.label}
+            />
+        }
       </Content>
       {
         currentFolder && <Paginator total={currentFolder.total} pageSize={limit}

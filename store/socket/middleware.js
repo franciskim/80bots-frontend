@@ -26,6 +26,7 @@ export default function createWebSocketMiddleware() {
 
     const initExternal = (url, data = {}) => {
       externalSocket = io(url, data);
+      externalSocket.on('connect', console.log);
     };
 
     return next => action => {
