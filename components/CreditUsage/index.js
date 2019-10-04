@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import {Card, CardBody} from '../default/Card';
-import {getCreditUsageHistory} from '../../store/history/actions';
-import { getRunningBots } from 'store/bot/actions';
-import {connect} from 'react-redux';
-import {withTheme} from 'emotion-theming';
-import {Filters, LimitFilter, ListFilter, Table, Th, Thead} from '../default/Table';
-import {Paginator} from '../default';
 import styled from '@emotion/styled';
 import AsyncSelect from 'react-select/async';
+import { Card, CardBody } from 'components/default/Card';
+import { getCreditUsageHistory } from 'store/history/actions';
+import { getRunningBots } from 'store/bot/actions';
+import { connect } from 'react-redux';
+import { withTheme } from 'emotion-theming';
+import { Filters, LimitFilter, ListFilter, Table, Th, Thead } from 'components/default/Table';
+import { Paginator } from 'components/default';
 
 const Container = styled(Card)` 
   border-radius: .25rem;

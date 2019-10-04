@@ -78,6 +78,7 @@ const FiltersSection = styled(Filters)`
   align-self: flex-start;
   justify-content: space-between;
   margin-bottom: 20px;
+  padding: 20px 20px 0 20px;
 `;
 
 const ScreenShots = styled.div`
@@ -211,21 +212,21 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack }) 
 
   return(
     <>
-      <Content styles={status && css``}>
-        {
-          !status && currentFolder && <FiltersSection>
-            { reportMode && <Hint>Select issued screenshots |&nbsp;</Hint> }
-            <Report type={'danger'} onClick={() => setReportMode(!reportMode)}>
-              { reportMode ? 'Cancel' : 'Report Issue' }
-            </Report>
-            {
-              reportMode && <>
-                <Hint>&nbsp;|&nbsp;</Hint>
-                <Report type={'success'} onClick={() => reportModal.current.open()}>Proceed</Report>
-              </>
-            }
-          </FiltersSection>
-        }
+      {
+        !status && currentFolder && <FiltersSection>
+          { reportMode && <Hint>Select issued screenshots |&nbsp;</Hint> }
+          <Report type={'danger'} onClick={() => setReportMode(!reportMode)}>
+            { reportMode ? 'Cancel' : 'Report Issue' }
+          </Report>
+          {
+            reportMode && <>
+              <Hint>&nbsp;|&nbsp;</Hint>
+              <Report type={'success'} onClick={() => reportModal.current.open()}>Proceed</Report>
+            </>
+          }
+        </FiltersSection>
+      }
+      <Content>
         {
           !status
             ? fallback

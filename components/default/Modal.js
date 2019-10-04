@@ -1,9 +1,9 @@
-import React, { Fragment, useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import styled from '@emotion/styled';
-import { css, keyframes, Global } from '@emotion/core';
-import { globalStyles } from 'config';
 import Icon from 'components/default/icons';
 import PropTypes from 'prop-types';
+import { css, keyframes, Global } from '@emotion/core';
+import { globalStyles } from 'config';
 
 const bodyStyles = css`
   ${ globalStyles };
@@ -162,7 +162,7 @@ const DefaultModal = ({ children, title, styles, containerStyles, contentStyles,
 
   return(
     mode !== 'closed'
-      ? <Fragment>
+      ? <>
         <Global styles={!enableScroll && bodyStyles}/>
         <Container styles={getContainerStyle(mode)}>
           <ModalContainer onClick={() => !disableSideClosing && close()}>
@@ -180,7 +180,7 @@ const DefaultModal = ({ children, title, styles, containerStyles, contentStyles,
             </ModalDiv>
           </ModalContainer>
         </Container>
-      </Fragment>
+      </>
       : null
   );
 };
