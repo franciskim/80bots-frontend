@@ -138,8 +138,8 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
       let timer;
       initConnection(`${botInstance.ip}:6002`, handshake);
       listen('connect', () => {
-        setStatus(STATUSES.CONNECTED);
         clearTimeout(timer);
+        setStatus(STATUSES.CONNECTED);
       });
       listen('connect_error', () => {
         setStatus(STATUSES.ERROR);

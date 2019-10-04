@@ -188,7 +188,7 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
       listen(EVENTS.OUTPUT, output => {
         setStatus(null);
         setOutput(output);
-        setFallback(!output && 'No output was provided');
+        setFallback(!output.length && 'No output was provided');
       });
       listen(EVENTS.FOLDERS, (folders) => {
         setStatus(null);
@@ -309,8 +309,8 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
             />
         }
         {
-          !status
-            ? fallback ? <Fallback>{ fallback }</Fallback> : null
+          !status && fallback
+            ? <Fallback>{ fallback }</Fallback>
             : <CurrentType output={output} setCustomBack={setCustomBack} />
         }
       </Content>

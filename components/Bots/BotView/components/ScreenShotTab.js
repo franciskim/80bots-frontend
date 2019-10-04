@@ -32,8 +32,7 @@ const Fade = keyframes`
 const Content = styled(CardBody)`
   display: flex;
   flex-flow: column wrap;
-  justify-content: space-between;
-  height: 85vh;
+  height: 82vh;
   ${ props => props.styles };
 `;
 
@@ -212,7 +211,7 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack }) 
 
   return(
     <>
-      <Content>
+      <Content styles={status && css``}>
         {
           !status && currentFolder && <FiltersSection>
             { reportMode && <Hint>Select issued screenshots |&nbsp;</Hint> }
