@@ -32,7 +32,7 @@ const Fade = keyframes`
 const Content = styled(CardBody)`
   display: flex;
   flex-flow: column wrap;
-  height: 82vh;
+  height: 77vh;
   ${ props => props.styles };
 `;
 
