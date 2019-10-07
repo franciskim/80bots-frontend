@@ -7,7 +7,7 @@ Sentry.init({ dsn: process.env.SENTRY_DSN, attachStacktrace: true, release: new 
 
 const notifySentry = (err, req, statusCode, user) => {
   Sentry.configureScope((scope) => {
-    if (err.message) {
+    if (err?.message) {
       scope.setFingerprint([err.message]);
     }
     if (!req) {
