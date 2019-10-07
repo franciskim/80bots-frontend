@@ -125,13 +125,11 @@ const BotEditor = ({
   };
 
   const onPlatformInputChange = (newValue) => {
-    const inputValue = newValue.replace(/\W/g, '');
-    setPlatformName(inputValue);
+    setPlatformName(newValue);
   };
 
   const onTagInputChange = (newValue) => {
-    const inputValue = newValue.replace(/\W/g, '');
-    setTagName(inputValue);
+    setTagName(newValue);
   };
 
   const getTagOptions = () => {

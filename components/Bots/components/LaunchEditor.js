@@ -33,6 +33,7 @@ const inputStyle = {
 const selectStyles = {
   container: css`
     margin-top: 10px;
+    max-width: 400px;
   `
 };
 
@@ -164,9 +165,8 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   };
 
   const onMultiSelectChange = (field, newValue) => {
-    const inputValue = newValue.replace(/\W/g, '');
     let valuesCopy = { ...values };
-    valuesCopy[field].term = inputValue;
+    valuesCopy[field].term = newValue;
     setValues(valuesCopy);
   };
 

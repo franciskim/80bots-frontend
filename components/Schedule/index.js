@@ -14,7 +14,7 @@ import { getRunningBots } from 'store/bot/actions';
 import { css } from '@emotion/core';
 import { withTheme } from 'emotion-theming';
 import { Card, CardBody } from '../default/Card';
-import {Filters, LimitFilter, SearchFilter, Table, Th, Thead} from '../default/Table';
+import { Filters, LimitFilter, SearchFilter, Table, Th, Thead } from 'components/default/Table';
 
 const Container = styled(Card)`
   border-radius: .25rem;

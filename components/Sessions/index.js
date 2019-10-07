@@ -8,7 +8,7 @@ import { Table, Thead, Filters, LimitFilter } from '../default/Table';
 import { addNotification } from 'store/notification/actions';
 import { connect } from 'react-redux';
 import { getSessions } from 'store/instanceSession/actions';
-import Paginator from '../default/Paginator';
+import { Paginator } from 'components/default';
 
 const Container = styled(Card)`
   border-radius: .25rem;
