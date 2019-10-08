@@ -50,6 +50,7 @@ const STATUSES = {
 
 const LogsTab = ({ botInstance, listen, removeAll, emit, setCustomBack, user }) => {
   const [status, setStatus] = useState(STATUSES.DATA);
+  const [scrolled, setScrolled] = useState(false);
 
   const logReducer = (state, action) => {
     switch (action.type) {
@@ -67,14 +68,14 @@ const LogsTab = ({ botInstance, listen, removeAll, emit, setCustomBack, user }) 
 
   useEffect(() => {
     setLogs({ type: 'new', data: '' });
-    if(botInstance && Object.keys(botInstance).length > 0) {
+    if(Object.keys(botInstance).length > 0) {
       setStatus(STATUSES.DATA);
       emit(MESSAGES.GET_LOGS, { init: folder.value === 'init' });
     }
   }, [folder, botInstance]);
 
   useEffect(() => {
-    if(botInstance && Object.keys(botInstance).length > 0) {
+    if(Object.keys(botInstance).length > 0) {
       listen(EVENTS.LOG, chunk => {
         if(status) setStatus(null);
         setLogs({ type: 'add', data: abtos(chunk) });
@@ -83,10 +84,11 @@ const LogsTab = ({ botInstance, listen, removeAll, emit, setCustomBack, user }) 
   }, [botInstance]);
 
   useEffect(() => {
-    if(logs) {
+    if(logs && !scrolled) {
       document.getElementById('logs').scrollTop = document.getElementById('logs').scrollHeight;
+      setScrolled(true);
     }
-  }, [logs]);
+  }, [logs, scrolled]);
 
   return(
     <>
