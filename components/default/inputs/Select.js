@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { default as ReactSelect }  from 'react-select';
 import { Wrap, Label, Error, LabelWrap, Description } from './Input';
-import { theme } from 'config';
+import { theme } from '/config';
 
 const selectStyles = {
   menuPortal: base => ({ ...base, zIndex: 5 }),

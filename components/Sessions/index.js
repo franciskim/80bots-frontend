@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import dayjs from 'dayjs';
 import { withTheme } from 'emotion-theming';
+import { connect } from 'react-redux';
 import { Card, CardBody } from '../default/Card';
 import { Table, Thead, Filters, LimitFilter } from '../default/Table';
-import { addNotification } from 'store/notification/actions';
-import { connect } from 'react-redux';
-import { getSessions } from 'store/instanceSession/actions';
-import { Paginator } from 'components/default';
+import { addNotification } from '/store/notification/actions';
+import { getSessions } from '/store/instanceSession/actions';
+import { Paginator } from '/components/default';
 
 const Container = styled(Card)`
   border-radius: .25rem;

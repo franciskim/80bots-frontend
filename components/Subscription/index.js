@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import Button from 'components/default/Button';
-import StripeCheckout from 'components/default/StripeCheckout';
-import { Card, CardBody, CardFooter, CardHeader } from '../default/Card';
-import { getSubscriptions, subscribe } from 'store/subscription/actions';
+import Button from '/components/default/Button';
+import StripeCheckout from '/components/default/StripeCheckout';
 import { connect } from 'react-redux';
 import { withTheme } from 'emotion-theming';
-import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES } from 'config';
+import { Card, CardBody, CardFooter, CardHeader } from '../default/Card';
+import { getSubscriptions, subscribe } from '/store/subscription/actions';
+import { addNotification } from '/store/notification/actions';
+import { NOTIFICATION_TYPES } from '/config';
 
 const Container = styled(Card)`  
   border-radius: .25rem;

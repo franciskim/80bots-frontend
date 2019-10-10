@@ -69,7 +69,7 @@ export const NOTIFICATION_TIMINGS = {
 
 export const BILLING_DETAILS = {
   company: '80bots',
-  image: 'static/images/logos/stripe.svg',
+  image: 'public/images/logos/stripe.svg',
   currency: 'USD',
   locale: 'en',
   shippingAddress: false,
@@ -88,25 +88,25 @@ export const globalStyles = css`
   @font-face {
     font-family: Overpass, monospace;
     font-weight: normal;
-    src: url("/static/fonts/overpass-mono/overpass-mono-regular.otf");
+    src: url("/public/fonts/overpass-mono/overpass-mono-regular.otf");
   }
   
   @font-face {
     font-family: Overpass, monospace;
     font-weight: bold;
-    src: url("/static/fonts/overpass-mono/overpass-mono-bold.otf");
+    src: url("/public/fonts/overpass-mono/overpass-mono-bold.otf");
   }
   
   @font-face {
     font-family: Overpass, monospace;
     font-weight: 300;
-    src: url("/static/fonts/overpass-mono/overpass-mono-light.otf");
+    src: url("/public/fonts/overpass-mono/overpass-mono-light.otf");
   }
   
   @font-face {
     font-family: Overpass, monospace;
     font-weight: 600;
-    src: url("/static/fonts/overpass-mono/overpass-mono-semibold.otf");
+    src: url("/public/fonts/overpass-mono/overpass-mono-semibold.otf");
   }
 
   body {

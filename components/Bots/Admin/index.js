@@ -2,23 +2,23 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import BotEditor from './components/BotEditor';
-import Icon from 'components/default/icons';
+import Icon from '/components/default/icons';
 import Router from 'next/router';
 import LaunchEditor from '../components/LaunchEditor';
-import Modal from 'components/default/Modal';
-import { Button, Badge, Paginator } from 'components/default';
-import { Card, CardBody } from 'components/default/Card';
-import { Table, Thead, Filters, LimitFilter, SearchFilter, Th } from 'components/default/Table';
+import Modal from '/components/default/Modal';
+import { css } from '@emotion/core';
+import { withTheme } from 'emotion-theming';
+import { Button, Badge, Paginator } from '/components/default';
+import { Card, CardBody } from '/components/default/Card';
+import { Table, Thead, Filters, LimitFilter, SearchFilter, Th } from '/components/default/Table';
 import { connect } from 'react-redux';
 import {
   adminGetBots, adminUpdateBot, addBot, adminLaunchInstance, getBotSettings, updateBotSettings, adminDeleteBot,
   syncLocalBots, setBotLimit
-} from 'store/bot/actions';
-import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
-import { css } from '@emotion/core';
-import { withTheme } from 'emotion-theming';
-import { addListener } from 'store/socket/actions';
+} from '/store/bot/actions';
+import { addNotification } from '/store/notification/actions';
+import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from '/config';
+import { addListener } from '/store/socket/actions';
 
 const Container = styled(Card)`
   border-radius: .25rem;

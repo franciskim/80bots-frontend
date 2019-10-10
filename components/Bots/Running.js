@@ -6,15 +6,15 @@ import Select from 'react-select';
 import Modal from '../default/Modal';
 import Link from 'next/link';
 import { connect } from 'react-redux';
-import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES } from 'config';
-import { botInstanceUpdated, getRunningBots, updateRunningBot, setBotLimit } from 'store/bot/actions';
-import { addListener, removeAllListeners } from 'store/socket/actions';
-import { Paginator, Loader, Button } from '../default';
 import { withTheme } from 'emotion-theming';
+import { css } from '@emotion/core';
+import { addNotification } from '/store/notification/actions';
+import { NOTIFICATION_TYPES } from '/config';
+import { botInstanceUpdated, getRunningBots, updateRunningBot, setBotLimit } from '/store/bot/actions';
+import { addListener, removeAllListeners } from '/store/socket/actions';
+import { Paginator, Loader, Button } from '../default';
 import { Card, CardBody } from '../default/Card';
 import { Table, Thead, Th, Filters, LimitFilter, SearchFilter } from '../default/Table';
-import { css } from '@emotion/core';
 
 const Container = styled(Card)`
   border-radius: .25rem;

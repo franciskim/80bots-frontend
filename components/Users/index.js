@@ -7,14 +7,14 @@ import Modal from '../default/Modal';
 import Link from 'next/link';
 import { withTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
+import { connect } from 'react-redux';
 import { Paginator, Button, Badge } from '../default';
 import { Card, CardBody } from '../default/Card';
-import {Table, Thead, Filters, SearchFilter, LimitFilter, Th} from '../default/Table';
-import { addNotification } from 'store/notification/actions';
-import { updateUser } from 'store/user/actions';
-import { getUsers } from 'store/user/actions';
-import { NOTIFICATION_TYPES } from 'config';
-import { connect } from 'react-redux';
+import { Table, Thead, Filters, SearchFilter, LimitFilter, Th } from '../default/Table';
+import { NOTIFICATION_TYPES } from '/config';
+import { addNotification } from '/store/notification/actions';
+import { updateUser } from '/store/user/actions';
+import { getUsers } from '/store/user/actions';
 
 const Container = styled(Card)`
   border-radius: .25rem;

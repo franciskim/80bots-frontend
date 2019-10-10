@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import Icon from 'components/default/icons';
-import { theme } from 'config';
-import { DragDropContainer } from 'components/default';
-import { Card } from 'components/default/Card';
+import Icon from '/components/default/icons';
+import { theme } from '/config';
+import { DragDropContainer } from '/components/default';
+import { Card } from '/components/default/Card';
 import { css } from '@emotion/core';
 
 const ACCEPT_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];

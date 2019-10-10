@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { Table, Thead } from 'components/default/Table';
-import { Button } from 'components/default';
+import { Table, Thead } from '/components/default/Table';
+import { Button } from '/components/default';
 
 const LinkTd = styled.td`
   cursor: pointer;

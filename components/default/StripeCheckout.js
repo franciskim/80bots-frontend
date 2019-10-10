@@ -1,9 +1,9 @@
 import React from 'react';
 import StripeCheckout from 'react-stripe-checkout';
-import { BILLING_DETAILS } from 'config';
+import { BILLING_DETAILS } from '/config';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { createSubscription } from 'store/auth/actions';
+import { createSubscription } from '/store/auth/actions';
 
 const StripeCheckoutForm = props => {
   const { user, onClose, description, amount, panelLabel = 'Subscribe', children, onSuccess } = props;

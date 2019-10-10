@@ -13,13 +13,14 @@ app.prepare().then(() => {
   createServer((req, res) => {
     const parsedUrl = parse(req.url, true);
     const rootStaticFiles = { // paths where files lies
-      '/logo.png': 'static/images/logos',
-      '/robots.txt': 'static',
-      '/favicon.ico': 'static/images/icons',
+      '/logo.png': 'public/images/logos',
+      '/robots.txt': 'public',
+      '/favicon.ico': 'public/images/icons',
       '/pdf.worker.js': '.next/static/chunks',
       '/service-worker.js': '.next',
-      '/sitemap.xml': 'static',
+      '/sitemap.xml': 'public',
       '/static/sitemap.xml': '',
+      '/public/sitemap.xml': '',
     };
     if (rootStaticFiles[parsedUrl.pathname] || path.extname(parsedUrl.pathname) === '.xml'){
       const fileFolder = path.extname(parsedUrl.pathname) !== '.xml' && !rootStaticFiles[parsedUrl.pathname]

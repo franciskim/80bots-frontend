@@ -2,13 +2,13 @@ import React, { useEffect, useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
-import { CardBody } from 'components/default/Card';
-import { Filters } from 'components/default/Table';
-import { abtos } from 'lib/helpers';
-import { Textarea, Select } from 'components/default/inputs';
-import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from 'store/socket/actions';
-import { theme } from 'config';
-import { Loader } from 'components/default';
+import { CardBody } from '/components/default/Card';
+import { Filters } from '/components/default/Table';
+import { abtos } from '/lib/helpers';
+import { Textarea, Select } from '/components/default/inputs';
+import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from '/store/socket/actions';
+import { theme } from '/config';
+import { Loader } from '/components/default';
 
 const EVENTS = {
   LOG: 'log'

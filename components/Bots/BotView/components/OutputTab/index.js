@@ -1,18 +1,18 @@
 import React, { useEffect, useState, useRef, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import Modal from 'components/default/Modal';
+import Modal from '/components/default/Modal';
 import ImagesType from './components/ImagesType';
 import JsonType from './components/JsonType';
-import { Filters, ListFilter } from 'components/default/Table';
-import { connect } from 'react-redux';
-import { CardBody } from 'components/default/Card';
-import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from 'store/socket/actions';
-import {Button, Loader, Paginator} from 'components/default';
-import { Select } from 'components/default/inputs';
 import { css, keyframes } from '@emotion/core';
-import { arrayToCsv, download } from 'lib/helpers';
-import {theme} from '../../../../../config';
+import { connect } from 'react-redux';
+import { Filters, ListFilter } from '/components/default/Table';
+import { CardBody } from '/components/default/Card';
+import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from '/store/socket/actions';
+import { Button, Loader, Paginator } from '/components/default';
+import { Select } from '/components/default/inputs';
+import { arrayToCsv, download } from '/lib/helpers';
+import { theme } from '/config';
 
 const EVENTS = {
   AVAILABLE: 'output.available',

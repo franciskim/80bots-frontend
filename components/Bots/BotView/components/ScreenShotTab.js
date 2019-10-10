@@ -2,16 +2,16 @@ import React, { useEffect, useRef, useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import ScreenShot from './ScreenShot';
-import Modal from 'components/default/Modal';
+import Modal from '/components/default/Modal';
 import ReportEditor from './ReportIssue';
 import { css, keyframes } from '@emotion/core';
 import { withTheme } from 'emotion-theming';
 import { connect } from 'react-redux';
-import { CardBody } from 'components/default/Card';
-import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from 'store/socket/actions';
-import { Loader, Button, Paginator } from 'components/default';
-import { Filters } from 'components/default/Table';
-import { theme } from 'config';
+import { CardBody } from '/components/default/Card';
+import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from '/store/socket/actions';
+import { Loader, Button, Paginator } from '/components/default';
+import { Filters } from '/components/default/Table';
+import { theme } from '/config';
 
 const EVENTS = {
   FOLDERS: 'folders',

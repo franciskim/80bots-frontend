@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import AsyncSelect from 'react-select/async';
-import { Card, CardBody } from 'components/default/Card';
-import { getCreditUsageHistory } from 'store/history/actions';
-import { getRunningBots } from 'store/bot/actions';
 import { connect } from 'react-redux';
 import { withTheme } from 'emotion-theming';
-import { Filters, LimitFilter, ListFilter, Table, Th, Thead } from 'components/default/Table';
-import { Paginator } from 'components/default';
+import { Card, CardBody } from '/components/default/Card';
+import { getCreditUsageHistory } from '/store/history/actions';
+import { getRunningBots } from '/store/bot/actions';
+import { Filters, LimitFilter, ListFilter, Table, Th, Thead } from '/components/default/Table';
+import { Paginator } from '/components/default';
 
 const Container = styled(Card)` 
   border-radius: .25rem;
@@ -19,11 +19,6 @@ const SelectWrap = styled.div`
   display: flex;
   flex-direction: column;
   width: 350px;
-`;
-
-const Label = styled.label`
-  font-size: 16px;
-  margin-bottom: 5px;
 `;
 
 const FILTERS_ACTION_OPTIONS = [
@@ -65,7 +60,21 @@ const CreditUsage = ({ getCreditUsageHistory, credits, total, getRunningBots, ru
     getCreditUsageHistory({ page, limit, action, sort: field, order: value, instanceId });
   };
 
-  // eslint-disable-next-line react/prop-types
+  const onLimitChange = ({ value }) => {
+    setLimit(value);
+    getCreditUsageHistory({ page, limit: value, action, sort: order.field, order: order.value, instanceId });
+  };
+
+  const onListChange = ({ value }) => {
+    setFilterAction(value);
+    getCreditUsageHistory({ page, limit, action: value, sort: order.field, order: order.value, instanceId });
+  };
+
+  const onPageChange = (page) => {
+    setPage(page);
+    getCreditUsageHistory({ page, limit, action, sort: order.field, order: order.value, instanceId });
+  };
+
   const OrderTh = props => <Th {...props}
     // eslint-disable-next-line react/prop-types
     order={(props.field === order.field) || (props.children === order.field) ? order.value : ''}
@@ -85,16 +94,13 @@ const CreditUsage = ({ getCreditUsageHistory, credits, total, getRunningBots, ru
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); getCreditUsageHistory({ page, limit: value, action, sort: order.field, order: order.value, instanceId }); }}/>
-
+            <LimitFilter onChange={onLimitChange}/>
             <SelectWrap>
-              <Label>Select one of your running bots</Label>
-              <AsyncSelect onChange={onBotChange} loadOptions={searchBots} defaultOptions={runningBots.map(toOptions)}/>
+              <AsyncSelect placeholder={'Select one of your running bots'} onChange={onBotChange}
+                loadOptions={searchBots} defaultOptions={runningBots.map(toOptions)}
+              />
             </SelectWrap>
-
-            <ListFilter options={FILTERS_ACTION_OPTIONS}
-              onChange={({ value }) => {setFilterAction(value); getCreditUsageHistory({ page, limit, action: value, sort: order.field, order: order.value, instanceId }); }}
-            />
+            <ListFilter options={FILTERS_ACTION_OPTIONS} onChange={onListChange} />
           </Filters>
           <Table responsive>
             <Thead>
@@ -110,7 +116,7 @@ const CreditUsage = ({ getCreditUsageHistory, credits, total, getRunningBots, ru
               { credits.map(renderRow) }
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getCreditUsageHistory({ page, limit, action, sort: order.field, order: order.value, instanceId }); }}/>
+          <Paginator total={total} pageSize={limit} onChangePage={onPageChange}/>
         </CardBody>
       </Container>
     </>

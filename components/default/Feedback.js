@@ -1,14 +1,14 @@
 import React, { useState, useRef } from 'react';
-import Modal from 'components/default/Modal';
+import Modal from '/components/default/Modal';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { Button, FilesDropZone } from 'components/default';
-import { Input, Select, Textarea } from 'components/default/inputs';
+import { Button, FilesDropZone } from '/components/default';
+import { Input, Select, Textarea } from '/components/default/inputs';
 import { css } from '@emotion/core';
 import { connect } from 'react-redux';
-import { supportEmail } from 'store/user/actions';
-import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES } from 'config';
+import { supportEmail } from '/store/user/actions';
+import { addNotification } from '/store/notification/actions';
+import { NOTIFICATION_TYPES } from '/config';
 
 const TYPES = {
   BUG:         'Bug report',

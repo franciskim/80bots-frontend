@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import Icon from '../icons';
-import { theme } from 'config';
+import { theme } from '/config';
 import { css, keyframes } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 import Tooltip from '../Tooltip';

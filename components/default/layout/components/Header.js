@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Icon from '../../icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import DropDown from 'components/default/DropDown';
+import DropDown from '/components/default/DropDown';
 import HamburgerButton from '../../HamburgerButton';
-import { logout } from 'store/auth/actions';
+import { logout } from '/store/auth/actions';
 import Router from 'next/router';
 import Link from 'next/link';
 

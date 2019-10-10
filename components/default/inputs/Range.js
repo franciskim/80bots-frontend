@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/core';
-import { theme } from 'config';
+import { theme } from '/config';
 import { Label, Wrap, LabelWrap, Description } from './Input';
 
 const thumbStyles = css`

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { Card } from 'components/default/Card';
+import { Card } from '/components/default/Card';
 
 const Container = styled(Card)`
   display: flex;

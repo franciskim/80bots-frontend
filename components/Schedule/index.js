@@ -5,16 +5,16 @@ import ScheduleEditor from '../default/ScheduleEditor';
 import AsyncSelect from 'react-select/async';
 import Icon from '../default/icons';
 import Modal from '../default/Modal';
-import { addNotification } from 'store/notification/actions';
-import { connect } from 'react-redux';
-import { NOTIFICATION_TYPES } from 'config';
-import { Badge, Button, Paginator } from '../default';
-import { getSchedules, updateSchedule, deleteSchedule, createSchedule } from 'store/schedule/actions';
-import { getRunningBots } from 'store/bot/actions';
 import { css } from '@emotion/core';
 import { withTheme } from 'emotion-theming';
+import { connect } from 'react-redux';
+import { addNotification } from '/store/notification/actions';
+import { NOTIFICATION_TYPES } from '/config';
+import { Badge, Button, Paginator } from '../default';
+import { getSchedules, updateSchedule, deleteSchedule, createSchedule } from '/store/schedule/actions';
+import { getRunningBots } from '/store/bot/actions';
 import { Card, CardBody } from '../default/Card';
-import { Filters, LimitFilter, SearchFilter, Table, Th, Thead } from 'components/default/Table';
+import { Filters, LimitFilter, SearchFilter, Table, Th, Thead } from '/components/default/Table';
 
 const Container = styled(Card)`
   border-radius: .25rem;
@@ -80,7 +80,7 @@ const modalStyles = css`
   overflow-y: visible;
 `;
 
-const BotsSchedule = ({ theme, addNotification, getSchedules, getRunningBots, createSchedule, deleteSchedule, schedules,
+const BotsSchedule = ({ theme, notify, getSchedules, getRunningBots, createSchedule, deleteSchedule, schedules,
   total, runningBots, ...props }) => {
   const [clickedSchedule, setClickedSchedule] = useState(null);
   const [limit, setLimit] = useState(10);
@@ -115,11 +115,11 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, getRunningBots, cr
     const statusName = schedule.status === 'active' ? 'deactivated' : 'activated';
     const status = schedule.status === 'active' ? 'inactive' : 'active';
     props.updateSchedule(schedule.id, {status})
-      .then(() => addNotification({
+      .then(() => notify({
         type: NOTIFICATION_TYPES.SUCCESS,
         message: `Schedule was successfully ${statusName}!`
       }))
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
+      .catch(() => notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Status update failed' }));
   };
 
   const toggleModal = schedule => {
@@ -143,7 +143,7 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, getRunningBots, cr
         .then(() => {
           getSchedules({ page: 1, limit, sort: order.field, order: order.value, search });
           addModal.current.close();
-          addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully added' });
+          notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully added' });
         });
     }
   };
@@ -151,16 +151,16 @@ const BotsSchedule = ({ theme, addNotification, getSchedules, getRunningBots, cr
   const updateSchedule = (editedSchedules) => {
     editModal.current.close();
     props.updateSchedule(clickedSchedule.id, { details: editedSchedules })
-      .then(() => addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully updated' }))
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Update of schedule failed' }))
+      .then(() => notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully updated' }))
+      .catch(() => notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Update of schedule failed' }))
       .finally(() => setClickedSchedule(null));
   };
 
   const modalDeleteSchedule = () => {
     modal.current.close();
     deleteSchedule(clickedSchedule.id)
-      .then(() => addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully deleted' }))
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Removal of Schedule failed' }))
+      .then(() => notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Schedule was successfully deleted' }))
+      .catch(() => notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Removal of Schedule failed' }))
       .finally(() => setClickedSchedule(null));
   };
 
@@ -277,7 +277,7 @@ BotsSchedule.propTypes = {
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
-  addNotification: PropTypes.func.isRequired,
+  notify:       PropTypes.func.isRequired,
   getSchedules: PropTypes.func.isRequired,
   updateSchedule: PropTypes.func.isRequired,
   deleteSchedule: PropTypes.func.isRequired,
@@ -295,7 +295,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addNotification: payload => dispatch(addNotification(payload)),
+  notify: payload => dispatch(addNotification(payload)),
   getSchedules: query => dispatch(getSchedules(query)),
   createSchedule: data => dispatch(createSchedule(data)),
   updateSchedule: (id, data) => dispatch(updateSchedule(id, data)),

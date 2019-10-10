@@ -6,16 +6,16 @@ import Modal from '../default/Modal';
 import Icon from '../default/icons';
 import Select from 'react-select';
 import Paginator from '../default/Paginator';
+import { connect } from 'react-redux';
 import { withTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
-import { addNotification } from 'store/notification/actions';
+import { addNotification } from '/store/notification/actions';
 import {
   getLowCreditNotifications, addLowCreditNotifications, deleteLowCreditNotification
-} from 'store/eventNotification/actions';
-import { NOTIFICATION_TYPES } from 'config';
-import { connect } from 'react-redux';
+} from '/store/eventNotification/actions';
+import { NOTIFICATION_TYPES } from '/config';
 import { Card, CardBody } from '../default/Card';
-import { Table, Thead, Filters, LimitFilter, SearchFilter } from '../default/Table';
+import { Table, Thead, Filters, LimitFilter } from '../default/Table';
 
 const Container = styled(Card)`
   border-radius: .25rem;

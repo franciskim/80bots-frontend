@@ -5,11 +5,11 @@ import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { css } from '@emotion/core';
 import { connect } from 'react-redux';
-import { getPlatforms } from 'store/platform/actions';
-import { getTags } from 'store/bot/actions';
-import { getUsers } from 'store/user/actions';
-import { Button } from 'components/default';
-import { Textarea, Input } from 'components/default/inputs';
+import { getPlatforms } from '/store/platform/actions';
+import { getTags } from '/store/bot/actions';
+import { getUsers } from '/store/user/actions';
+import { Button } from '/components/default';
+import { Textarea, Input } from '/components/default/inputs';
 
 const FormContainer = styled.div`
   display: flex;

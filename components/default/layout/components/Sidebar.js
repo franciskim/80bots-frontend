@@ -3,9 +3,9 @@ import styled from '@emotion/styled';
 import Link from 'next/link';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
-import Feedback from 'components/default/Feedback';
+import Feedback from '/components/default/Feedback';
 import { css } from '@emotion/core';
-import { SIDEBAR_ANIMATION_TIME, ROUTES } from 'config';
+import { SIDEBAR_ANIMATION_TIME, ROUTES } from '/config';
 
 const Container = styled.div`
   flex-direction: column;
@@ -75,7 +75,7 @@ const Sidebar = ({ opened = false, userRole }) => {
     <Container opened={opened}>
       <LinkWrap>
         <Link href={'/dashboard'}>
-          <img src="/static/images/80bots.svg" alt=""/>
+          <img src="/images/80bots.svg" alt=""/>
         </Link>
       </LinkWrap>
       <Ul>

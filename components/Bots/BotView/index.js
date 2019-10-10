@@ -6,14 +6,14 @@ import ScreenShotTab from './components/ScreenShotTab';
 import LogsTab from './components/LogsTab';
 import OutputTab from './components/OutputTab';
 import DisplayTab from './components/DisplayTab';
-import { theme } from 'config';
 import { connect } from 'react-redux';
 import { useRouter } from 'next/router';
 import { withTheme } from 'emotion-theming';
-import { Card, CardBody, CardHeader } from 'components/default/Card';
-import { adminGetBot, getBot, clearBot } from 'store/bot/actions';
-import { Badge, Button, Loader } from 'components/default';
-import { initExternalConnection, closeExternalConnection, addExternalListener } from 'store/socket/actions';
+import { theme } from '/config';
+import { Card, CardBody, CardHeader } from '/components/default/Card';
+import { adminGetBot, getBot, clearBot } from '/store/bot/actions';
+import { Badge, Button, Loader } from '/components/default';
+import { initExternalConnection, closeExternalConnection, addExternalListener } from '/store/socket/actions';
 
 const TABS = {
   SCREENSHOTS: {

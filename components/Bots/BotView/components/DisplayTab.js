@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
 import { connect } from 'react-redux';
-import { CardBody } from 'components/default/Card';
-import { Loader } from 'components/default';
 import { useTheme } from 'emotion-theming';
+import { CardBody } from '/components/default/Card';
+import { Loader } from '/components/default';
 
 const Content = styled(CardBody)`
   display: flex;

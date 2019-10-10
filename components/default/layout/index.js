@@ -6,7 +6,7 @@ import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Banner from './components/Banner';
 import Loader from '../Loader';
-import { checkAuth } from 'store/auth/actions';
+import { checkAuth } from '/store/auth/actions';
 import { connect } from 'react-redux';
 import { withTheme } from 'emotion-theming';
 

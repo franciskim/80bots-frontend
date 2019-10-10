@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/core';
-import { theme } from 'config';
+import { theme } from '/config';
 import { Button } from './Button';
 
 const Container = styled.div`

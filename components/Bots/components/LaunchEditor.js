@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
-import { Input, Label, LabelWrap, Description, Select, Range } from 'components/default/inputs';
-import { Button, Steps } from 'components/default';
+import { Input, Label, LabelWrap, Description, Select, Range } from '/components/default/inputs';
+import { Button, Steps } from '/components/default';
 
 const Buttons = styled.div`
   display: flex;

@@ -3,11 +3,11 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import Link from 'next/link';
-import Head from 'components/default/layout/components/Head';
+import Head from '../default/layout/components/Head';
 import { connect } from 'react-redux';
-import { login, reset } from 'store/auth/actions';
-import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES } from 'config';
+import { login, reset } from '/store/auth/actions';
+import { addNotification } from '/store/notification/actions';
+import { NOTIFICATION_TYPES } from '/config';
 
 const Container = styled.div`
   display: flex;
@@ -84,7 +84,7 @@ const Login = ({ addNotification, login, reset }) => {
           <form method="POST" className="flex-grow-1" style={{ display: !formVisible ? 'block' : 'none' }}>
             <Link href={'/'}>
               <Logo href="/" className="sidebar-brand text-decoration-none">
-                <img src="/static/images/80bots.svg" alt=""/>
+                <img src="/images/80bots.svg" alt=""/>
               </Logo>
             </Link>
             <h4 className="text-center">Sign In</h4>
@@ -112,7 +112,7 @@ const Login = ({ addNotification, login, reset }) => {
           <form className="flex-grow-1" method="post" style={{ display: formVisible ? 'block' : 'none' }}>
             <Link href={'/'}>
               <Logo href="/" className="sidebar-brand text-decoration-none">
-                <img src="/static/images/80bots.svg" alt=""/>
+                <img src="/images/80bots.svg" alt=""/>
               </Logo>
             </Link>
             <h4 className="text-primary text-center">Forgot password?</h4>

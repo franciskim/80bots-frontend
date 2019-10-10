@@ -1,15 +1,15 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import Head from 'components/default/layout/components/Head';
+import Head from '../default/layout/components/Head';
 import styled from '@emotion/styled';
-import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { resetPassword } from 'store/auth/actions';
 import Router from 'next/router';
 import Link from 'next/link';
-import { Input } from 'components/default/inputs';
-import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES } from 'config';
+import { css } from '@emotion/core';
+import { connect } from 'react-redux';
+import { NOTIFICATION_TYPES } from '/config';
+import { resetPassword } from '/store/auth/actions';
+import { Input } from '/components/default/inputs';
+import { addNotification } from '/store/notification/actions';
 
 const Container = styled.div`
   display: flex;
@@ -99,7 +99,7 @@ const Reset = ({ addNotification, resetPassword }) => {
         <FormContainer>
           <form method="POST" className="flex-grow-1">
             <Logo href="/">
-              <img src="/static/images/80bots.svg" alt=""/>
+              <img src="/images/80bots.svg" alt=""/>
             </Logo>
             <h4 className="text-center">Reset Password</h4>
 

@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
-import { Textarea } from 'components/default/inputs';
 import { css } from '@emotion/core';
-import { Button, FilesDropZone } from 'components/default';
-import { reportBot } from 'store/bot/actions';
-import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES } from 'config';
+import { Textarea } from '/components/default/inputs';
+import { Button, FilesDropZone } from '/components/default';
+import { reportBot } from '/store/bot/actions';
+import { addNotification } from '/store/notification/actions';
+import { NOTIFICATION_TYPES } from '/config';
 
 const Buttons = styled.div`
   display: flex;

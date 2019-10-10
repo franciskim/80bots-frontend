@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import styled from '@emotion/styled';
-import Icon from 'components/default/icons';
+import Icon from '/components/default/icons';
 import PropTypes from 'prop-types';
 import { css, keyframes, Global } from '@emotion/core';
-import { globalStyles } from 'config';
+import { globalStyles } from '/config';
 
 const bodyStyles = css`
   ${ globalStyles };

@@ -6,12 +6,12 @@ import Modal from '../default/Modal';
 import Button from '../default/Button';
 import { withTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
+import { connect } from 'react-redux';
 import { Card, CardBody } from '../default/Card';
 import { Table, Thead } from '../default/Table';
-import { addNotification } from 'store/notification/actions';
-import { getSubscriptionsAdmin, updateSubscriptionAdmin, deleteSubscriptionAdmin } from 'store/subscription/actions';
-import { NOTIFICATION_TYPES } from 'config';
-import { connect } from 'react-redux';
+import { addNotification } from '/store/notification/actions';
+import { getSubscriptionsAdmin, updateSubscriptionAdmin, deleteSubscriptionAdmin } from '/store/subscription/actions';
+import { NOTIFICATION_TYPES } from '/config';
 
 const Container = styled(Card)`
   border-radius: .25rem;

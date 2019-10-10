@@ -5,13 +5,13 @@ import LaunchEditor from './components/LaunchEditor';
 import Router from 'next/router';
 import Modal from '../default/Modal';
 import { css } from '@emotion/core';
-import { Button, Badge, Paginator } from 'components/default';
-import { Card, CardBody } from 'components/default/Card';
-import {Table, Thead, Filters, LimitFilter, SearchFilter, Th} from 'components/default/Table';
 import { connect } from 'react-redux';
-import { getBots, launchInstance, setBotLimit } from 'store/bot/actions';
-import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
-import { addNotification } from 'store/notification/actions';
+import { Button, Badge, Paginator } from '/components/default';
+import { Card, CardBody } from '/components/default/Card';
+import { Table, Thead, Filters, LimitFilter, SearchFilter, Th } from '/components/default/Table';
+import { getBots, launchInstance, setBotLimit } from '/store/bot/actions';
+import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from '/config';
+import { addNotification } from '/store/notification/actions';
 
 const Container = styled(Card)` 
   border-radius: .25rem;

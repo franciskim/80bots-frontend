@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import Icon from 'components/default/icons';
+import Icon from '/components/default/icons';
 import Select from 'react-select';
 import Link from 'next/link';
 import { withTheme } from 'emotion-theming';
-import { Card, CardBody } from 'components/default/Card';
-import { Table, Thead, Th, Filters, LimitFilter, ListFilter, SearchFilter } from 'components/default/Table';
 import { connect } from 'react-redux';
-import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES } from 'config';
+import { Card, CardBody } from '/components/default/Card';
+import { Table, Thead, Th, Filters, LimitFilter, ListFilter, SearchFilter } from '/components/default/Table';
+import { addNotification } from '/store/notification/actions';
+import { NOTIFICATION_TYPES } from '/config';
 import {
   adminGetRunningBots, updateAdminRunningBot, downloadInstancePemFile, botInstanceUpdated, syncBotInstances
-} from 'store/bot/actions';
-import { addListener, removeAllListeners } from 'store/socket/actions';
-import { Paginator, Loader, Button } from 'components/default';
-import { download, minToTime } from 'lib/helpers';
+} from '/store/bot/actions';
+import { addListener, removeAllListeners } from '/store/socket/actions';
+import { Paginator, Loader, Button } from '/components/default';
+import { download, minToTime } from '/lib/helpers';
 
 const Container = styled(Card)`
   border-radius: .25rem;

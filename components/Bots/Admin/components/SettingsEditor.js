@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
-import { getBotSettings, updateBotSettings } from 'store/bot/actions';
-import { addNotification } from 'store/notification/actions';
-import { NOTIFICATION_TYPES } from 'config';
 import { css } from '@emotion/core';
-import { Button } from 'components/default';
-import { Input, Textarea } from 'components/default/inputs';
+import { getBotSettings, updateBotSettings } from '/store/bot/actions';
+import { addNotification } from '/store/notification/actions';
+import { NOTIFICATION_TYPES } from '/config';
+import { Button } from '/components/default';
+import { Input, Textarea } from '/components/default/inputs';
 
 const VALIDATION = {
   SCRIPT: 'script',

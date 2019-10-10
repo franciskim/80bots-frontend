@@ -5,8 +5,7 @@ import Button from './Button';
 import Icon from './icons';
 import styled from '@emotion/styled';
 import dayjs from 'dayjs';
-import { theme } from 'config';
-import { WEEKDAYS } from 'config';
+import { theme, WEEKDAYS } from '/config';
 
 const Buttons = styled.div`
   display: flex;

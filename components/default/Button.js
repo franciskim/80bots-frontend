@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import Loader from './Loader';
 import { css } from '@emotion/core';
-import { theme } from 'config';
+import { theme } from '/config';
 
 const DefaultButton = styled.button`
   display: inline-block;

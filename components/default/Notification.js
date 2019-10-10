@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import Icon from '/components/default/icons';
+import PropTypes from 'prop-types';
 import { css, keyframes } from '@emotion/core';
 import { connect } from 'react-redux';
-import Icon from '../default/icons';
-import PropTypes from 'prop-types';
-import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config';
-import { removeLastNotification, hideNotification } from 'store/notification/actions';
 import { withTheme } from 'emotion-theming';
+import { removeLastNotification, hideNotification } from '/store/notification/actions';
+import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from '/config';
 
 const { SUCCESS, ERROR } = NOTIFICATION_TYPES;
 
