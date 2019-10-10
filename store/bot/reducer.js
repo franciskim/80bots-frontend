@@ -62,7 +62,7 @@ export const reducer = (state = initialState, action) => {
     }
 
     case success(GET_BOT):
-      return { ...state, botInstance: { ...action.data, ip: 'localhost' }, loading: false };
+      return { ...state, botInstance: action.data, loading: false };
 
     case success(GET_BOTS):
     case success(ADMIN_GET_BOTS):
