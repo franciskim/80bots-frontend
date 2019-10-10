@@ -130,10 +130,13 @@ const RunningBots = ({
   const downloadEventHandler = instance => {
     downloadInstancePemFile(instance.id).then(({data}) => {
       download(data, `${instance.instance_id}.pem`, 'application/x-pem-file');
-    }).catch(() => notify({
-      type: NOTIFICATION_TYPES.ERROR,
-      message: 'Error occurred while downloading file'
-    }));
+    }).catch(({ error : { response } }) => {
+      if (response && response.data) {
+        notify({type: NOTIFICATION_TYPES.ERROR, message: response.data.message});
+      } else {
+        notify({type: NOTIFICATION_TYPES.ERROR, message: 'Error occurred while downloading file'});
+      }
+    });
   };
 
   const changeBotInstanceStatus = (option, id) => {
@@ -188,8 +191,8 @@ const RunningBots = ({
           <A><Icon name={'eye'} color={'white'}/></A>
         </Link>
       </IconButton>
-      <IconButton title={'Download PEM'} type={'success'} onClick={() => downloadEventHandler(botInstance)}>
-        <Icon name={'download'} color={'white'}/>
+      <IconButton disabled={botInstance.status === 'terminated'} title={'Download PEM'} type={'success'} onClick={() => downloadEventHandler(botInstance)}>
+        <Icon name={'download'} color={'white'} />
       </IconButton>
     </td>
     {botInstance.status === 'pending' && <Td colSpan={'9'}>{Loading}</Td>}
@@ -243,7 +246,7 @@ const RunningBots = ({
                 <OrderTh field={'launched_by'}>Launched By</OrderTh>
                 <OrderTh field={'name'}>Name</OrderTh>
                 <OrderTh field={'bot_name'}>Script</OrderTh>
-                <OrderTh field={'instance_id'}>Instance Id</OrderTh>
+                <th>Instance Id</th>
                 <OrderTh field={'uptime'}>Uptime</OrderTh>
                 <OrderTh field={'ip'}>IP</OrderTh>
                 <OrderTh field={'status'}>Status</OrderTh>
