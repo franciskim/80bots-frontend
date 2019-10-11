@@ -84,7 +84,8 @@ const FiltersSection = styled(Filters)`
 const ScreenShots = styled.div`
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
+  align-items: center;
   ${ props => props.styles };
 `;
 
@@ -231,12 +232,12 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack }) 
           !status
             ? fallback
               ? <Fallback>{ fallback }</Fallback>
-              : <ScreenShots styles={!currentFolder && css`justify-content: flex-start;`}>
+              : <ScreenShots>
                 {
                   !currentFolder
                     ? folders.map((item, idx) => <Image key={idx} src={item.src} caption={item.caption}
                       onClick={() => setCurrentFolder(item)} />)
-                    : images.map((item, idx) => <Image styles={css`margin-right: 0`} key={idx} src={item.src}
+                    : images.map((item, idx) => <Image key={idx} src={item.src}
                       selected={issuedScreenshots.findIndex(image => item.name === image.name) > -1}
                       caption={item.caption} onClick={() => reportMode ? selectImage(item) : setCurrentImage(item)}
                     />)

@@ -17,8 +17,9 @@ import { theme } from '/config';
 const EVENTS = {
   AVAILABLE: 'output.available',
   FOLDERS: 'output.folders',
+  APPEND: 'output.append',
   OUTPUT: 'output.data',
-  FULL: 'output.full',
+  FULL: 'output.full'
 };
 
 const MESSAGES = {
@@ -158,8 +159,18 @@ const STATUSES = {
   }
 };
 
+const outputReducer = (state, action) => {
+  switch (action.type) {
+    case EVENTS.OUTPUT:
+      return [...action.data];
+    case EVENTS.APPEND: {
+      return [...state].concat(action.data);
+    }
+  }
+};
+
 const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBack }) => {
-  const [output, setOutput] = useState([]);
+  const [output, setOutput] = useReducer(outputReducer, []);
   const [folders, setFolders] = useState([]);
   const [currentFolder, setCurrentFolder] = useState(null);
   const [types, setTypes] = useState([]);
@@ -187,7 +198,7 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
       });
       listen(EVENTS.OUTPUT, output => {
         setStatus(null);
-        setOutput(output);
+        setOutput({ type: EVENTS.OUTPUT, data: output });
         setFallback(!output.length && 'No output was provided');
       });
       listen(EVENTS.FOLDERS, (folders) => {
@@ -198,6 +209,10 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
       });
       listen(EVENTS.FULL, (data) => {
         if(data) setFullOutput(data);
+      });
+      listen(EVENTS.APPEND, (data) => {
+        if(data) setOutput({ type: EVENTS.APPEND, data }) ;
+        setFallback(null);
       });
       emit(MESSAGES.GET_AVAILABLE);
     }
@@ -267,7 +282,8 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
 
   const renderTypes = (Wrapper, current, idx) => {
     const type = <Type key={idx} type={current.value === currentType.value ? 'success' : 'primary'}
-      onClick={() => { setCurrentType(current); setOutput([]); }} disabled={!types.includes(current.value)}
+      onClick={() => { setCurrentType(current); setOutput({ type: EVENTS.OUTPUT, data: [] }); }}
+      disabled={!types.includes(current.value)}
     >
       { current.label }
     </Type>;
@@ -285,10 +301,7 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
   const CurrentType = currentType.component;
   return(
     <>
-      <Content
-        styles={currentType.value === OUTPUT_TYPES.IMAGES.value
-        && css`justify-content: space-between; flex-flow: row wrap;`}
-      >
+      <Content>
         {
           !status
             ? <FiltersSection>

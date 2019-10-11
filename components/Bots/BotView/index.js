@@ -111,7 +111,7 @@ const Tab = styled(Back)`
   }
 `;
 
-const A = styled.a`
+const A = styled.a` 
   color: inherit;
   text-decoration: none; 
 `;

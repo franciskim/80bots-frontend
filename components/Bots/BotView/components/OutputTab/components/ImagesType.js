@@ -9,6 +9,14 @@ const Fade = keyframes`
   to { opacity: 1 }
 `;
 
+const Images = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+  ${ props => props.styles };
+`;
+
 const Image = styled(ScreenShot)`
   margin-bottom: 20px;
   margin-right: 20px;
@@ -49,16 +57,14 @@ const ImagesType = ({ output }) => {
   const renderImage = (item, idx) => {
     if(item.data) {
       item = toImage(item);
-      return <Image styles={css`margin-right: 0`} key={idx} src={item.src}
+      return <Image key={idx} src={item.src}
         caption={item.caption} onClick={() => setCurrentImage(item)}
       />;
     }
   };
 
   return <>
-    {
-      output.map(renderImage)
-    }
+    <Images>{ output.map(renderImage) }</Images>
     {
       currentImage && <ImageViewer onClick={() => setCurrentImage(null)}>
         <img onClick={e => e.stopPropagation()} alt={currentImage.caption} src={currentImage.src}/>
