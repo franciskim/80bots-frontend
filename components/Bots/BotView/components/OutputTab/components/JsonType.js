@@ -51,7 +51,7 @@ const JsonType = ({ output, setCustomBack }) => {
         if(typeof row[key] !== 'object') {
           rowData.push(<td key={rowIdx}>{ row[key] }</td>);
         } else {
-          if(row[key].length) {
+          if(row[key] && row[key].length) {
             rowData.push(<LinkTd onClick={() => viewNestedData(row[key])} key={rowIdx}>{ `See ${key}` }</LinkTd>);
           } else {
             rowData.push(<td key={rowIdx}>{ `No ${key}` }</td>);
