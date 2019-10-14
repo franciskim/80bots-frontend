@@ -14,6 +14,7 @@ import notification from './notification/reducer';
 import user from './user/reducer';
 import history from './history/reducer';
 import bot from './bot/reducer';
+import cms from './cms/reducer';
 import schedule from './schedule/reducer';
 import subscription from './subscription/reducer';
 import eventNotification from './eventNotification/reducer';
@@ -26,7 +27,7 @@ const socketMiddleware = createWebSocketMiddleware();
 const botMiddleware = createBotMiddleware();
 
 const rootReducer = combineReducers({
-  auth, notification, user, history, bot, schedule, subscription, eventNotification, instanceSession, platform
+  auth, notification, user, history, bot, cms, schedule, subscription, eventNotification, instanceSession, platform
 });
 
 export function initializeStore(initialState = undefined) {

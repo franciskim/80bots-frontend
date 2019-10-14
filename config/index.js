@@ -11,6 +11,7 @@ export const ROUTES = {
     { name: 'Subscription Plans', href: '/admin/subscriptions' },
     { name: 'Credit Usage History', href: '/admin/history' },
     { name: 'Low Credit Notifications', href: '/admin/notifications' },
+    { name: 'CMS', href: '/admin/cms' },
   ],
   User: [
     { name: 'Running Bots', href: '/bots/running' },
