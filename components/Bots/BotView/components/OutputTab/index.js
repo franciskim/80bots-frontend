@@ -100,7 +100,7 @@ const Type = styled(Button)`
   animation: ${Fade} 200ms ease-in;
 `;
 
-const Hint = styled.span`
+const Hint = styled.span` 
   font-size: 14px;
   color: ${ props => props.theme.colors.grey };
 `;
