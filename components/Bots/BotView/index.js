@@ -130,17 +130,18 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
   const [status, setStatus] = useState(STATUSES.CONNECTING);
   const [customBack, setCustomBack] = useState(null);
+  const [viewMode, setViewMode] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
     let timer;
     closeConnection();
+    setViewMode('ONLINE')
     if(botInstance.status === 'running') {
-      const handshake = { id: botInstance.instance_id };
-      initConnection('sockets', `${botInstance.ip}:6002`, handshake);
+      initConnection('sockets', `${botInstance.ip}:6002`, { id: botInstance.instance_id });
     } else {
-      const handshake = { id: botInstance.id };
-      initConnection('api', process.env.API_URL, handshake);
+      setViewMode('OFFLINE')
+      initConnection('api', process.env.API_URL, { id: botInstance.id });
     }
     listen('connect', () => {
       clearTimeout(timer);
@@ -176,11 +177,16 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
     setCustomBack(null);
   }, [activeTab]);
 
-  const renderTab = (item, idx) => <Tab type={activeTab.title === TABS[item].title ? 'success' : 'primary'}
-    key={idx} onClick={() => setActiveTab(TABS[item])}
-  >
-    { TABS[item].title }
-  </Tab>;
+  const renderTab = (item, idx) => {
+    const isOffline = viewMode === 'OFFLINE';
+    const isDisabled = isOffline && item === 'DISPLAY';
+    return (
+      <Tab disabled={isDisabled} type={activeTab.title === TABS[item].title ? 'success' : 'primary'}
+        key={idx} onClick={() => setActiveTab(TABS[item])}>
+        { TABS[item].title }
+      </Tab>
+    );
+  };
 
   const CurrentTab = activeTab.component;
 
