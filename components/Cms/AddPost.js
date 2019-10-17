@@ -42,10 +42,13 @@ const AddPost = ({ addPost }) => {
 
   }, []);
 
+  // TODO: Check data
   const convertPostData = postData => ({
     title: postData.title,
     content: postData.content,
     status: postData.status,
+    type: postData.type,
+    bot_id: postData.botId
   });
 
   const pageAddPost = (postData) => {

@@ -43,35 +43,46 @@ const PostView = ({ getPost, post }) => {
   }, []);
 
   return(
-    <Container>
-      <Header>
-        <Back type={'primary'}>
-          <Link href={'/admin/cms'}><A>Back</A></Link>
-        </Back>
-      </Header>
-      <CardBody>
-        <Table responsive>
-          <tbody>
-            <tr>
-              <td>Title</td>
-              <td>{post.title}</td>
-            </tr>
-            <tr>
-              <td>Slug</td>
-              <td>{post.slug}</td>
-            </tr>
-            <tr>
-              <td>Content</td>
-              <td>{post.content}</td>
-            </tr>
-            <tr>
-              <td>Status</td>
-              <td>{post.status}</td>
-            </tr>
-          </tbody>
-        </Table>
-      </CardBody>
-    </Container>
+    <>
+      <Container>
+        <Header>
+          <Back type={'primary'}>
+            <Link href={'/admin/cms'}><A>Back</A></Link>
+          </Back>
+        </Header>
+        <CardBody>
+          <Table responsive>
+            <tbody>
+              <tr>
+                <td>Title</td>
+                <td>{post.title}</td>
+              </tr>
+              <tr>
+                <td>Slug</td>
+                <td>{post.slug}</td>
+              </tr>
+              <tr>
+                <td>Content</td>
+                <td>{post.content}</td>
+              </tr>
+              <tr>
+                <td>Status</td>
+                <td>{post.status}</td>
+              </tr>
+            </tbody>
+          </Table>
+        </CardBody>
+      </Container>
+
+      <Container>
+        <Header>
+          Messages
+        </Header>
+        <CardBody>
+          sdvsdv
+        </CardBody>
+      </Container>
+    </>
   );
 
 };

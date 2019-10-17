@@ -2,7 +2,8 @@ import { success, error } from 'redux-saga-requests';
 import {
   GET_POSTS,
   GET_POST,
-  UPDATE_POST
+  UPDATE_POST,
+  FORGET_POST
 } from './types';
 
 const initialState = {
@@ -20,7 +21,8 @@ export const reducer = (state = initialState, action) => {
     case GET_POST:
     case UPDATE_POST:
       return { ...state, loading: true, error: null };
-
+    case FORGET_POST:
+      return { ...state, loading: true, error: null, post: {} };
     case success(GET_POSTS):
       return {
         ...state,

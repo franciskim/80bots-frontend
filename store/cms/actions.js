@@ -3,7 +3,7 @@ import {
   GET_POST,
   ADD_POST,
   UPDATE_POST,
-  DELETE_POST
+  DELETE_POST, FORGET_POST
 } from './types';
 
 export const getPosts = (query = { page: 1, limit: 1 }) => {
@@ -71,4 +71,8 @@ export const getPost = (id) => ({
     thunk: true,
     admin: true
   }
+});
+
+export const forgetPost = () => ({
+  type: FORGET_POST
 });

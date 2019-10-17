@@ -6,9 +6,8 @@ import { css } from '@emotion/core';
 import { connect } from 'react-redux';
 import { Button } from '/components/default';
 import { Textarea, Input, Select } from '/components/default/inputs';
-import {getPlatforms} from '../../../store/platform/actions';
-import {adminGetBots} from '../../../store/bot/actions';
-import {getUsers} from '../../../store/user/actions';
+import { adminGetBots } from '../../../store/bot/actions';
+import RichEditor from './RichEditor';
 
 const FormContainer = styled.div`
   display: flex;
@@ -98,8 +97,9 @@ const PostEditor = ({ type, post, adminGetBots, bots, onSubmit }) => {
 
   const [title, setTitle] = useState(post ? post.title : '');
   const [content, setContent] = useState(post ? post.content : '');
-  const [bot, setBot] = useState(null);
+  const [bot, setBot] = useState(post ? post.bot : null);
   const [status, setStatus] = useState(post ? post.status : '');
+  const [isBotPost, setBotPost] = useState(post ? post.type === 'bot' : false);
   const [error, setError] = useState(null);
 
   const toOptions = item => {
@@ -121,7 +121,11 @@ const PostEditor = ({ type, post, adminGetBots, bots, onSubmit }) => {
 
   const submit = () => {
     onSubmit({
-      title, content, status: status.value, bot_id: bot.id
+      title,
+      content,
+      status: status.value,
+      type: isBotPost ? 'bot' : 'post',
+      botId: bot ? bot.id : null
     });
   };
 
@@ -131,16 +135,25 @@ const PostEditor = ({ type, post, adminGetBots, bots, onSubmit }) => {
         <Input type={'text'} label={'Title *'} value={title} styles={inputStyles}
           onChange={e => setTitle(e.target.value)}
         />
-        <SelectWrap>
-          <Label>{'Select bot'}</Label>
-          <AsyncSelect onChange={option => setBot(option)}
-            loadOptions={searchBots} defaultOptions={bots.map(toOptions)}
-          />
-        </SelectWrap>
 
-        <Textarea label={'Content'} rows={10} value={content} styles={{ label: css`text-align: left;` }}
-          onChange={e => setContent(e.target.value)}
-        />
+        <InputWrap>
+          <Label>Post type *</Label>
+          <StatusButton type={isBotPost ? 'danger' : 'primary'} onClick={() => setBotPost(!isBotPost)}>
+            { isBotPost ? 'Bot Post' : 'Post' }
+          </StatusButton>
+        </InputWrap>
+
+        {
+          isBotPost && <SelectWrap>
+            <Label>{'Select bot'}</Label>
+
+            <AsyncSelect onChange={option => setBot(option)} value={toOptions(bot)}
+              loadOptions={searchBots} defaultOptions={bots.map(toOptions)}
+            />
+          </SelectWrap>
+        }
+
+        <RichEditor onChange={setContent} content={content}/>
 
         <Select options={STATUSES} value={STATUSES.find(item => item.value === status)}
           onChange={option => setStatus(option)} styles={selectStyles} label={'Status'}

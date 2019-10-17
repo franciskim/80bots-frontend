@@ -119,6 +119,7 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
   const renderRow = (post, idx) => <tr key={idx}>
     <td>{ post.title }</td>
     <td>{ post.slug }</td>
+    <td>{ post.type === 'bot' ? 'Bot Post' : 'Post' }</td>
     <td>{ post.content }</td>
     <td>{ post.status }</td>
     <td>
@@ -163,6 +164,7 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
               <tr>
                 <OrderTh field={'title'}>Post title</OrderTh>
                 <OrderTh field={'slug'}>Slug</OrderTh>
+                <OrderTh field={'slug'}>Type</OrderTh>
                 <OrderTh field={'content'}>Content</OrderTh>
                 <OrderTh field={'status'}>Status</OrderTh>
                 <th>Action</th>

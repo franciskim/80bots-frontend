@@ -10,7 +10,7 @@ import {connect} from 'react-redux';
 import {Button, Loader} from '../default';
 import PostEditor from './components/PostEditor';
 import {addNotification} from '../../store/notification/actions';
-import { getPost, updatePost } from '../../store/cms/actions';
+import { getPost, updatePost, forgetPost } from '../../store/cms/actions';
 import { useTheme } from 'emotion-theming';
 
 const Container = styled(Card)` 
@@ -35,19 +35,24 @@ const A = styled.a`
   text-decoration: none; 
 `;
 
-const EditPost = ({ getPost, updatePost, post }) => {
+const EditPost = ({ getPost, updatePost, forgetPost, post }) => {
 
   const router = useRouter();
   const theme = useTheme();
 
   useEffect(() => {
     getPost(router.query.id);
+    return function () {
+      forgetPost();
+    };
   }, []);
 
   const convertPostData = postData => ({
     title: postData.title,
     content: postData.content,
     status: postData.status,
+    type: postData.type,
+    bot_id: postData.botId
   });
 
   const pageEditPost = (postData) => {
@@ -80,7 +85,8 @@ const EditPost = ({ getPost, updatePost, post }) => {
 EditPost.propTypes = {
   getPost: PropTypes.func.isRequired,
   updatePost: PropTypes.func.isRequired,
-  post: PropTypes.object.isRequired
+  post: PropTypes.object.isRequired,
+  forgetPost: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -89,6 +95,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getPost: id => dispatch(getPost(id)),
+  forgetPost: () => dispatch(forgetPost()),
   updatePost: (id, data) => dispatch(updatePost(id, data)),
 });
 
