@@ -133,30 +133,33 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
   const router = useRouter();
 
   useEffect(() => {
-    if(botInstance?.ip) {
+    let timer;
+    closeConnection();
+    if(botInstance.status === 'running') {
       const handshake = { id: botInstance.instance_id };
-      let timer;
-      closeConnection();
-      initConnection(`${botInstance.ip}:6002`, handshake);
-      listen('connect', () => {
-        clearTimeout(timer);
-        setStatus(STATUSES.CONNECTED);
-      });
-      listen('connect_error', () => {
-        setStatus(STATUSES.ERROR);
-      });
-      listen('connect_timeout', () => {
-        setStatus(STATUSES.TIMEOUT);
-      });
-      listen('reconnect_attempt', () => {
-        timer = setTimeout(() => {
-          setStatus(STATUSES.RECONNECT);
-        }, 1000);
-      });
-      listen('disconnect', () => {
-        setStatus(STATUSES.DISCONNECT);
-      });
+      initConnection('sockets', `${botInstance.ip}:6002`, handshake);
+    } else {
+      const handshake = { id: botInstance.id };
+      initConnection('api', process.env.API_URL, handshake);
     }
+    listen('connect', () => {
+      clearTimeout(timer);
+      setStatus(STATUSES.CONNECTED);
+    });
+    listen('connect_error', () => {
+      setStatus(STATUSES.ERROR);
+    });
+    listen('connect_timeout', () => {
+      setStatus(STATUSES.TIMEOUT);
+    });
+    listen('reconnect_attempt', () => {
+      timer = setTimeout(() => {
+        setStatus(STATUSES.RECONNECT);
+      }, 1000);
+    });
+    listen('disconnect', () => {
+      setStatus(STATUSES.DISCONNECT);
+    });
   }, [botInstance]);
 
   useEffect(() => {

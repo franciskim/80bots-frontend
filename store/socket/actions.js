@@ -25,9 +25,9 @@ export const removeAllListeners = () => ({
   type: REMOVE_ALL_LISTENERS
 });
 
-export const initExternalConnection = (url, handshake) => ({
+export const initExternalConnection = (provider, url, handshake) => ({
   type: INIT_EXTERNAL_CONNECTION,
-  data: { url, handshake }
+  data: { url, handshake, provider }
 });
 
 export const closeExternalConnection = () => ({
