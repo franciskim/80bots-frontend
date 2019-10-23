@@ -130,33 +130,37 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
   const [status, setStatus] = useState(STATUSES.CONNECTING);
   const [customBack, setCustomBack] = useState(null);
+  const [viewMode, setViewMode] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
-    if(botInstance?.ip) {
-      const handshake = { id: botInstance.instance_id };
-      let timer;
-      closeConnection();
-      initConnection(`${botInstance.ip}:6002`, handshake);
-      listen('connect', () => {
-        clearTimeout(timer);
-        setStatus(STATUSES.CONNECTED);
-      });
-      listen('connect_error', () => {
-        setStatus(STATUSES.ERROR);
-      });
-      listen('connect_timeout', () => {
-        setStatus(STATUSES.TIMEOUT);
-      });
-      listen('reconnect_attempt', () => {
-        timer = setTimeout(() => {
-          setStatus(STATUSES.RECONNECT);
-        }, 1000);
-      });
-      listen('disconnect', () => {
-        setStatus(STATUSES.DISCONNECT);
-      });
+    let timer;
+    closeConnection();
+    setViewMode('ONLINE')
+    if(botInstance.status === 'running') {
+      initConnection('sockets', `${botInstance.ip}:6002`, { id: botInstance.instance_id });
+    } else {
+      setViewMode('OFFLINE')
+      initConnection('api', process.env.API_URL, { id: botInstance.id });
     }
+    listen('connect', () => {
+      clearTimeout(timer);
+      setStatus(STATUSES.CONNECTED);
+    });
+    listen('connect_error', () => {
+      setStatus(STATUSES.ERROR);
+    });
+    listen('connect_timeout', () => {
+      setStatus(STATUSES.TIMEOUT);
+    });
+    listen('reconnect_attempt', () => {
+      timer = setTimeout(() => {
+        setStatus(STATUSES.RECONNECT);
+      }, 1000);
+    });
+    listen('disconnect', () => {
+      setStatus(STATUSES.DISCONNECT);
+    });
   }, [botInstance]);
 
   useEffect(() => {
@@ -173,11 +177,16 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
     setCustomBack(null);
   }, [activeTab]);
 
-  const renderTab = (item, idx) => <Tab type={activeTab.title === TABS[item].title ? 'success' : 'primary'}
-    key={idx} onClick={() => setActiveTab(TABS[item])}
-  >
-    { TABS[item].title }
-  </Tab>;
+  const renderTab = (item, idx) => {
+    const isOffline = viewMode === 'OFFLINE';
+    const isDisabled = isOffline && item === 'DISPLAY';
+    return (
+      <Tab disabled={isDisabled} type={activeTab.title === TABS[item].title ? 'success' : 'primary'}
+        key={idx} onClick={() => setActiveTab(TABS[item])}>
+        { TABS[item].title }
+      </Tab>
+    );
+  };
 
   const CurrentTab = activeTab.component;
 

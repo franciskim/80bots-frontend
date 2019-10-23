@@ -200,7 +200,7 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack }) 
     return new File([blob], item.name, { type: 'image/jpg' });
   };
 
-  const toImage = (item) => ({ src: URL.createObjectURL(toFile(item)), caption: item.name, ...item });
+  const toImage = (item) => ({ src: item.src || URL.createObjectURL(toFile(item)), caption: item.name, ...item });
 
   const selectImage = image => {
     const idx = issuedScreenshots.findIndex(item => item.name === image.name);

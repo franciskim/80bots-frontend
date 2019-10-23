@@ -1,4 +1,5 @@
 import io from 'socket.io-client';
+import BotDataProvider from '/lib/BotDataProvider';
 import Echo from 'laravel-echo';
 import {
   ADD_LISTENER, REMOVE_LISTENER, REMOVE_ALL_LISTENERS, EMIT_MESSAGE, ADD_EXTERNAL_LISTENER, REMOVE_EXTERNAL_LISTENER,
@@ -24,9 +25,10 @@ export default function createWebSocketMiddleware() {
       });
     };
 
-    const initExternal = (url, data = {}) => {
-      externalSocket = io(url, data);
-      externalSocket.on('connect', console.log);
+    const initExternal = (provider, url, data = {}) => {
+      const config = { provider, url, data };
+      externalSocket = new BotDataProvider(config);
+      externalSocket.on('connect', console.debug);
     };
 
     return next => action => {
@@ -51,7 +53,7 @@ export default function createWebSocketMiddleware() {
           return socket.emit(action.data.eventName, action.data.message);
 
         case INIT_EXTERNAL_CONNECTION: {
-          initExternal(action.data.url, { query: action.data.handshake } );
+          initExternal(action.data.provider, action.data.url, { query: action.data.handshake } );
           break;
         }
         case ADD_EXTERNAL_LISTENER: {
