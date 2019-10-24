@@ -9,6 +9,8 @@ import { Textarea, Select } from '/components/default/inputs';
 import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from '/store/socket/actions';
 import { theme } from '/config';
 import { Loader } from '/components/default';
+import { getLogs } from '/store/bot/actions';
+import {useRouter} from 'next/router';
 
 const EVENTS = {
   LOG: 'log'
@@ -48,9 +50,11 @@ const STATUSES = {
   }
 };
 
-const LogsTab = ({ botInstance, listen, removeAll, emit, setCustomBack, user }) => {
+const LogsTab = ({ botInstance, getLogs, listen, removeAll, emit, setCustomBack, user }) => {
   const [status, setStatus] = useState(STATUSES.DATA);
   const [scrolled, setScrolled] = useState(false);
+
+  const router = useRouter();
 
   const logReducer = (state, action) => {
     switch (action.type) {
@@ -63,32 +67,36 @@ const LogsTab = ({ botInstance, listen, removeAll, emit, setCustomBack, user }) 
   const [folder, setFolder] = useState(LOG_TYPES[0]);
 
   useEffect(() => {
-    return () => { removeAll(); };
+    getLogs({ instance_id: router.query.id });
   }, []);
 
-  useEffect(() => {
-    setLogs({ type: 'new', data: '' });
-    if(Object.keys(botInstance).length > 0) {
-      setStatus(STATUSES.DATA);
-      emit(MESSAGES.GET_LOGS, { init: folder.value === 'init' });
-    }
-  }, [folder, botInstance]);
-
-  useEffect(() => {
-    if(Object.keys(botInstance).length > 0) {
-      listen(EVENTS.LOG, chunk => {
-        if(status) setStatus(null);
-        setLogs({ type: 'add', data: abtos(chunk) });
-      });
-    }
-  }, [botInstance]);
-
-  useEffect(() => {
-    if(logs && !scrolled) {
-      document.getElementById('logs').scrollTop = document.getElementById('logs').scrollHeight;
-      setScrolled(true);
-    }
-  }, [logs, scrolled]);
+  // useEffect(() => {
+  //   return () => { removeAll(); };
+  // }, []);
+  //
+  // useEffect(() => {
+  //   setLogs({ type: 'new', data: '' });
+  //   if(Object.keys(botInstance).length > 0) {
+  //     setStatus(STATUSES.DATA);
+  //     emit(MESSAGES.GET_LOGS, { init: folder.value === 'init' });
+  //   }
+  // }, [folder, botInstance]);
+  //
+  // useEffect(() => {
+  //   if(Object.keys(botInstance).length > 0) {
+  //     listen(EVENTS.LOG, chunk => {
+  //       if(status) setStatus(null);
+  //       setLogs({ type: 'add', data: abtos(chunk) });
+  //     });
+  //   }
+  // }, [botInstance]);
+  //
+  // useEffect(() => {
+  //   if(logs && !scrolled) {
+  //     document.getElementById('logs').scrollTop = document.getElementById('logs').scrollHeight;
+  //     setScrolled(true);
+  //   }
+  // }, [logs, scrolled]);
 
   return(
     <>
@@ -113,20 +121,24 @@ const LogsTab = ({ botInstance, listen, removeAll, emit, setCustomBack, user }) 
 };
 
 LogsTab.propTypes = {
-  listen:        PropTypes.func.isRequired,
-  emit:          PropTypes.func.isRequired,
-  removeAll:     PropTypes.func.isRequired,
-  setCustomBack: PropTypes.func.isRequired,
-  botInstance:   PropTypes.object.isRequired,
-  user:          PropTypes.object.isRequired
+  listen:         PropTypes.func.isRequired,
+  emit:           PropTypes.func.isRequired,
+  removeAll:      PropTypes.func.isRequired,
+  setCustomBack:  PropTypes.func.isRequired,
+  getLogs:        PropTypes.func.isRequired,
+  botInstance:    PropTypes.object.isRequired,
+  logs:           PropTypes.object.isRequired,
+  user:           PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  botInstance: state.bot.botInstance,
-  user:        state.auth.user
+  botInstance:  state.bot.botInstance,
+  logs:         state.bot.logs,
+  user:         state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({
+  getLogs: (query) => dispatch(getLogs(query)),
   listen: (...args) => dispatch(addExternalListener(...args)),
   emit: (...args) => dispatch(emitExternalMessage(...args)),
   removeAll: () => dispatch(removeAllExternalListeners())

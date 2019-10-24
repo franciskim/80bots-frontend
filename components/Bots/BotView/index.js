@@ -128,40 +128,40 @@ const ConnectionStatus = ({ status, color }) => <>
 
 const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, closeConnection, initConnection, listen }) => {
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
-  const [status, setStatus] = useState(STATUSES.CONNECTING);
+  const [status, setStatus] = useState(STATUSES.CONNECTED);
   const [customBack, setCustomBack] = useState(null);
   const [viewMode, setViewMode] = useState(null);
   const router = useRouter();
 
-  useEffect(() => {
-    let timer;
-    closeConnection();
-    setViewMode('ONLINE')
-    if(botInstance.status === 'running') {
-      initConnection('sockets', `${botInstance.ip}:6002`, { id: botInstance.instance_id });
-    } else {
-      setViewMode('OFFLINE')
-      initConnection('api', process.env.API_URL, { id: botInstance.id });
-    }
-    listen('connect', () => {
-      clearTimeout(timer);
-      setStatus(STATUSES.CONNECTED);
-    });
-    listen('connect_error', () => {
-      setStatus(STATUSES.ERROR);
-    });
-    listen('connect_timeout', () => {
-      setStatus(STATUSES.TIMEOUT);
-    });
-    listen('reconnect_attempt', () => {
-      timer = setTimeout(() => {
-        setStatus(STATUSES.RECONNECT);
-      }, 1000);
-    });
-    listen('disconnect', () => {
-      setStatus(STATUSES.DISCONNECT);
-    });
-  }, [botInstance]);
+  // useEffect(() => {
+  //   let timer;
+  //   closeConnection();
+  //   setViewMode('ONLINE')
+  //   if(botInstance.status === 'running') {
+  //     initConnection('sockets', `${botInstance.ip}:6002`, { id: botInstance.instance_id });
+  //   } else {
+  //     setViewMode('OFFLINE')
+  //     initConnection('api', process.env.API_URL, { id: botInstance.id });
+  //   }
+  //   listen('connect', () => {
+  //     clearTimeout(timer);
+  //     setStatus(STATUSES.CONNECTED);
+  //   });
+  //   listen('connect_error', () => {
+  //     setStatus(STATUSES.ERROR);
+  //   });
+  //   listen('connect_timeout', () => {
+  //     setStatus(STATUSES.TIMEOUT);
+  //   });
+  //   listen('reconnect_attempt', () => {
+  //     timer = setTimeout(() => {
+  //       setStatus(STATUSES.RECONNECT);
+  //     }, 1000);
+  //   });
+  //   listen('disconnect', () => {
+  //     setStatus(STATUSES.DISCONNECT);
+  //   });
+  // }, [botInstance]);
 
   useEffect(() => {
     user.role === 'Admin'

@@ -1,4 +1,8 @@
 import {
+  GET_FOLDERS,
+  GET_SCREENSHOTS,
+  GET_IMAGES,
+  GET_LOGS,
   GET_BOTS,
   GET_BOT,
   ADMIN_GET_BOTS,
@@ -16,6 +20,66 @@ import {
   ADMIN_REGIONS, ADMIN_UPDATE_REGION, ADMIN_SYNC_REGIONS, BOT_REPORT, REPORT_UPLOAD_PROGRESS, LIMIT_CHANGE
 } from './types';
 import { success } from 'redux-saga-requests';
+
+export const getFolders = (query = { page: 1, limit: 1 }) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  return {
+    type: GET_FOLDERS,
+    request: {
+      method: 'GET',
+      url: '/instances/folders',
+      params: query
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const getScreenshots = (query = { page: 1, limit: 1 }) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  return {
+    type: GET_SCREENSHOTS,
+    request: {
+      method: 'GET',
+      url: '/instances/objects',
+      params: {...query, type: 'screenshots'}
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const getImages = (query = { page: 1, limit: 1 }) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  return {
+    type: GET_IMAGES,
+    request: {
+      method: 'GET',
+      url: '/instances/objects',
+      params: {...query, type: 'images'}
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const getLogs = (query) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  return {
+    type: GET_LOGS,
+    request: {
+      method: 'GET',
+      url: '/instances/logs',
+      params: query,
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
 
 export const getBots = (query = { page: 1, limit: 1 }) => {
   Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);

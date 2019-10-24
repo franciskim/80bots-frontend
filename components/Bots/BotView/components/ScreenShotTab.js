@@ -6,12 +6,16 @@ import Modal from '/components/default/Modal';
 import ReportEditor from './ReportIssue';
 import { css, keyframes } from '@emotion/core';
 import { withTheme } from 'emotion-theming';
+import { useRouter } from 'next/router';
 import { connect } from 'react-redux';
 import { CardBody } from '/components/default/Card';
+import { getFolders, getScreenshots } from '/store/bot/actions';
 import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from '/store/socket/actions';
 import { Loader, Button, Paginator } from '/components/default';
+import { addListener, removeAllListeners } from '/store/socket/actions';
 import { Filters } from '/components/default/Table';
 import { theme } from '/config';
+import Link from 'next/link';
 
 const EVENTS = {
   FOLDERS: 'folders',
@@ -109,6 +113,11 @@ const Fallback = (props) => {
   return <Div><Span {...props}/></Div>;
 };
 
+const A = styled.a` 
+  color: inherit;
+  text-decoration: none; 
+`;
+
 const STATUSES = {
   FOLDERS: {
     label: 'Receiving Folders',
@@ -120,10 +129,11 @@ const STATUSES = {
   }
 };
 
-const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack }) => {
-  const [folders, setFolders] = useState([]);
+const ScreenShotTab = ({ botInstance, getFolders, getScreenshots, folders, screenshots, total, listen, removeAll, emit, setCustomBack }) => {
+  //const [folders, setFolders] = useState([]);
   const [offset, setOffset] = useReducer((state, offset) => offset, 0);
-  const [limit, setLimit] = useState(20);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const [fallback, setFallback] = useState(null);
   const [status, setStatus] = useState(STATUSES.FOLDERS);
   const [currentFolder, setCurrentFolder] = useState(null);
@@ -132,6 +142,7 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack }) 
   const [issuedScreenshots, setIssuedScreenshots] = useState([]);
 
   const reportModal = useRef(null);
+  const router = useRouter();
 
   const imagesReducer = (state, action) => {
     switch (action.type) {
@@ -154,6 +165,20 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack }) 
   const BackButton = <Back type={'primary'} onClick={() => setCurrentFolder(null)}>Back</Back>;
 
   useEffect(() => {
+
+    getFolders({ instance_id: router.query.id, page, limit });
+
+    // addListener(`instance.${router.query.id}.show`, 'S3ObjectAdded', event => {
+    //   if(event) {
+    //     console.log(event);
+    //   }
+    // });
+    // return () => {
+    //   removeAllListeners();
+    // };
+  }, []);
+
+  useEffect(() => {
     return () => { removeAll(); };
   }, []);
 
@@ -161,39 +186,48 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack }) 
     if(!reportMode) setIssuedScreenshots([]);
   }, [reportMode]);
 
-  useEffect(() => {
-    if(botInstance && Object.keys(botInstance).length > 0) {
-      listen(EVENTS.FOLDERS, (folders) => {
-        setStatus(null);
-        setFolders(folders.map(toImage));
-        setFallback(!folders.length && 'No folders are created');
-      });
-      listen(EVENTS.SCREENSHOTS, (screenshots) => {
-        setStatus(null);
-        setImages({ type: EVENTS.SCREENSHOTS, data: screenshots.map(toImage) });
-      });
-      listen(EVENTS.SCREENSHOT, (screenshot) => {
-        if(offset === 0) {
-          setImages({ type: EVENTS.SCREENSHOT, data: toImage(screenshot) });
-        } else {
-          setStatus(STATUSES.DATA);
-          emit(MESSAGES.GET_SCREENSHOTS, { folder: currentFolder.date, offset, limit });
-        }
-      });
-      emit(MESSAGES.GET_FOLDERS);
-    }
-  }, [botInstance]);
+  // useEffect(() => {
+  //   if(botInstance && Object.keys(botInstance).length > 0) {
+  //     listen(EVENTS.FOLDERS, (folders) => {
+  //       setStatus(null);
+  //       setFolders(folders.map(toImage));
+  //       setFallback(!folders.length && 'No folders are created');
+  //     });
+  //     listen(EVENTS.SCREENSHOTS, (screenshots) => {
+  //       setStatus(null);
+  //       setImages({ type: EVENTS.SCREENSHOTS, data: screenshots.map(toImage) });
+  //     });
+  //     listen(EVENTS.SCREENSHOT, (screenshot) => {
+  //       if(offset === 0) {
+  //         setImages({ type: EVENTS.SCREENSHOT, data: toImage(screenshot) });
+  //       } else {
+  //         setStatus(STATUSES.DATA);
+  //         emit(MESSAGES.GET_SCREENSHOTS, { folder: currentFolder.date, offset, limit });
+  //       }
+  //     });
+  //     emit(MESSAGES.GET_FOLDERS);
+  //   }
+  // }, [botInstance]);
+  //
+  // useEffect(() => {
+  //   if(currentFolder) {
+  //     setStatus(STATUSES.DATA);
+  //     emit(MESSAGES.GET_SCREENSHOTS, { folder: currentFolder.date, offset, limit });
+  //     setCustomBack(BackButton);
+  //   } else {
+  //     setImages({ type: EVENTS.SCREENSHOTS, data: [] });
+  //     setCustomBack(null);
+  //   }
+  // }, [currentFolder, offset]);
 
-  useEffect(() => {
-    if(currentFolder) {
-      setStatus(STATUSES.DATA);
-      emit(MESSAGES.GET_SCREENSHOTS, { folder: currentFolder.date, offset, limit });
-      setCustomBack(BackButton);
-    } else {
-      setImages({ type: EVENTS.SCREENSHOTS, data: [] });
-      setCustomBack(null);
-    }
-  }, [currentFolder, offset]);
+  const backToFolders = () => {
+    setCurrentFolder(null);
+  };
+
+  const selectCurrentFolder = (item) => {
+    setCurrentFolder(item);
+    getScreenshots({ instance_id: router.query.id, folder: item.id, page, limit });
+  };
 
   const toFile = (item) => {
     const blob = new Blob([item.thumbnail || item.data], { type: 'image/jpg' });
@@ -213,74 +247,116 @@ const ScreenShotTab = ({ botInstance, listen, removeAll, emit, setCustomBack }) 
 
   return(
     <>
-      {
-        !status && currentFolder && <FiltersSection>
-          { reportMode && <Hint>Select issued screenshots |&nbsp;</Hint> }
-          <Report type={'danger'} onClick={() => setReportMode(!reportMode)}>
-            { reportMode ? 'Cancel' : 'Report Issue' }
-          </Report>
-          {
-            reportMode && <>
-              <Hint>&nbsp;|&nbsp;</Hint>
-              <Report type={'success'} onClick={() => reportModal.current.open()}>Proceed</Report>
-            </>
-          }
-        </FiltersSection>
-      }
       <Content>
         {
-          !status
-            ? fallback
-              ? <Fallback>{ fallback }</Fallback>
-              : <ScreenShots>
-                {
-                  !currentFolder
-                    ? folders.map((item, idx) => <Image key={idx} src={item.src} caption={item.caption}
-                      onClick={() => setCurrentFolder(item)} />)
-                    : images.map((item, idx) => <Image key={idx} src={item.src}
-                      selected={issuedScreenshots.findIndex(image => item.name === image.name) > -1}
-                      caption={item.caption} onClick={() => reportMode ? selectImage(item) : setCurrentImage(item)}
-                    />)
-                }
-              </ScreenShots>
+          folders ? <>
+            {
+              currentFolder
+                ? <Button type={'primary'} onClick={backToFolders}>Back to folders</Button>
+                : null
+            }
+            <ScreenShots>
+              {
+                !currentFolder
+                  ? folders.map((item, idx) => <Image key={idx} src={item.thumbnail.url} caption={item.name}
+                    onClick={() => selectCurrentFolder(item)}/> )
+                  : screenshots.map((item, idx) => <Image key={idx} src={item.thumbnail.url}
+                    selected={issuedScreenshots.findIndex(image => item.name === image.name) > -1}
+                    caption={item.name} onClick={() => reportMode ? selectImage(item) : setCurrentImage(item)}
+                  />)
+              }
+            </ScreenShots>
+            {
+              !currentFolder
+                ? <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getFolders({ instance_id: router.query.id, page, limit }); }}/>
+                : null
+            }</>
             : <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color}
               caption={status.label}
             />
         }
       </Content>
-      {
-        currentFolder && <Paginator total={currentFolder.total} pageSize={limit}
-          onChangePage={page => setOffset((page * limit) - limit)}
-        />
-      }
-      {
-        currentImage && <ImageViewer onClick={() => setCurrentImage(null)}>
-          <img onClick={e => e.stopPropagation()} alt={currentImage.caption} src={currentImage.src}/>
-        </ImageViewer>
-      }
-      <Modal ref={reportModal} title={'Report Issue'} contentStyles={css`min-width: 420px; max-width: 420px;`}
-        onClose={() => setReportMode(false)}
-      >
-        <ReportEditor bot={botInstance} screenshots={issuedScreenshots.map(toFile)}/>
-      </Modal>
+
+
+
+      {/*{*/}
+      {/*  !status && currentFolder && <FiltersSection>*/}
+      {/*    { reportMode && <Hint>Select issued screenshots |&nbsp;</Hint> }*/}
+      {/*    <Report type={'danger'} onClick={() => setReportMode(!reportMode)}>*/}
+      {/*      { reportMode ? 'Cancel' : 'Report Issue' }*/}
+      {/*    </Report>*/}
+      {/*    {*/}
+      {/*      reportMode && <>*/}
+      {/*        <Hint>&nbsp;|&nbsp;</Hint>*/}
+      {/*        <Report type={'success'} onClick={() => reportModal.current.open()}>Proceed</Report>*/}
+      {/*      </>*/}
+      {/*    }*/}
+      {/*  </FiltersSection>*/}
+      {/*}*/}
+      {/*<Content>*/}
+      {/*  {*/}
+      {/*    !status*/}
+      {/*      ? fallback*/}
+      {/*        ? <Fallback>{ fallback }</Fallback>*/}
+      {/*        : <ScreenShots>*/}
+      {/*          {*/}
+      {/*            !currentFolder*/}
+      {/*              ? folders.map((item, idx) => <Image key={idx} src={item.src} caption={item.caption}*/}
+      {/*                onClick={() => setCurrentFolder(item)} />)*/}
+      {/*              : images.map((item, idx) => <Image key={idx} src={item.src}*/}
+      {/*                selected={issuedScreenshots.findIndex(image => item.name === image.name) > -1}*/}
+      {/*                caption={item.caption} onClick={() => reportMode ? selectImage(item) : setCurrentImage(item)}*/}
+      {/*              />)*/}
+      {/*          }*/}
+      {/*        </ScreenShots>*/}
+      {/*      : <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color}*/}
+      {/*        caption={status.label}*/}
+      {/*      />*/}
+      {/*  }*/}
+      {/*</Content>*/}
+      {/*{*/}
+      {/*  currentFolder && <Paginator total={currentFolder.total} pageSize={limit}*/}
+      {/*    onChangePage={page => setOffset((page * limit) - limit)}*/}
+      {/*  />*/}
+      {/*}*/}
+      {/*{*/}
+      {/*  currentImage && <ImageViewer onClick={() => setCurrentImage(null)}>*/}
+      {/*    <img onClick={e => e.stopPropagation()} alt={currentImage.caption} src={currentImage.src}/>*/}
+      {/*  </ImageViewer>*/}
+      {/*}*/}
+      {/*<Modal ref={reportModal} title={'Report Issue'} contentStyles={css`min-width: 420px; max-width: 420px;`}*/}
+      {/*  onClose={() => setReportMode(false)}*/}
+      {/*>*/}
+      {/*  <ReportEditor bot={botInstance} screenshots={issuedScreenshots.map(toFile)}/>*/}
+      {/*</Modal>*/}
     </>
   );
 };
 
 ScreenShotTab.propTypes = {
-  setCustomBack: PropTypes.func.isRequired,
-  botInstance:   PropTypes.object.isRequired,
-  removeAll:     PropTypes.func.isRequired,
-  listen:        PropTypes.func.isRequired,
-  theme:         PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired,
-  emit:          PropTypes.func.isRequired
+  setCustomBack:  PropTypes.func.isRequired,
+  botInstance:    PropTypes.object.isRequired,
+  getFolders:     PropTypes.func.isRequired,
+  getScreenshots: PropTypes.func.isRequired,
+  folders:        PropTypes.array.isRequired,
+  screenshots:    PropTypes.array.isRequired,
+  total:          PropTypes.number.isRequired,
+  removeAll:      PropTypes.func.isRequired,
+  listen:         PropTypes.func.isRequired,
+  theme:          PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired,
+  emit:           PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  botInstance: state.bot.botInstance
+  botInstance: state.bot.botInstance,
+  folders: state.bot.folders,
+  screenshots: state.bot.screenshots,
+  total: state.bot.total,
 });
 
 const mapDispatchToProps = dispatch => ({
+  getFolders: query => dispatch(getFolders(query)),
+  getScreenshots: query => dispatch(getScreenshots(query)),
   listen: (...args) => dispatch(addExternalListener(...args)),
   emit: (...args) => dispatch(emitExternalMessage(...args)),
   removeAll: () => dispatch(removeAllExternalListeners())
