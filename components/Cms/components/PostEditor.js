@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Button } from '/components/default';
 import { Textarea, Input, Select } from '/components/default/inputs';
 import { adminGetBots } from '../../../store/bot/actions';
-import RichEditor from './RichEditor';
+import RichEditor from '../../default/inputs/RichEditor';
 
 const FormContainer = styled.div`
   display: flex;
