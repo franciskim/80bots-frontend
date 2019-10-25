@@ -13,6 +13,9 @@ import { Button, Loader, Paginator } from '/components/default';
 import { Select } from '/components/default/inputs';
 import { arrayToCsv, download } from '/lib/helpers';
 import { theme } from '/config';
+import { getFolders, getOutputJson } from '/store/bot/actions';
+import {useRouter} from 'next/router';
+import ScreenShot from '../ScreenShot';
 
 const EVENTS = {
   AVAILABLE: 'output.available',
@@ -87,6 +90,25 @@ const FiltersSection = styled(Filters)`
   align-self: flex-start;
   justify-content: space-between;
   height: 39px;
+`;
+
+const Outputs = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+  ${ props => props.styles };
+`;
+
+const Image = styled(ScreenShot)`
+  margin-bottom: 20px;
+  margin-right: 20px;
+  animation: ${Fade} 200ms ease-in-out;
+  ${ props => props.styles };
+  ${ props => props.selected && css`
+    box-shadow: 0 0 10px ${ props.theme.colors.darkishPink };
+    border: 1px solid ${ props.theme.colors.darkishPink };
+  `}
 `;
 
 const Buttons = styled.div`
@@ -169,93 +191,110 @@ const outputReducer = (state, action) => {
   }
 };
 
-const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBack }) => {
+const OutputTab = ({ botInstance, getFolders, getOutputJson, folders, jsons, total, listen, removeAllListeners, emit, setCustomBack }) => {
   const [output, setOutput] = useReducer(outputReducer, []);
-  const [folders, setFolders] = useState([]);
+  // const [folders, setFolders] = useState([]);
   const [currentFolder, setCurrentFolder] = useState(null);
+  const [currentJson, setCurrentJson] = useState(null);
   const [types, setTypes] = useState([]);
   const [currentType, setCurrentType] = useState(OUTPUT_TYPES.JSON);
-  const [exportVariant, setExportVariant] = useState(EXPORT_VARIANTS[0]);
-  const [exportType, setExportType] = useState(EXPORT_TYPES[0]);
+  const [exportVariant, setExportVariant] = useState(EXPORT_VARIANTS[1]);
+  const [exportType, setExportType] = useState(EXPORT_TYPES[1]);
   const [fullOutput, setFullOutput] = useState(null);
   const [offset, setOffset] = useReducer((state, offset) => offset, 0);
-  const [limit, setLimit] = useState(20);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const [status, setStatus] = useState(STATUSES.TYPES);
   const [fallback, setFallback] = useState(null);
 
   const exportModal = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
-    return () => { removeAllListeners(); };
+    getFolders({ instance_id: router.query.id, page, limit });
   }, []);
 
-  useEffect(() => {
-    if(botInstance && Object.keys(botInstance).length > 0) {
-      listen(EVENTS.AVAILABLE, (types) => {
-        setStatus(null);
-        setTypes(types);
-        setFallback(!types.length && 'No available types was provided');
-      });
-      listen(EVENTS.OUTPUT, output => {
-        setStatus(null);
-        setOutput({ type: EVENTS.OUTPUT, data: output });
-        setFallback(!output.length && 'No output was provided');
-      });
-      listen(EVENTS.FOLDERS, (folders) => {
-        setStatus(null);
-        setFolders(folders);
-        setFallback(!folders.length && 'No folders are created');
-        if(folders.length > 0) setCurrentFolder(folders[folders.length - 1]);
-      });
-      listen(EVENTS.FULL, (data) => {
-        if(data) setFullOutput(data);
-      });
-      listen(EVENTS.APPEND, (data) => {
-        if(data) setOutput({ type: EVENTS.APPEND, data }) ;
-        setFallback(null);
-      });
-      emit(MESSAGES.GET_AVAILABLE);
-    }
-  }, [botInstance]);
+  const selectCurrentFolder = (item) => {
+    setCurrentFolder(item);
+    getOutputJson({ instance_id: router.query.id, folder: item.id, page, limit });
+  };
 
-  useEffect(() => {
-    if(currentType && Object.keys(botInstance).length > 0) {
-      emit(MESSAGES.GET_FOLDERS, { type: currentType.value } );
-      setStatus(STATUSES.FOLDERS);
-    }
-  }, [currentType, botInstance]);
+  const backToFolders = () => {
+    setCurrentFolder(null);
+  };
 
-  useEffect(() => {
-    if(currentFolder) {
-      emit(MESSAGES.GET_OUTPUT, {
-        folder: currentFolder.name || currentFolder,
-        type: currentType.value, offset, limit
-      });
-      setStatus(STATUSES.DATA);
-    }
-  }, [currentFolder, offset]);
+  // useEffect(() => {
+  //   return () => { removeAllListeners(); };
+  // }, []);
+  //
+  // useEffect(() => {
+  //   if(botInstance && Object.keys(botInstance).length > 0) {
+  //     listen(EVENTS.AVAILABLE, (types) => {
+  //       setStatus(null);
+  //       setTypes(types);
+  //       setFallback(!types.length && 'No available types was provided');
+  //     });
+  //     listen(EVENTS.OUTPUT, output => {
+  //       setStatus(null);
+  //       setOutput({ type: EVENTS.OUTPUT, data: output });
+  //       setFallback(!output.length && 'No output was provided');
+  //     });
+  //     listen(EVENTS.FOLDERS, (folders) => {
+  //       setStatus(null);
+  //       setFolders(folders);
+  //       setFallback(!folders.length && 'No folders are created');
+  //       if(folders.length > 0) setCurrentFolder(folders[folders.length - 1]);
+  //     });
+  //     listen(EVENTS.FULL, (data) => {
+  //       if(data) setFullOutput(data);
+  //     });
+  //     listen(EVENTS.APPEND, (data) => {
+  //       if(data) setOutput({ type: EVENTS.APPEND, data }) ;
+  //       setFallback(null);
+  //     });
+  //     emit(MESSAGES.GET_AVAILABLE);
+  //   }
+  // }, [botInstance]);
+  //
+  // useEffect(() => {
+  //   if(currentType && Object.keys(botInstance).length > 0) {
+  //     emit(MESSAGES.GET_FOLDERS, { type: currentType.value } );
+  //     setStatus(STATUSES.FOLDERS);
+  //   }
+  // }, [currentType, botInstance]);
+  //
+  // useEffect(() => {
+  //   if(currentFolder) {
+  //     emit(MESSAGES.GET_OUTPUT, {
+  //       folder: currentFolder.name || currentFolder,
+  //       type: currentType.value, offset, limit
+  //     });
+  //     setStatus(STATUSES.DATA);
+  //   }
+  // }, [currentFolder, offset]);
+  //
+  // useEffect(() => {
+  //   if(fullOutput) {
+  //     switch (exportType.value) {
+  //       case TYPES.JSON: {
+  //         const parsed = fullOutput.reduce((all, current) => all.concat(current), []);
+  //         return download(JSON.stringify(parsed), 'output.json', 'application/json');
+  //       }
+  //       case TYPES.CSV: {
+  //         const parsed = fullOutput.reduce((all, current) => all.concat(current), []);
+  //         return download(arrayToCsv(parsed), 'output.csv', 'text/csv');
+  //       }
+  //       case TYPES.IMAGE: {
+  //         setExportType(EXPORT_TYPES[0]);
+  //         return download(fullOutput, 'images.zip', 'application/zip');
+  //       }
+  //     }
+  //     setFullOutput(null);
+  //   }
+  // }, [fullOutput]);
 
-  useEffect(() => {
-    if(fullOutput) {
-      switch (exportType.value) {
-        case TYPES.JSON: {
-          const parsed = fullOutput.reduce((all, current) => all.concat(current), []);
-          return download(JSON.stringify(parsed), 'output.json', 'application/json');
-        }
-        case TYPES.CSV: {
-          const parsed = fullOutput.reduce((all, current) => all.concat(current), []);
-          return download(arrayToCsv(parsed), 'output.csv', 'text/csv');
-        }
-        case TYPES.IMAGE: {
-          setExportType(EXPORT_TYPES[0]);
-          return download(fullOutput, 'images.zip', 'application/zip');
-        }
-      }
-      setFullOutput(null);
-    }
-  }, [fullOutput]);
-
-  const triggerExport = () => {
+  const triggerExport = (item) => {
+    setCurrentJson(item);
     if(currentType.value === OUTPUT_TYPES.JSON.value) {
       exportModal.current.open();
     } else {
@@ -269,14 +308,14 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
       case VARIANTS.CURRENT: {
         switch (exportType.value) {
           case TYPES.JSON:
-            return download(JSON.stringify(output), `${currentFolder}.json`, 'application/json');
-          case TYPES.CSV:
-            return download(arrayToCsv(output), `${currentFolder}.csv`, 'text/csv');
+            return download(JSON.stringify(currentJson.thumbnail.url), `${currentJson.name}.json`, 'application/json');
+          // case TYPES.CSV:
+          //   return download(arrayToCsv(output), `${currentFolder}.csv`, 'text/csv');
         }
         break;
       }
-      case VARIANTS.ALL:
-        return emit(MESSAGES.GET_FULL, { type: currentType.value });
+      // case VARIANTS.ALL:
+      //   return emit(MESSAGES.GET_FULL, { type: currentType.value });
     }
   };
 
@@ -302,30 +341,57 @@ const OutputTab = ({ botInstance, listen, removeAllListeners, emit, setCustomBac
   return(
     <>
       <Content>
+
         {
-          !status
-            ? <FiltersSection>
-              { Object.values(OUTPUT_TYPES).reverse().reduce(renderTypes, Actions) }
+          folders ? <>
+            {
+              currentFolder
+                ? <Button type={'primary'} onClick={backToFolders}>Back to folders</Button>
+                : null
+            }
+            <Outputs>
               {
-                folders.length > 0 && currentType.value === OUTPUT_TYPES.JSON.value &&
-                <ListFilter label={'Time'} onChange={({value}) => setCurrentFolder(value)}
-                  options={folders.map(item => ({value: item, label: item})).reverse()}
-                  value={{ value: currentFolder?.name || currentFolder, label: currentFolder?.name || currentFolder }}
-                />
+                !currentFolder
+                  ? folders.map((item, idx) => <Image key={idx} src={''} caption={item.name}
+                    onClick={() => selectCurrentFolder(item)}/> )
+                  : jsons.map((item, idx) => <Image key={idx} src={''} caption={item.name}
+                    onClick={() => triggerExport(item)}/> )
               }
-              <Actions>
-                <Action type={'primary'} onClick={triggerExport}>Export</Action>
-              </Actions>
-            </FiltersSection>
+            </Outputs>
+            {
+              !currentFolder
+                ? <Paginator total={total} pageSize={limit} onChangePage={(page) => { setPage(page); getFolders({ instance_id: router.query.id, page, limit }); }}/>
+                : null
+            }</>
             : <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color}
               caption={status.label}
             />
         }
-        {
-          !status && fallback
-            ? <Fallback>{ fallback }</Fallback>
-            : <CurrentType output={output} setCustomBack={setCustomBack} />
-        }
+
+        {/*{*/}
+        {/*  !status*/}
+        {/*    ? <FiltersSection>*/}
+        {/*      { Object.values(OUTPUT_TYPES).reverse().reduce(renderTypes, Actions) }*/}
+        {/*      {*/}
+        {/*        folders.length > 0 && currentType.value === OUTPUT_TYPES.JSON.value &&*/}
+        {/*        <ListFilter label={'Time'} onChange={({value}) => setCurrentFolder(value)}*/}
+        {/*          options={folders.map(item => ({value: item, label: item})).reverse()}*/}
+        {/*          value={{ value: currentFolder?.name || currentFolder, label: currentFolder?.name || currentFolder }}*/}
+        {/*        />*/}
+        {/*      }*/}
+        {/*      <Actions>*/}
+        {/*        <Action type={'primary'} onClick={triggerExport}>Export</Action>*/}
+        {/*      </Actions>*/}
+        {/*    </FiltersSection>*/}
+        {/*    : <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color}*/}
+        {/*      caption={status.label}*/}
+        {/*    />*/}
+        {/*}*/}
+        {/*{*/}
+        {/*  !status && fallback*/}
+        {/*    ? <Fallback>{ fallback }</Fallback>*/}
+        {/*    : <CurrentType output={output} setCustomBack={setCustomBack} />*/}
+        {/*}*/}
       </Content>
       {
         currentType.value === OUTPUT_TYPES.IMAGES.value
@@ -356,14 +422,23 @@ OutputTab.propTypes = {
   emit:               PropTypes.func.isRequired,
   removeAllListeners: PropTypes.func.isRequired,
   setCustomBack:      PropTypes.func.isRequired,
-  botInstance:        PropTypes.object.isRequired
+  botInstance:        PropTypes.object.isRequired,
+  getFolders:         PropTypes.func.isRequired,
+  getOutputJson:      PropTypes.func.isRequired,
+  folders:            PropTypes.array.isRequired,
+  total:              PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
-  botInstance: state.bot.botInstance
+  botInstance: state.bot.botInstance,
+  folders: state.bot.folders,
+  jsons: state.bot.jsons,
+  total: state.bot.total,
 });
 
 const mapDispatchToProps = dispatch => ({
+  getFolders: query => dispatch(getFolders(query)),
+  getOutputJson: query => dispatch(getOutputJson(query)),
   listen: (...args) => dispatch(addExternalListener(...args)),
   emit: (...args) => dispatch(emitExternalMessage(...args)),
   removeAllListeners: () => dispatch(removeAllExternalListeners())

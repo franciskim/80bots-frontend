@@ -4,6 +4,7 @@ import {
   GET_SCREENSHOTS,
   GET_IMAGES,
   GET_LOGS,
+  GET_OUTPUT_JSON,
   GET_BOTS,
   GET_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
@@ -23,6 +24,7 @@ const initialState = {
   screenshots: [],
   images: [],
   logs: {},
+  jsons: [],
   bots: [],
   tags: [],
   amis: [],
@@ -45,6 +47,7 @@ export const reducer = (state = initialState, action) => {
     case GET_SCREENSHOTS:
     case GET_IMAGES:
     case GET_LOGS:
+    case GET_OUTPUT_JSON:
     case GET_BOTS:
     case ADMIN_GET_BOTS:
     case GET_ALL_BOTS:
@@ -104,6 +107,14 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         logs: action.data.data,
+        loading: false
+      };
+
+    case success(GET_OUTPUT_JSON):
+      return {
+        ...state,
+        jsons: action.data.data,
+        total: action.data.total,
         loading: false
       };
 
@@ -174,6 +185,7 @@ export const reducer = (state = initialState, action) => {
     case error(GET_SCREENSHOTS):
     case error(GET_IMAGES):
     case error(GET_LOGS):
+    case error(GET_OUTPUT_JSON):
     case error(GET_BOT):
     case error(GET_BOTS):
     case error(ADMIN_GET_BOTS):

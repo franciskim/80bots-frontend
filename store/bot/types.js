@@ -2,6 +2,7 @@ export const GET_FOLDERS                = 'GET_FOLDERS';
 export const GET_SCREENSHOTS            = 'GET_SCREENSHOTS';
 export const GET_IMAGES                 = 'GET_IMAGES';
 export const GET_LOGS                   = 'GET_LOGS';
+export const GET_OUTPUT_JSON            = 'GET_OUTPUT_JSON';
 
 export const GET_BOTS                   = 'GET_BOTS';
 export const GET_BOT                    = 'GET_BOT';

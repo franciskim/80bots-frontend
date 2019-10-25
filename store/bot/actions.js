@@ -3,6 +3,7 @@ import {
   GET_SCREENSHOTS,
   GET_IMAGES,
   GET_LOGS,
+  GET_OUTPUT_JSON,
   GET_BOTS,
   GET_BOT,
   ADMIN_GET_BOTS,
@@ -74,6 +75,21 @@ export const getLogs = (query) => {
       method: 'GET',
       url: '/instances/logs',
       params: query,
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const getOutputJson = (query) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  return {
+    type: GET_OUTPUT_JSON,
+    request: {
+      method: 'GET',
+      url: '/instances/objects',
+      params: {...query, type: 'json'}
     },
     meta: {
       thunk: true
