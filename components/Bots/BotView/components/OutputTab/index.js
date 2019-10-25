@@ -162,7 +162,6 @@ const STATUSES = {
 const outputReducer = (state, action) => {
   switch (action.type) {
     case EVENTS.OUTPUT:
-      console.debug(action.data);
       return [...action.data];
     case EVENTS.APPEND: {
       return [...state].concat(action.data);
