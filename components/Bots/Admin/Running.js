@@ -11,7 +11,7 @@ import { Table, Thead, Th, Filters, LimitFilter, ListFilter, SearchFilter } from
 import { addNotification } from '/store/notification/actions';
 import { NOTIFICATION_TYPES } from '/config';
 import {
-  adminGetRunningBots, updateAdminRunningBot, downloadInstancePemFile, botInstanceUpdated, syncBotInstances
+  restoreBot, adminGetRunningBots, updateAdminRunningBot, downloadInstancePemFile, botInstanceUpdated, syncBotInstances
 } from '/store/bot/actions';
 import { addListener, removeAllListeners } from '/store/socket/actions';
 import { Paginator, Loader, Button } from '/components/default';
@@ -94,7 +94,7 @@ const FILTERS_LIST_OPTIONS = [
 ];
 
 const RunningBots = ({
-  theme, notify, adminGetRunningBots, downloadInstancePemFile, updateAdminRunningBot,
+  theme, notify, adminGetRunningBots, restoreBot, downloadInstancePemFile, updateAdminRunningBot,
   botInstances, total, user, addListener, removeAllListeners, botInstanceUpdated, syncBotInstances, syncLoading
 }) => {
   const [list, setFilterList] = useState('all');
@@ -126,6 +126,15 @@ const RunningBots = ({
       removeAllListeners();
     };
   }, []);
+
+  const choiceRestoreBot = instance => {
+    restoreBot(instance.id)
+      .then(() => notify({
+        type: NOTIFICATION_TYPES.INFO,
+        message: 'The instance was successfully queued for restoring'
+      }))
+      .catch(() => notify({type: NOTIFICATION_TYPES.ERROR, message: 'Restore failed'}));
+  };
 
   const downloadEventHandler = instance => {
     downloadInstancePemFile(instance.id).then(({data}) => {
@@ -191,6 +200,16 @@ const RunningBots = ({
           <A><Icon name={'eye'} color={'white'}/></A>
         </Link>
       </IconButton>
+      {
+        botInstance.status === 'terminated'
+          ?
+          <IconButton title={'Restore Bot'} type={'success'}
+            onClick={() => choiceRestoreBot(botInstance)}>
+            <Icon name={'restore'} color={'white'}/>
+          </IconButton>
+          :
+          null
+      }
       <IconButton disabled={botInstance.status === 'terminated'} title={'Download PEM'} type={'success'} onClick={() => downloadEventHandler(botInstance)}>
         <Icon name={'download'} color={'white'} />
       </IconButton>
@@ -266,23 +285,24 @@ const RunningBots = ({
           />
         </CardBody>
       </Container>
-  </>
+    </>
   );
 };
 
 RunningBots.propTypes = {
-  notify:                  PropTypes.func.isRequired,
-  adminGetRunningBots:     PropTypes.func.isRequired,
-  downloadInstancePemFile: PropTypes.func.isRequired,
-  updateAdminRunningBot:   PropTypes.func.isRequired,
-  addListener:             PropTypes.func.isRequired,
-  removeAllListeners:      PropTypes.func.isRequired,
-  botInstanceUpdated:      PropTypes.func.isRequired,
-  syncBotInstances:        PropTypes.func.isRequired,
-  botInstances:            PropTypes.array.isRequired,
-  total:                   PropTypes.number.isRequired,
-  syncLoading:             PropTypes.bool.isRequired,
-  user:                    PropTypes.object,
+  notify:                   PropTypes.func.isRequired,
+  restoreBot:               PropTypes.func.isRequired,
+  adminGetRunningBots:      PropTypes.func.isRequired,
+  downloadInstancePemFile:  PropTypes.func.isRequired,
+  updateAdminRunningBot:    PropTypes.func.isRequired,
+  addListener:              PropTypes.func.isRequired,
+  removeAllListeners:       PropTypes.func.isRequired,
+  botInstanceUpdated:       PropTypes.func.isRequired,
+  syncBotInstances:         PropTypes.func.isRequired,
+  botInstances:             PropTypes.array.isRequired,
+  total:                    PropTypes.number.isRequired,
+  syncLoading:              PropTypes.bool.isRequired,
+  user:                     PropTypes.object,
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
@@ -297,6 +317,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   notify: payload => dispatch(addNotification(payload)),
+  restoreBot: id => dispatch(restoreBot(id)),
   adminGetRunningBots: query => dispatch(adminGetRunningBots(query)),
   downloadInstancePemFile: id => dispatch(downloadInstancePemFile(id)),
   updateAdminRunningBot: (id, data) => dispatch(updateAdminRunningBot(id, data)),

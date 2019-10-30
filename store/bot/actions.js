@@ -8,6 +8,7 @@ import {
   ADMIN_GET_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
   ADMIN_POST_LAUNCH_INSTANCE,
+  RESTORE_INSTANCE,
   UPDATE_RUNNING_BOT,
   ADMIN_UPDATE_BOT,
   ADMIN_UPDATE_RUNNING_BOT,
@@ -376,3 +377,17 @@ export const setBotLimit = limit => ({
   type: LIMIT_CHANGE,
   data: limit
 });
+
+export const restoreBot = id => {
+  return {
+    type: RESTORE_INSTANCE,
+    request: {
+      method: 'POST',
+      url: '/instances/restore',
+      data: { instance_id: id }
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
