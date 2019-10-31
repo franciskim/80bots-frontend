@@ -200,16 +200,16 @@ const RunningBots = ({
           <A><Icon name={'eye'} color={'white'}/></A>
         </Link>
       </IconButton>
-      {
-        botInstance.status === 'terminated'
-          ?
-          <IconButton title={'Restore Bot'} type={'success'}
-            onClick={() => choiceRestoreBot(botInstance)}>
-            <Icon name={'restore'} color={'white'}/>
-          </IconButton>
-          :
-          null
-      }
+      {/*{*/}
+      {/*  botInstance.status === 'terminated'*/}
+      {/*    ?*/}
+      {/*    <IconButton title={'Restore Bot'} type={'success'}*/}
+      {/*      onClick={() => choiceRestoreBot(botInstance)}>*/}
+      {/*      <Icon name={'restore'} color={'white'}/>*/}
+      {/*    </IconButton>*/}
+      {/*    :*/}
+      {/*    null*/}
+      {/*}*/}
       <IconButton disabled={botInstance.status === 'terminated'} title={'Download PEM'} type={'success'} onClick={() => downloadEventHandler(botInstance)}>
         <Icon name={'download'} color={'white'} />
       </IconButton>
