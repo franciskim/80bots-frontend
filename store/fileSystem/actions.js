@@ -8,7 +8,7 @@ export const getItems = (query = { page: 1, limit: 1 }) => {
     type: GET_FILES,
     request: {
       method: 'GET',
-      url: '/instances/objects',
+      url: `/instances/${query.instance_id}/objects`,
       params: {...query, type: 'screenshots'}
     },
     meta: {

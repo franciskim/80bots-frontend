@@ -28,7 +28,7 @@ export const getFolders = (query = { page: 1, limit: 1 }) => {
     type: GET_FOLDERS,
     request: {
       method: 'GET',
-      url: '/instances/folders',
+      url: `/instances/${query.instance_id}/objects`,
       params: query
     },
     meta: {
@@ -43,7 +43,7 @@ export const getScreenshots = (query = { page: 1, limit: 1 }) => {
     type: GET_SCREENSHOTS,
     request: {
       method: 'GET',
-      url: '/instances/objects',
+      url: `/instances/${query.instance_id}/objects`,
       params: {...query, type: 'screenshots'}
     },
     meta: {
@@ -58,7 +58,7 @@ export const getImages = (query = { page: 1, limit: 1 }) => {
     type: GET_IMAGES,
     request: {
       method: 'GET',
-      url: '/instances/objects',
+      url: `/instances/${query.instance_id}/objects`,
       params: {...query, type: 'images'}
     },
     meta: {
@@ -88,7 +88,7 @@ export const getOutputJson = (query) => {
     type: GET_OUTPUT_JSON,
     request: {
       method: 'GET',
-      url: '/instances/objects',
+      url: `/instances/${query.instance_id}/objects`,
       params: {...query, type: 'json'}
     },
     meta: {
@@ -118,7 +118,7 @@ export const getRunningBots = (query = { page: 1, limit: 1 }) => {
     type: GET_RUNNING_BOTS,
     request: {
       method: 'GET',
-      url: '/bots/running',
+      url: '/instances',
       params: query
     },
     meta: {
@@ -205,7 +205,7 @@ export const adminGetRunningBots = (query = { page: 1, limit: 1 }) => {
     type: ADMIN_GET_RUNNING_BOTS,
     request: {
       method: 'GET',
-      url: '/admin/bots/running',
+      url: '/instances',
       params: query
     },
     meta: {
@@ -238,7 +238,7 @@ export const adminGetBots = (query = { page: 1, limit: 1 }) => {
     type: ADMIN_GET_BOTS,
     request: {
       method: 'GET',
-      url: '/admin/bots',
+      url: '/bots',
       params: query
     },
     meta: {
@@ -268,7 +268,7 @@ export const addBot = (data) => ({
   type: ADD_BOT,
   request: {
     method: 'POST',
-    url: '/admin/bots',
+    url: '/bots',
     data
   },
   meta: {
@@ -283,7 +283,7 @@ export const getTags = (query = { page: 1, limit: 1 }) => {
     type: GET_TAGS,
     request: {
       method: 'GET',
-      url: '/admin/bots/tags',
+      url: '/bots/tags',
       params: query
     },
     meta: {
@@ -389,7 +389,7 @@ export const adminGetBot = (id) => ({
   type: GET_BOT,
   request: {
     method: 'GET',
-    url: `/admin/instances/${id}`
+    url: `/instances/${id}`
   },
   meta: {
     thunk: true,
