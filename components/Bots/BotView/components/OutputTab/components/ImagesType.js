@@ -1,80 +1,57 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import {withTheme} from 'emotion-theming';
+import {useRouter} from 'next/router';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import ScreenShot from '../../ScreenShot';
-import styled from '@emotion/styled';
-import { css, keyframes } from '@emotion/core';
+import FileSystem from '/components/default/FileSystem';
+import {getItems, flushItems} from '/store/fileSystem/actions';
+import {Paginator} from '/components/default';
 
-const Fade = keyframes`
-  from { opacity: 0 }
-  to { opacity: 1 }
-`;
+const ImagesType = ({items, total, getItems, flushItems }) => {
+  const router = useRouter();
+  const [query, setQuery] = useState(null);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
+  useEffect(() => {
+    setQuery({ page, limit, instance_id: router.query.id, entity: 'file', type: 'images' });
+    return () => {
+      flushItems();
+    };
+  }, [router.query.id]);
 
-const Images = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: center;
-  ${ props => props.styles };
-`;
+  useEffect(() => {
+    if(query && page && limit) getItems({...query, page, limit});
+  }, [query, page, limit]);
 
-const Image = styled(ScreenShot)`
-  margin-bottom: 20px;
-  margin-right: 20px;
-  animation: ${Fade} 200ms ease-in-out;
-  ${ props => props.styles };
-  ${ props => props.selected && css`
-    box-shadow: 0 0 10px ${ props.theme.colors.darkishPink };
-    border: 1px solid ${ props.theme.colors.darkishPink };
-  `}
-`;
-
-const ImageViewer = styled.div`
-  top: 0;
-  left: 0;
-  display: flex;
-  position: fixed;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, .8);
-  img {
-    width: calc(100vw - 400px); 
-    height: calc(100vh - 200px);
-  }
-`;
-
-const ImagesType = ({ output }) => {
-  const [currentImage, setCurrentImage] = useState(null);
-
-  const toFile = (item) => {
-    const blob = new Blob([item.thumbnail || item.data], { type: 'image/jpg' });
-    return new File([blob], item.name, { type: 'image/jpg' });
+  const onFileClick = () => {};
+  const onFolderClick = (item) => {
+    setQuery({ page, limit, instance_id: router.query.id, entity: 'file', type: 'images' });
   };
 
-  const toImage = (item) => ({ src: URL.createObjectURL(toFile(item)), caption: item.name, ...item });
-
-  const renderImage = (item, idx) => {
-    if(item.data) {
-      item = toImage(item);
-      return <Image key={idx} src={item.src}
-        caption={item.caption} onClick={() => setCurrentImage(item)}
-      />;
-    }
-  };
-
-  return <>
-    <Images>{ output.map(renderImage) }</Images>
-    {
-      currentImage && <ImageViewer onClick={() => setCurrentImage(null)}>
-        <img onClick={e => e.stopPropagation()} alt={currentImage.caption} src={currentImage.src}/>
-      </ImageViewer>
-    }
-  </>;
+  return (
+    <>
+      <FileSystem items={items} onFileClick={onFileClick} onFolderClick={onFolderClick}/>
+      <Paginator total={total} pageSize={limit} onChangePage={setPage}/>
+    </>
+  );
 };
 
 ImagesType.propTypes = {
-  output: PropTypes.array.isRequired
+  items: PropTypes.array,
+  total: PropTypes.number,
+  getItems: PropTypes.func.isRequired,
+  flushItems: PropTypes.func.isRequired,
 };
 
-export default ImagesType;
+const mapStateToProps = state => ({
+  items: state.fileSystem.items,
+  total: state.fileSystem.total,
+});
+
+
+const mapDispatchToProps = dispatch => ({
+  getItems: query => dispatch(getItems(query)),
+  flushItems: () => dispatch(flushItems()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ImagesType));

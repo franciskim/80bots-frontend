@@ -12,14 +12,6 @@ import { Loader } from '/components/default';
 import { getLogs } from '/store/bot/actions';
 import {useRouter} from 'next/router';
 
-const EVENTS = {
-  LOG: 'log'
-};
-
-const MESSAGES = {
-  GET_LOGS: 'get_logs'
-};
-
 const LOG_TYPES = [
   { value: 'work', label: 'Script Work' },
   { value: 'init', label: 'Instance Init' }
