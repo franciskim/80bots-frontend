@@ -107,8 +107,8 @@ const BotsSchedule = ({ theme, notify, getSchedules, getRunningBots, createSched
   };
 
   const toOptions = bot => ({
-    value: bot.aws_instance_id,
-    label: bot.aws_instance_id + '|' + bot.name
+    value: bot.instance_id,
+    label: bot.instance_id + '|' + bot.name
   });
 
   const changeScheduleStatus = schedule => {

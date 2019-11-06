@@ -125,7 +125,7 @@ const RunningBots = ({ theme, notify, getRunningBots, updateRunningBot, botInsta
   const renderRow = (botInstance, idx) => <Tr key={idx} disabled={botInstance.status === 'pending'}>
     <td>{ botInstance.region }</td>
     <td>{ botInstance.name }</td>
-    <td>{ botInstance.credits_used }</td>
+    <td>{ botInstance.used_credit }</td>
     <td>
       <Ip onClick={() => copyToClipboard(botInstance)}>{ botInstance.ip }</Ip>
     </td>

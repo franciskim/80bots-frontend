@@ -147,7 +147,7 @@ export const updateAdminRunningBot = (id, updateData) => {
     type: ADMIN_UPDATE_RUNNING_BOT,
     request: {
       method: 'PUT',
-      url: `/admin/instances/${id}`,
+      url: `/instances/${id}`,
       data: { update: updateData }
     },
     meta: {
