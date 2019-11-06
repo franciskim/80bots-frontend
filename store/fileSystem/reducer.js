@@ -1,13 +1,12 @@
 import { success, error } from 'redux-saga-requests';
 import {
-  GET_FILES
+  GET_FILES,
+  SET_ITEMS,
 } from './types';
 
 const initialState = {
   items: [],
   total: 0,
-  page: 1,
-  limit: 10,
   loading: true,
   error: null,
 };
@@ -21,12 +20,13 @@ export const reducer = (state = initialState, action) => {
         ...state,
         items: action.data.data,
         total: action.data.total,
-        page: action.data.page,
         loading: false
       };
     case error(GET_FILES):
       return { ...state, loading: false, error: action.error };
 
+    case SET_ITEMS:
+      return { ...state, items: action.data.items || [] };
     default: return state;
   }
 };

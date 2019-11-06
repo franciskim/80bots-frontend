@@ -23,7 +23,7 @@ const initialState = {
   folders: [],
   screenshots: [],
   images: [],
-  logs: {},
+  logs: [],
   jsons: [],
   bots: [],
   tags: [],
