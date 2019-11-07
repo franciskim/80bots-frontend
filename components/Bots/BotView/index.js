@@ -193,11 +193,11 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
   return(
     <Container>
       <Header>
-        {
-          customBack || <Back type={'primary'}>
-            <Link href={'/admin/bots/running'}><A>Back</A></Link>
-          </Back>
-        }
+        {/*{*/}
+        {/*  customBack || <Back type={'primary'}>*/}
+        {/*    <Link href={'/admin/bots/running'}><A>Back</A></Link>*/}
+        {/*  </Back>*/}
+        {/*}*/}
         <H6>
           {
             Object.keys(botInstance).length

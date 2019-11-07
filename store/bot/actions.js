@@ -147,7 +147,7 @@ export const updateAdminRunningBot = (id, updateData) => {
     type: ADMIN_UPDATE_RUNNING_BOT,
     request: {
       method: 'PUT',
-      url: `/admin/instances/${id}`,
+      url: `/instances/${id}`,
       data: { update: updateData }
     },
     meta: {
@@ -190,7 +190,7 @@ export const adminLaunchInstance = (id, params) => {
     type: ADMIN_POST_LAUNCH_INSTANCE,
     request: {
       method: 'POST',
-      url: '/admin/instances/launch',
+      url: '/instances/launch',
       data: { bot_id: id, params }
     },
     meta: {
