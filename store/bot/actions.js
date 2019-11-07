@@ -190,7 +190,7 @@ export const adminLaunchInstance = (id, params) => {
     type: ADMIN_POST_LAUNCH_INSTANCE,
     request: {
       method: 'POST',
-      url: '/admin/instances/launch',
+      url: '/instances/launch',
       data: { bot_id: id, params }
     },
     meta: {
