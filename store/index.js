@@ -2,6 +2,7 @@ import createSagaMiddleware from 'redux-saga';
 import thunkMiddleware from 'redux-thunk';
 import createWebSocketMiddleware from './socket/middleware';
 import createBotMiddleware from './bot/middleware';
+import createFileSystemMiddleware from './fileSystem/middleware';
 import { requestsPromiseMiddleware } from 'redux-saga-requests';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { createLogger } from 'redux-logger';
@@ -26,6 +27,7 @@ const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
 const socketMiddleware = createWebSocketMiddleware();
 const botMiddleware = createBotMiddleware();
+const fileSystemMiddleware = createFileSystemMiddleware();
 
 const rootReducer = combineReducers({
   auth, fileSystem, notification, user, history, bot, cms, schedule, subscription, eventNotification, instanceSession, platform
@@ -37,7 +39,8 @@ export function initializeStore(initialState = undefined) {
     requestsPromiseMiddleware({ auto: true }),
     sagaMiddleware,
     socketMiddleware,
-    botMiddleware
+    botMiddleware,
+    fileSystemMiddleware
   ];
 
   // Disable Logger at server side.

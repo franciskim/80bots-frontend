@@ -10,7 +10,6 @@ import { useRouter } from 'next/router';
 import { connect } from 'react-redux';
 import { CardBody } from '/components/default/Card';
 import { getFolders, getScreenshots } from '/store/bot/actions';
-import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from '/store/socket/actions';
 import { Loader, Button, Paginator } from '/components/default';
 import { addListener, removeAllListeners } from '/store/socket/actions';
 import { Filters } from '/components/default/Table';
@@ -366,9 +365,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getFolders: query => dispatch(getFolders(query)),
   getScreenshots: query => dispatch(getScreenshots(query)),
-  listen: (...args) => dispatch(addExternalListener(...args)),
-  emit: (...args) => dispatch(emitExternalMessage(...args)),
-  removeAll: () => dispatch(removeAllExternalListeners())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Old_ScreenShotTab));

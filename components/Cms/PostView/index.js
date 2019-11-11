@@ -7,7 +7,6 @@ import { withTheme } from 'emotion-theming';
 import { theme } from '/config';
 import { Card, CardBody, CardHeader } from '/components/default/Card';
 import { getPost } from '../../../store/cms/actions';
-import {addExternalListener, closeExternalConnection, initExternalConnection} from '../../../store/socket/actions';
 import {connect} from 'react-redux';
 import {Button, Loader} from '../../default';
 import {Table, Thead} from '../../default/Table';

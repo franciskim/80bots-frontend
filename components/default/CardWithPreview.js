@@ -31,7 +31,6 @@ const Blur = styled.div`
 `;
 
 const CardWithPreview = ({ src, caption, children, ...props }) => {
-  console.log(props)
   return(
     <Container image={src} {...props}>
       <Blur>{ caption }</Blur>

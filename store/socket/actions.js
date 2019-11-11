@@ -1,41 +1,39 @@
 import {
+  SUBSCRIBE_CHANNEL,
+  UNSUBSCRIBE_CHANNEL,
   ADD_LISTENER,
+  ADD_WHISPER_LISTENER,
+  REMOVE_WHISPER_LISTENER,
   EMIT_MESSAGE,
   REMOVE_ALL_LISTENERS,
   REMOVE_LISTENER,
-  ADD_EXTERNAL_LISTENER,
-  REMOVE_ALL_EXTERNAL_LISTENERS,
-  EMIT_EXTERNAL_MESSAGE,
-  REMOVE_EXTERNAL_LISTENER,
-  INIT_EXTERNAL_CONNECTION,
-  CLOSE_EXTERNAL_CONNECTION
+  GET_CHANNEL
 } from './types';
 
-export const emitMessage = (eventName, message) => ({
-  type: EMIT_MESSAGE,
-  data: { eventName, message }
+export const subscribe = (channel, isPrivate = false) => ({
+  type: SUBSCRIBE_CHANNEL,
+  data: {
+    channel,
+    isPrivate
+  }
 });
 
-export const emitExternalMessage = (eventName, message, url, handshake) => ({
-  type: EMIT_EXTERNAL_MESSAGE,
-  data: { eventName, message, url, payload: handshake }
+export const unsubscribe = (channel) => ({
+  type: UNSUBSCRIBE_CHANNEL,
+  data: {
+    channel
+  }
 });
 
-export const removeAllListeners = () => ({
-  type: REMOVE_ALL_LISTENERS
+export const stopListeningForWhisper = (channel, signal) => ({
+  type: REMOVE_WHISPER_LISTENER,
+  data: { channel, signal }
 });
 
-export const initExternalConnection = (provider, url, handshake) => ({
-  type: INIT_EXTERNAL_CONNECTION,
-  data: { url, handshake, provider }
-});
 
-export const closeExternalConnection = () => ({
-  type: CLOSE_EXTERNAL_CONNECTION
-});
-
-export const removeAllExternalListeners = () => ({
-  type: REMOVE_ALL_EXTERNAL_LISTENERS
+export const listenForWhisper = (channel, signal, callback) => ({
+  type: ADD_WHISPER_LISTENER,
+  data: { channel, signal, callback }
 });
 
 export const addListener = (room, eventName, handler) => ({
@@ -43,10 +41,13 @@ export const addListener = (room, eventName, handler) => ({
   data: { room, eventName, handler }
 });
 
-//TODO: add ability to init multiple external connections
-export const addExternalListener = (eventName, handler) => ({
-  type: ADD_EXTERNAL_LISTENER,
-  data: { eventName, handler }
+export const emitMessage = (eventName, message) => ({
+  type: EMIT_MESSAGE,
+  data: { eventName, message }
+});
+
+export const removeAllListeners = () => ({
+  type: REMOVE_ALL_LISTENERS
 });
 
 export const removeListener = (eventName) => ({
@@ -54,7 +55,7 @@ export const removeListener = (eventName) => ({
   data: { eventName }
 });
 
-export const removeExternalListener = (eventName) => ({
-  type: REMOVE_EXTERNAL_LISTENER,
-  data: { eventName }
+export const getChannel = (channel) => ({
+  type: GET_CHANNEL,
+  data: { channel }
 });

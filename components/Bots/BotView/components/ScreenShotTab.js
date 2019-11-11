@@ -1,58 +1,107 @@
 import React, {useEffect, useState} from 'react';
-import {withTheme} from 'emotion-theming';
 import {useRouter} from 'next/router';
+import {withTheme} from 'emotion-theming';
+import styled from '@emotion/styled';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import FileSystem from '../../../default/FileSystem';
-import {getItems, flushItems} from '../../../../store/fileSystem/actions';
-import {Paginator} from '../../../default';
+import FileSystem from '/components/default/FileSystem';
+import {flush, open, close} from '/store/fileSystem/actions';
+const rootFolder = 'screenshots';
+const defaultLimit = 20;
 
-const ScreenShotTab = ({items, total, getItems, flushItems }) => {
+const Breadcrumbs = styled.div`
+  padding: 10px 15px;
+  display: flex;
+  align-content: flex-start;
+`;
+const ScreenShotTab = ({flush, channel, openItem, closeItem, openedFolder, previous, setCustomBack }) => {
+  const [breadCrumbs, setBreadcrumbs] = useState(['/']);
+  const [limit, setLimit] = useState(defaultLimit);
+
   const router = useRouter();
-  const [query, setQuery] = useState(null);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
   useEffect(() => {
-    setQuery({ page, limit, instance_id: router.query.id, entity: 'folder', type: 'entity' });
-    return () => {
-      flushItems();
-    };
+    return () => flush();
   }, [router.query.id]);
 
+  // Breadcrumbs builder;
   useEffect(() => {
-    if(query && page && limit) getItems({...query, page, limit});
-  }, [query, page, limit]);
+    if(openedFolder) {
+      const pathItems = [];
+      const parts = openedFolder.path.split('/');
+      parts.forEach((part, i) => {
+        let newPath = part;
+        if(pathItems[i-1]) {
+          newPath = `${pathItems[i-1].path}/${part}`;
+        }
+        pathItems.push({
+          path: newPath,
+          name: part
+        });
+      });
+      setBreadcrumbs(pathItems);
+    }
+    return openedFolder && !openedFolder.path.startsWith(rootFolder) ? flush() : undefined;
+  }, [openedFolder]);
 
-  const onFileClick = () => {};
-  const onFolderClick = (item) => {
-    setQuery({ page, limit, instance_id: router.query.id, parent: item.name, entity: 'file', type: 'screenshots' });
-  };
+  useEffect(() => {
+    if(channel && !!openedFolder) return;
+    openItem({ path: rootFolder }, { limit });
+  }, [channel, openedFolder]);
+
+  useEffect(() => {
+    if(!previous || openedFolder.path === rootFolder) {
+      setCustomBack(null);
+    } else {
+      setCustomBack(() => {
+        closeItem(openedFolder);
+        openItem(previous, { limit });
+      });
+    }
+  }, [openedFolder, previous]);
 
   return (
     <>
-      <FileSystem items={items} onFileClick={onFileClick} onFolderClick={onFolderClick}/>
-      <Paginator total={total} pageSize={limit} onChangePage={setPage}/>
+      <Breadcrumbs>
+        {
+          breadCrumbs.map((item, i) => {
+            return (
+              <span key={i}>
+                {item.name !== rootFolder ? <>/&nbsp;</> : null }
+                <a href='#' onClick={(e) => {e.stopPropagation(); openItem(item);}}>
+                  {item.name}
+                </a>
+                &nbsp;
+              </span>
+            );
+          })
+        }
+      </Breadcrumbs>
+      <FileSystem />
     </>
   );
 };
 
 ScreenShotTab.propTypes = {
-  items: PropTypes.array,
-  total: PropTypes.number,
-  getItems: PropTypes.func.isRequired,
-  flushItems: PropTypes.func.isRequired,
-
+  flush: PropTypes.func.isRequired,
+  channel: PropTypes.string,
+  openItem: PropTypes.func.isRequired,
+  closeItem: PropTypes.func.isRequired,
+  openedFolder: PropTypes.object,
+  previous: PropTypes.object,
+  setCustomBack: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  items: state.fileSystem.items,
-  total: state.fileSystem.total,
+  channel: state.bot.botInstance?.storage_channel,
+  openedFolder: state.fileSystem.openedFolder,
+  previous: state.fileSystem.history.slice(-1)?.[0]?.openedFolder,
 });
 
 
 const mapDispatchToProps = dispatch => ({
-  getItems: query => dispatch(getItems(query)),
-  flushItems: () => dispatch(flushItems()),
+  flush: () => dispatch(flush()),
+  openItem: (item, query) => dispatch(open(item, query)),
+  closeItem: (item) => dispatch(close(item)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ScreenShotTab));

@@ -6,11 +6,10 @@ import { CardBody } from '/components/default/Card';
 import { Filters } from '/components/default/Table';
 import { abtos } from '/lib/helpers';
 import { Textarea, Select } from '/components/default/inputs';
-import { addExternalListener, emitExternalMessage, removeAllExternalListeners } from '/store/socket/actions';
 import { theme } from '/config';
 import { Loader } from '/components/default';
 import { getLogs } from '/store/bot/actions';
-import {useRouter} from 'next/router';
+`import {useRouter} from 'next/router';`
 
 const LOG_TYPES = [
   { value: 'work', label: 'Script Work' },
@@ -131,9 +130,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getLogs: (query) => dispatch(getLogs(query)),
-  listen: (...args) => dispatch(addExternalListener(...args)),
-  emit: (...args) => dispatch(emitExternalMessage(...args)),
-  removeAll: () => dispatch(removeAllExternalListeners())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LogsTab);

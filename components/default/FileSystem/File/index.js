@@ -25,7 +25,7 @@ export const TYPE = 'file';
 
 const File = ({ item, onClick }) => {
   return(
-    <Wrapper src={item.thumbnail} caption={item.name} onClick={() => onClick(item)} />
+    <Wrapper src={item.url} caption={item.name} onClick={() => onClick(item)} />
   );
 };
 

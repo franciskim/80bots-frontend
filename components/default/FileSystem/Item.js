@@ -12,13 +12,13 @@ const ItemFallback = styled.div`
 
 const renderByType = (item, props) => {
   const {type} = item;
-  const { onFileClick, onFolderClick } = props
+  const { onClick } = props
   switch (type) {
     case FOLDER_TYPE: {
-      return <Folder item={item} onClick={onFolderClick}/>;
+      return <Folder item={item} onClick={onClick}/>;
     }
     case FILE_TYPE: {
-      return <File item={item} onClick={onFileClick}/>;
+      return <File item={item} onClick={onClick}/>;
     }
     default: {
       return (<ItemFallback>{'Can\'t process item type'}</ItemFallback>);

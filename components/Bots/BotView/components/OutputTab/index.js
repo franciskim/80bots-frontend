@@ -26,7 +26,7 @@ const Content = styled(CardBody)`
 
 const TypesNavigation = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 `;
 
@@ -45,15 +45,16 @@ const Hint = styled.span`
   color: ${ props => props.theme.colors.grey };
 `;
 
-const OutputTab = () => {
+const OutputTab = ({setCustomBack}) => {
   const [currentType, setCurrentType] = useState(OUTPUT_TYPES.IMAGES)
 
+  console.log(setCustomBack);
   const renderCurrentType = () => {
     switch (currentType.value) {
       case OUTPUT_TYPES.IMAGES.value:
-        return <ImagesType />;
+        return <ImagesType setCustomBack={setCustomBack} />;
       case OUTPUT_TYPES.JSON.value:
-        return <JsonType />;
+        return <JsonType setCustomBack={setCustomBack} />;
       default:
         return <Loader type={'spinning-bubbles'}
           width={100}

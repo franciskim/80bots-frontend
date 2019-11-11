@@ -3,6 +3,17 @@ import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Item from './Item';
 import {CardBody} from '../Card';
+import {Paginator} from '../Paginator';
+
+const Row = styled.div`
+  display: flex;
+  flex-flow: row;
+`;
+
+const Col = styled.div`
+  display: flex;
+  flex-flow: column;
+`;
 
 const Content = styled(CardBody)`
   display: flex;
@@ -13,24 +24,45 @@ const Content = styled(CardBody)`
 
 const ListWrapper = styled.div`
   display: flex;
+  flex: 1;
+  align-content: flex-start;
   flex-flow: row wrap;
   justify-content: flex-start;
   align-items: center;
   ${ props => props.styles };
 `;
 
-const List = ({ items, ...props }) => {
+const PaginatorRow = styled(Row)`
+  justify-content: flex-end;
+`;
+
+const List = ({ items, total, limit, onLimitChange, onPageChange, onItemClick }) => {
   return(
-    <Content>
-      <ListWrapper>
-        { items.map((item, i) => <Item item={item} key={i} {...props} />) }
-      </ListWrapper>
-    </Content>
+    <Col>
+      <Row>
+        <Content>
+          <ListWrapper>
+            { items.map((item, i) => <Item item={item} key={i} onClick={onItemClick} />) }
+          </ListWrapper>
+        </Content>
+      </Row>
+      <PaginatorRow>
+        <Col>
+          <Paginator total={total} pageSize={limit} onChangePage={onPageChange}/>
+        </Col>
+      </PaginatorRow>
+    </Col>
+
   );
 };
 
 List.propTypes = {
-  items: PropTypes.array.isRequired
+  items: PropTypes.array.isRequired,
+  total: PropTypes.number,
+  limit: PropTypes.number,
+  onLimitChange: PropTypes.func,
+  onPageChange: PropTypes.func,
+  onItemClick: PropTypes.func,
 };
 
 export default List;

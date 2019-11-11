@@ -1,57 +1,66 @@
 import React, {useEffect, useState} from 'react';
-import {withTheme} from 'emotion-theming';
 import {useRouter} from 'next/router';
+import {withTheme} from 'emotion-theming';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import FileSystem from '/components/default/FileSystem';
-import {getItems, flushItems} from '/store/fileSystem/actions';
-import {Paginator} from '/components/default';
+import {flush, open, close} from '/store/fileSystem/actions';
+const rootFolder = 'output/images';
+const defaultLimit = 20;
 
-const ImagesType = ({items, total, getItems, flushItems }) => {
+const ImagesType = ({flush, channel, openItem, closeItem, openedFolder, previous, setCustomBack }) => {
+  const [breadCrumbs, setBreadcrumbs] = useState(['/']);
+  const [limit, setLimit] = useState(defaultLimit);
+
   const router = useRouter();
-  const [query, setQuery] = useState(null);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
   useEffect(() => {
-    setQuery({ page, limit, instance_id: router.query.id, entity: 'file', type: 'images' });
-    return () => {
-      flushItems();
-    };
+    return () => flush();
   }, [router.query.id]);
 
   useEffect(() => {
-    if(query && page && limit) getItems({...query, page, limit});
-  }, [query, page, limit]);
+    if(channel && !!openedFolder) return;
+    openItem({ path: rootFolder }, { limit });
+  }, [channel, openedFolder]);
 
-  const onFileClick = () => {};
-  const onFolderClick = (item) => {
-    setQuery({ page, limit, instance_id: router.query.id, entity: 'file', type: 'images' });
-  };
+  useEffect(() => {
+    if(!previous || openedFolder.path === rootFolder) {
+      setCustomBack(null);
+    } else {
+      setCustomBack(() => {
+        closeItem(openedFolder);
+        openItem(previous, { limit });
+      });
+    }
+  }, [openedFolder, previous]);
 
   return (
     <>
-      <FileSystem items={items} onFileClick={onFileClick} onFolderClick={onFolderClick}/>
-      <Paginator total={total} pageSize={limit} onChangePage={setPage}/>
+      <FileSystem />
     </>
   );
 };
 
 ImagesType.propTypes = {
-  items: PropTypes.array,
-  total: PropTypes.number,
-  getItems: PropTypes.func.isRequired,
-  flushItems: PropTypes.func.isRequired,
+  flush: PropTypes.func.isRequired,
+  channel: PropTypes.string,
+  openItem: PropTypes.func.isRequired,
+  closeItem: PropTypes.func.isRequired,
+  openedFolder: PropTypes.object,
+  previous: PropTypes.object,
+  setCustomBack: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  items: state.fileSystem.items,
-  total: state.fileSystem.total,
+  channel: state.bot.botInstance?.storage_channel,
+  openedFolder: state.fileSystem.openedFolder,
+  previous: state.fileSystem.history.slice(-1)?.[0]?.openedFolder,
 });
 
 
 const mapDispatchToProps = dispatch => ({
-  getItems: query => dispatch(getItems(query)),
-  flushItems: () => dispatch(flushItems()),
+  flush: () => dispatch(flush()),
+  openItem: (item, query) => dispatch(open(item, query)),
+  closeItem: (item) => dispatch(close(item)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ImagesType));

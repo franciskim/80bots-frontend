@@ -11,9 +11,9 @@ import { useRouter } from 'next/router';
 import { withTheme } from 'emotion-theming';
 import { theme } from '/config';
 import { Card, CardBody, CardHeader } from '/components/default/Card';
-import { adminGetBot, getBot, clearBot } from '/store/bot/actions';
+import {adminGetBot, getBot, clearBot} from '/store/bot/actions';
+import { subscribe, unsubscribe } from '/store/socket/actions';
 import { Badge, Button, Loader } from '/components/default';
-import { initExternalConnection, closeExternalConnection, addExternalListener } from '/store/socket/actions';
 
 const TABS = {
   SCREENSHOTS: {
@@ -126,42 +126,23 @@ const ConnectionStatus = ({ status, color }) => <>
   <Hint>&nbsp;|&nbsp;</Hint>
 </>;
 
-const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, closeConnection, initConnection, listen }) => {
+const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, wsSubscribe, wsUnsubscribe }) => {
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
-  const [status, setStatus] = useState(STATUSES.CONNECTED);
+  const [status, setStatus] = useState(STATUSES.CONNECTING);
   const [customBack, setCustomBack] = useState(null);
   const [viewMode, setViewMode] = useState(null);
   const router = useRouter();
 
-  // useEffect(() => {
-  //   let timer;
-  //   closeConnection();
-  //   setViewMode('ONLINE')
-  //   if(botInstance.status === 'running') {
-  //     initConnection('sockets', `${botInstance.ip}:6002`, { id: botInstance.instance_id });
-  //   } else {
-  //     setViewMode('OFFLINE')
-  //     initConnection('api', process.env.API_URL, { id: botInstance.id });
-  //   }
-  //   listen('connect', () => {
-  //     clearTimeout(timer);
-  //     setStatus(STATUSES.CONNECTED);
-  //   });
-  //   listen('connect_error', () => {
-  //     setStatus(STATUSES.ERROR);
-  //   });
-  //   listen('connect_timeout', () => {
-  //     setStatus(STATUSES.TIMEOUT);
-  //   });
-  //   listen('reconnect_attempt', () => {
-  //     timer = setTimeout(() => {
-  //       setStatus(STATUSES.RECONNECT);
-  //     }, 1000);
-  //   });
-  //   listen('disconnect', () => {
-  //     setStatus(STATUSES.DISCONNECT);
-  //   });
-  // }, [botInstance]);
+  useEffect(() => {
+    const { storage_channel } = botInstance;
+    if(storage_channel) {
+      wsSubscribe(storage_channel, true);
+      setStatus(STATUSES.CONNECTED);
+    }
+    return () => {
+      return wsUnsubscribe(storage_channel);
+    };
+  }, [botInstance]);
 
   useEffect(() => {
     user.role === 'Admin'
@@ -169,7 +150,6 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
       : getBot(router.query.id);
     return () => {
       clearBot();
-      closeConnection();
     };
   }, []);
 
@@ -189,15 +169,14 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
   };
 
   const CurrentTab = activeTab.component;
-
   return(
     <Container>
       <Header>
-        {/*{*/}
-        {/*  customBack || <Back type={'primary'}>*/}
-        {/*    <Link href={'/admin/bots/running'}><A>Back</A></Link>*/}
-        {/*  </Back>*/}
-        {/*}*/}
+        {
+          <Back type={'primary'}>
+            <A onClick={() => customBack ? customBack() : router.back()}>Back</A>
+          </Back>
+        }
         <H6>
           {
             Object.keys(botInstance).length
@@ -215,7 +194,7 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
           ? <Content>
             <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color} caption={status.label} />
           </Content>
-          : <CurrentTab setCustomBack={setCustomBack}/>
+          : <CurrentTab setCustomBack={(f) => setCustomBack(() => f )}/>
       }
     </Container>
   );
@@ -223,11 +202,10 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
 
 BotView.propTypes = {
   adminGetBot:     PropTypes.func.isRequired,
-  closeConnection: PropTypes.func.isRequired,
-  initConnection:  PropTypes.func.isRequired,
   clearBot:        PropTypes.func.isRequired,
   getBot:          PropTypes.func.isRequired,
-  listen:          PropTypes.func.isRequired,
+  wsSubscribe:     PropTypes.func.isRequired,
+  wsUnsubscribe:   PropTypes.func.isRequired,
   botInstance:     PropTypes.object.isRequired,
   user:            PropTypes.object,
   theme:           PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired
@@ -247,9 +225,8 @@ const mapDispatchToProps = dispatch => ({
   getBot: (id) => dispatch(getBot(id)),
   clearBot: () => dispatch(clearBot()),
   adminGetBot: (id) => dispatch(adminGetBot(id)),
-  initConnection: (...args) => dispatch(initExternalConnection(...args)),
-  closeConnection: () => dispatch(closeExternalConnection()),
-  listen: (...args) => dispatch(addExternalListener(...args))
+  wsSubscribe: (channel, isPrivate) => dispatch(subscribe(channel, isPrivate)),
+  wsUnsubscribe: (channel) => dispatch(unsubscribe(channel)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(BotView));
