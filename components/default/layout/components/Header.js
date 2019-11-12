@@ -48,7 +48,7 @@ const Header = ({ user, sidebarOpened, onHamburgerClick, logout }) => {
     <Container>
       <HamburgerButton opened={sidebarOpened} onClick={onHamburgerClick}/>
       <div className="nav-right">
-        <DropDown toggleItem={<UserName><User><Icon name={'user'} width={15} height={15}/></User>
+        <DropDown side='right' toggleItem={<UserName><User><Icon name={'user'} width={15} height={15} /></User>
           { user ? user.name : 'User'}<Arrow><Icon name={'arrow'}/></Arrow></UserName>}
         >
           <Link href={'/profile'}>
