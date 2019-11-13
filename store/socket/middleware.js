@@ -18,7 +18,6 @@ import {
 export default function createWebSocketMiddleware() {
   return (store) => {
     const { dispatch } = store;
-    console.log(store)
     let socket;
     let rooms = {};
 

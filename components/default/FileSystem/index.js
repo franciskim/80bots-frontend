@@ -9,18 +9,18 @@ import {withTheme} from 'emotion-theming';
 
 const Container = styled.div`
   position: relative;
+  flex: 1;
 `;
 
-const FileSystem = ({ items, total, limit, page, openedFolder, openedFile, openItem, closeItem, getItems }) => {
+const FileSystem = ({ items, total, limit, page, openedFolder, openedFile, openItem, closeItem, getItems, hideNavigator }) => {
 
   return(
     <Container>
-
       {
         openedFile?.path ? <FileReaderComponent item={openedFile} onClose={closeItem}/> : null
       }
       {
-        openedFolder ? <List items={items}
+        openedFolder && !hideNavigator ? <List items={items}
           onItemClick={openItem}
           onLimitChange={(limit) => getItems({limit})}
           onPageChange={(page) => getItems({page})}
@@ -41,6 +41,7 @@ FileSystem.propTypes = {
   closeItem: PropTypes.func.isRequired,
   openedFolder: PropTypes.object,
   openedFile: PropTypes.object,
+  hideNavigator: PropTypes.bool
 };
 
 const mapStateToProps = state => ({

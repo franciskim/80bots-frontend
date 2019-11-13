@@ -48,7 +48,6 @@ const Hint = styled.span`
 const OutputTab = ({setCustomBack}) => {
   const [currentType, setCurrentType] = useState(OUTPUT_TYPES.IMAGES)
 
-  console.log(setCustomBack);
   const renderCurrentType = () => {
     switch (currentType.value) {
       case OUTPUT_TYPES.IMAGES.value:

@@ -6,6 +6,8 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import FileSystem from '/components/default/FileSystem';
 import {flush, open, close} from '/store/fileSystem/actions';
+import {Loader} from '../../../default';
+import {theme} from "../../../../config";
 const rootFolder = 'screenshots';
 const defaultLimit = 20;
 
@@ -14,34 +16,41 @@ const Breadcrumbs = styled.div`
   display: flex;
   align-content: flex-start;
 `;
-const ScreenShotTab = ({flush, channel, openItem, closeItem, openedFolder, previous, setCustomBack }) => {
-  const [breadCrumbs, setBreadcrumbs] = useState(['/']);
+
+const Container = styled.div`
+  position: relative;
+  flex: 1;
+  bottom: 0;
+  display: flex;
+`;
+
+const STATUSES = {
+  ERROR: {
+    label: 'Oops! Some error occurs...',
+    color: theme.colors.pink,
+  },
+  LOADING: {
+    label: 'Receiving Data',
+    color: theme.colors.mediumGreen
+  },
+  EMPTY: {
+    label: 'There is no data here yet, we are waiting for the updates...',
+    color: theme.colors.primary
+  },
+  READY: {
+    label: 'Success',
+    color: theme.colors.primary
+  },
+};
+
+const ScreenShotTab = ({flush, channel, openItem, closeItem, openedFolder, previous, setCustomBack, loading, items }) => {
   const [limit, setLimit] = useState(defaultLimit);
+  const [status, setStatus] = useState({});
 
   const router = useRouter();
   useEffect(() => {
     return () => flush();
   }, [router.query.id]);
-
-  // Breadcrumbs builder;
-  useEffect(() => {
-    if(openedFolder) {
-      const pathItems = [];
-      const parts = openedFolder.path.split('/');
-      parts.forEach((part, i) => {
-        let newPath = part;
-        if(pathItems[i-1]) {
-          newPath = `${pathItems[i-1].path}/${part}`;
-        }
-        pathItems.push({
-          path: newPath,
-          name: part
-        });
-      });
-      setBreadcrumbs(pathItems);
-    }
-    return openedFolder && !openedFolder.path.startsWith(rootFolder) ? flush() : undefined;
-  }, [openedFolder]);
 
   useEffect(() => {
     if(channel && !!openedFolder) return;
@@ -59,24 +68,25 @@ const ScreenShotTab = ({flush, channel, openItem, closeItem, openedFolder, previ
     }
   }, [openedFolder, previous]);
 
+  useEffect(() => {
+    if(loading) {
+      setStatus(STATUSES.LOADING);
+    } else if (items.length) {
+      setStatus(STATUSES.READY);
+    } else if (!items.length) {
+      setStatus(STATUSES.EMPTY);
+    }
+  }, [loading, items]);
+
   return (
     <>
-      <Breadcrumbs>
+      <Container>
         {
-          breadCrumbs.map((item, i) => {
-            return (
-              <span key={i}>
-                {item.name !== rootFolder ? <>/&nbsp;</> : null }
-                <a href='#' onClick={(e) => {e.stopPropagation(); openItem(item);}}>
-                  {item.name}
-                </a>
-                &nbsp;
-              </span>
-            );
-          })
+          loading || !items.length ?
+            <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color} caption={status.label} /> :
+            <FileSystem />
         }
-      </Breadcrumbs>
-      <FileSystem />
+      </Container>
     </>
   );
 };
@@ -95,6 +105,8 @@ const mapStateToProps = state => ({
   channel: state.bot.botInstance?.storage_channel,
   openedFolder: state.fileSystem.openedFolder,
   previous: state.fileSystem.history.slice(-1)?.[0]?.openedFolder,
+  loading: state.fileSystem.loading,
+  items: state.fileSystem.items,
 });
 
 

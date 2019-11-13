@@ -1,14 +1,15 @@
 import {
   OPEN_ITEM,
-  CLOSE_ITEM
+  CLOSE_ITEM,
+  FLUSH
 } from './types';
 import {
   listenForWhisper,
-  stopListeningForWhisper
+  stopListeningForWhisper,
 } from '../socket/actions';
 import {
-  getItems,
-  addItem
+  addItem,
+  open,
 } from './actions';
 
 export default function createBotMiddleware() {
@@ -24,13 +25,14 @@ export default function createBotMiddleware() {
         console.error('Unknown bot storage channel');
         return next(action);
       }
-      const item = action?.data?.item;
+      let item = action?.data?.item;
       if(!item) return next(action);
       const {path = ''} = item;
       const signal = `/${path}`;
 
       switch (action.type) {
         case OPEN_ITEM: {
+          console.debug({item, prev: currentState.fileSystem.openedFolder})
           switch (item.type) {
             case 'folder': {
               console.debug('SOCKET:STOP_LISTENING', `/${currentState.fileSystem.openedFolder?.path || ''}`)
@@ -44,9 +46,16 @@ export default function createBotMiddleware() {
             }
           }
           console.debug('SOCKET:START LISTENING', signal);
-          dispatch(listenForWhisper(channel, signal, (item) => {
-            console.debug(signal, item);
-            dispatch(addItem(item));
+          dispatch(listenForWhisper(channel, signal, (data) => {
+            const state = getState();
+            const fileSystem = state.fileSystem || {};
+            const { openedFile, openedFolder } = fileSystem;
+            if(signal === `/${openedFolder?.path}`) {
+              dispatch(addItem(data));
+            }
+            if(signal === `/${openedFile?.path}`) {
+              dispatch(open(data));
+            }
           }));
           break;
         }

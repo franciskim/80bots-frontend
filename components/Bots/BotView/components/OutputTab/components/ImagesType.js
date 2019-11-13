@@ -9,7 +9,6 @@ const rootFolder = 'output/images';
 const defaultLimit = 20;
 
 const ImagesType = ({flush, channel, openItem, closeItem, openedFolder, previous, setCustomBack }) => {
-  const [breadCrumbs, setBreadcrumbs] = useState(['/']);
   const [limit, setLimit] = useState(defaultLimit);
 
   const router = useRouter();

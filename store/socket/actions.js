@@ -30,7 +30,6 @@ export const stopListeningForWhisper = (channel, signal) => ({
   data: { channel, signal }
 });
 
-
 export const listenForWhisper = (channel, signal, callback) => ({
   type: ADD_WHISPER_LISTENER,
   data: { channel, signal, callback }

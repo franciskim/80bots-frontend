@@ -64,6 +64,7 @@ const STATUSES = {
 const Container = styled(Card)` 
   border-radius: .25rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  flex: 1;
 `;
 
 const Header = styled(CardHeader)`
