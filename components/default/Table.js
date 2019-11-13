@@ -16,6 +16,13 @@ export const Table = styled.table`
     padding: 0.75rem;
     border-top: 1px solid ${ props => props.theme.colors.table.border };
   }
+  td.td-controls {
+    white-space: nowrap;
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+  }
   @media(min-width: 1400px) {
     font-size: 14px;
   }

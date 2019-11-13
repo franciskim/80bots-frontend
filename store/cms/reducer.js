@@ -34,7 +34,7 @@ export const reducer = (state = initialState, action) => {
     case success(GET_POST):
       return {
         ...state,
-        post: action.data.data,
+        post: action.data,
         loading: false
       };
 

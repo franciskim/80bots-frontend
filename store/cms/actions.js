@@ -12,7 +12,7 @@ export const getPosts = (query = { page: 1, limit: 1 }) => {
     type: GET_POSTS,
     request: {
       method: 'GET',
-      url: '/admin/posts',
+      url: '/posts',
       params: query
     },
     meta: {
@@ -25,7 +25,7 @@ export const addPost = (data) => ({
   type: ADD_POST,
   request: {
     method: 'POST',
-    url: '/admin/posts',
+    url: '/posts',
     data
   },
   meta: {
@@ -39,8 +39,8 @@ export const updatePost = (id, updateData) => {
     type: UPDATE_POST,
     request: {
       method: 'PUT',
-      url: `/admin/posts/${id}`,
-      data: { update: updateData }
+      url: `/posts/${id}`,
+      data: updateData
     },
     meta: {
       thunk: true,
@@ -53,7 +53,7 @@ export const deletePost = (id) => ({
   type: DELETE_POST,
   request: {
     method: 'DELETE',
-    url: `/admin/posts/${id}`
+    url: `/posts/${id}`
   },
   meta: {
     thunk: true,
@@ -65,7 +65,7 @@ export const getPost = (id) => ({
   type: GET_POST,
   request: {
     method: 'GET',
-    url: `/admin/posts/${id}`
+    url: `/posts/${id}`
   },
   meta: {
     thunk: true,

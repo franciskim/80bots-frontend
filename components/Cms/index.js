@@ -120,10 +120,8 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
     <td>{ post.title }</td>
     <td>{ post.slug }</td>
     <td>{ post.type === 'bot' ? 'Bot Post' : 'Post' }</td>
-    <td>{ post.content }</td>
     <td>{ post.status }</td>
-    <td>
-
+    <td className='td-controls'>
       <IconButton title={'View Post'} type={'primary'}>
         <Link href={'/admin/cms/posts/[id]'} as={`/admin/cms/posts/${post.id}`}>
           <A><Icon name={'eye'} color={theme.colors.white}/></A>
@@ -141,7 +139,6 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
       >
         <Icon name={'garbage'} color={theme.colors.white}/>
       </IconButton>
-
     </td>
   </tr>;
 
@@ -165,7 +162,6 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
                 <OrderTh field={'title'}>Post title</OrderTh>
                 <OrderTh field={'slug'}>Slug</OrderTh>
                 <OrderTh field={'slug'}>Type</OrderTh>
-                <OrderTh field={'content'}>Content</OrderTh>
                 <OrderTh field={'status'}>Status</OrderTh>
                 <th>Action</th>
               </tr>

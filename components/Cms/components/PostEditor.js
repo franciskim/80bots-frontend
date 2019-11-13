@@ -1,188 +1,238 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import AsyncSelect from 'react-select/async';
-import { css } from '@emotion/core';
-import { connect } from 'react-redux';
+import dynamic from 'next/dynamic';
+
 import { Button } from '/components/default';
-import { Textarea, Input, Select } from '/components/default/inputs';
-import { adminGetBots } from '../../../store/bot/actions';
-import RichEditor from '../../default/inputs/RichEditor';
+import { Input, Select } from '/components/default/inputs';
+import StaticPage from '../../../pages/admin/cms/posts/staticPost';
+
+dynamic(import('jodit/build/jodit.min.css'), { ssr: false });
+const JoditEditor = dynamic(import('jodit-react'), { ssr: false });
 
 const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 20px 0 10px 0;
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0 10px 0;
 `;
 
 const InputWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  &:first-of-type {
-    margin-right: 10px;
-  }
-  &:last-of-type {
-    margin-left: 10px;
-  }
-`;
-
-const TextareaWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 `;
 
 const Label = styled.label`
-  font-size: 16px;
-  margin-bottom: 5px;
+    font-size: 16px;
+    margin-bottom: 5px;
 `;
 
 const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    .btn {
+        margin-right: 10px;
+        &:last-child {
+            margin-right: 0;
+        }
+        a {
+          color: inherit;
+          text-decoration: none;
+        }
+    }
 `;
 
-const StatusButton = styled(Button)`
-  text-transform: uppercase;
-  min-height: 38px;
+const ErrorsList = styled.div`
+    width: 100%;
+    text-align: left;
 `;
 
-const Error = styled.span`
-  font-size: 15px;
-  text-align: center;
-  color: ${ props => props.theme.colors.darkishPink };
+const Error = styled.div`
+    font-size: 15px;
+    color: ${props => props.theme.colors.darkishPink};
 `;
 
 const selectStyles = {
-  valueContainer: (provided) => ({
+  valueContainer: provided => ({
     ...provided,
     padding: '0 8px',
-    borderColor: '#ced4da'
-  })
+    borderColor: '#ced4da',
+  }),
 };
 
-const inputStyles = {
-  container: css`
-    &:first-of-type {
-      margin-right: 10px;
+const FormGroup = styled.div`
+    text-align: left;
+    margin-bottom: 10px;
+    &:last-child {
+        margin-bottom: 0;
     }
-    &:last-of-type {
-      margin-left: 10px;
-    }  
-  `,
-};
+`;
 
-const SelectWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 350px;
+const InlineInput = styled.div`
+    display: flex;
+    align-items: center;
+    .label {
+        margin-right: 5px;
+        flex-shrink: 0;
+    }
+    .form-control {
+        flex: 2;
+    }
 `;
 
 const STATUSES = [
   { value: 'draft', label: 'Draft' },
   { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'Inactive' }
+  { value: 'inactive', label: 'Inactive' },
 ];
 
-const PostEditor = ({ type, post, adminGetBots, bots, onSubmit }) => {
+const POST_TYPES = [
+  { value: 'post', label: 'Blog post' },
+  { value: 'page', label: 'Page' },
+];
 
-  const [title, setTitle] = useState(post ? post.title : '');
-  const [content, setContent] = useState(post ? post.content : '');
-  const [bot, setBot] = useState(post ? post.bot : null);
-  const [status, setStatus] = useState(post ? post.status : '');
-  const [isBotPost, setBotPost] = useState(post ? post.type === 'bot' : false);
-  const [error, setError] = useState(null);
+const JODIT_EDITOR_CONFIG = {
+  height: 400,
+  defaultMode: 3,
+};
 
-  const toOptions = item => {
-    return({
-      ...item,
-      value: typeof item === 'object' ? item.id : item,
-      label: typeof item === 'object' ? item.name : item
+const PostEditor = ({ type, post = {}, onSubmit, formErrors, onShowPreview, showPreview }) => {
+  setTimeout(() => setJoditEditorReady(true), 100);
+
+  const editor = useRef(null);
+  const [title, setTitle] = useState(post.title || '');
+  const [content, setContent] = useState(post.content || '');
+  const [postType, setPostType] = useState(post.type || 'page');
+  const [postUrl, setPostUrl] = useState(post.slug || '');
+  const [status, setStatus] = useState(post.status || 'draft');
+  const [errors, setErrors] = useState(formErrors || []);
+  const [isJoditEditorReady, setJoditEditorReady] = useState(false);
+
+  const getData = () => ({
+    title,
+    content: content,
+    status: status,
+    slug: postUrl,
+    type: postType,
+  });
+
+  const findOption = (options, value) => {
+    return options.find(option => option.value === value);
+  };
+
+  const renderErrors = (errors = {}) => {
+    return Object.keys(errors).map((el, index) => {
+      return (
+        <div key={index} className='error-list'>
+          {errors[el].map((error, key) => (
+            <div key={key} className='error-li'>
+              {error}
+            </div>
+          ))}
+        </div>
+      );
     });
   };
 
-  useEffect(() => {
-    adminGetBots({ page: 1, limit: 25 });
-  }, []);
+  // useEffect(() => {
+  //   setErrors(formErrors);
+  // }, [formErrors]);
 
-  const searchBots = (value, callback) => {
-    adminGetBots({ page: 1, limit: 25, search: value })
-      .then(action => callback(action.data.data.map(toOptions)));
-  };
-
-  const submit = () => {
-    onSubmit({
-      title,
-      content,
-      status: status.value,
-      type: isBotPost ? 'bot' : 'post',
-      botId: bot ? bot.id : null
-    });
-  };
-
-  return(
+  return (
     <>
-      <FormContainer>
-        <Input type={'text'} label={'Title *'} value={title} styles={inputStyles}
-          onChange={e => setTitle(e.target.value)}
-        />
-
-        <InputWrap>
-          <Label>Post type *</Label>
-          <StatusButton type={isBotPost ? 'danger' : 'primary'} onClick={() => setBotPost(!isBotPost)}>
-            { isBotPost ? 'Bot Post' : 'Post' }
-          </StatusButton>
-        </InputWrap>
-
-        {
-          isBotPost && <SelectWrap>
-            <Label>{'Select bot'}</Label>
-
-            <AsyncSelect onChange={option => setBot(option)} value={toOptions(bot)}
-              loadOptions={searchBots} defaultOptions={bots.map(toOptions)}
-            />
-          </SelectWrap>
-        }
-
-        <RichEditor onChange={setContent} content={content}/>
-
-        <Select options={STATUSES} value={STATUSES.find(item => item.value === status)}
-          onChange={option => setStatus(option)} styles={selectStyles} label={'Status'}
-        />
-
-        { error && <Error>{ error }</Error> }
-      </FormContainer>
-      <Buttons>
-        <Button type={'primary'} onClick={submit}>{ type === 'add' ? 'Add' : 'Update' }</Button>
-      </Buttons>
+      {showPreview ? (
+        <StaticPage {...getData()} standalonePage={false} />
+      ) : (
+        <>
+          <FormContainer>
+            <FormGroup>
+              <Input
+                type={'text'}
+                label={'Title *'}
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+              />
+            </FormGroup>
+    
+            <FormGroup>
+              <Select
+                label={'Post type *'}
+                onChange={option => setPostType(option.value)}
+                options={POST_TYPES}
+                value={findOption(POST_TYPES, postType)}
+              />
+            </FormGroup>
+    
+            {post.id && postType === 'post' && (
+              <FormGroup>
+                <div className='label'>URL</div>
+                <input type={'text'} disabled='disabled' className={'form-control'} value={postUrl} />
+              </FormGroup>
+            )}
+    
+            {postType === 'page' && (
+              <FormGroup>
+                <Label>{'URL *'}</Label>
+                <InlineInput>
+                  <div className='label'>cms/</div>
+                  <input
+                    type={'text'}
+                    className={'form-control'}
+                    value={postUrl}
+                    onChange={e => setPostUrl(e.target.value)}
+                  />
+                </InlineInput>
+              </FormGroup>
+            )}
+    
+            <FormGroup>
+              <Label>{'Content *'}</Label>
+              {isJoditEditorReady && (
+                <JoditEditor
+                  ref={editor}
+                  value={content}
+                  config={JODIT_EDITOR_CONFIG}
+                  onChange={setContent}
+                />
+              )}
+            </FormGroup>
+    
+            <FormGroup>
+              <Select
+                options={STATUSES}
+                value={findOption(STATUSES, status)}
+                onChange={option => setStatus(option.value)}
+                styles={selectStyles}
+                label={'Status'}
+              />
+            </FormGroup>
+            {errors && Object.keys(errors).length ? (
+              <ErrorsList>
+                <Error>Errors: {renderErrors(errors)}</Error>
+              </ErrorsList>
+            ) : null}
+          </FormContainer>
+          <Buttons>
+            <Button className='btn' type={'primary'} onClick={onSubmit(getData())}>
+              {type === 'add' ? 'Add' : 'Update'}
+            </Button>
+            <Button className='btn' type={'success'} onClick={() => onShowPreview(true)}>
+              Preview
+            </Button>
+          </Buttons>
+        </>
+      )}
     </>
   );
-
 };
 
 PostEditor.propTypes = {
   type: PropTypes.oneOf(['edit', 'add']).isRequired,
+  formErrors: PropTypes.object,
   post: PropTypes.object,
-  adminGetBots: PropTypes.func.isRequired,
-  bots: PropTypes.array.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  showPreview: PropTypes.bool,
+  onSubmit: PropTypes.func.isRequired,
+  onShowPreview: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
-  bots: state.bot.bots,
-});
-
-const mapDispatchToProps = dispatch => ({
-  adminGetBots: query => dispatch(adminGetBots(query)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(PostEditor);
+export default PostEditor;

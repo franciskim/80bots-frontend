@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Link from 'next/link';
-import Router, { useRouter } from 'next/router';
+import Router from 'next/router';
 import { withTheme } from 'emotion-theming';
 import {NOTIFICATION_TIMINGS, NOTIFICATION_TYPES, theme} from '/config';
 import { Card, CardBody, CardHeader } from '/components/default/Card';
@@ -35,31 +35,19 @@ const A = styled.a`
 `;
 
 const AddPost = ({ addPost }) => {
-
-  const router = useRouter();
-
-  useEffect(() => {
-
-  }, []);
-
-  // TODO: Check data
-  const convertPostData = postData => ({
-    title: postData.title,
-    content: postData.content,
-    status: postData.status,
-    type: postData.type,
-    bot_id: postData.botId
-  });
-
+  const [postFormErrors, setPostFormErrors] = useState({});
   const pageAddPost = (postData) => {
-    addPost(convertPostData(postData))
+    addPost(postData)
       .then(() => {
         addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Post added!' });
         setTimeout(() => {
           Router.push('/admin/cms');
         }, (NOTIFICATION_TIMINGS.DURATION * 2) + NOTIFICATION_TIMINGS.INFO_HIDE_DELAY);
       })
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Add failed!' }));
+      .catch((errors) => {
+        setPostFormErrors(errors.error.response.data.message);
+        addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Add failed!' });
+      });
   };
 
   return(
@@ -70,7 +58,7 @@ const AddPost = ({ addPost }) => {
         </Back>
       </Header>
       <CardBody>
-        <PostEditor type={'add'} onSubmit={pageAddPost} />
+        <PostEditor type={'add'} formErrors={(errors) => postFormErrors(errors)} onSubmit={(data) => pageAddPost(data)} />
       </CardBody>
     </Container>
   );

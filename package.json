@@ -19,6 +19,7 @@
     "draft-js": "^0.11.1",
     "draftjs-to-html": "^0.8.4",
     "emotion-theming": "^10.0.19",
+    "jodit-react": "^1.0.26",
     "laravel-echo": "^1.6.0",
     "next": "^9.0.7",
     "prop-types": "^15.7.2",
