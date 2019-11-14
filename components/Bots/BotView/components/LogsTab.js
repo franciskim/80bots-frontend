@@ -48,14 +48,12 @@ const STATUSES = {
 
 const LogsTab = ({ items, flush, channel, openItem, openedFolder, openedFile, setCustomBack, loading }) => {
   const router = useRouter();
-  const [options, setOptions] = useState([
-    {value: 'log', label: 'Bot Work'},
-    {value: 'cloud-init-output', label: 'Bot Initial'}
-  ]);
+  const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState(null);
   const [status, setStatus] = useState({});
 
   useEffect(() => {
+    console.log(openedFolder);
     if(!openedFolder || !openedFolder.path.startsWith(rootFolder)) {
       openItem({ path: rootFolder }, { limit: 10 });
     }
@@ -68,17 +66,39 @@ const LogsTab = ({ items, flush, channel, openItem, openedFolder, openedFile, se
     } else if (!items.length || !openedFile) {
       setStatus(STATUSES.EMPTY);
     }
-  }, [loading, items]);
+  }, [loading, items, openedFile]);
 
   useEffect(() => {
-    if(!items.length) return;
+    const newOptions = items.map(item => {
+      item.value = item.name;
+      if(item.value === 'cloud-init-output') {
+        item.label = 'Bot Initial';
+      } else if (item.value === 'log') {
+        item.label = 'Bot Work';
+      } else {
+        item.label = item.value;
+      }
+      return item;
+    });
+    setOptions(newOptions);
+  }, [items]);
+
+  useEffect(() => {
+    if(!options.length) return;
     if(!selected) {
       setSelected(options[0]);
-    } else {
-      const item = items.find(item => item.name === selected.value);
-      if(item) openItem(item);
     }
-  }, [items, selected]);
+  }, [options]);
+
+  useEffect(() => {
+    if(!selected) return;
+    if(!selected.path.startsWith(rootFolder)) {
+      flush();
+      setSelected(null);
+    } else {
+      openItem(selected);
+    }
+  }, [selected]);
 
   const onSelected = (option) => {
     setSelected(option);

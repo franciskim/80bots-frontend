@@ -1,7 +1,7 @@
 import {
   OPEN_ITEM,
   CLOSE_ITEM,
-  FLUSH
+  FLUSH,
 } from './types';
 import {
   listenForWhisper,
@@ -13,6 +13,9 @@ import {
 } from './actions';
 
 export default function createBotMiddleware() {
+
+  let listeners = [];
+
   return (storeApi) => {
     const { dispatch, getState } = storeApi;
     return next => action => {
@@ -32,42 +35,48 @@ export default function createBotMiddleware() {
 
       switch (action.type) {
         case OPEN_ITEM: {
-          console.debug({item, prev: currentState.fileSystem.openedFolder})
-          switch (item.type) {
-            case 'folder': {
-              console.debug('SOCKET:STOP_LISTENING', `/${currentState.fileSystem.openedFolder?.path || ''}`)
-              dispatch(stopListeningForWhisper(channel, `/${currentState.fileSystem.openedFolder?.path || ''}`));
-              break;
+          listeners.forEach(listener => {
+            if(listener.type === item.type) {
+              listener.unsubscribe();
             }
-            case 'file': {
-              console.debug('SOCKET:STOP_LISTENING', `/${currentState.fileSystem.openedFile?.path || ''}`);
-              dispatch(stopListeningForWhisper(channel, `/${currentState.fileSystem.openedFile?.path || ''}`));
-              break;
+          });
+          const listener = {
+            channel,
+            signal,
+            ...item,
+            unsubscribe: function () {
+              console.debug('SOCKET: STOP LISTEN', this.signal)
+              return dispatch(stopListeningForWhisper(this.channel, this.signal));
+            },
+            subscribe: function () {
+              console.debug('SOCKET: LISTEN', this.signal)
+              return dispatch(listenForWhisper(this.channel, this.signal, (data) => {
+                const state = getState();
+                const fileSystem = state.fileSystem || {};
+                const { openedFile, openedFolder } = fileSystem;
+                if(this.signal === `/${openedFolder?.path}`) {
+                  dispatch(addItem(data));
+                }
+                if(this.signal === `/${openedFile?.path}`) {
+                  dispatch(open(data));
+                }
+              }));
             }
-          }
-          console.debug('SOCKET:START LISTENING', signal);
-          dispatch(listenForWhisper(channel, signal, (data) => {
-            const state = getState();
-            const fileSystem = state.fileSystem || {};
-            const { openedFile, openedFolder } = fileSystem;
-            if(signal === `/${openedFolder?.path}`) {
-              dispatch(addItem(data));
-            }
-            if(signal === `/${openedFile?.path}`) {
-              dispatch(open(data));
-            }
-          }));
+          };
+          listener.subscribe();
+          listeners.push(listener);
           break;
         }
         case CLOSE_ITEM: {
-          console.debug('SOCKET:STOP LISTENING', signal);
-          dispatch(stopListeningForWhisper(channel, signal));
-          if(item.entity === 'folder') {
-            // REMOVE FOLDER LISTENING
-          } else {
-            // REMOVE FILE LISTENING
-          }
+          const listener = listeners.find(listener => listener.signal === signal && listener.type === item.type && listener.channel === channel);
+          if(listener) listener.unsubscribe();
           break;
+        }
+        case FLUSH: {
+          listeners.forEach(listener => {
+            listener.unsubscribe();
+          });
+          listeners = [];
         }
       }
       next(action);
