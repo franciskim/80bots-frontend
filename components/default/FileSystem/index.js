@@ -12,10 +12,7 @@ const Container = styled.div`
   flex: 1;
 `;
 
-const FileSystem = ({ items, total, limit, openedFolder, openedFile, openItem, closeItem, getItems, hideNavigator }) => {
-
-  const [page, setPage] = useState(1);
-
+const FileSystem = ({ items, total, limit, page, openedFolder, openedFile, openItem, closeItem, getItems, hideNavigator }) => {
   return(
     <Container>
       {
@@ -25,7 +22,7 @@ const FileSystem = ({ items, total, limit, openedFolder, openedFile, openItem, c
         openedFolder && !hideNavigator ? <List items={items}
           onItemClick={openItem}
           onLimitChange={(limit) => getItems({limit})}
-          onPageChange={(page) => { getItems({page}); setPage(page); }}
+          onPageChange={(page) => getItems({page})}
           page={page}
           total={total}
           limit={limit}/> : null
@@ -37,6 +34,8 @@ const FileSystem = ({ items, total, limit, openedFolder, openedFile, openItem, c
 FileSystem.propTypes = {
   items: PropTypes.array,
   total: PropTypes.number,
+  page: PropTypes.number,
+  limit: PropTypes.number,
   getItems: PropTypes.func.isRequired,
   flush: PropTypes.func.isRequired,
   openItem: PropTypes.func.isRequired,
@@ -53,6 +52,7 @@ const mapStateToProps = state => ({
   items: state.fileSystem.items,
   total: state.fileSystem.total,
   limit: state.fileSystem.query?.limit,
+  page: state.fileSystem.query?.page,
 });
 
 
