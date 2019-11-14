@@ -190,6 +190,7 @@ const BotsSchedule = ({ theme, addNotification, adminGetSchedules, adminCreateSc
   };
 
   const renderRow = (schedule, idx) => <tr key={idx}>
+    <td>{ schedule.user }</td>
     <td>{ schedule.instance_id }</td>
     <td>{ schedule.bot_name }</td>
     <td>
@@ -234,6 +235,7 @@ const BotsSchedule = ({ theme, addNotification, adminGetSchedules, adminCreateSc
           <Table>
             <Thead>
               <tr>
+                <OrderTh field={'user'}>User</OrderTh>
                 <OrderTh field={'instance_id'}>Instance Id</OrderTh>
                 <OrderTh field={'bot_name'}>Bot Name</OrderTh>
                 <OrderTh field={'status'}>Status</OrderTh>

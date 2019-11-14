@@ -10,7 +10,7 @@ import { withTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
 import { addNotification } from '/store/notification/actions';
 import { NOTIFICATION_TYPES } from '/config';
-import { botInstanceUpdated, getRunningBots, updateRunningBot, setBotLimit } from '/store/bot/actions';
+import { copyInstance, restoreBot, botInstanceUpdated, getRunningBots, updateRunningBot, setBotLimit } from '/store/bot/actions';
 import { addListener, removeAllListeners } from '/store/socket/actions';
 import { Paginator, Loader, Button } from '../default';
 import { Card, CardBody } from '../default/Card';
@@ -78,7 +78,7 @@ const OPTIONS = [
 ];
 
 const RunningBots = ({ theme, notify, getRunningBots, updateRunningBot, botInstances,
-  total, user, addListener, removeAllListeners, botInstanceUpdated, setLimit, limit }) => {
+  copyInstance, restoreBot, total, user, addListener, removeAllListeners, botInstanceUpdated, setLimit, limit }) => {
   const [clickedBotInstance, setClickedBotInstance] = useState(null);
   const [order, setOrder] = useState({ value: '', field: '' });
   const [page, setPage] = useState(1);
@@ -103,6 +103,27 @@ const RunningBots = ({ theme, notify, getRunningBots, updateRunningBot, botInsta
     };
   }, []);
 
+  const choiceRestoreBot = instance => {
+    restoreBot(instance.id)
+      .then(() => notify({
+        type: NOTIFICATION_TYPES.INFO,
+        message: 'The instance was successfully queued for restoring'
+      }))
+      .catch(() => notify({type: NOTIFICATION_TYPES.ERROR, message: 'Restore failed'}));
+  };
+
+  const choiceCopyInstance = instance => {
+    copyInstance(instance.id)
+      .then(() => {
+        notify({
+          type: NOTIFICATION_TYPES.INFO,
+          message: 'The instance was successfully queued for cloning'
+        });
+        getRunningBots({ page, limit });
+      })
+      .catch(() => notify({type: NOTIFICATION_TYPES.ERROR, message: 'Cloning failed'}));
+  };
+
   const changeBotInstanceStatus = (option, id) => {
     updateRunningBot(id, { status: option.value })
       .then(() => notify({
@@ -125,7 +146,7 @@ const RunningBots = ({ theme, notify, getRunningBots, updateRunningBot, botInsta
   const renderRow = (botInstance, idx) => <Tr key={idx} disabled={botInstance.status === 'pending'}>
     <td>{ botInstance.region }</td>
     <td>{ botInstance.name }</td>
-    <td>{ botInstance.credits_used }</td>
+    <td>{ botInstance.used_credit }</td>
     <td>
       <Ip onClick={() => copyToClipboard(botInstance)}>{ botInstance.ip }</Ip>
     </td>
@@ -147,6 +168,19 @@ const RunningBots = ({ theme, notify, getRunningBots, updateRunningBot, botInsta
       </IconButton>
       <IconButton type={'primary'} onClick={() => { setClickedBotInstance(botInstance); modal.current.open(); }}>
         <Icon name={'edit'} color={theme.colors.white} />
+      </IconButton>
+      {
+        botInstance.status === 'terminated'
+          ?
+          <IconButton title={'Restore Bot'} type={'success'}
+            onClick={() => choiceRestoreBot(botInstance)}>
+            <Icon name={'restore'} color={'white'}/>
+          </IconButton>
+          :
+          null
+      }
+      <IconButton title={'Copy Instance'} type={'success'} onClick={() => choiceCopyInstance(botInstance)}>
+        <Icon name={'copy'} color={'white'} />
       </IconButton>
     </td>
     { botInstance.status === 'pending' && <Td colSpan={'9'}>{ Loading }</Td> }
@@ -210,6 +244,8 @@ RunningBots.propTypes = {
   botInstanceUpdated: PropTypes.func.isRequired,
   updateRunningBot:   PropTypes.func.isRequired,
   getRunningBots:     PropTypes.func.isRequired,
+  copyInstance:       PropTypes.func.isRequired,
+  restoreBot:         PropTypes.func.isRequired,
   botInstances:       PropTypes.array.isRequired,
   addListener:        PropTypes.func.isRequired,
   setLimit:           PropTypes.func.isRequired,
@@ -231,6 +267,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   notify: payload => dispatch(addNotification(payload)),
+  copyInstance: id => dispatch(copyInstance(id)),
+  restoreBot: id => dispatch(restoreBot(id)),
   getRunningBots: query => dispatch(getRunningBots(query)),
   updateRunningBot: (id, data) => dispatch(updateRunningBot(id, data)),
   addListener: (room, eventName, handler) => dispatch(addListener(room, eventName, handler)),

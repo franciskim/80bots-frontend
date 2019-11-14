@@ -1,80 +1,65 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import {useRouter} from 'next/router';
+import {withTheme} from 'emotion-theming';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import ScreenShot from '../../ScreenShot';
-import styled from '@emotion/styled';
-import { css, keyframes } from '@emotion/core';
+import FileSystem from '/components/default/FileSystem';
+import {flush, open, close} from '/store/fileSystem/actions';
+const rootFolder = 'output/images';
+const defaultLimit = 20;
 
-const Fade = keyframes`
-  from { opacity: 0 }
-  to { opacity: 1 }
-`;
+const ImagesType = ({flush, channel, openItem, closeItem, openedFolder, previous, setCustomBack }) => {
+  const [limit, setLimit] = useState(defaultLimit);
 
-const Images = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: center;
-  ${ props => props.styles };
-`;
+  const router = useRouter();
+  useEffect(() => {
+    return () => flush();
+  }, [router.query.id]);
 
-const Image = styled(ScreenShot)`
-  margin-bottom: 20px;
-  margin-right: 20px;
-  animation: ${Fade} 200ms ease-in-out;
-  ${ props => props.styles };
-  ${ props => props.selected && css`
-    box-shadow: 0 0 10px ${ props.theme.colors.darkishPink };
-    border: 1px solid ${ props.theme.colors.darkishPink };
-  `}
-`;
+  useEffect(() => {
+    if(channel && !!openedFolder) return;
+    openItem({ path: rootFolder }, { limit });
+  }, [channel, openedFolder]);
 
-const ImageViewer = styled.div`
-  top: 0;
-  left: 0;
-  display: flex;
-  position: fixed;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, .8);
-  img {
-    width: calc(100vw - 400px); 
-    height: calc(100vh - 200px);
-  }
-`;
-
-const ImagesType = ({ output }) => {
-  const [currentImage, setCurrentImage] = useState(null);
-
-  const toFile = (item) => {
-    const blob = new Blob([item.thumbnail || item.data], { type: 'image/jpg' });
-    return new File([blob], item.name, { type: 'image/jpg' });
-  };
-
-  const toImage = (item) => ({ src: URL.createObjectURL(toFile(item)), caption: item.name, ...item });
-
-  const renderImage = (item, idx) => {
-    if(item.data) {
-      item = toImage(item);
-      return <Image key={idx} src={item.src}
-        caption={item.caption} onClick={() => setCurrentImage(item)}
-      />;
+  useEffect(() => {
+    if(!previous || openedFolder.path === rootFolder) {
+      setCustomBack(null);
+    } else {
+      setCustomBack(() => {
+        closeItem(openedFolder);
+        openItem(previous, { limit });
+      });
     }
-  };
+  }, [openedFolder, previous]);
 
-  return <>
-    <Images>{ output.map(renderImage) }</Images>
-    {
-      currentImage && <ImageViewer onClick={() => setCurrentImage(null)}>
-        <img onClick={e => e.stopPropagation()} alt={currentImage.caption} src={currentImage.src}/>
-      </ImageViewer>
-    }
-  </>;
+  return (
+    <>
+      <FileSystem />
+    </>
+  );
 };
 
 ImagesType.propTypes = {
-  output: PropTypes.array.isRequired
+  flush: PropTypes.func.isRequired,
+  channel: PropTypes.string,
+  openItem: PropTypes.func.isRequired,
+  closeItem: PropTypes.func.isRequired,
+  openedFolder: PropTypes.object,
+  previous: PropTypes.object,
+  setCustomBack: PropTypes.func.isRequired,
 };
 
-export default ImagesType;
+const mapStateToProps = state => ({
+  channel: state.bot.botInstance?.storage_channel,
+  openedFolder: state.fileSystem.openedFolder,
+  previous: state.fileSystem.history.slice(-1)?.[0]?.openedFolder,
+});
+
+
+const mapDispatchToProps = dispatch => ({
+  flush: () => dispatch(flush()),
+  openItem: (item, query) => dispatch(open(item, query)),
+  closeItem: (item) => dispatch(close(item)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ImagesType));

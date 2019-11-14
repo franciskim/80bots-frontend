@@ -1,4 +1,9 @@
 import {
+  GET_FOLDERS,
+  GET_SCREENSHOTS,
+  GET_IMAGES,
+  GET_LOGS,
+  GET_OUTPUT_JSON,
   GET_BOTS,
   GET_BOT,
   ADMIN_GET_BOTS,
@@ -8,15 +13,103 @@ import {
   ADMIN_GET_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
   ADMIN_POST_LAUNCH_INSTANCE,
+  COPY_INSTANCE,
   RESTORE_INSTANCE,
   UPDATE_RUNNING_BOT,
   ADMIN_UPDATE_BOT,
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
-  GET_TAGS, BOT_SETTINGS, UPDATE_BOT_SETTINGS, SYNC_BOT_INSTANCES, ADMIN_DELETE_BOT, AMIS, SYNC_BOTS, CLEAR_BOT,
-  ADMIN_REGIONS, ADMIN_UPDATE_REGION, ADMIN_SYNC_REGIONS, BOT_REPORT, REPORT_UPLOAD_PROGRESS, LIMIT_CHANGE
+  GET_TAGS,
+  BOT_SETTINGS,
+  UPDATE_BOT_SETTINGS,
+  SYNC_BOT_INSTANCES,
+  ADMIN_DELETE_BOT,
+  AMIS,
+  SYNC_BOTS,
+  CLEAR_BOT,
+  ADMIN_REGIONS,
+  ADMIN_UPDATE_REGION,
+  ADMIN_SYNC_REGIONS,
+  BOT_REPORT,
+  REPORT_UPLOAD_PROGRESS,
+  LIMIT_CHANGE,
 } from './types';
 import { success } from 'redux-saga-requests';
+
+export const getFolders = (query = { page: 1, limit: 1 }) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  return {
+    type: GET_FOLDERS,
+    request: {
+      method: 'GET',
+      url: `/instances/${query.instance_id}/objects`,
+      params: query
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const getScreenshots = (query = { page: 1, limit: 1 }) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  return {
+    type: GET_SCREENSHOTS,
+    request: {
+      method: 'GET',
+      url: `/instances/${query.instance_id}/objects`,
+      params: {...query, type: 'screenshots'}
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const getImages = (query = { page: 1, limit: 1 }) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  return {
+    type: GET_IMAGES,
+    request: {
+      method: 'GET',
+      url: `/instances/${query.instance_id}/objects`,
+      params: {...query, type: 'images'}
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const getLogs = (query) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  return {
+    type: GET_LOGS,
+    request: {
+      method: 'GET',
+      url: '/instances/logs',
+      params: query,
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const getOutputJson = (query) => {
+  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  return {
+    type: GET_OUTPUT_JSON,
+    request: {
+      method: 'GET',
+      url: `/instances/${query.instance_id}/objects`,
+      params: {...query, type: 'json'}
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
 
 export const getBots = (query = { page: 1, limit: 1 }) => {
   Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
@@ -39,7 +132,7 @@ export const getRunningBots = (query = { page: 1, limit: 1 }) => {
     type: GET_RUNNING_BOTS,
     request: {
       method: 'GET',
-      url: '/bots/running',
+      url: '/instances',
       params: query
     },
     meta: {
@@ -68,7 +161,7 @@ export const updateAdminRunningBot = (id, updateData) => {
     type: ADMIN_UPDATE_RUNNING_BOT,
     request: {
       method: 'PUT',
-      url: `/admin/instances/${id}`,
+      url: `/instances/${id}`,
       data: { update: updateData }
     },
     meta: {
@@ -111,7 +204,7 @@ export const adminLaunchInstance = (id, params) => {
     type: ADMIN_POST_LAUNCH_INSTANCE,
     request: {
       method: 'POST',
-      url: '/admin/instances/launch',
+      url: '/instances/launch',
       data: { bot_id: id, params }
     },
     meta: {
@@ -126,7 +219,7 @@ export const adminGetRunningBots = (query = { page: 1, limit: 1 }) => {
     type: ADMIN_GET_RUNNING_BOTS,
     request: {
       method: 'GET',
-      url: '/admin/bots/running',
+      url: '/instances',
       params: query
     },
     meta: {
@@ -159,7 +252,7 @@ export const adminGetBots = (query = { page: 1, limit: 1 }) => {
     type: ADMIN_GET_BOTS,
     request: {
       method: 'GET',
-      url: '/admin/bots',
+      url: '/bots',
       params: query
     },
     meta: {
@@ -189,7 +282,7 @@ export const addBot = (data) => ({
   type: ADD_BOT,
   request: {
     method: 'POST',
-    url: '/admin/bots',
+    url: '/bots',
     data
   },
   meta: {
@@ -204,7 +297,7 @@ export const getTags = (query = { page: 1, limit: 1 }) => {
     type: GET_TAGS,
     request: {
       method: 'GET',
-      url: '/admin/bots/tags',
+      url: '/bots/tags',
       params: query
     },
     meta: {
@@ -310,7 +403,7 @@ export const adminGetBot = (id) => ({
   type: GET_BOT,
   request: {
     method: 'GET',
-    url: `/admin/instances/${id}`
+    url: `/instances/${id}`
   },
   meta: {
     thunk: true,
@@ -377,6 +470,20 @@ export const setBotLimit = limit => ({
   type: LIMIT_CHANGE,
   data: limit
 });
+
+export const copyInstance = id => {
+  return {
+    type: COPY_INSTANCE,
+    request: {
+      method: 'POST',
+      url: '/instances/copy',
+      data: { instance_id: id }
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
 
 export const restoreBot = id => {
   return {

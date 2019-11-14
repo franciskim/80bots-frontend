@@ -143,6 +143,7 @@ Bots.propTypes = {
 const mapStateToProps = state => ({
   bots: state.bot.bots,
   total: state.bot.total,
+  limit: state.bot.limit
 });
 
 const mapDispatchToProps = dispatch => ({

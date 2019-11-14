@@ -90,7 +90,7 @@ const Login = ({ addNotification, login, reset }) => {
             <h4 className="text-center">Sign In</h4>
             <div className="form-group">
               <label htmlFor="email">Email</label>
-              <input id="email" type="email" className="form-control" onChange={e => setEmail(e.target.value)}
+              <input id="email" autoComplete="username" type="email" className="form-control" onChange={e => setEmail(e.target.value)}
                 value={email} required autoFocus
               />
             </div>
@@ -98,6 +98,7 @@ const Login = ({ addNotification, login, reset }) => {
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <input id="password" type="password" className="form-control" name="password"
+                autoComplete="current-password"
                 value={password} required autoFocus onChange={e => setPassword(e.target.value)}
               />
             </div>

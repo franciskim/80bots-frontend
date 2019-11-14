@@ -11,9 +11,9 @@ import { useRouter } from 'next/router';
 import { withTheme } from 'emotion-theming';
 import { theme } from '/config';
 import { Card, CardBody, CardHeader } from '/components/default/Card';
-import { adminGetBot, getBot, clearBot } from '/store/bot/actions';
+import {adminGetBot, getBot, clearBot} from '/store/bot/actions';
+import { subscribe, unsubscribe } from '/store/socket/actions';
 import { Badge, Button, Loader } from '/components/default';
-import { initExternalConnection, closeExternalConnection, addExternalListener } from '/store/socket/actions';
 
 const TABS = {
   SCREENSHOTS: {
@@ -64,6 +64,7 @@ const STATUSES = {
 const Container = styled(Card)` 
   border-radius: .25rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  flex: 1;
 `;
 
 const Header = styled(CardHeader)`
@@ -126,37 +127,22 @@ const ConnectionStatus = ({ status, color }) => <>
   <Hint>&nbsp;|&nbsp;</Hint>
 </>;
 
-const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, closeConnection, initConnection, listen }) => {
+const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, wsSubscribe, wsUnsubscribe }) => {
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
   const [status, setStatus] = useState(STATUSES.CONNECTING);
   const [customBack, setCustomBack] = useState(null);
+  const [viewMode, setViewMode] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
-    if(botInstance?.ip) {
-      const handshake = { id: botInstance.instance_id };
-      let timer;
-      closeConnection();
-      initConnection(`${botInstance.ip}:6002`, handshake);
-      listen('connect', () => {
-        clearTimeout(timer);
-        setStatus(STATUSES.CONNECTED);
-      });
-      listen('connect_error', () => {
-        setStatus(STATUSES.ERROR);
-      });
-      listen('connect_timeout', () => {
-        setStatus(STATUSES.TIMEOUT);
-      });
-      listen('reconnect_attempt', () => {
-        timer = setTimeout(() => {
-          setStatus(STATUSES.RECONNECT);
-        }, 1000);
-      });
-      listen('disconnect', () => {
-        setStatus(STATUSES.DISCONNECT);
-      });
+    const { storage_channel } = botInstance;
+    if(storage_channel) {
+      wsSubscribe(storage_channel, true);
+      setStatus(STATUSES.CONNECTED);
     }
+    return () => {
+      return wsUnsubscribe(storage_channel);
+    };
   }, [botInstance]);
 
   useEffect(() => {
@@ -165,7 +151,6 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
       : getBot(router.query.id);
     return () => {
       clearBot();
-      closeConnection();
     };
   }, []);
 
@@ -173,20 +158,24 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
     setCustomBack(null);
   }, [activeTab]);
 
-  const renderTab = (item, idx) => <Tab type={activeTab.title === TABS[item].title ? 'success' : 'primary'}
-    key={idx} onClick={() => setActiveTab(TABS[item])}
-  >
-    { TABS[item].title }
-  </Tab>;
+  const renderTab = (item, idx) => {
+    const isOffline = viewMode === 'OFFLINE';
+    const isDisabled = isOffline && item === 'DISPLAY';
+    return (
+      <Tab disabled={isDisabled} type={activeTab.title === TABS[item].title ? 'success' : 'primary'}
+        key={idx} onClick={() => setActiveTab(TABS[item])}>
+        { TABS[item].title }
+      </Tab>
+    );
+  };
 
   const CurrentTab = activeTab.component;
-
   return(
     <Container>
       <Header>
         {
-          customBack || <Back type={'primary'}>
-            <Link href={'/admin/bots/running'}><A>Back</A></Link>
+          <Back type={'primary'}>
+            <A onClick={() => customBack ? customBack() : router.back()}>Back</A>
           </Back>
         }
         <H6>
@@ -206,7 +195,7 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
           ? <Content>
             <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color} caption={status.label} />
           </Content>
-          : <CurrentTab setCustomBack={setCustomBack}/>
+          : <CurrentTab setCustomBack={(f) => setCustomBack(() => f )}/>
       }
     </Container>
   );
@@ -214,11 +203,10 @@ const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, clos
 
 BotView.propTypes = {
   adminGetBot:     PropTypes.func.isRequired,
-  closeConnection: PropTypes.func.isRequired,
-  initConnection:  PropTypes.func.isRequired,
   clearBot:        PropTypes.func.isRequired,
   getBot:          PropTypes.func.isRequired,
-  listen:          PropTypes.func.isRequired,
+  wsSubscribe:     PropTypes.func.isRequired,
+  wsUnsubscribe:   PropTypes.func.isRequired,
   botInstance:     PropTypes.object.isRequired,
   user:            PropTypes.object,
   theme:           PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired
@@ -238,9 +226,8 @@ const mapDispatchToProps = dispatch => ({
   getBot: (id) => dispatch(getBot(id)),
   clearBot: () => dispatch(clearBot()),
   adminGetBot: (id) => dispatch(adminGetBot(id)),
-  initConnection: (...args) => dispatch(initExternalConnection(...args)),
-  closeConnection: () => dispatch(closeExternalConnection()),
-  listen: (...args) => dispatch(addExternalListener(...args))
+  wsSubscribe: (channel, isPrivate) => dispatch(subscribe(channel, isPrivate)),
+  wsUnsubscribe: (channel) => dispatch(unsubscribe(channel)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(BotView));

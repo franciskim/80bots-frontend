@@ -1,3 +1,9 @@
+export const GET_FOLDERS                = 'GET_FOLDERS';
+export const GET_SCREENSHOTS            = 'GET_SCREENSHOTS';
+export const GET_IMAGES                 = 'GET_IMAGES';
+export const GET_LOGS                   = 'GET_LOGS';
+export const GET_OUTPUT_JSON            = 'GET_OUTPUT_JSON';
+
 export const GET_BOTS                   = 'GET_BOTS';
 export const GET_BOT                    = 'GET_BOT';
 export const CLEAR_BOT                  = 'CLEAR_BOT';
@@ -5,6 +11,7 @@ export const GET_ALL_BOTS               = 'GET_ALL_BOTS';
 export const GET_RUNNING_BOTS           = 'GET_RUNNING_BOTS';
 export const POST_LAUNCH_INSTANCE       = 'POST_LAUNCH_INSTANCE';
 export const RESTORE_INSTANCE           = 'RESTORE_INSTANCE';
+export const COPY_INSTANCE              = 'COPY_INSTANCE';
 export const UPDATE_RUNNING_BOT         = 'UPDATE_RUNNING_BOT';
 export const AMIS                       = 'GET_AMIS';
 export const LIMIT_CHANGE               = 'LIMIT_CHANGE';

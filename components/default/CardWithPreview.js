@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { Card } from '/components/default/Card';
@@ -6,7 +6,9 @@ import { Card } from '/components/default/Card';
 const Container = styled(Card)`
   display: flex;
   background-image: ${ props => props.image ? `url("${props.image}")` : 'none' };
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   width: 320px;
   height: 200px;
   transition: 100ms all;
@@ -30,17 +32,19 @@ const Blur = styled.div`
   background-color: rgba(0, 0, 0, .45);
 `;
 
-const ScreenShot = ({ src, caption, ...props }) => {
+const CardWithPreview = ({ src, caption, children, ...props }) => {
+  const [blur, setBlur] = useState(true)
   return(
-    <Container image={src} {...props}>
-      <Blur>{ caption }</Blur>
+    <Container image={src} {...props} onMouseOver={() => setBlur(false)} onMouseLeave={() => setBlur(true)}>
+      {blur && <Blur>{ caption }</Blur>}
+      {children}
     </Container>
   );
 };
 
-ScreenShot.propTypes = {
+CardWithPreview.propTypes = {
   src:     PropTypes.string.isRequired,
   caption: PropTypes.string.isRequired
 };
 
-export default ScreenShot;
+export default CardWithPreview;

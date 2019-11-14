@@ -29,15 +29,20 @@ export const DefaultTextarea = styled.textarea`
   ${props => props.isInputError && errorStyles };
 `;
 
-export const Textarea = ({ styles, label, error, ...props }) => <Wrap styles={styles && styles.container}>
-  { label && <Label styles={styles && styles.label}>{ label }</Label> }
-  <DefaultTextarea styles={styles && styles.textarea} {...props} isInputError={!!error} />
-  <Error styles={styles && styles.error}>{ error }</Error>
-</Wrap>;
+export const Textarea = React.forwardRef(({ styles, label, error, ...props }, ref) => {
+  return (
+    <Wrap styles={styles && styles.container}>
+      { label && <Label styles={styles && styles.label}>{ label }</Label> }
+      <DefaultTextarea ref={ref} styles={styles && styles.textarea} {...props} isInputError={!!error} />
+      <Error styles={styles && styles.error}>{ error }</Error>
+    </Wrap>
+  );
+});
 
 Textarea.propTypes = {
   label: PropTypes.string,
   error: PropTypes.string,
+  // ref: PropTypes.s
   styles: PropTypes.shape({
     container: PropTypes.object,
     label: PropTypes.object,

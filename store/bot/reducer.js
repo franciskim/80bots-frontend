@@ -1,8 +1,14 @@
 import { success, error } from 'redux-saga-requests';
 import {
+  GET_FOLDERS,
+  GET_SCREENSHOTS,
+  GET_IMAGES,
+  GET_LOGS,
+  GET_OUTPUT_JSON,
   GET_BOTS,
   GET_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
+  COPY_INSTANCE,
   RESTORE_INSTANCE,
   UPDATE_RUNNING_BOT,
   ADMIN_GET_BOTS,
@@ -16,6 +22,11 @@ import {
 } from './types';
 
 const initialState = {
+  folders: [],
+  screenshots: [],
+  images: [],
+  logs: [],
+  jsons: [],
   bots: [],
   tags: [],
   amis: [],
@@ -34,6 +45,11 @@ const initialState = {
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_FOLDERS:
+    case GET_SCREENSHOTS:
+    case GET_IMAGES:
+    case GET_LOGS:
+    case GET_OUTPUT_JSON:
     case GET_BOTS:
     case ADMIN_GET_BOTS:
     case GET_ALL_BOTS:
@@ -41,6 +57,7 @@ export const reducer = (state = initialState, action) => {
     case ADMIN_GET_RUNNING_BOTS:
     case GET_BOT:
     case POST_LAUNCH_INSTANCE:
+    case COPY_INSTANCE:
     case RESTORE_INSTANCE:
     case ADMIN_POST_LAUNCH_INSTANCE:
     case UPDATE_RUNNING_BOT:
@@ -64,7 +81,46 @@ export const reducer = (state = initialState, action) => {
     }
 
     case success(GET_BOT):
-      return { ...state, botInstance: action.data, loading: false };
+      return { ...state, botInstance: { ...action.data }, loading: false };
+
+    case success(GET_FOLDERS):
+      return {
+        ...state,
+        folders: action.data.data,
+        total: action.data.total,
+        loading: false
+      };
+
+    case success(GET_SCREENSHOTS):
+      return {
+        ...state,
+        screenshots: action.data.data,
+        total: action.data.total,
+        loading: false
+      };
+
+    case success(GET_IMAGES):
+      return {
+        ...state,
+        images: action.data.data,
+        total: action.data.total,
+        loading: false
+      };
+
+    case success(GET_LOGS):
+      return {
+        ...state,
+        logs: action.data.data,
+        loading: false
+      };
+
+    case success(GET_OUTPUT_JSON):
+      return {
+        ...state,
+        jsons: action.data.data,
+        total: action.data.total,
+        loading: false
+      };
 
     case success(GET_BOTS):
     case success(ADMIN_GET_BOTS):
@@ -85,6 +141,7 @@ export const reducer = (state = initialState, action) => {
         loading: false
       };
 
+    case success(COPY_INSTANCE):
     case success(RESTORE_INSTANCE):
     case success(POST_LAUNCH_INSTANCE):
     case success(ADMIN_POST_LAUNCH_INSTANCE):
@@ -130,6 +187,11 @@ export const reducer = (state = initialState, action) => {
     case success(ADMIN_REGIONS):
       return { ...state, regions: action.data.data, totalRegions: action.data.total, loading: false };
 
+    case error(GET_FOLDERS):
+    case error(GET_SCREENSHOTS):
+    case error(GET_IMAGES):
+    case error(GET_LOGS):
+    case error(GET_OUTPUT_JSON):
     case error(GET_BOT):
     case error(GET_BOTS):
     case error(ADMIN_GET_BOTS):
@@ -137,6 +199,7 @@ export const reducer = (state = initialState, action) => {
     case error(GET_RUNNING_BOTS):
     case error(ADMIN_GET_RUNNING_BOTS):
     case error(POST_LAUNCH_INSTANCE):
+    case error(COPY_INSTANCE):
     case error(RESTORE_INSTANCE):
     case error(ADMIN_POST_LAUNCH_INSTANCE):
     case error(UPDATE_RUNNING_BOT):

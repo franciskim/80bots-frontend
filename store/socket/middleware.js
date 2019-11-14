@@ -1,40 +1,73 @@
 import io from 'socket.io-client';
 import Echo from 'laravel-echo';
+import { success, error } from 'redux-saga-requests';
 import {
-  ADD_LISTENER, REMOVE_LISTENER, REMOVE_ALL_LISTENERS, EMIT_MESSAGE, ADD_EXTERNAL_LISTENER, REMOVE_EXTERNAL_LISTENER,
-  REMOVE_ALL_EXTERNAL_LISTENERS, EMIT_EXTERNAL_MESSAGE, INIT_EXTERNAL_CONNECTION, CLOSE_EXTERNAL_CONNECTION
+  ADD_LISTENER,
+  REMOVE_LISTENER,
+  REMOVE_ALL_LISTENERS,
+  EMIT_MESSAGE,
+  SUBSCRIBE_CHANNEL,
+  UNSUBSCRIBE_CHANNEL,
+  ADD_WHISPER_LISTENER,
+  REMOVE_WHISPER_LISTENER,
+  GET_CHANNEL
 } from './types';
-
+import {
+  AUTH_CHECK
+} from '../auth/types';
 export default function createWebSocketMiddleware() {
-  return ({ dispatch }) => {
+  return (store) => {
+    const { dispatch } = store;
     let socket;
-    let externalSocket;
     let rooms = {};
-
-    const init = () => {
-      socket = new Echo({
-        broadcaster: 'socket.io',
-        host: process.env.SOCKET_URL,
-        client: io,
-        auth: {
-          headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
-          }
-        }
-      });
-    };
-
-    const initExternal = (url, data = {}) => {
-      externalSocket = io(url, data);
-      externalSocket.on('connect', console.log);
-    };
 
     return next => action => {
       switch (action.type) {
+        case success(AUTH_CHECK): {
+          socket = new Echo({
+            broadcaster: 'socket.io',
+            authEndpoint: process.env.SOCKET_AUTH_URL,
+            host: process.env.SOCKET_URL,
+            client: io,
+            auth: {
+              headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+              }
+            }
+          });
+          return next(action);
+        }
+        case error(AUTH_CHECK): {
+          socket = null;
+          return next(action);
+        }
+        case GET_CHANNEL: {
+          const { channel } = action.data;
+          return rooms[channel];
+        }
+        case SUBSCRIBE_CHANNEL: {
+          const { channel, isPrivate } = action.data;
+          rooms[channel] = isPrivate ? socket.private(channel) : socket.channel(channel);
+          return next(action);
+        }
+        case UNSUBSCRIBE_CHANNEL: {
+          const { channel } = action.data;
+          rooms[channel]?.unsubscribe();
+          return next(action);
+        }
         case ADD_LISTENER: {
-          if(!socket) init();
-          if(!rooms[action.data.room]) rooms[action.data.room] = socket.channel(action.data.room);
-          return rooms[action.data.room].listen(action.data.eventName, action.data.handler);
+          if(socket && !rooms[action.data.room]) rooms[action.data.room] = socket.channel(action.data.room);
+          return rooms[action.data.room]?.listen(action.data.eventName, action.data.handler);
+        }
+        case ADD_WHISPER_LISTENER: {
+          const { channel, signal, callback } = action.data;
+          rooms[channel]?.listenForWhisper(signal, callback);
+          return next(action);
+        }
+        case REMOVE_WHISPER_LISTENER: {
+          const { channel, signal } = action.data;
+          rooms[channel]?.stopListeningForWhisper(signal);
+          return next(action);
         }
         case REMOVE_LISTENER:
           return rooms[action.data.room] && rooms[action.data.room].stopListening(action.data.eventName);
@@ -49,29 +82,6 @@ export default function createWebSocketMiddleware() {
         }
         case EMIT_MESSAGE:
           return socket.emit(action.data.eventName, action.data.message);
-
-        case INIT_EXTERNAL_CONNECTION: {
-          initExternal(action.data.url, { query: action.data.handshake } );
-          break;
-        }
-        case ADD_EXTERNAL_LISTENER: {
-          return externalSocket?.on(action.data.eventName, action.data.handler);
-        }
-        case EMIT_EXTERNAL_MESSAGE: {
-          return externalSocket?.emit(action.data.eventName, action.data.message);
-        }
-        case REMOVE_EXTERNAL_LISTENER:
-          return externalSocket?.removeListener(action.data.eventName);
-
-        case REMOVE_ALL_EXTERNAL_LISTENERS: {
-          return externalSocket?.removeAllListeners();
-        }
-
-        case CLOSE_EXTERNAL_CONNECTION: {
-          externalSocket?.disconnect();
-          externalSocket = null;
-          break;
-        }
 
         default: return next(action);
       }
