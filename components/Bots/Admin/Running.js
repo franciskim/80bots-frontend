@@ -11,7 +11,7 @@ import { Table, Thead, Th, Filters, LimitFilter, ListFilter, SearchFilter } from
 import { addNotification } from '/store/notification/actions';
 import { NOTIFICATION_TYPES } from '/config';
 import {
-  restoreBot, adminGetRunningBots, updateAdminRunningBot, downloadInstancePemFile, botInstanceUpdated, syncBotInstances
+  copyInstance, restoreBot, adminGetRunningBots, updateAdminRunningBot, downloadInstancePemFile, botInstanceUpdated, syncBotInstances
 } from '/store/bot/actions';
 import { addListener, removeAllListeners } from '/store/socket/actions';
 import { Paginator, Loader, Button } from '/components/default';
@@ -94,7 +94,7 @@ const FILTERS_LIST_OPTIONS = [
 ];
 
 const RunningBots = ({
-  theme, notify, adminGetRunningBots, restoreBot, downloadInstancePemFile, updateAdminRunningBot,
+  theme, notify, adminGetRunningBots, copyInstance, restoreBot, downloadInstancePemFile, updateAdminRunningBot,
   botInstances, total, user, addListener, removeAllListeners, botInstanceUpdated, syncBotInstances, syncLoading
 }) => {
   const [list, setFilterList] = useState('all');
@@ -134,6 +134,18 @@ const RunningBots = ({
         message: 'The instance was successfully queued for restoring'
       }))
       .catch(() => notify({type: NOTIFICATION_TYPES.ERROR, message: 'Restore failed'}));
+  };
+
+  const choiceCopyInstance = instance => {
+    copyInstance(instance.id)
+      .then(() => {
+        notify({
+          type: NOTIFICATION_TYPES.INFO,
+          message: 'The instance was successfully queued for cloning'
+        });
+        adminGetRunningBots({ page, limit, list });
+      })
+      .catch(() => notify({type: NOTIFICATION_TYPES.ERROR, message: 'Cloning failed'}));
   };
 
   const downloadEventHandler = instance => {
@@ -210,6 +222,11 @@ const RunningBots = ({
           :
           null
       }
+
+      <IconButton title={'Copy Instance'} type={'success'} onClick={() => choiceCopyInstance(botInstance)}>
+        <Icon name={'copy'} color={'white'} />
+      </IconButton>
+
       <IconButton disabled={botInstance.status === 'terminated'} title={'Download PEM'} type={'success'} onClick={() => downloadEventHandler(botInstance)}>
         <Icon name={'download'} color={'white'} />
       </IconButton>
@@ -291,6 +308,7 @@ const RunningBots = ({
 
 RunningBots.propTypes = {
   notify:                   PropTypes.func.isRequired,
+  copyInstance:             PropTypes.func.isRequired,
   restoreBot:               PropTypes.func.isRequired,
   adminGetRunningBots:      PropTypes.func.isRequired,
   downloadInstancePemFile:  PropTypes.func.isRequired,
@@ -317,6 +335,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   notify: payload => dispatch(addNotification(payload)),
+  copyInstance: id => dispatch(copyInstance(id)),
   restoreBot: id => dispatch(restoreBot(id)),
   adminGetRunningBots: query => dispatch(adminGetRunningBots(query)),
   downloadInstancePemFile: id => dispatch(downloadInstancePemFile(id)),

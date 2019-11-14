@@ -3,6 +3,7 @@ import {
   GET_BOTS,
   GET_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
+  COPY_INSTANCE,
   RESTORE_INSTANCE,
   UPDATE_RUNNING_BOT,
   ADMIN_GET_BOTS,
@@ -41,6 +42,7 @@ export const reducer = (state = initialState, action) => {
     case ADMIN_GET_RUNNING_BOTS:
     case GET_BOT:
     case POST_LAUNCH_INSTANCE:
+    case COPY_INSTANCE:
     case RESTORE_INSTANCE:
     case ADMIN_POST_LAUNCH_INSTANCE:
     case UPDATE_RUNNING_BOT:
@@ -85,6 +87,7 @@ export const reducer = (state = initialState, action) => {
         loading: false
       };
 
+    case success(COPY_INSTANCE):
     case success(RESTORE_INSTANCE):
     case success(POST_LAUNCH_INSTANCE):
     case success(ADMIN_POST_LAUNCH_INSTANCE):
@@ -137,6 +140,7 @@ export const reducer = (state = initialState, action) => {
     case error(GET_RUNNING_BOTS):
     case error(ADMIN_GET_RUNNING_BOTS):
     case error(POST_LAUNCH_INSTANCE):
+    case error(COPY_INSTANCE):
     case error(RESTORE_INSTANCE):
     case error(ADMIN_POST_LAUNCH_INSTANCE):
     case error(UPDATE_RUNNING_BOT):

@@ -8,6 +8,7 @@ import {
   ADMIN_GET_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
   ADMIN_POST_LAUNCH_INSTANCE,
+  COPY_INSTANCE,
   RESTORE_INSTANCE,
   UPDATE_RUNNING_BOT,
   ADMIN_UPDATE_BOT,
@@ -377,6 +378,20 @@ export const setBotLimit = limit => ({
   type: LIMIT_CHANGE,
   data: limit
 });
+
+export const copyInstance = id => {
+  return {
+    type: COPY_INSTANCE,
+    request: {
+      method: 'POST',
+      url: '/instances/copy',
+      data: { instance_id: id }
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
 
 export const restoreBot = id => {
   return {
