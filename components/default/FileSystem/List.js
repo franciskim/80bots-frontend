@@ -36,7 +36,7 @@ const PaginatorRow = styled(Row)`
   justify-content: flex-end;
 `;
 
-const List = ({ items, total, limit, onLimitChange, onPageChange, onItemClick }) => {
+const List = ({ items, total, limit, page, onLimitChange, onPageChange, onItemClick }) => {
   return(
     <Col>
       <Row>
@@ -48,7 +48,7 @@ const List = ({ items, total, limit, onLimitChange, onPageChange, onItemClick })
       </Row>
       <PaginatorRow>
         <Col>
-          <Paginator total={total} pageSize={limit} onChangePage={onPageChange}/>
+          <Paginator initialPage={page} total={total} pageSize={limit} onChangePage={(page) => onPageChange(page)}/>
         </Col>
       </PaginatorRow>
     </Col>
@@ -60,6 +60,7 @@ List.propTypes = {
   items: PropTypes.array.isRequired,
   total: PropTypes.number,
   limit: PropTypes.number,
+  page: PropTypes.number,
   onLimitChange: PropTypes.func,
   onPageChange: PropTypes.func,
   onItemClick: PropTypes.func,
