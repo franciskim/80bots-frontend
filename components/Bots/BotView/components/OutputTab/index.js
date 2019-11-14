@@ -12,10 +12,10 @@ const OUTPUT_TYPES = {
     value: 'images',
     label: 'Images'
   },
-  JSON: {
-    value: 'json',
-    label: 'JSON',
-  }
+  // JSON: {
+  //   value: 'json',
+  //   label: 'JSON',
+  // }
 };
 
 const Content = styled(CardBody)`
