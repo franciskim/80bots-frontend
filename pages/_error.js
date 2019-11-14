@@ -22,6 +22,7 @@ const notifySentry = (err, req, statusCode, user) => {
     }
     if (user) {
       scope.setUser({ id: user.id, email: user.email });
+      scope.setTag('email', user.email);
     }
   });
 
