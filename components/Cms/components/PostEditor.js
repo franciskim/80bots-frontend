@@ -49,8 +49,12 @@ const CONTENT_EDITOR_CONFIG = {
 };
 
 const STYLES_EDITOR_CONFIG = {
-  height: 300,
+  height: 250,
   defaultMode: 2,
+  toolbar: false,
+  showCharsCounter: false,
+  showWordsCounter: false,
+  showXPathInStatusbar: false,
   sourceEditorNativeOptions: {
     mode: 'ace/mode/css',
   }
@@ -99,7 +103,7 @@ const PostEditor = ({ type, post = {}, onSubmit, formErrors, onShowPreview, show
   return (
     <>
       {showPreview ? (
-        <StaticPage {...getPostData()} standalonePage={false} />
+        <StaticPage {...getPostData()} />
       ) : (
         <>
           <FormContainer>

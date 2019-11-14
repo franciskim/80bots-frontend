@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Error from 'next/error';
 import * as Sentry from '@sentry/browser';
 import { Static } from '../components/Static';
-
 
 if(process.env.NODE_ENV === 'production') {
   Sentry.init({ dsn: process.env.SENTRY_DSN, attachStacktrace: true, release: new Date().toDateString() });
@@ -33,7 +31,6 @@ const notifySentry = (err, req, statusCode, user) => {
   Sentry.captureException(err);
 };
 
-// const ErrorPage = ({ statusCode }) => <Error statusCode={statusCode} />;
 const ErrorPage = (props) => {
   return <Static {...props}  />;
 };

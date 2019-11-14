@@ -1,7 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
+import('jodit/build/jodit.min.css');
 
-dynamic(import('jodit/build/jodit.min.css'), { ssr: false });
 const JoditEditorReact = dynamic(import('jodit-react'), { ssr: false });
 
 export const JoditEditor = ({ value, onChange, config }) => {

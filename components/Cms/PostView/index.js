@@ -8,8 +8,7 @@ import { Card, CardBody, CardHeader } from '/components/default/Card';
 import { getPost } from '../../../store/cms/actions';
 import { connect } from 'react-redux';
 import { Button } from '../../default';
-import { Table } from '../../default/Table';
-import { JoditEditor } from '../../commonBlocks/JoditEditor';
+import StaticPage from '../../../pages/admin/cms/posts/staticPost';
 
 const Container = styled(Card)`
   border-radius: 0.25rem;
@@ -37,13 +36,6 @@ const A = styled.a`
   text-decoration: none;
 `;
 
-const JODIT_EDITOR_CONFIG = {
-  height: 300,
-  defaultMode: 2,
-  readonly: true,
-  toolbar: false
-};
-
 const PostView = ({ getPost, post, postLoading }) => {
   const router = useRouter();
 
@@ -52,55 +44,27 @@ const PostView = ({ getPost, post, postLoading }) => {
   }, []);
 
   return (
-    <>
-      {
-        !postLoading && post.id && (
-          <>
-            <Container>
-              <Header>
-                <Back type={'primary'}>
-                  <Link href={'/admin/cms'}>
-                    <A>Back</A>
-                  </Link>
-                </Back>
-              </Header>
-              <CardBody>
-                <Table responsive>
-                  <tbody>
-                    <tr>
-                      <td>Title</td>
-                      <td>{post.title}</td>
-                    </tr>
-                    <tr>
-                      <td>Slug</td>
-                      <td>{post.slug}</td>
-                    </tr>
-                    <tr>
-                      <td>Content</td>
-                      <td>
-                        <JoditEditor
-                          value={post.content}
-                          config={JODIT_EDITOR_CONFIG}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Status</td>
-                      <td>{post.status}</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Container>
-          </>
-        )
-      }
-      {
-        !postLoading && !post.id && (
-          <div>Page with this id not found!</div>
-        )
-      }
-    </>
+    <Container>
+      <Header>
+        <Back type={'primary'}>
+          <Link href={'/admin/cms'}>
+            <A>Back</A>
+          </Link>
+        </Back>
+      </Header>
+      <CardBody>
+        {
+          !postLoading && post.id && (
+            <StaticPage {...post} />
+          )
+        }
+        {
+          !postLoading && !post.id && (
+            <div>Page with this id not found!</div>
+          )
+        }
+      </CardBody>
+    </Container>
   );
 };
 
