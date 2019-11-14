@@ -39,14 +39,20 @@ const Page = styled.div`
     }
 `;
 
-const StaticPage = ({ standalonePage = true, title, content, styles, scripts }) => {
+const CustomStyles = styled.div`
+  ${props => props.customStyle};
+`;
+
+const StaticPage = ({ standalonePage = true, title, content, style, scripts }) => {
   document.title = title;
   return (
-    <Page className='page' styles={styles}>
-      <div className='page-container'>
-        <div className='page-content' dangerouslySetInnerHTML={{ __html: content }}></div>
-      </div>
-    </Page>
+    <CustomStyles customStyle={style}>
+      <Page className='page' standalonePage={standalonePage}>
+        <div className='page-container'>
+          <div className='page-content' dangerouslySetInnerHTML={{ __html: content }}></div>
+        </div>
+      </Page>
+    </CustomStyles>
   );
 };
 
@@ -54,7 +60,7 @@ StaticPage.propTypes = {
   standalonePage: PropTypes.bool,
   title: PropTypes.string,
   content: PropTypes.string,
-  styles: PropTypes.string,
+  style: PropTypes.string,
   scripts: PropTypes.string,
 };
 

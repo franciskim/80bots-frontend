@@ -9,6 +9,7 @@ import { getPost } from '../../../store/cms/actions';
 import { connect } from 'react-redux';
 import { Button } from '../../default';
 import { Table } from '../../default/Table';
+import { JoditEditor } from '../../commonBlocks/JoditEditor';
 
 const Container = styled(Card)`
   border-radius: 0.25rem;
@@ -35,6 +36,13 @@ const A = styled.a`
   color: inherit;
   text-decoration: none;
 `;
+
+const JODIT_EDITOR_CONFIG = {
+  height: 300,
+  defaultMode: 2,
+  readonly: true,
+  toolbar: false
+};
 
 const PostView = ({ getPost, post, postLoading }) => {
   const router = useRouter();
@@ -69,7 +77,12 @@ const PostView = ({ getPost, post, postLoading }) => {
                     </tr>
                     <tr>
                       <td>Content</td>
-                      <td>{post.content}</td>
+                      <td>
+                        <JoditEditor
+                          value={post.content}
+                          config={JODIT_EDITOR_CONFIG}
+                        />
+                      </td>
                     </tr>
                     <tr>
                       <td>Status</td>
@@ -78,11 +91,6 @@ const PostView = ({ getPost, post, postLoading }) => {
                   </tbody>
                 </Table>
               </CardBody>
-            </Container>
-
-            <Container>
-              <Header>Messages</Header>
-              <CardBody>sdvsdv</CardBody>
             </Container>
           </>
         )

@@ -10,7 +10,7 @@ export const Static = ({ url, statusCode }) => {
     const slug = url.replace('/', '');
     axios
       .get(`/posts/show?slug=${slug}`)
-      .then(({ data }) => setContent(<StaticPage {...data} />))
+      .then(({ data }) => setContent(<StaticPage {...data} standalonePage />))
       .catch(() => setContent(<Error statusCode={statusCode} />));
   }, []);
 

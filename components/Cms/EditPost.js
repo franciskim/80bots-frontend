@@ -38,7 +38,7 @@ const A = styled.a`
 const EditPost = ({ getPost, updatePost, forgetPost, post }) => {
   const router = useRouter();
   const theme = useTheme();
-  const [postFormErrors, setPostFormErrors] = useState([]);
+  const [postFormErrors, setPostFormErrors] = useState({});
   const [showPreview, setShowPreview] = useState(false);
 
   const pageEditPost = postData => {
@@ -78,8 +78,8 @@ const EditPost = ({ getPost, updatePost, forgetPost, post }) => {
             type={'edit'}
             formErrors={postFormErrors}
             post={post}
+            onSubmit={pageEditPost}
             showPreview={showPreview}
-            onSubmit={(data) => pageEditPost(data)}
             onShowPreview={setShowPreview}
           />
         ) : (
