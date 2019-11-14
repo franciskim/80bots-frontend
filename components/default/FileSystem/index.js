@@ -12,7 +12,9 @@ const Container = styled.div`
   flex: 1;
 `;
 
-const FileSystem = ({ items, total, limit, page, openedFolder, openedFile, openItem, closeItem, getItems, hideNavigator }) => {
+const FileSystem = ({ items, total, limit, openedFolder, openedFile, openItem, closeItem, getItems, hideNavigator }) => {
+
+  const [page, setPage] = useState(1);
 
   return(
     <Container>
@@ -23,7 +25,7 @@ const FileSystem = ({ items, total, limit, page, openedFolder, openedFile, openI
         openedFolder && !hideNavigator ? <List items={items}
           onItemClick={openItem}
           onLimitChange={(limit) => getItems({limit})}
-          onPageChange={(page) => getItems({page})}
+          onPageChange={(page) => { getItems({page}); setPage(page); }}
           page={page}
           total={total}
           limit={limit}/> : null
