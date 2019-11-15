@@ -36,8 +36,8 @@ export const TYPE = 'folder';
 const Folder = ({ item, onClick = () => null }) => {
   const defaultThumbnail = '/images/thumbnails/folder.png';
   return(
-    <Wrapper>
-      <img src={item.thumbnail || defaultThumbnail} width="320" alt="" onClick={() => onClick(item)}/>
+    <Wrapper onClick={() => onClick(item)}>
+      <img src={item.thumbnail || defaultThumbnail} width="320" alt=""/>
       <Caption>{item.name}</Caption>
     </Wrapper>
   );

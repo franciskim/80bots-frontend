@@ -12,7 +12,7 @@ export const flush = () => {
   };
 };
 
-export const open = (item, query) => (dispatch, getState) => {
+export const open = (item, query) => (dispatch) => {
   if(!['folder', 'file'].includes(item.type)) {
     item.type = 'folder';
   }
