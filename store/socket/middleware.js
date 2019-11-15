@@ -21,20 +21,23 @@ export default function createWebSocketMiddleware() {
     let socket;
     let rooms = {};
 
+    const connect = () => {
+      return socket = new Echo({
+        broadcaster: 'socket.io',
+        authEndpoint: process.env.SOCKET_AUTH_URL,
+        host: process.env.SOCKET_URL,
+        client: io,
+        auth: {
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+          }
+        }
+      });
+    };
     return next => action => {
       switch (action.type) {
         case success(AUTH_CHECK): {
-          socket = new Echo({
-            broadcaster: 'socket.io',
-            authEndpoint: process.env.SOCKET_AUTH_URL,
-            host: process.env.SOCKET_URL,
-            client: io,
-            auth: {
-              headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-              }
-            }
-          });
+          socket = connect();
           return next(action);
         }
         case error(AUTH_CHECK): {
@@ -47,6 +50,9 @@ export default function createWebSocketMiddleware() {
         }
         case SUBSCRIBE_CHANNEL: {
           const { channel, isPrivate } = action.data;
+          if(!socket) {
+            socket = connect();
+          }
           rooms[channel] = isPrivate ? socket.private(channel) : socket.channel(channel);
           return next(action);
         }
