@@ -51,6 +51,7 @@ export default function createBotMiddleware() {
             subscribe: function () {
               console.debug('SOCKET: LISTEN', this.signal)
               return dispatch(listenForWhisper(this.channel, this.signal, (data) => {
+                console.log({signal, data})
                 const state = getState();
                 const fileSystem = state.fileSystem || {};
                 const { openedFile, openedFolder } = fileSystem;

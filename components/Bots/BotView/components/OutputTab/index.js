@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from '@emotion/styled';
 import ImagesType from './components/ImagesType';
 import JsonType from './components/JsonType';
@@ -8,14 +8,14 @@ import { CardBody } from '/components/default/Card';
 import { Button, Loader } from '/components/default';
 
 const OUTPUT_TYPES = {
+  JSON: {
+    value: 'json',
+    label: 'JSON',
+  },
   IMAGES: {
     value: 'images',
     label: 'Images'
   },
-  // JSON: {
-  //   value: 'json',
-  //   label: 'JSON',
-  // }
 };
 
 const Content = styled(CardBody)`
@@ -46,7 +46,7 @@ const Hint = styled.span`
 `;
 
 const OutputTab = ({setCustomBack}) => {
-  const [currentType, setCurrentType] = useState(OUTPUT_TYPES.IMAGES)
+  const [currentType, setCurrentType] = useState(OUTPUT_TYPES.JSON)
 
   const renderCurrentType = () => {
     switch (currentType.value) {

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ImageViewer from './ImageViewer';
 import TextViewer from './TextViewer';
+import JsonViewer from './JsonViewer';
 import { lookup as getMime } from 'mime-types';
 import styled from "@emotion/styled";
 
@@ -21,7 +22,9 @@ const openFile = (item, onClose) => {
     case 'image/webp':
       return <ImageViewer item={item} onClose={onClose} />;
     case 'text/plain':
-      return <TextViewer item={item} onClose={onClose}/>;
+      return <TextViewer item={item} onClose={onClose} />;
+    case 'application/json':
+      return <JsonViewer item={item} onClose={onClose} />;
     default:
       return <div>Oops! Can not open file click <a href={item.url}>here</a> to download file</div>;
   }

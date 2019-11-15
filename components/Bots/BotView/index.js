@@ -14,6 +14,8 @@ import { Card, CardBody, CardHeader } from '/components/default/Card';
 import {adminGetBot, getBot, clearBot} from '/store/bot/actions';
 import { subscribe, unsubscribe } from '/store/socket/actions';
 import { Badge, Button, Loader } from '/components/default';
+import Icon from "../../default/icons";
+import DropDown from "../../default/DropDown";
 
 const TABS = {
   SCREENSHOTS: {
@@ -126,6 +128,14 @@ const ConnectionStatus = ({ status, color }) => <>
   <Status type={'info'} color={color} pill>{ status }</Status>
   <Hint>&nbsp;|&nbsp;</Hint>
 </>;
+
+const Arrow = styled.div`
+  display: inline-block;
+  color: white;
+  transform: rotate(90deg);
+  margin: 1px 0 0 6px;
+`;
+
 
 const BotView = ({ botInstance, user, getBot, clearBot, adminGetBot, theme, wsSubscribe, wsUnsubscribe }) => {
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
