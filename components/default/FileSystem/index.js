@@ -23,13 +23,17 @@ const FileSystem = ({
   closeItem,
   getItems,
   hideNavigator,
-  isReportMode,
-  onItemSelect,
+  onFileOpen,
+  onFolderOpen,
   selectedItems
 }) => {
 
   const handleItemClick = (item) => {
-    item.type === 'file' ? isReportMode && onItemSelect(item) : openItem(item);
+    if(item.type === 'file') {
+      return onFileOpen ? onFileOpen(item) : openItem(item);
+    } else {
+      return onFolderOpen ? onFolderOpen(item) : openItem(item);
+    }
   };
 
   const getSelectedItems = () => {
@@ -69,8 +73,8 @@ FileSystem.propTypes = {
   openedFolder: PropTypes.object,
   openedFile: PropTypes.object,
   hideNavigator: PropTypes.bool,
-  isReportMode: PropTypes.bool,
-  onItemSelect: PropTypes.func,
+  onFileOpen: PropTypes.func,
+  onFolderOpen: PropTypes.func,
   selectedItems: PropTypes.array,
 };
 

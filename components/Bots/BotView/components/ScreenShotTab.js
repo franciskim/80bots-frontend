@@ -26,6 +26,7 @@ const Container = styled.div`
     bottom: 0;
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
 `;
 
 const Report = styled(Button)`
@@ -155,8 +156,7 @@ const ScreenShotTab = ({
             </FiltersSection>
             <FileSystem
               selectedItems={reportItems}
-              isReportMode={isReportMode}
-              onItemSelect={handleItemSelect}
+              onFileOpen={isReportMode ? handleItemSelect : null}
             />
           </>
         )}
