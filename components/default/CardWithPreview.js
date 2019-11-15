@@ -33,7 +33,7 @@ const Blur = styled.div`
 `;
 
 const CardWithPreview = ({ src, caption, children, ...props }) => {
-  const [blur, setBlur] = useState(true)
+  const [blur, setBlur] = useState(true);
   return(
     <Container image={src} {...props} onMouseOver={() => setBlur(false)} onMouseLeave={() => setBlur(true)}>
       {blur && <Blur>{ caption }</Blur>}

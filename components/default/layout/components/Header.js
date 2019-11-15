@@ -30,11 +30,13 @@ const Arrow = styled.div`
 `;
 
 const User = styled.div`
+  display: inline-flex;
   margin: 0 5px 0 0;
 `;
 
 const UserName = styled.span`
   display: flex;
+  align-items: center;
   font-size: 13px;
 `;
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import Link from 'next/link';
 import ScreenShotTab from './components/ScreenShotTab';
 import LogsTab from './components/LogsTab';
 import OutputTab from './components/OutputTab';

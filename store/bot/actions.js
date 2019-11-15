@@ -456,10 +456,7 @@ export const reportBot = (id, data) => dispatch => dispatch({
   request: {
     method: 'POST',
     url: `/instances/${id}/report`,
-    data,
-    onUploadProgress: e => dispatch({
-      type: REPORT_UPLOAD_PROGRESS, data: { progress: Math.round((e.loaded / e.total) * 100) }
-    })
+    data
   },
   meta: {
     thunk: true
