@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import Head from '../default/layout/components/Head';
-import { connect } from 'react-redux';
-import { withTheme } from 'emotion-theming';
+import {connect} from 'react-redux';
+import {withTheme} from 'emotion-theming';
 
 const Container = styled.div`
   display: flex;
@@ -11,7 +11,6 @@ const Container = styled.div`
   flex: 1;
   justify-content: center;
   align-items: center;
-  background-image: radial-gradient(hsl(200, 100%, 65%), hsl(200, 100%, 40%));
 `;
 
 const Header = styled.h1`
@@ -20,13 +19,14 @@ const Header = styled.h1`
 `;
 
 const Home = () => {
-  return(
-    <>
+  return (
+    <Fragment>
       <Head title={'Home'}/>
       <Container>
-        <Header>Home page here</Header>
+        <Header>80bots is a hyperautomation SaaS platform to help individuals and businesses automate web tasks that are
+          a bit tricky to do with Zapier or IFTTT.</Header>
       </Container>
-    </>
+    </Fragment>
   );
 };
 
