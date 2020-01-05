@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
+import { Button } from '/components/default';
 
 const PaginationContainer = styled.div`
   display: flex;
@@ -43,6 +44,7 @@ export const Paginator = props => {
     startIndex: null,
     endIndex: null,
   });
+  const [jumpPage, setJumpPage] = useState(props.jumpPage || 0);
 
   const setPaginator = page => {
     const totalPages = Math.ceil(total / pageSize);
@@ -111,6 +113,11 @@ export const Paginator = props => {
     return null;
   }
 
+  const pageJumpStyle = {
+
+  };
+
+
   return(
     <PaginationContainer>
       <PaginationList>
@@ -129,6 +136,9 @@ export const Paginator = props => {
         <ListItem onClick={() => setPage(Math.ceil(total / pageSize))}>
           &raquo;
         </ListItem>
+        <input type={'text'} style={pageJumpStyle} size={'4'} onChange={event => setJumpPage(event.target.value)} />&nbsp;
+        <Button type={'primary'} onClick={() => setPage(parseInt(jumpPage))}>Go</Button>
+      &nbsp;Page {currentPage} of {totalPages}
       </PaginationList>
     </PaginationContainer>
   );
@@ -139,6 +149,7 @@ Paginator.propTypes = {
   onChangePage: PropTypes.func.isRequired,
   initialPage: PropTypes.number,
   pageSize: PropTypes.number,
+  jumpPage: PropTypes.number
 };
 
 export default Paginator;
