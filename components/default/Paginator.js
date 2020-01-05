@@ -114,7 +114,7 @@ export const Paginator = props => {
   }
 
   const pageJumpStyle = {
-
+    'text-align': 'center'
   };
 
 
@@ -136,9 +136,7 @@ export const Paginator = props => {
         <ListItem onClick={() => setPage(Math.ceil(total / pageSize))}>
           &raquo;
         </ListItem>
-        <input type={'text'} style={pageJumpStyle} size={'4'} onChange={event => setJumpPage(event.target.value)} />&nbsp;
-        <Button type={'primary'} onClick={() => setPage(parseInt(jumpPage))}>Go</Button>
-      &nbsp;Page {currentPage} of {totalPages}
+      &nbsp;Page <input type={'text'} style={pageJumpStyle} size={'4'} onChange={event => setJumpPage(event.target.value)} placeholder={currentPage} />&nbsp;of {totalPages}&nbsp;<Button type={'primary'} onClick={() => setPage(parseInt(jumpPage))}>Go</Button>
       </PaginationList>
     </PaginationContainer>
   );
