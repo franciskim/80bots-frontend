@@ -23,7 +23,7 @@ const Home = () => {
     <Fragment>
       <Head title={'Home'}/>
       <Container>
-        <Header>80bots is a hyper-modern RPA (Robotic Process Automation) platform for the web that help you and your organisation automate tasks that cannot be done with IFTTT or Zapier.</Header>
+        <Header>80bots is a hyper-modern RPA (Robotic Process Automation) platform for the web that helps you and your organisation automate tasks that cannot be done with IFTTT or Zapier.</Header>
       </Container>
     </Fragment>
   );
