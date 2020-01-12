@@ -171,7 +171,7 @@ const BotView = ({botInstance, user, getBot, clearBot, adminGetBot, theme, wsSub
     const isDisabled = isOffline && item === 'DISPLAY';
     return (
       <Tab disabled={isDisabled} type={activeTab.title === TABS[item].title ? 'success' : 'primary'}
-           key={idx} onClick={() => setActiveTab(TABS[item])}>
+        key={idx} onClick={() => setActiveTab(TABS[item])}>
         {TABS[item].title}
       </Tab>
     );

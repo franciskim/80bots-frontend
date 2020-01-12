@@ -134,9 +134,10 @@ export const Paginator = props => {
           &rsaquo;
         </ListItem>
         <ListItem onClick={() => setPage(Math.ceil(total / pageSize))}>
-          &raquo;
+              &raquo;
         </ListItem>
-      &nbsp;Page <input type={'text'} style={pageJumpStyle} size={'4'} onChange={event => setJumpPage(event.target.value)} placeholder={currentPage} />&nbsp;of {totalPages}&nbsp;<Button type={'primary'} onClick={() => setPage(parseInt(jumpPage))}>Go</Button>
+      &nbsp;Page&nbsp;<input type={'text'} style={pageJumpStyle} size={'3'} onChange={event => setJumpPage(event.target.value)}
+          placeholder={currentPage} />&nbsp;of {totalPages}&nbsp;<Button type={'primary'} onClick={() => setPage(parseInt(jumpPage))}>Go</Button>
       </PaginationList>
     </PaginationContainer>
   );

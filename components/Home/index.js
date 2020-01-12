@@ -14,7 +14,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.h1`
-  color: white;
+  color: #333;
   font-size: 80px;
 `;
 
@@ -23,8 +23,7 @@ const Home = () => {
     <Fragment>
       <Head title={'Home'}/>
       <Container>
-        <Header>80bots is a hyperautomation SaaS platform to help individuals and businesses automate web tasks that are
-          a bit tricky to do with Zapier or IFTTT.</Header>
+        <Header>80bots is a hyper-modern RPA (Robotic Process Automation) platform for the web that help you and your organisation automate tasks that cannot be done with IFTTT or Zapier.</Header>
       </Container>
     </Fragment>
   );

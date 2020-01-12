@@ -203,8 +203,8 @@ const Settings = ({ theme, addNotification, addListener, user, regions, total, g
           options={amis.map(toOption)} value={getCurrentSelect()}
         />
         <Buttons>
-          <Button type={'primary'} onClick={changeRegionAmi}>Update</Button>
           <Button type={'danger'} onClick={() => modal.current.close()}>Cancel</Button>
+          <Button type={'primary'} onClick={changeRegionAmi}>Update</Button>
         </Buttons>
       </Modal>
 

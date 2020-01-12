@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useRouter } from 'next/router';
-import { withTheme } from 'emotion-theming';
+import React, {useEffect, useState, useRef} from 'react';
+import {useRouter} from 'next/router';
+import {withTheme} from 'emotion-theming';
 import styled from '@emotion/styled';
-import { css, keyframes } from '@emotion/core';
-import { connect } from 'react-redux';
+import {css, keyframes} from '@emotion/core';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import FileSystem from '/components/default/FileSystem';
-import { flush, open, close } from '/store/fileSystem/actions';
-import { Loader, Button } from '../../../default';
-import { theme } from '../../../../config';
+import {flush, open, close} from '/store/fileSystem/actions';
+import {Loader, Button} from '../../../default';
+import {theme} from '../../../../config';
 import Modal from '/components/default/Modal';
 import ReportEditor from './ReportIssue';
 
@@ -46,11 +46,11 @@ const Hint = styled.span`
 
 const STATUSES = {
   ERROR: {
-    label: 'Oops! Some error occurs...',
+    label: 'Oops! Some error occurred...',
     color: theme.colors.pink,
   },
   LOADING: {
-    label: 'Receiving Data',
+    label: 'Receiving data',
     color: theme.colors.mediumGreen,
   },
   EMPTY: {
@@ -73,7 +73,7 @@ const ScreenShotTab = ({
   setCustomBack,
   loading,
   items,
-  botInstance
+  botInstance,
 }) => {
   const [limit] = useState(defaultLimit);
   const [status, setStatus] = useState({});
@@ -90,7 +90,7 @@ const ScreenShotTab = ({
 
   useEffect(() => {
     if (channel && !!openedFolder) return;
-    openItem({ path: rootFolder }, { limit });
+    openItem({path: rootFolder}, {limit});
   }, [channel, openedFolder]);
 
   useEffect(() => {
@@ -99,7 +99,7 @@ const ScreenShotTab = ({
     } else {
       setCustomBack(() => {
         closeItem(openedFolder);
-        openItem(previous, { limit });
+        openItem(previous, {limit});
       });
     }
   }, [openedFolder, previous]);
@@ -170,7 +170,7 @@ const ScreenShotTab = ({
           max-width: 420px;
         `}
         close={() => setShowReportModal(false)}>
-        <ReportEditor bot={botInstance} screenshots={reportItems} onClose={() => setShowReportModal(false)} />
+        <ReportEditor bot={botInstance} screenshots={reportItems} onClose={() => setShowReportModal(false)}/>
       </Modal>
     </>
   );
