@@ -15,7 +15,7 @@ const Container = styled.div`
 
 const Header = styled.h1`
   color: #7DFFFF;
-  font-size: 80px;
+  font-size: 63px;
 `;
 
 const Home = () => {
