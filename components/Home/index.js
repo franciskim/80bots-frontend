@@ -21,7 +21,7 @@ const Header = styled.h1`
 const Home = () => {
   return (
     <Fragment>
-      <style jsx>{`
+      <style jsx global>{`
           body { background: #333; }
         }
       `}</style>
