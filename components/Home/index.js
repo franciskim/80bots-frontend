@@ -14,13 +14,17 @@ const Container = styled.div`
 `;
 
 const Header = styled.h1`
-  color: #333;
+  color: #7DFFFF;
   font-size: 80px;
 `;
 
 const Home = () => {
   return (
     <Fragment>
+      <style jsx>{`
+          body { background: #333; }
+        }
+      `}</style>
       <Head title={'Home'}/>
       <Container>
         <Header>80bots is a hyper-modern, cloud-native RPA (Robotic Process Automation) platform for the web that helps you and your organisation automate tasks that cannot be done with IFTTT or Zapier.</Header>
