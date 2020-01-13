@@ -41,7 +41,7 @@ const Home = () => {
           you and your organisation automate tasks that cannot be done with IFTTT or Zapier.</Header>
         <form action={'https://80bots.us4.list-manage.com/subscribe/post?u=105560c1c79f5eb1cf278f471&amp;id=21583f32e6'}
           method={'post'} target={'_blank'} noValidate>
-          <input type={'email'} name={'EMAIL'} placeholder={'Give us your email to be in the know.'} autoFocus/>
+          <input type={'email'} name={'EMAIL'} placeholder={'Enter your email to be in the know.'} autoFocus/>
         </form>
       </Container>
     </Fragment>
