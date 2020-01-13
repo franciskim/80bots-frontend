@@ -15,14 +15,14 @@ const Container = styled.div`
 
 const Header = styled.h1`
   color: #7DFFFF;
-  font-size: 63px;
+  font-size: 45px;
 `;
 
 const Home = () => {
   return (
     <Fragment>
       <style jsx global>{`
-          body { background: #333; }
+          body { background: #333; padding: 23px; }
         }
       `}</style>
       <Head title={'Home'}/>

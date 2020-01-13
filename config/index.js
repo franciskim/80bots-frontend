@@ -86,32 +86,11 @@ export const SIDEBAR_ANIMATION_TIME = 250;
 export const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export const globalStyles = css`
-  @font-face {
-    font-family: Overpass, monospace;
-    font-weight: normal;
-    src: url("/public/fonts/overpass-mono/overpass-mono-regular.otf");
-  }
-  
-  @font-face {
-    font-family: Overpass, monospace;
-    font-weight: bold;
-    src: url("/public/fonts/overpass-mono/overpass-mono-bold.otf");
-  }
-  
-  @font-face {
-    font-family: Overpass, monospace;
-    font-weight: 300;
-    src: url("/public/fonts/overpass-mono/overpass-mono-light.otf");
-  }
-  
-  @font-face {
-    font-family: Overpass, monospace;
-    font-weight: 600;
-    src: url("/public/fonts/overpass-mono/overpass-mono-semibold.otf");
-  }
+
+  @import url('https://fonts.googleapis.com/css?family=Anonymous+Pro:400,400i,700,700i&display=swap');
 
   body {
-    font-family: Overpass, monospace;
+    font-family: 'Anonymous Pro', monospace;
     margin: 0;
     display: flex;
     flex-direction: column;
