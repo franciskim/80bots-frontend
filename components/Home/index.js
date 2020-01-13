@@ -21,13 +21,28 @@ const Header = styled.h1`
 const Home = () => {
   return (
     <Fragment>
+      <img src="/images/80bots-logo.svg" className={'logo'}/>
       <style jsx global>{`
           body { background: #333; padding: 23px; }
-        }
+          .logo { width: 230px; float: left; }
+          input {
+          background: transparent;
+          border: none;
+          font-size: 45px;
+          color: #FF7D7D;
+          width: 100%;
+          }
+          input:focus { outline: 0; }
+          form { width: 100%; }
       `}</style>
       <Head title={'Home'}/>
       <Container>
-        <Header>80bots is a hyper-modern, cloud-native RPA (Robotic Process Automation) platform for the web that helps you and your organisation automate tasks that cannot be done with IFTTT or Zapier.</Header>
+        <Header>80bots is a hyper-modern, cloud-native RPA (Robotic Process Automation) platform for the web that helps
+          you and your organisation automate tasks that cannot be done with IFTTT or Zapier.</Header>
+        <form action={'https://80bots.us4.list-manage.com/subscribe/post?u=105560c1c79f5eb1cf278f471&amp;id=21583f32e6'}
+          method={'post'} target={'_blank'} noValidate>
+          <input type={'email'} name={'EMAIL'} placeholder={'Give us your email to be in the know.'} autoFocus/>
+        </form>
       </Container>
     </Fragment>
   );
@@ -38,7 +53,7 @@ Home.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  isAuthorized: state.auth.isAuthorized
+  isAuthorized: state.auth.isAuthorized,
 });
 
 export default connect(mapStateToProps, null)(withTheme(Home));
