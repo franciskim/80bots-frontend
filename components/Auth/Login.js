@@ -92,7 +92,11 @@ const Login = ({ addNotification, login, reset }) => {
           >
             <Link href={"/"}>
               <Logo href="/" className="sidebar-brand text-decoration-none">
-                <img src="/images/80bots.svg" alt="" />
+                <object
+                  type="image/svg+xml"
+                  data="/images/80bots-logo.svg"
+                  className={"logo"}
+                />{" "}
               </Logo>
             </Link>
             <h4 className="text-center">Sign In</h4>
@@ -149,7 +153,11 @@ const Login = ({ addNotification, login, reset }) => {
           >
             <Link href={"/"}>
               <Logo href="/" className="sidebar-brand text-decoration-none">
-                <img src="/images/80bots.svg" alt="" />
+                <object
+                  type="image/svg+xml"
+                  data="/images/80bots-logo.svg"
+                  className={"logo"}
+                />
               </Logo>
             </Link>
             <h4 className="text-primary text-center">Forgot password?</h4>

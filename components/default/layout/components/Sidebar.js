@@ -85,7 +85,11 @@ const Sidebar = ({ opened = false, userRole }) => {
     <Container opened={opened}>
       <LinkWrap>
         <Link href={"/dashboard"}>
-          <img src="/images/80bots-logo.svg" alt="" />
+          <object
+            type="image/svg+xml"
+            data="/images/80bots-logo.svg"
+            className={"logo"}
+          />
         </Link>
       </LinkWrap>
       <Ul>{userRole && ROUTES[userRole].map(renderLink)}</Ul>

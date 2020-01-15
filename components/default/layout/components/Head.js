@@ -2,7 +2,8 @@ import React from "react";
 import NextHead from "next/head";
 import PropTypes from "prop-types";
 
-const defaultDescription = "80bots da best";
+const defaultDescription =
+  "80bots is a hyper-modern, cloud-native RPA (Robotic Process Automation) platform for the web that helps you and your organisation automate tasks that cannot be done with IFTTT or Zapier.";
 const defaultOGURL = "";
 const defaultOGImage = "";
 const googleAnalyticsId = "id";

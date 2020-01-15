@@ -102,10 +102,13 @@ const Reset = ({ addNotification, resetPassword }) => {
         <FormContainer>
           <form method="POST" className="flex-grow-1">
             <Logo href="/">
-              <img src="/images/80bots.svg" alt="" />
+              <object
+                type="image/svg+xml"
+                data="/images/80bots-logo.svg"
+                className={"logo"}
+              />{" "}
             </Logo>
             <h4 className="text-center">Reset Password</h4>
-
             <Input
               label={"Email"}
               type="email"
