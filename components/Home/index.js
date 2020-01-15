@@ -16,6 +16,9 @@ const Container = styled.div`
 const Header = styled.h1`
   color: #7DFFFF;
   font-size: 45px;
+  @media(max-width: 1023px) {
+    font-size: 23px;
+  }
 `;
 
 const Home = () => {
@@ -34,13 +37,16 @@ const Home = () => {
           }
           input:focus { outline: 0; }
           form { width: 100%; }
+          @media(max-width: 1023px) {
+            input { font-size: 23px; }
+          }
       `}</style>
       <Head title={'Home'}/>
       <Container>
         <Header>80bots is a hyper-modern, cloud-native RPA (Robotic Process Automation) platform for the web that helps
           you and your organisation automate tasks that cannot be done with IFTTT or Zapier.</Header>
         <form action={'https://80bots.us4.list-manage.com/subscribe/post?u=105560c1c79f5eb1cf278f471&amp;id=21583f32e6'}
-          method={'post'} target={'_blank'} noValidate>
+              method={'post'} target={'_blank'} noValidate>
           <input type={'email'} name={'EMAIL'} placeholder={'Enter your email to be in the know.'} autoFocus/>
         </form>
       </Container>
