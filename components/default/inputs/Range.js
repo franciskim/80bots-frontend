@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import styled from '@emotion/styled';
-import PropTypes from 'prop-types';
-import { css } from '@emotion/core';
-import { theme } from '/config';
-import { Label, Wrap, LabelWrap, Description } from './Input';
+import React, { useState, useEffect } from "react";
+import styled from "@emotion/styled";
+import PropTypes from "prop-types";
+import { css } from "@emotion/core";
+import { theme } from "/config";
+import { Label, Wrap, LabelWrap, Description } from "./Input";
 
 const thumbStyles = css`
   appearance: none;
@@ -14,19 +14,19 @@ const thumbStyles = css`
   cursor: pointer;
   transition: background 100ms ease-in-out;
   &:hover {
-    background: ${ theme.colors.darkishPink };
+    background: ${theme.colors.darkishPink};
   }
 `;
 
 const DefaultRange = styled.input`
-  &[type=range] {
+  &[type="range"] {
     -webkit-appearance: none;
     border-radius: 5px;
     height: 5px;
     outline: none;
     cursor: pointer;
     width: 100%;
-    background-color: ${ props => props.theme.colors.silver };
+    background-color: ${props => props.theme.colors.silver};
     &::-webkit-slider-thumb {
       ${thumbStyles};
     }
@@ -34,10 +34,10 @@ const DefaultRange = styled.input`
       ${thumbStyles};
     }
     &:active::-webkit-slider-thumb {
-      background: ${ props => props.theme.colors.darkishPink };
+      background: ${props => props.theme.colors.darkishPink};
     }
     &:active::-moz-range-thumb {
-      background: ${ props => props.theme.colors.darkishPink };
+      background: ${props => props.theme.colors.darkishPink};
     }
   }
 `;
@@ -46,11 +46,11 @@ const RangeValue = styled.span`
   display: inline-block;
   position: relative;
   width: 50px;
-  color: ${ props => props.theme.colors.white };
+  color: ${props => props.theme.colors.white};
   line-height: 20px;
   text-align: center;
   border-radius: 3px;
-  background: ${ props => props.theme.colors.primary };
+  background: ${props => props.theme.colors.primary};
   padding: 5px 10px;
   margin-left: 12px;
   &:after {
@@ -60,9 +60,9 @@ const RangeValue = styled.span`
     width: 0;
     height: 0;
     border-top: 7px solid transparent;
-    border-right: 7px solid ${ props => props.theme.colors.primary };
+    border-right: 7px solid ${props => props.theme.colors.primary};
     border-bottom: 7px solid transparent;
-    content: '';
+    content: "";
   }
 `;
 
@@ -70,10 +70,18 @@ const RangeContainer = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
-  ${ props => props.styles };
+  ${props => props.styles};
 `;
 
-export const Range = ({ styles, onChange, min, label, value, description, ...props }) => {
+export const Range = ({
+  styles,
+  onChange,
+  min,
+  label,
+  value,
+  description,
+  ...props
+}) => {
   const [val, setVal] = useState(value || min || 0);
 
   useEffect(() => {
@@ -81,7 +89,7 @@ export const Range = ({ styles, onChange, min, label, value, description, ...pro
   }, []);
 
   useEffect(() => {
-    if(value) setVal(value);
+    if (value) setVal(value);
   }, [value]);
 
   const changeValue = e => {
@@ -89,14 +97,20 @@ export const Range = ({ styles, onChange, min, label, value, description, ...pro
     setVal(Number(e.target.value));
   };
 
-  return(
+  return (
     <Wrap styles={styles && styles.container}>
       <LabelWrap>
-        { label && <Label styles={styles && styles.label}>{ label }</Label> }
-        { description && <Description text={description} /> }
+        {label && <Label styles={styles && styles.label}>{label}</Label>}
+        {description && <Description text={description} />}
       </LabelWrap>
       <RangeContainer>
-        <DefaultRange {...props} min={min} type={'range'} value={val} onChange={changeValue}/>
+        <DefaultRange
+          {...props}
+          min={min}
+          type={"range"}
+          value={val}
+          onChange={changeValue}
+        />
         <RangeValue>{val}</RangeValue>
       </RangeContainer>
     </Wrap>

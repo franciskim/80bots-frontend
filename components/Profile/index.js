@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import styled from '@emotion/styled';
-import PropTypes from 'prop-types';
-import Select from 'react-select';
-import Button from '../default/Button';
-import { connect } from 'react-redux';
-import { addNotification } from '/store/notification/actions';
-import { NOTIFICATION_TYPES } from '/config';
-import { getTimezones, updateUserProfile, getRegions } from '/store/user/actions';
+import React, { useEffect, useState } from "react";
+import styled from "@emotion/styled";
+import PropTypes from "prop-types";
+import Select from "react-select";
+import Button from "../default/Button";
+import { connect } from "react-redux";
+import { addNotification } from "/store/notification/actions";
+import { NOTIFICATION_TYPES } from "/config";
+import {
+  getTimezones,
+  updateUserProfile,
+  getRegions
+} from "/store/user/actions";
 
 const Container = styled.div`
   display: flex;
@@ -21,7 +25,15 @@ const ButtonContainer = styled.div`
   margin-top: 15px;
 `;
 
-const Profile = ({ user, getTimezones, getRegions, updateUser, addNotification, timezones, regions }) => {
+const Profile = ({
+  user,
+  getTimezones,
+  getRegions,
+  updateUser,
+  addNotification,
+  timezones,
+  regions
+}) => {
   const [timezone, setTimezone] = useState(null);
   const [region, setRegion] = useState(null);
 
@@ -31,40 +43,40 @@ const Profile = ({ user, getTimezones, getRegions, updateUser, addNotification, 
   }, []);
 
   useEffect(() => {
-    if(!timezone && timezones.length > 0) {
-      const defaultValue = timezones.find(item => item.timezone === user.timezone);
+    if (!timezone && timezones.length > 0) {
+      const defaultValue = timezones.find(
+        item => item.timezone === user.timezone
+      );
       setTimezone({ value: defaultValue.id, label: defaultValue.value });
     }
   }, [timezones]);
 
   useEffect(() => {
-    if(!region && regions.length > 0) {
+    if (!region && regions.length > 0) {
       const defaultValue = regions.find(item => item.name === user.region);
       setRegion({ value: defaultValue.id, label: defaultValue.name });
     }
   }, [regions]);
 
   const updateTimezone = () => {
-    updateUser({ timezone_id: timezone.value })
-      .then(() => {
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: `Timezone was successfully set to ${timezone.label}`
-        });
+    updateUser({ timezone_id: timezone.value }).then(() => {
+      addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: `Timezone was successfully set to ${timezone.label}`
       });
+    });
   };
 
   const updateRegion = () => {
-    updateUser({ region_id: region.value })
-      .then(() => {
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: `Region was successfully set to ${region.label}`
-        });
+    updateUser({ region_id: region.value }).then(() => {
+      addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: `Region was successfully set to ${region.label}`
       });
+    });
   };
 
-  return(
+  return (
     <>
       <div className="card">
         <div className="card-header d-flex align-items-center justify-content-between">
@@ -75,62 +87,98 @@ const Profile = ({ user, getTimezones, getRegions, updateUser, addNotification, 
             <div className="col-md-12 col-sm-12">
               <div className="form-group">
                 <label htmlFor="">Email</label>
-                <input type="text" name="email" className="form-control"
-                  value={user.email} readOnly
+                <input
+                  type="text"
+                  name="email"
+                  className="form-control"
+                  value={user.email}
+                  readOnly
                 />
               </div>
             </div>
             <div className="col-md-6 col-sm-12">
               <div className="form-group">
                 <label htmlFor="">Used Credits</label>
-                <input type="text" name="credit_used" value={user.used_credits} readOnly className="form-control" />
+                <input
+                  type="text"
+                  name="credit_used"
+                  value={user.used_credits}
+                  readOnly
+                  className="form-control"
+                />
               </div>
             </div>
             <div className="col-md-6 col-sm-12">
               <div className="form-group">
                 <label htmlFor="">Remaining Credits</label>
-                <input type="text" name="credits" value={user.credits} readOnly
+                <input
+                  type="text"
+                  name="credits"
+                  value={user.credits}
+                  readOnly
                   className="form-control"
                 />
               </div>
             </div>
-            { user.plan && <div className="col-md-12 col-sm-12">
-              <div className="form-group">
-                <label htmlFor="">Active Plan</label>
-                <input type="text" name="plan" className="form-control" value={user.plan} readOnly />
+            {user.plan && (
+              <div className="col-md-12 col-sm-12">
+                <div className="form-group">
+                  <label htmlFor="">Active Plan</label>
+                  <input
+                    type="text"
+                    name="plan"
+                    className="form-control"
+                    value={user.plan}
+                    readOnly
+                  />
+                </div>
               </div>
-            </div>}
+            )}
           </div>
         </div>
       </div>
-      <br/>
+      <br />
       <div className="card">
         <div className="card-header d-flex align-items-center justify-content-between">
           <h5 className="mb-0">My Timezone</h5>
         </div>
         <div className="card-body">
           <Container>
-            <Select options={timezones.map(item => ({ value: item.id, label: item.value }))}
-              onChange={option => setTimezone(option)} value={timezone}
+            <Select
+              options={timezones.map(item => ({
+                value: item.id,
+                label: item.value
+              }))}
+              onChange={option => setTimezone(option)}
+              value={timezone}
             />
             <ButtonContainer>
-              <Button type={'primary'} onClick={updateTimezone}>Update</Button>
+              <Button type={"primary"} onClick={updateTimezone}>
+                Update
+              </Button>
             </ButtonContainer>
           </Container>
         </div>
       </div>
-      <br/>
+      <br />
       <div className="card">
         <div className="card-header d-flex align-items-center justify-content-between">
           <h5 className="mb-0">Preferred Region</h5>
         </div>
         <div className="card-body">
           <Container>
-            <Select options={regions.map(item => ({ value: item.id, label: item.name }))}
-              onChange={option => setRegion(option)} value={region}
+            <Select
+              options={regions.map(item => ({
+                value: item.id,
+                label: item.name
+              }))}
+              onChange={option => setRegion(option)}
+              value={region}
             />
             <ButtonContainer>
-              <Button type={'primary'} onClick={updateRegion}>Update</Button>
+              <Button type={"primary"} onClick={updateRegion}>
+                Update
+              </Button>
             </ButtonContainer>
           </Container>
         </div>

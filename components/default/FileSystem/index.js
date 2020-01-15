@@ -1,15 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import List from './List';
-import FileReaderComponent from './Tools/FileReader';
-import { close, flush, getItems, open } from '../../../store/fileSystem/actions';
-import { connect } from 'react-redux';
-import { withTheme } from 'emotion-theming';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import List from "./List";
+import FileReaderComponent from "./Tools/FileReader";
+import {
+  close,
+  flush,
+  getItems,
+  open
+} from "../../../store/fileSystem/actions";
+import { connect } from "react-redux";
+import { withTheme } from "emotion-theming";
 
 const Container = styled.div`
-    position: relative;
-    flex: 1;
+  position: relative;
+  flex: 1;
 `;
 
 const FileSystem = ({
@@ -27,9 +32,8 @@ const FileSystem = ({
   onFolderOpen,
   selectedItems
 }) => {
-
-  const handleItemClick = (item) => {
-    if(item.type === 'file') {
+  const handleItemClick = item => {
+    if (item.type === "file") {
       return onFileOpen ? onFileOpen(item) : openItem(item);
     } else {
       return onFolderOpen ? onFolderOpen(item) : openItem(item);
@@ -45,7 +49,9 @@ const FileSystem = ({
 
   return (
     <Container>
-      {openedFile?.path ? <FileReaderComponent item={openedFile} onClose={closeItem} /> : null}
+      {openedFile?.path ? (
+        <FileReaderComponent item={openedFile} onClose={closeItem} />
+      ) : null}
       {openedFolder && !hideNavigator ? (
         <List
           items={getSelectedItems()}
@@ -75,7 +81,7 @@ FileSystem.propTypes = {
   hideNavigator: PropTypes.bool,
   onFileOpen: PropTypes.func,
   onFolderOpen: PropTypes.func,
-  selectedItems: PropTypes.array,
+  selectedItems: PropTypes.array
 };
 
 const mapStateToProps = state => ({
@@ -85,14 +91,17 @@ const mapStateToProps = state => ({
   items: state.fileSystem.items,
   total: state.fileSystem.total,
   limit: state.fileSystem.query?.limit,
-  page: state.fileSystem.query?.page,
+  page: state.fileSystem.query?.page
 });
 
 const mapDispatchToProps = dispatch => ({
   getItems: query => dispatch(getItems(query)),
   flush: () => dispatch(flush()),
   openItem: item => dispatch(open(item)),
-  closeItem: item => dispatch(close(item)),
+  closeItem: item => dispatch(close(item))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(FileSystem));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTheme(FileSystem));

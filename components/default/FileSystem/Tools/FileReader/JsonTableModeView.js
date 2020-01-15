@@ -1,8 +1,15 @@
-import React, { useEffect, useState, useRef } from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import { Table as BaseTable, Thead, Filters, LimitFilter, SearchFilter, ListFilter } from '/components/default/Table';
-import {Paginator} from '/components/default/Paginator';
+import React, { useEffect, useState, useRef } from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import {
+  Table as BaseTable,
+  Thead,
+  Filters,
+  LimitFilter,
+  SearchFilter,
+  ListFilter
+} from "/components/default/Table";
+import { Paginator } from "/components/default/Paginator";
 
 const Table = styled(BaseTable)`
   min-width: 100%;
@@ -33,12 +40,11 @@ const Footer = styled.footer`
 
 const LinkTd = styled.td`
   cursor: pointer;
-  color: ${ props => props.theme.colors.primary };
+  color: ${props => props.theme.colors.primary};
   &:hover {
-    color: ${ props => props.theme.colors.clearBlue };
+    color: ${props => props.theme.colors.clearBlue};
   }
 `;
-
 
 const JsonTableModeView = ({ output }) => {
   const [data, setData] = useState(output || []);
@@ -55,26 +61,26 @@ const JsonTableModeView = ({ output }) => {
   };
 
   useEffect(() => {
-    if(!deepViewing) {
+    if (!deepViewing) {
       setData(output);
     }
-  }, [deepViewing, output])
+  }, [deepViewing, output]);
 
   useEffect(() => {
-    if(data && data.length) {
-      setSlicedChunk(data.slice(page*limit - limit, page*limit));
+    if (data && data.length) {
+      setSlicedChunk(data.slice(page * limit - limit, page * limit));
     }
   }, [data]);
 
   useEffect(() => {
-    setSlicedChunk(output.slice(page*limit - limit, page*limit));
+    setSlicedChunk(output.slice(page * limit - limit, page * limit));
   }, [page, limit]);
 
-  const getHeader = (row) => {
+  const getHeader = row => {
     let columns = [];
     for (let key in row) {
-      if(row.hasOwnProperty(key)) {
-        columns.push(<th key={key}>{ key }</th>);
+      if (row.hasOwnProperty(key)) {
+        columns.push(<th key={key}>{key}</th>);
       }
     }
     return columns;
@@ -84,54 +90,59 @@ const JsonTableModeView = ({ output }) => {
     let rowData = [];
     let rowIdx = 0;
     for (let key in row) {
-      if(row.hasOwnProperty(key)) {
-        if(typeof row[key] !== 'object') {
-          rowData.push(<td key={rowIdx}>{ row[key] }</td>);
+      if (row.hasOwnProperty(key)) {
+        if (typeof row[key] !== "object") {
+          rowData.push(<td key={rowIdx}>{row[key]}</td>);
         } else {
-          if(row[key] && row[key].length) {
-            rowData.push(<LinkTd onClick={() => viewNestedData(row[key])} key={rowIdx}>{ `See ${key}` }</LinkTd>);
+          if (row[key] && row[key].length) {
+            rowData.push(
+              <LinkTd
+                onClick={() => viewNestedData(row[key])}
+                key={rowIdx}
+              >{`See ${key}`}</LinkTd>
+            );
           } else {
-            rowData.push(<td key={rowIdx}>{ `No ${key}` }</td>);
+            rowData.push(<td key={rowIdx}>{`No ${key}`}</td>);
           }
         }
       }
       rowIdx++;
     }
-    return(
-      <tr key={idx}>
-        { rowData }
-      </tr>
-    );
+    return <tr key={idx}>{rowData}</tr>;
   };
 
   return (
     <Wrapper>
       <Header>
-        <LimitFilter defaultValue={limit} onChange={({value}) => setLimit(value)}/>
+        <LimitFilter
+          defaultValue={limit}
+          onChange={({ value }) => setLimit(value)}
+        />
       </Header>
       <Content>
         <Table>
-          {
-            slicedChunk[0] && <Thead>
-              <tr>
-                { getHeader(slicedChunk[0]) }
-              </tr>
+          {slicedChunk[0] && (
+            <Thead>
+              <tr>{getHeader(slicedChunk[0])}</tr>
             </Thead>
-          }
-          <tbody>
-            { slicedChunk.map(renderRow) }
-          </tbody>
+          )}
+          <tbody>{slicedChunk.map(renderRow)}</tbody>
         </Table>
       </Content>
       <Footer>
-        <Paginator initialPage={page} total={total} pageSize={limit} onChangePage={(page) => setPage(page)}/>
+        <Paginator
+          initialPage={page}
+          total={total}
+          pageSize={limit}
+          onChangePage={page => setPage(page)}
+        />
       </Footer>
     </Wrapper>
   );
 };
 
 JsonTableModeView.propTypes = {
-  output:        PropTypes.array.isRequired,
+  output: PropTypes.array.isRequired
 };
 
 export default JsonTableModeView;

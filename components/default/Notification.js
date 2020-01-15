@@ -1,12 +1,15 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import Icon from '/components/default/icons';
-import PropTypes from 'prop-types';
-import { css, keyframes } from '@emotion/core';
-import { connect } from 'react-redux';
-import { withTheme } from 'emotion-theming';
-import { removeLastNotification, hideNotification } from '/store/notification/actions';
-import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from '/config';
+import React from "react";
+import styled from "@emotion/styled";
+import Icon from "/components/default/icons";
+import PropTypes from "prop-types";
+import { css, keyframes } from "@emotion/core";
+import { connect } from "react-redux";
+import { withTheme } from "emotion-theming";
+import {
+  removeLastNotification,
+  hideNotification
+} from "/store/notification/actions";
+import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from "/config";
 
 const { SUCCESS, ERROR } = NOTIFICATION_TYPES;
 
@@ -69,43 +72,66 @@ const NotificationMessage = styled(P)`
 `;
 
 const Notification = props => {
-  const { theme: { colors: { mediumGreen, clearGreen, darkishPink, pink, clearBlue, clearBlueTwo } },
-    notification, hideNotification, removeNotification } = props;
+  const {
+    theme: {
+      colors: {
+        mediumGreen,
+        clearGreen,
+        darkishPink,
+        pink,
+        clearBlue,
+        clearBlueTwo
+      }
+    },
+    notification,
+    hideNotification,
+    removeNotification
+  } = props;
 
   const getStyle = (hide, status) => {
     const animation = keyframes`
-      ${hide ? 'from' : 'to'} {
+      ${hide ? "from" : "to"} {
         opacity: 1;
         right: 2rem;
       }
-      ${!hide ? 'from' : 'to'} {
+      ${!hide ? "from" : "to"} {
         opacity: 0;
         right: calc(-2rem - 250px); // use notification div styles to calc
       }
     `;
     return css`
-      background: ${ status === SUCCESS ? `linear-gradient(to left, ${mediumGreen}, ${clearGreen})`
-    : status === ERROR ? `linear-gradient(to left, ${darkishPink}, ${pink})`
-      : `linear-gradient(to left, ${clearBlue}, ${clearBlueTwo})`};
-      right: ${hide ? 'calc(-2rem - 250px)' : '2rem'};
+      background: ${status === SUCCESS
+        ? `linear-gradient(to left, ${mediumGreen}, ${clearGreen})`
+        : status === ERROR
+        ? `linear-gradient(to left, ${darkishPink}, ${pink})`
+        : `linear-gradient(to left, ${clearBlue}, ${clearBlueTwo})`};
+      right: ${hide ? "calc(-2rem - 250px)" : "2rem"};
       animation: ${animation} ${NOTIFICATION_TIMINGS.DURATION}ms ease;
     `;
   };
 
-  const closeNotification = (timer) => {
+  const closeNotification = timer => {
     clearTimeout(timer);
     !notification.hide
       ? hideNotification()
-      : setTimeout(removeNotification, notification.duration || NOTIFICATION_TIMINGS.DURATION);
+      : setTimeout(
+          removeNotification,
+          notification.duration || NOTIFICATION_TIMINGS.DURATION
+        );
   };
 
-  const renderInfoNotification = (notification) => {
+  const renderInfoNotification = notification => {
     const timer = !notification.hide
-      ? setTimeout(hideNotification, notification.hideDelay || NOTIFICATION_TIMINGS.INFO_HIDE_DELAY)
+      ? setTimeout(
+          hideNotification,
+          notification.hideDelay || NOTIFICATION_TIMINGS.INFO_HIDE_DELAY
+        )
       : setTimeout(removeNotification, NOTIFICATION_TIMINGS.DURATION);
     return (
       <InfoNotificationDiv css={getStyle(notification.hide, notification.type)}>
-        <InfoClose onClick={() => closeNotification(timer)}><Icon name={'cross'}/></InfoClose>
+        <InfoClose onClick={() => closeNotification(timer)}>
+          <Icon name={"cross"} />
+        </InfoClose>
         <InfoNotificationContent>
           <NotificationMessage>{notification.message}</NotificationMessage>
         </InfoNotificationContent>
@@ -133,7 +159,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   removeNotification: () => dispatch(removeLastNotification()),
-  hideNotification: () => dispatch(hideNotification()),
+  hideNotification: () => dispatch(hideNotification())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Notification));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTheme(Notification));

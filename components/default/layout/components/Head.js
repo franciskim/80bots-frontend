@@ -1,20 +1,23 @@
-import React from 'react';
-import NextHead from 'next/head';
-import PropTypes from 'prop-types';
+import React from "react";
+import NextHead from "next/head";
+import PropTypes from "prop-types";
 
-const defaultDescription = '80bots da best';
-const defaultOGURL = '';
-const defaultOGImage = '';
-const googleAnalyticsId = 'id';
+const defaultDescription = "80bots da best";
+const defaultOGURL = "";
+const defaultOGImage = "";
+const googleAnalyticsId = "id";
 
 const Head = props => (
   <NextHead>
-    <title>{props.title + ' | 80bots'}</title>
+    <title>{props.title + " | 80bots"}</title>
     <meta charSet="UTF-8" />
-    <meta name="description" content={props.description || defaultDescription} />
+    <meta
+      name="description"
+      content={props.description || defaultDescription}
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="user-avatar" content={props.userAvatar}/>
-    <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="user-avatar" content={props.userAvatar} />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
     <link rel="icon" href="data:," />
     {/*    <link rel="shortcut icon" href="/static/images/icons/favicon.ico" />
     <link rel="icon" sizes="16x16 32x32 64x64" href="/static/images/icons/favicon.ico" />
@@ -37,7 +40,7 @@ const Head = props => (
     {/*<meta name="msapplication-TileImage" content="/static/images/icons/favicon-144.png" />*/}
     <meta name="msapplication-config" content="/browserconfig.xml" />
     <meta property="og:url" content={props.url || defaultOGURL} />
-    <meta property="og:title" content={props.title || ''} />
+    <meta property="og:title" content={props.title || ""} />
     <meta
       property="og:description"
       content={props.description || defaultDescription}
@@ -51,8 +54,10 @@ const Head = props => (
     <meta name="description" content={props.description} />
     <meta property="og:title" content={props.title} />
     <meta property="og:url" content={props.url} />
-    <script type="application/ld+json" dangerouslySetInnerHTML={{
-      __html: `{
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: `{
           "@context": "http://schema.org",
           "@type": "Organization",
           "name": "80bots",
@@ -86,23 +91,33 @@ const Head = props => (
               "https://www.linkedin.com/company/80bots/"
           ]
       }`
-    }}/>
-    <script dangerouslySetInnerHTML={{__html: `
+      }}
+    />
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', '123');`}}
+        gtag('config', '123');`
+      }}
     />
-    <script dangerouslySetInnerHTML={{__html: `
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
         ga('create', '123', 'auto');
-        ga('send', 'pageview');`}}
+        ga('send', 'pageview');`
+      }}
     />
-    <noscript dangerouslySetInnerHTML={{__html: `<iframe src="https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}"
-        height="0" width="0" style="display:none;visibility:hidden;"></iframe>`}}
+    <noscript
+      dangerouslySetInnerHTML={{
+        __html: `<iframe src="https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}"
+        height="0" width="0" style="display:none;visibility:hidden;"></iframe>`
+      }}
     />
   </NextHead>
 );

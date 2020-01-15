@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import { css } from '@emotion/core';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import { css } from "@emotion/core";
 
 const Container = styled.div`
   position: relative;
@@ -11,12 +11,12 @@ const DropDownMenu = styled.div`
   position: absolute;
   top: 100%;
   ${props =>
-    props.side === 'right'
+    props.side === "right"
       ? css`
-            right: 0;
+          right: 0;
         `
       : css`
-            left: 0;
+          left: 0;
         `};
   z-index: 1000;
   float: left;
@@ -31,7 +31,7 @@ const DropDownMenu = styled.div`
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0.25rem;
-  display: ${props => (props.open ? 'block' : 'none')};
+  display: ${props => (props.open ? "block" : "none")};
 `;
 
 const DropDownToggle = styled.span`
@@ -46,8 +46,12 @@ const DropDown = ({ toggleItem, children, side }) => {
 
   return (
     <Container>
-      <DropDownToggle onClick={() => toggle(!opened)}>{toggleItem}</DropDownToggle>
-      <DropDownMenu side={side} open={opened}>{children}</DropDownMenu>
+      <DropDownToggle onClick={() => toggle(!opened)}>
+        {toggleItem}
+      </DropDownToggle>
+      <DropDownMenu side={side} open={opened}>
+        {children}
+      </DropDownMenu>
     </Container>
   );
 };
@@ -55,7 +59,7 @@ const DropDown = ({ toggleItem, children, side }) => {
 DropDown.propTypes = {
   side: PropTypes.string,
   toggleItem: PropTypes.object,
-  children: PropTypes.any,
+  children: PropTypes.any
 };
 
 export default DropDown;

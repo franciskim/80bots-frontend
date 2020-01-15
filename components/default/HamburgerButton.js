@@ -1,10 +1,10 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import PropTypes from 'prop-types';
-import { css } from '@emotion/core';
+import React from "react";
+import styled from "@emotion/styled";
+import PropTypes from "prop-types";
+import { css } from "@emotion/core";
 
 const hamburgerBaseStyle = css`
-  content: '';
+  content: "";
   cursor: pointer;
   border-radius: 1px;
   height: 3px;
@@ -20,18 +20,19 @@ const Button = styled.span`
   position: relative;
   top: 0;
   ${hamburgerBaseStyle};
-  
-  &::before, &::after {
+
+  &::before,
+  &::after {
     ${hamburgerBaseStyle};
   }
-  
+
   &::before {
     top: -7.5px;
     width: 18px;
     left: 0;
     position: absolute;
   }
-  
+
   &::after {
     bottom: -7.5px;
     width: 14px;
@@ -40,7 +41,8 @@ const Button = styled.span`
 `;
 
 const openedStyles = css`
-  span::before, span::after {
+  span::before,
+  span::after {
     left: -1px;
     width: 12px;
   }
@@ -55,7 +57,8 @@ const openedStyles = css`
 `;
 
 const closedStyles = css`
-  span::before, span::after {
+  span::before,
+  span::after {
     left: 13px;
     width: 12px;
   }
@@ -77,12 +80,17 @@ const Container = styled.span`
   height: 26px;
   &:hover {
     cursor: pointer;
-    ${ props => props.opened ? openedStyles : closedStyles };
+    ${props => (props.opened ? openedStyles : closedStyles)};
   }
 `;
 
 const HamburgerButton = ({ opened, ...props }) => {
-  return <Container opened={opened} {...props}> <Button/> </Container>;
+  return (
+    <Container opened={opened} {...props}>
+      {" "}
+      <Button />{" "}
+    </Container>
+  );
 };
 
 HamburgerButton.propTypes = {

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import CardWithPreview from '../../CardWithPreview';
-import { css, keyframes } from '@emotion/core';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import CardWithPreview from "../../CardWithPreview";
+import { css, keyframes } from "@emotion/core";
 
 const Fade = keyframes`
   from { opacity: 0 }
@@ -17,13 +17,13 @@ const Wrapper = styled(CardWithPreview)`
   ${props => props.styles};
   ${props =>
     props.selected &&
-      css`
-          box-shadow: 0 0 15px red;
-          border: 2px solid red;
-      `}
+    css`
+      box-shadow: 0 0 15px red;
+      border: 2px solid red;
+    `}
 `;
 
-export const TYPE = 'file';
+export const TYPE = "file";
 
 const File = ({ item, onClick }) => {
   return (
@@ -38,7 +38,7 @@ const File = ({ item, onClick }) => {
 
 File.propTypes = {
   item: PropTypes.object.isRequired,
-  onClick: PropTypes.func,
+  onClick: PropTypes.func
 };
 
 export default File;

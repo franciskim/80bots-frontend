@@ -1,21 +1,23 @@
-import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import Button from '../default/Button';
-import Modal from '../default/Modal';
-import Icon from '../default/icons';
-import Select from 'react-select';
-import Paginator from '../default/Paginator';
-import { connect } from 'react-redux';
-import { withTheme } from 'emotion-theming';
-import { css } from '@emotion/core';
-import { addNotification } from '/store/notification/actions';
+import React, { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import Button from "../default/Button";
+import Modal from "../default/Modal";
+import Icon from "../default/icons";
+import Select from "react-select";
+import Paginator from "../default/Paginator";
+import { connect } from "react-redux";
+import { withTheme } from "emotion-theming";
+import { css } from "@emotion/core";
+import { addNotification } from "/store/notification/actions";
 import {
-  getLowCreditNotifications, addLowCreditNotifications, deleteLowCreditNotification
-} from '/store/eventNotification/actions';
-import { NOTIFICATION_TYPES } from '/config';
-import { Card, CardBody } from '../default/Card';
-import { Table, Thead, Filters, LimitFilter } from '../default/Table';
+  getLowCreditNotifications,
+  addLowCreditNotifications,
+  deleteLowCreditNotification
+} from "/store/eventNotification/actions";
+import { NOTIFICATION_TYPES } from "/config";
+import { Card, CardBody } from "../default/Card";
+import { Table, Thead, Filters, LimitFilter } from "../default/Table";
 
 const Container = styled(Card)`
   background: #333;
@@ -55,12 +57,18 @@ const modalStyles = css`
 const PERCENTAGES = (() => {
   let percentages = [];
   for (let i = 1; i <= 100; i++) {
-    percentages.push({ value: i, label: i + ' %' });
+    percentages.push({ value: i, label: i + " %" });
   }
   return percentages;
 })();
 
-const Notifications = ({ theme, addNotification, lowCreditNotifications, total, ...props }) => {
+const Notifications = ({
+  theme,
+  addNotification,
+  lowCreditNotifications,
+  total,
+  ...props
+}) => {
   const [clickedNotification, setClickedNotification] = useState(null);
   const [percentage, setPercentage] = useState(null);
   const [page, setPage] = useState(1);
@@ -101,46 +109,67 @@ const Notifications = ({ theme, addNotification, lowCreditNotifications, total, 
   };
 
   const updateNotification = () => {
-    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Notification updated!' });
+    addNotification({
+      type: NOTIFICATION_TYPES.SUCCESS,
+      message: "Notification updated!"
+    });
     editModal.current.close();
   };
 
   const deleteNotification = () => {
-    props.deleteLowCreditNotification(clickedNotification.id)
-      .then(() => {
-        props.getLowCreditNotifications();
-        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Notification successfully deleted!' });
-        deleteModal.current.close();
+    props.deleteLowCreditNotification(clickedNotification.id).then(() => {
+      props.getLowCreditNotifications();
+      addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: "Notification successfully deleted!"
       });
+      deleteModal.current.close();
+    });
   };
 
-  const onPageChange = (page) => {
-    setPage(page); getLowCreditNotifications({ page, limit });
+  const onPageChange = page => {
+    setPage(page);
+    getLowCreditNotifications({ page, limit });
   };
 
-  const renderRow = (notification, idx) => <tr key={idx}>
-    <td>{ notification.id }</td>
-    <td>{ notification.percentage }&nbsp;%</td>
-    <td>
-      <IconButton title={'View Running Bots'} type={'primary'} onClick={() => openEditModal(notification)}>
-        <Icon name={'edit'} color={theme.colors.white} />
-      </IconButton>
-      <IconButton title={'Edit Remaining Credits'} type={'danger'} onClick={() => openDeleteModal(notification)}>
-        <Icon name={'garbage'} color={theme.colors.white} />
-      </IconButton>
-    </td>
-  </tr>;
+  const renderRow = (notification, idx) => (
+    <tr key={idx}>
+      <td>{notification.id}</td>
+      <td>{notification.percentage}&nbsp;%</td>
+      <td>
+        <IconButton
+          title={"View Running Bots"}
+          type={"primary"}
+          onClick={() => openEditModal(notification)}
+        >
+          <Icon name={"edit"} color={theme.colors.white} />
+        </IconButton>
+        <IconButton
+          title={"Edit Remaining Credits"}
+          type={"danger"}
+          onClick={() => openDeleteModal(notification)}
+        >
+          <Icon name={"garbage"} color={theme.colors.white} />
+        </IconButton>
+      </td>
+    </tr>
+  );
 
-  return(
+  return (
     <>
       <AddButtonWrap>
-        <Button type={'primary'} onClick={() => addModal.current.open()}>Add Notification</Button>
+        <Button type={"primary"} onClick={() => addModal.current.open()}>
+          Add Notification
+        </Button>
       </AddButtonWrap>
       <Container>
         <CardBody>
           <Filters>
             <LimitFilter
-              onChange={({ limit }) => { setLimit(limit); props.getLowCreditNotifications({ page, limit }); }}
+              onChange={({ limit }) => {
+                setLimit(limit);
+                props.getLowCreditNotifications({ page, limit });
+              }}
             />
           </Filters>
           <Table>
@@ -151,42 +180,77 @@ const Notifications = ({ theme, addNotification, lowCreditNotifications, total, 
                 <th>Actions</th>
               </tr>
             </Thead>
-            <tbody>
-              { lowCreditNotifications.map(renderRow) }
-            </tbody>
+            <tbody>{lowCreditNotifications.map(renderRow)}</tbody>
           </Table>
-          <Paginator total={total} pageSize={limit} onChangePage={onPageChange}/>
+          <Paginator
+            total={total}
+            pageSize={limit}
+            onChangePage={onPageChange}
+          />
         </CardBody>
       </Container>
 
-      <Modal ref={editModal} title={'Edit Notification'} contentStyles={modalStyles}
+      <Modal
+        ref={editModal}
+        title={"Edit Notification"}
+        contentStyles={modalStyles}
         onClose={onModalClose}
       >
-        <Select options={PERCENTAGES} value={percentage} onChange={option => setPercentage(option.value)}
-          defaultValue={clickedNotification && PERCENTAGES.find(item => item.value === clickedNotification.percentage)}
+        <Select
+          options={PERCENTAGES}
+          value={percentage}
+          onChange={option => setPercentage(option.value)}
+          defaultValue={
+            clickedNotification &&
+            PERCENTAGES.find(
+              item => item.value === clickedNotification.percentage
+            )
+          }
         />
         <Buttons>
-          <Button type={'danger'} onClick={() => editModal.current.close()}>Cancel</Button>
-          <Button type={'primary'} onClick={updateNotification}>Update</Button>
+          <Button type={"danger"} onClick={() => editModal.current.close()}>
+            Cancel
+          </Button>
+          <Button type={"primary"} onClick={updateNotification}>
+            Update
+          </Button>
         </Buttons>
       </Modal>
 
-      <Modal ref={deleteModal} title={'Are you sure?'} contentStyles={modalStyles}
+      <Modal
+        ref={deleteModal}
+        title={"Are you sure?"}
+        contentStyles={modalStyles}
         onClose={onModalClose}
       >
         <Buttons>
-          <Button type={'danger'} onClick={() => editModal.current.close()}>Cancel</Button>
-          <Button type={'primary'} onClick={deleteNotification}>Delete</Button>
+          <Button type={"danger"} onClick={() => editModal.current.close()}>
+            Cancel
+          </Button>
+          <Button type={"primary"} onClick={deleteNotification}>
+            Delete
+          </Button>
         </Buttons>
       </Modal>
 
-      <Modal ref={addModal} title={'Add Notification'} contentStyles={modalStyles}
+      <Modal
+        ref={addModal}
+        title={"Add Notification"}
+        contentStyles={modalStyles}
         onClose={onModalClose}
       >
-        <Select options={PERCENTAGES} value={percentage} onChange={option => setPercentage(option)} />
+        <Select
+          options={PERCENTAGES}
+          value={percentage}
+          onChange={option => setPercentage(option)}
+        />
         <Buttons>
-          <Button type={'danger'} onClick={() => addModal.current.close()}>Cancel</Button>
-          <Button type={'primary'} onClick={addLowCreditNotification}>Add</Button>
+          <Button type={"danger"} onClick={() => addModal.current.close()}>
+            Cancel
+          </Button>
+          <Button type={"primary"} onClick={addLowCreditNotification}>
+            Add
+          </Button>
         </Buttons>
       </Modal>
     </>
@@ -202,7 +266,7 @@ Notifications.propTypes = {
   addLowCreditNotification: PropTypes.func.isRequired,
   deleteLowCreditNotification: PropTypes.func.isRequired,
   lowCreditNotifications: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -212,9 +276,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
-  getLowCreditNotifications: query => dispatch(getLowCreditNotifications(query)),
-  addLowCreditNotification: percentage => dispatch(addLowCreditNotifications(percentage)),
-  deleteLowCreditNotification: id => dispatch(deleteLowCreditNotification(id)),
+  getLowCreditNotifications: query =>
+    dispatch(getLowCreditNotifications(query)),
+  addLowCreditNotification: percentage =>
+    dispatch(addLowCreditNotifications(percentage)),
+  deleteLowCreditNotification: id => dispatch(deleteLowCreditNotification(id))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Notifications));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTheme(Notifications));

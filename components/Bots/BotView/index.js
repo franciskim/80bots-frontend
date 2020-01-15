@@ -1,68 +1,68 @@
-import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import ScreenShotTab from './components/ScreenShotTab';
-import LogsTab from './components/LogsTab';
-import OutputTab from './components/OutputTab';
-import DisplayTab from './components/DisplayTab';
-import {connect} from 'react-redux';
-import {useRouter} from 'next/router';
-import {withTheme} from 'emotion-theming';
-import {theme} from '/config';
-import {Card, CardBody, CardHeader} from '/components/default/Card';
-import {adminGetBot, getBot, clearBot} from '/store/bot/actions';
-import {subscribe, unsubscribe} from '/store/socket/actions';
-import {Badge, Button, Loader} from '/components/default';
-import Icon from '../../default/icons';
-import DropDown from '../../default/DropDown';
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import ScreenShotTab from "./components/ScreenShotTab";
+import LogsTab from "./components/LogsTab";
+import OutputTab from "./components/OutputTab";
+import DisplayTab from "./components/DisplayTab";
+import { connect } from "react-redux";
+import { useRouter } from "next/router";
+import { withTheme } from "emotion-theming";
+import { theme } from "/config";
+import { Card, CardBody, CardHeader } from "/components/default/Card";
+import { adminGetBot, getBot, clearBot } from "/store/bot/actions";
+import { subscribe, unsubscribe } from "/store/socket/actions";
+import { Badge, Button, Loader } from "/components/default";
+import Icon from "../../default/icons";
+import DropDown from "../../default/DropDown";
 
 const TABS = {
   SCREENSHOTS: {
-    title: 'Screenshots',
-    component: ScreenShotTab,
+    title: "Screenshots",
+    component: ScreenShotTab
   },
   LOGS: {
-    title: 'Logs',
-    component: LogsTab,
+    title: "Logs",
+    component: LogsTab
   },
   OUTPUTS: {
-    title: 'Outputs',
-    component: OutputTab,
+    title: "Outputs",
+    component: OutputTab
   },
   DISPLAY: {
-    title: 'Display',
-    component: DisplayTab,
-  },
+    title: "Display",
+    component: DisplayTab
+  }
 };
 
 const STATUSES = {
   CONNECTING: {
-    label: 'Connecting',
-    color: theme.colors.orange,
+    label: "Connecting",
+    color: theme.colors.orange
   },
   CONNECTED: {
-    label: 'Connected',
-    color: theme.colors.clearGreen,
+    label: "Connected",
+    color: theme.colors.clearGreen
   },
   RECONNECT: {
-    label: 'Reconnecting',
-    color: theme.colors.orange,
+    label: "Reconnecting",
+    color: theme.colors.orange
   },
   TIMEOUT: {
-    label: 'Instance Launching or Stopped',
-    color: theme.colors.darkishPink,
+    label: "Instance Launching or Stopped",
+    color: theme.colors.darkishPink
   },
   ERROR: {
-    label: 'Stopped',
-    color: theme.colors.darkishPink,
+    label: "Stopped",
+    color: theme.colors.darkishPink
   },
   DISCONNECT: {
-    label: 'Disconnected',
-    color: theme.colors.darkishPink,
-  },
+    label: "Disconnected",
+    color: theme.colors.darkishPink
+  }
 };
 
-const Container = styled(Card)` 
+const Container = styled(Card)`
   background: #333;
   border: none;
   color: #fff;
@@ -114,20 +114,24 @@ const Tab = styled(Back)`
   }
 `;
 
-const A = styled.a` 
+const A = styled.a`
   color: inherit;
-  text-decoration: none; 
+  text-decoration: none;
 `;
 
-const Hint = styled.span` 
+const Hint = styled.span`
   font-size: 14px;
   color: ${props => props.theme.colors.grey};
 `;
 
-const ConnectionStatus = ({status, color}) => <>
-  <Status type={'info'} color={color} pill>{status}</Status>
-  <Hint>&nbsp;|&nbsp;</Hint>
-</>;
+const ConnectionStatus = ({ status, color }) => (
+  <>
+    <Status type={"info"} color={color} pill>
+      {status}
+    </Status>
+    <Hint>&nbsp;|&nbsp;</Hint>
+  </>
+);
 
 const Arrow = styled.div`
   display: inline-block;
@@ -136,7 +140,16 @@ const Arrow = styled.div`
   margin: 1px 0 0 6px;
 `;
 
-const BotView = ({botInstance, user, getBot, clearBot, adminGetBot, theme, wsSubscribe, wsUnsubscribe}) => {
+const BotView = ({
+  botInstance,
+  user,
+  getBot,
+  clearBot,
+  adminGetBot,
+  theme,
+  wsSubscribe,
+  wsUnsubscribe
+}) => {
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
   const [status, setStatus] = useState(STATUSES.CONNECTING);
   const [customBack, setCustomBack] = useState(null);
@@ -144,7 +157,7 @@ const BotView = ({botInstance, user, getBot, clearBot, adminGetBot, theme, wsSub
   const router = useRouter();
 
   useEffect(() => {
-    const {storage_channel} = botInstance;
+    const { storage_channel } = botInstance;
     if (storage_channel) {
       wsSubscribe(storage_channel, true);
       setStatus(STATUSES.CONNECTED);
@@ -155,7 +168,7 @@ const BotView = ({botInstance, user, getBot, clearBot, adminGetBot, theme, wsSub
   }, [botInstance]);
 
   useEffect(() => {
-    user.role === 'Admin'
+    user.role === "Admin"
       ? adminGetBot(router.query.id)
       : getBot(router.query.id);
     return () => {
@@ -168,11 +181,15 @@ const BotView = ({botInstance, user, getBot, clearBot, adminGetBot, theme, wsSub
   }, [activeTab]);
 
   const renderTab = (item, idx) => {
-    const isOffline = viewMode === 'OFFLINE';
-    const isDisabled = isOffline && item === 'DISPLAY';
+    const isOffline = viewMode === "OFFLINE";
+    const isDisabled = isOffline && item === "DISPLAY";
     return (
-      <Tab disabled={isDisabled} type={activeTab.title === TABS[item].title ? 'success' : 'primary'}
-           key={idx} onClick={() => setActiveTab(TABS[item])}>
+      <Tab
+        disabled={isDisabled}
+        type={activeTab.title === TABS[item].title ? "success" : "primary"}
+        key={idx}
+        onClick={() => setActiveTab(TABS[item])}
+      >
         {TABS[item].title}
       </Tab>
     );
@@ -183,29 +200,42 @@ const BotView = ({botInstance, user, getBot, clearBot, adminGetBot, theme, wsSub
     <Container>
       <Header>
         {
-          <Back type={'primary'}>
-            <A onClick={() => customBack ? customBack() : router.back()}>Back</A>
+          <Back type={"primary"}>
+            <A onClick={() => (customBack ? customBack() : router.back())}>
+              Back
+            </A>
           </Back>
         }
         <H6>
-          {
-            Object.keys(botInstance).length
-              ? botInstance.name + ' | ' + botInstance.bot_name
-              : <Loader type={'bubbles'} width={20} height={20} color={theme.colors.primary}/>
-          }
+          {Object.keys(botInstance).length ? (
+            botInstance.name + " | " + botInstance.bot_name
+          ) : (
+            <Loader
+              type={"bubbles"}
+              width={20}
+              height={20}
+              color={theme.colors.primary}
+            />
+          )}
         </H6>
         <Tabs>
-          <ConnectionStatus status={status.label} color={status.color}/>
+          <ConnectionStatus status={status.label} color={status.color} />
           {Object.keys(TABS).map(renderTab)}
         </Tabs>
       </Header>
-      {
-        status === STATUSES.CONNECTING
-          ? <Content>
-            <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color} caption={status.label}/>
-          </Content>
-          : <CurrentTab setCustomBack={(f) => setCustomBack(() => f)}/>
-      }
+      {status === STATUSES.CONNECTING ? (
+        <Content>
+          <Loader
+            type={"spinning-bubbles"}
+            width={100}
+            height={100}
+            color={status.color}
+            caption={status.label}
+          />
+        </Content>
+      ) : (
+        <CurrentTab setCustomBack={f => setCustomBack(() => f)} />
+      )}
     </Container>
   );
 };
@@ -218,25 +248,25 @@ BotView.propTypes = {
   wsUnsubscribe: PropTypes.func.isRequired,
   botInstance: PropTypes.object.isRequired,
   user: PropTypes.object,
-  theme: PropTypes.shape({colors: PropTypes.object.isRequired}).isRequired,
+  theme: PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired
 };
 
 ConnectionStatus.propTypes = {
   status: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({
   botInstance: state.bot.botInstance,
-  user: state.auth.user,
+  user: state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBot: (id) => dispatch(getBot(id)),
+  getBot: id => dispatch(getBot(id)),
   clearBot: () => dispatch(clearBot()),
-  adminGetBot: (id) => dispatch(adminGetBot(id)),
+  adminGetBot: id => dispatch(adminGetBot(id)),
   wsSubscribe: (channel, isPrivate) => dispatch(subscribe(channel, isPrivate)),
-  wsUnsubscribe: (channel) => dispatch(unsubscribe(channel)),
+  wsUnsubscribe: channel => dispatch(unsubscribe(channel))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(BotView));

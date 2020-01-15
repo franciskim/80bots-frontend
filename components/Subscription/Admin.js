@@ -1,17 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import Icon from '../default/icons';
-import Modal from '../default/Modal';
-import Button from '../default/Button';
-import { withTheme } from 'emotion-theming';
-import { css } from '@emotion/core';
-import { connect } from 'react-redux';
-import { Card, CardBody } from '../default/Card';
-import { Table, Thead } from '../default/Table';
-import { addNotification } from '/store/notification/actions';
-import { getSubscriptionsAdmin, updateSubscriptionAdmin, deleteSubscriptionAdmin } from '/store/subscription/actions';
-import { NOTIFICATION_TYPES } from '/config';
+import React, { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import Icon from "../default/icons";
+import Modal from "../default/Modal";
+import Button from "../default/Button";
+import { withTheme } from "emotion-theming";
+import { css } from "@emotion/core";
+import { connect } from "react-redux";
+import { Card, CardBody } from "../default/Card";
+import { Table, Thead } from "../default/Table";
+import { addNotification } from "/store/notification/actions";
+import {
+  getSubscriptionsAdmin,
+  updateSubscriptionAdmin,
+  deleteSubscriptionAdmin
+} from "/store/subscription/actions";
+import { NOTIFICATION_TYPES } from "/config";
 
 const Container = styled(Card)`
   background: #333;
@@ -63,11 +67,18 @@ const modalStyles = css`
   overflow-y: visible;
 `;
 
-const Subscriptions = ({ theme, addNotification, getSubscriptions, updateSubscription, deleteSubscription, plans }) => {
+const Subscriptions = ({
+  theme,
+  addNotification,
+  getSubscriptions,
+  updateSubscription,
+  deleteSubscription,
+  plans
+}) => {
   const [clickedPlan, setClickedPlan] = useState(null);
-  const [planName, setPlanName] = useState('');
-  const [planCredits, setPlanCredits] = useState('');
-  const [planPrice, setPlanPrice] = useState('');
+  const [planName, setPlanName] = useState("");
+  const [planCredits, setPlanCredits] = useState("");
+  const [planPrice, setPlanPrice] = useState("");
 
   const addModal = useRef(null);
   const editModal = useRef(null);
@@ -97,30 +108,43 @@ const Subscriptions = ({ theme, addNotification, getSubscriptions, updateSubscri
 
   const onModalClose = () => {
     setClickedPlan(null);
-    setPlanName('');
-    setPlanCredits('');
-    setPlanPrice('');
+    setPlanName("");
+    setPlanCredits("");
+    setPlanPrice("");
   };
 
   const changePlanStatus = plan => {
-    updateSubscription(plan.id, { status: plan.status === 'active' ? 'inactive' : 'active' })
-      .then(() => {
-        const status = plan.status === 'active' ? 'deactivated' : 'activated';
-        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: `Subscription plan was successfully ${status}` });
+    updateSubscription(plan.id, {
+      status: plan.status === "active" ? "inactive" : "active"
+    }).then(() => {
+      const status = plan.status === "active" ? "deactivated" : "activated";
+      addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: `Subscription plan was successfully ${status}`
       });
+    });
   };
 
   const addPlan = () => {
-    addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Subscription plan was successfully added' });
+    addNotification({
+      type: NOTIFICATION_TYPES.SUCCESS,
+      message: "Subscription plan was successfully added"
+    });
     addModal.current.close();
   };
 
   const updatePlan = () => {
-    updateSubscription(clickedPlan.id, { credit: planCredits, price: planPrice, name: planName })
-      .then(() => {
-        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Subscription plan was successfully updated' });
-        editModal.current.close();
+    updateSubscription(clickedPlan.id, {
+      credit: planCredits,
+      price: planPrice,
+      name: planName
+    }).then(() => {
+      addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: "Subscription plan was successfully updated"
       });
+      editModal.current.close();
+    });
   };
 
   const deletePlan = () => {
@@ -133,29 +157,44 @@ const Subscriptions = ({ theme, addNotification, getSubscriptions, updateSubscri
     });
   };
 
-  const renderRow = (plan, idx) => <tr key={idx}>
-    <td>{ plan.name }</td>
-    <td>{ plan.price }$</td>
-    <td>{ plan.credit }</td>
-    <td>
-      <StatusButton type={plan.status === 'active' ? 'success' : 'danger'} onClick={() => changePlanStatus(plan)}>
-        { plan.status }
-      </StatusButton>
-    </td>
-    <td>
-      <IconButton title={'Edit Subscription Plan'} type={'primary'} onClick={() => openEditModal(plan)}>
-        <Icon name={'edit'} color={theme.colors.white} />
-      </IconButton>
-      <IconButton title={'Delete Subscription Plan'} type={'danger'} onClick={() => openDeleteModal(plan)}>
-        <Icon name={'garbage'} color={theme.colors.white} />
-      </IconButton>
-    </td>
-  </tr>;
+  const renderRow = (plan, idx) => (
+    <tr key={idx}>
+      <td>{plan.name}</td>
+      <td>{plan.price}$</td>
+      <td>{plan.credit}</td>
+      <td>
+        <StatusButton
+          type={plan.status === "active" ? "success" : "danger"}
+          onClick={() => changePlanStatus(plan)}
+        >
+          {plan.status}
+        </StatusButton>
+      </td>
+      <td>
+        <IconButton
+          title={"Edit Subscription Plan"}
+          type={"primary"}
+          onClick={() => openEditModal(plan)}
+        >
+          <Icon name={"edit"} color={theme.colors.white} />
+        </IconButton>
+        <IconButton
+          title={"Delete Subscription Plan"}
+          type={"danger"}
+          onClick={() => openDeleteModal(plan)}
+        >
+          <Icon name={"garbage"} color={theme.colors.white} />
+        </IconButton>
+      </td>
+    </tr>
+  );
 
-  return(
+  return (
     <>
       <AddButtonWrap>
-        <Button type={'primary'} onClick={openAddModal}>Add subscription plan</Button>
+        <Button type={"primary"} onClick={openAddModal}>
+          Add subscription plan
+        </Button>
       </AddButtonWrap>
       <Container>
         <CardBody>
@@ -169,74 +208,112 @@ const Subscriptions = ({ theme, addNotification, getSubscriptions, updateSubscri
                 <th>Actions</th>
               </tr>
             </Thead>
-            <tbody>
-              { plans.map(renderRow) }
-            </tbody>
+            <tbody>{plans.map(renderRow)}</tbody>
           </Table>
         </CardBody>
       </Container>
 
-      <Modal ref={editModal} title={'Edit Subscription Plan'} contentStyles={modalStyles}
+      <Modal
+        ref={editModal}
+        title={"Edit Subscription Plan"}
+        contentStyles={modalStyles}
         onClose={onModalClose}
       >
         <InputWrap>
           <label>Name</label>
-          <input type={'text'} className={'form-control'} value={planName}
+          <input
+            type={"text"}
+            className={"form-control"}
+            value={planName}
             onChange={e => setPlanName(e.target.value)}
           />
         </InputWrap>
         <InputWrap>
           <label>Credits</label>
-          <input type={'text'} className={'form-control'} value={planCredits}
+          <input
+            type={"text"}
+            className={"form-control"}
+            value={planCredits}
             onChange={e => setPlanCredits(e.target.value)}
           />
         </InputWrap>
         <InputWrap>
           <label>Price</label>
-          <input type={'text'} className={'form-control'} value={planPrice}
+          <input
+            type={"text"}
+            className={"form-control"}
+            value={planPrice}
             onChange={e => setPlanPrice(e.target.value)}
           />
         </InputWrap>
         <Buttons>
-          <Button type={'primary'} onClick={updatePlan}>Update</Button>
-          <Button type={'danger'} onClick={() => editModal.current.close()}>Cancel</Button>
+          <Button type={"primary"} onClick={updatePlan}>
+            Update
+          </Button>
+          <Button type={"danger"} onClick={() => editModal.current.close()}>
+            Cancel
+          </Button>
         </Buttons>
       </Modal>
 
-      <Modal ref={addModal} title={'Add Subscription Plan'} contentStyles={modalStyles}
+      <Modal
+        ref={addModal}
+        title={"Add Subscription Plan"}
+        contentStyles={modalStyles}
         onClose={onModalClose}
       >
         <InputWrap>
           <label>Name</label>
-          <input type={'text'} className={'form-control'} value={planName}
+          <input
+            type={"text"}
+            className={"form-control"}
+            value={planName}
             onChange={e => setPlanName(e.target.value)}
           />
         </InputWrap>
         <InputWrap>
           <label>Credits</label>
-          <input type={'text'} className={'form-control'} value={planCredits}
+          <input
+            type={"text"}
+            className={"form-control"}
+            value={planCredits}
             onChange={e => setPlanCredits(e.target.value)}
           />
         </InputWrap>
         <InputWrap>
           <label>Price</label>
-          <input type={'text'} className={'form-control'} value={planPrice}
+          <input
+            type={"text"}
+            className={"form-control"}
+            value={planPrice}
             onChange={e => setPlanPrice(e.target.value)}
           />
         </InputWrap>
         <Buttons>
-          <Button type={'danger'} onClick={() => addModal.current.close()}>Cancel</Button>
-          <Button type={'primary'} onClick={addPlan}>Add</Button>
+          <Button type={"danger"} onClick={() => addModal.current.close()}>
+            Cancel
+          </Button>
+          <Button type={"primary"} onClick={addPlan}>
+            Add
+          </Button>
         </Buttons>
       </Modal>
 
-      <Modal ref={deleteModal} title={'Are you sure?'} contentStyles={modalStyles} onClose={onModalClose}>
+      <Modal
+        ref={deleteModal}
+        title={"Are you sure?"}
+        contentStyles={modalStyles}
+        onClose={onModalClose}
+      >
         <Buttons>
-          <Button type={'danger'} onClick={() => deleteModal.current.close()}>Cancel</Button>
-          <Button type={'primary'} onClick={deletePlan}>Delete</Button>
+          <Button type={"danger"} onClick={() => deleteModal.current.close()}>
+            Cancel
+          </Button>
+          <Button type={"primary"} onClick={deletePlan}>
+            Delete
+          </Button>
         </Buttons>
       </Modal>
-
     </>
   );
 };
@@ -253,14 +330,18 @@ Subscriptions.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  plans: state.subscription.plans,
+  plans: state.subscription.plans
 });
 
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   getSubscriptions: query => dispatch(getSubscriptionsAdmin(query)),
-  updateSubscription: (id, updateObject) => dispatch(updateSubscriptionAdmin(id, updateObject)),
-  deleteSubscription: (id) => dispatch(deleteSubscriptionAdmin(id)),
+  updateSubscription: (id, updateObject) =>
+    dispatch(updateSubscriptionAdmin(id, updateObject)),
+  deleteSubscription: id => dispatch(deleteSubscriptionAdmin(id))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Subscriptions));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTheme(Subscriptions));

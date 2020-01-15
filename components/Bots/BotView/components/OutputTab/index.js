@@ -1,27 +1,27 @@
-import React, {useEffect, useState} from 'react';
-import styled from '@emotion/styled';
-import ImagesType from './components/ImagesType';
-import JsonType from './components/JsonType';
-import { keyframes } from '@emotion/core';
-import { connect } from 'react-redux';
-import { CardBody } from '/components/default/Card';
-import { Button, Loader } from '/components/default';
+import React, { useEffect, useState } from "react";
+import styled from "@emotion/styled";
+import ImagesType from "./components/ImagesType";
+import JsonType from "./components/JsonType";
+import { keyframes } from "@emotion/core";
+import { connect } from "react-redux";
+import { CardBody } from "/components/default/Card";
+import { Button, Loader } from "/components/default";
 
 const OUTPUT_TYPES = {
   JSON: {
-    value: 'json',
-    label: 'JSON',
+    value: "json",
+    label: "JSON"
   },
   IMAGES: {
-    value: 'images',
-    label: 'Images'
-  },
+    value: "images",
+    label: "Images"
+  }
 };
 
 const Content = styled(CardBody)`
   display: flex;
   flex-flow: column;
-  ${ props => props.styles };
+  ${props => props.styles};
 `;
 
 const TypesNavigation = styled.div`
@@ -40,13 +40,13 @@ const Type = styled(Button)`
   animation: ${Fade} 200ms ease-in;
 `;
 
-const Hint = styled.span` 
+const Hint = styled.span`
   font-size: 14px;
-  color: ${ props => props.theme.colors.grey };
+  color: ${props => props.theme.colors.grey};
 `;
 
-const OutputTab = ({setCustomBack}) => {
-  const [currentType, setCurrentType] = useState(OUTPUT_TYPES.JSON)
+const OutputTab = ({ setCustomBack }) => {
+  const [currentType, setCurrentType] = useState(OUTPUT_TYPES.JSON);
 
   const renderCurrentType = () => {
     switch (currentType.value) {
@@ -55,34 +55,38 @@ const OutputTab = ({setCustomBack}) => {
       case OUTPUT_TYPES.JSON.value:
         return <JsonType setCustomBack={setCustomBack} />;
       default:
-        return <Loader type={'spinning-bubbles'}
-          width={100}
-          height={100}
-          color={status.color}
-          caption={'Loading...'}
-        />;
+        return (
+          <Loader
+            type={"spinning-bubbles"}
+            width={100}
+            height={100}
+            color={status.color}
+            caption={"Loading..."}
+          />
+        );
     }
   };
 
-  return(
+  return (
     <>
       <Content>
         <TypesNavigation>
-          {
-            Object.values(OUTPUT_TYPES).map((item, i, all) => {
-              const variant = item.value === currentType.value ? 'success' : 'primary';
-              return (
-                <>
-                  <Type key={i} type={variant} onClick={() => setCurrentType(item)}>
-                    { item.label }
-                  </Type>
-                  {
-                    all.length - 1 > i && <Hint>&nbsp;|&nbsp;</Hint>
-                  }
-                </>
-              );
-            })
-          }
+          {Object.values(OUTPUT_TYPES).map((item, i, all) => {
+            const variant =
+              item.value === currentType.value ? "success" : "primary";
+            return (
+              <>
+                <Type
+                  key={i}
+                  type={variant}
+                  onClick={() => setCurrentType(item)}
+                >
+                  {item.label}
+                </Type>
+                {all.length - 1 > i && <Hint>&nbsp;|&nbsp;</Hint>}
+              </>
+            );
+          })}
         </TypesNavigation>
         {renderCurrentType()}
       </Content>

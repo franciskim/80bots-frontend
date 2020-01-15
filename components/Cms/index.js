@@ -1,18 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import Modal from '../default/Modal';
-import { css } from '@emotion/core';
-import { NOTIFICATION_TYPES } from '/config';
-import { connect } from 'react-redux';
-import { Button, Paginator } from '/components/default';
-import { Card, CardBody } from '/components/default/Card';
-import { Table, Thead, Filters, LimitFilter, SearchFilter, Th } from '/components/default/Table';
-import { addNotification } from '/store/notification/actions';
-import { getPosts, deletePost } from '../../store/cms/actions';
-import Link from 'next/link';
-import Icon from '../default/icons';
-import { withTheme } from 'emotion-theming';
+import React, { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import Modal from "../default/Modal";
+import { css } from "@emotion/core";
+import { NOTIFICATION_TYPES } from "/config";
+import { connect } from "react-redux";
+import { Button, Paginator } from "/components/default";
+import { Card, CardBody } from "/components/default/Card";
+import {
+  Table,
+  Thead,
+  Filters,
+  LimitFilter,
+  SearchFilter,
+  Th
+} from "/components/default/Table";
+import { addNotification } from "/store/notification/actions";
+import { getPosts, deletePost } from "../../store/cms/actions";
+import Link from "next/link";
+import Icon from "../default/icons";
+import { withTheme } from "emotion-theming";
 
 const Container = styled(Card)`
   border-radius: 0.25rem;
@@ -24,10 +31,10 @@ const AddButtonWrap = styled.div`
   justify-content: flex-end;
   margin-bottom: 5px;
   button {
-      margin-right: 20px;
-      &:last-child {
-          margin-right: 0;
-      }
+    margin-right: 20px;
+    &:last-child {
+      margin-right: 0;
+    }
   }
 `;
 
@@ -45,7 +52,7 @@ const IconButton = styled(Button)`
   width: 27px;
   height: 27px;
   &:last-child {
-      margin-right: 0;
+    margin-right: 0;
   }
 `;
 
@@ -64,8 +71,8 @@ const modalStyles = css`
   max-width: 800px;
   overflow-y: visible;
   @media (max-height: 900px) {
-      max-height: 700px;
-      overflow-y: scroll;
+    max-height: 700px;
+    overflow-y: scroll;
   }
 `;
 
@@ -73,7 +80,7 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
   const [clickedPost, setClickedPost] = useState(null);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [order, setOrder] = useState({ value: '', field: '' });
+  const [order, setOrder] = useState({ value: "", field: "" });
   const [search, setSearch] = useState(null);
 
   const deleteModal = useRef(null);
@@ -86,16 +93,36 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
     setClickedPost(null);
     deletePost(clickedPost.id)
       .then(() => {
-        addNotification({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Post removed!' });
-        getPosts({ page, limit, sort: order.field, order: order.value, search });
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: "Post removed!"
+        });
+        getPosts({
+          page,
+          limit,
+          sort: order.field,
+          order: order.value,
+          search
+        });
         deleteModal.current.close();
       })
-      .catch(() => addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Post delete failed' }));
+      .catch(() =>
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: "Post delete failed"
+        })
+      );
   };
 
   const searchPosts = value => {
     setSearch(value);
-    getPosts({ page, limit, sort: order.field, order: order.value, search: value });
+    getPosts({
+      page,
+      limit,
+      sort: order.field,
+      order: order.value,
+      search: value
+    });
   };
 
   const onOrderChange = (field, value) => {
@@ -107,7 +134,11 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
     <Th
       {...props}
       // eslint-disable-next-line react/prop-types
-      order={props.field === order.field || props.children === order.field ? order.value : ''}
+      order={
+        props.field === order.field || props.children === order.field
+          ? order.value
+          : ""
+      }
       onClick={onOrderChange}
     />
   );
@@ -117,36 +148,43 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
       <td>{post.title}</td>
       <td>
         <Link href={`/${post.slug}`}>
-          <a target='_blank'>{post.slug}</a>
+          <a target="_blank">{post.slug}</a>
         </Link>
       </td>
-      <td>{post.type === 'bot' ? 'Bot Post' : 'Post'}</td>
+      <td>{post.type === "bot" ? "Bot Post" : "Post"}</td>
       <td>{post.status}</td>
-      <td className='td-controls'>
-        <IconButton title={'View Post'} type={'primary'}>
-          <Link href={'/admin/cms/posts/[id]'} as={`/admin/cms/posts/${post.id}`}>
+      <td className="td-controls">
+        <IconButton title={"View Post"} type={"primary"}>
+          <Link
+            href={"/admin/cms/posts/[id]"}
+            as={`/admin/cms/posts/${post.id}`}
+          >
             <A>
-              <Icon name={'eye'} color={theme.colors.white} />
+              <Icon name={"eye"} color={theme.colors.white} />
             </A>
           </Link>
         </IconButton>
 
-        <IconButton title={'Edit Post'} type={'primary'}>
-          <Link href={'/admin/cms/posts/[id]/edit'} as={`/admin/cms/posts/${post.id}/edit`}>
+        <IconButton title={"Edit Post"} type={"primary"}>
+          <Link
+            href={"/admin/cms/posts/[id]/edit"}
+            as={`/admin/cms/posts/${post.id}/edit`}
+          >
             <A>
-              <Icon name={'edit'} color={theme.colors.white} />
+              <Icon name={"edit"} color={theme.colors.white} />
             </A>
           </Link>
         </IconButton>
 
         <IconButton
-          title={'Delete Post'}
-          type={'danger'}
+          title={"Delete Post"}
+          type={"danger"}
           onClick={() => {
             setClickedPost(post);
             deleteModal.current.open();
-          }}>
-          <Icon name={'garbage'} color={theme.colors.white} />
+          }}
+        >
+          <Icon name={"garbage"} color={theme.colors.white} />
         </IconButton>
       </td>
     </tr>
@@ -155,8 +193,8 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
   return (
     <>
       <AddButtonWrap>
-        <AddButton type={'primary'}>
-          <Link href={'/admin/cms/add'}>
+        <AddButton type={"primary"}>
+          <Link href={"/admin/cms/add"}>
             <A>Add Post</A>
           </Link>
         </AddButton>
@@ -167,7 +205,13 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
             <LimitFilter
               onChange={({ value }) => {
                 setLimit(value);
-                getPosts({ page, limit: value, sort: order.field, order: order.value, search });
+                getPosts({
+                  page,
+                  limit: value,
+                  sort: order.field,
+                  order: order.value,
+                  search
+                });
               }}
             />
             <SearchFilter
@@ -180,10 +224,10 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
           <Table responsive>
             <Thead>
               <tr>
-                <OrderTh field={'title'}>Post title</OrderTh>
-                <OrderTh field={'slug'}>Slug</OrderTh>
-                <OrderTh field={'slug'}>Type</OrderTh>
-                <OrderTh field={'status'}>Status</OrderTh>
+                <OrderTh field={"title"}>Post title</OrderTh>
+                <OrderTh field={"slug"}>Slug</OrderTh>
+                <OrderTh field={"slug"}>Type</OrderTh>
+                <OrderTh field={"status"}>Status</OrderTh>
                 <th>Action</th>
               </tr>
             </Thead>
@@ -194,7 +238,13 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
             pageSize={limit}
             onChangePage={page => {
               setPage(page);
-              getPosts({ page, limit, sort: order.field, order: order.value, search });
+              getPosts({
+                page,
+                limit,
+                sort: order.field,
+                order: order.value,
+                search
+              });
             }}
           />
         </CardBody>
@@ -202,20 +252,22 @@ const Cms = ({ getPosts, deletePost, posts, total, theme }) => {
 
       <Modal
         ref={deleteModal}
-        title={'Delete Post'}
+        title={"Delete Post"}
         contentStyles={css`
           min-width: 300px;
-        `}>
+        `}
+      >
         <Buttons>
           <Button
-            type={'danger'}
+            type={"danger"}
             onClick={() => {
               setClickedPost(null);
               deleteModal.current.close();
-            }}>
+            }}
+          >
             Cancel
           </Button>
-          <Button type={'primary'} onClick={modalDeletePost}>
+          <Button type={"primary"} onClick={modalDeletePost}>
             Yes
           </Button>
         </Buttons>
@@ -230,18 +282,18 @@ Cms.propTypes = {
   posts: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
   theme: PropTypes.shape({
-    colors: PropTypes.object.isRequired,
-  }).isRequired,
+    colors: PropTypes.object.isRequired
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
   posts: state.cms.posts,
-  total: state.cms.total,
+  total: state.cms.total
 });
 
 const mapDispatchToProps = dispatch => ({
   getPosts: query => dispatch(getPosts(query)),
-  deletePost: id => dispatch(deletePost(id)),
+  deletePost: id => dispatch(deletePost(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Cms));

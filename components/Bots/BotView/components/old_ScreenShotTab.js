@@ -1,31 +1,31 @@
-import React, { useEffect, useRef, useState, useReducer } from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import ScreenShot from './ScreenShot';
-import Modal from '/components/default/Modal';
-import ReportEditor from './ReportIssue';
-import { css, keyframes } from '@emotion/core';
-import { withTheme } from 'emotion-theming';
-import { useRouter } from 'next/router';
-import { connect } from 'react-redux';
-import { CardBody } from '/components/default/Card';
-import { getFolders, getScreenshots } from '/store/bot/actions';
-import { Loader, Button, Paginator } from '/components/default';
-import { addListener, removeAllListeners } from '/store/socket/actions';
-import { Filters } from '/components/default/Table';
-import {NOTIFICATION_TYPES, theme} from '/config';
-import Link from 'next/link';
-import {addNotification} from '../../../../store/notification/actions';
+import React, { useEffect, useRef, useState, useReducer } from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import ScreenShot from "./ScreenShot";
+import Modal from "/components/default/Modal";
+import ReportEditor from "./ReportIssue";
+import { css, keyframes } from "@emotion/core";
+import { withTheme } from "emotion-theming";
+import { useRouter } from "next/router";
+import { connect } from "react-redux";
+import { CardBody } from "/components/default/Card";
+import { getFolders, getScreenshots } from "/store/bot/actions";
+import { Loader, Button, Paginator } from "/components/default";
+import { addListener, removeAllListeners } from "/store/socket/actions";
+import { Filters } from "/components/default/Table";
+import { NOTIFICATION_TYPES, theme } from "/config";
+import Link from "next/link";
+import { addNotification } from "../../../../store/notification/actions";
 
 const EVENTS = {
-  FOLDERS: 'folders',
-  SCREENSHOTS: 'screenshots',
-  SCREENSHOT: 'screenshot'
+  FOLDERS: "folders",
+  SCREENSHOTS: "screenshots",
+  SCREENSHOT: "screenshot"
 };
 
 const MESSAGES = {
-  GET_FOLDERS: 'get_folders',
-  GET_SCREENSHOTS: 'get_screenshots'
+  GET_FOLDERS: "get_folders",
+  GET_SCREENSHOTS: "get_screenshots"
 };
 
 const Fade = keyframes`
@@ -37,18 +37,20 @@ const Content = styled(CardBody)`
   display: flex;
   flex-flow: column wrap;
   height: 77vh;
-  ${ props => props.styles };
+  ${props => props.styles};
 `;
 
 const Image = styled(ScreenShot)`
   margin-bottom: 20px;
   margin-right: 20px;
   animation: ${Fade} 200ms ease-in-out;
-  ${ props => props.styles };
-  ${ props => props.selected && css`
-    box-shadow: 0 0 10px ${ props.theme.colors.darkishPink };
-    border: 1px solid ${ props.theme.colors.darkishPink };
-  `}
+  ${props => props.styles};
+  ${props =>
+    props.selected &&
+    css`
+      box-shadow: 0 0 10px ${props.theme.colors.darkishPink};
+      border: 1px solid ${props.theme.colors.darkishPink};
+    `}
 `;
 
 const ImageViewer = styled.div`
@@ -60,9 +62,9 @@ const ImageViewer = styled.div`
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, .8);
+  background-color: rgba(0, 0, 0, 0.8);
   img {
-    width: calc(100vw - 400px); 
+    width: calc(100vw - 400px);
     height: calc(100vh - 200px);
   }
 `;
@@ -90,46 +92,61 @@ const ScreenShots = styled.div`
   flex-flow: row wrap;
   justify-content: flex-start;
   align-items: center;
-  ${ props => props.styles };
+  ${props => props.styles};
 `;
 
 const Hint = styled.span`
   font-size: 14px;
-  color: ${ props => props.theme.colors.grey };
+  color: ${props => props.theme.colors.grey};
 `;
 
 const Span = styled.span`
   font-size: 20px;
-  color: ${ props => props.theme.colors.blueGrey };
+  color: ${props => props.theme.colors.blueGrey};
 `;
 
-const Fallback = (props) => {
+const Fallback = props => {
   const Div = styled.div`
     display: flex;
     flex: 1;
     justify-content: center;
     align-items: center;
   `;
-  return <Div><Span {...props}/></Div>;
+  return (
+    <Div>
+      <Span {...props} />
+    </Div>
+  );
 };
 
-const A = styled.a` 
+const A = styled.a`
   color: inherit;
-  text-decoration: none; 
+  text-decoration: none;
 `;
 
 const STATUSES = {
   FOLDERS: {
-    label: 'Receiving Folders',
+    label: "Receiving Folders",
     color: theme.colors.primary
   },
   DATA: {
-    label: 'Receiving Data',
+    label: "Receiving Data",
     color: theme.colors.mediumGreen
   }
 };
 
-const Old_ScreenShotTab = ({ botInstance, getFolders, getScreenshots, folders, screenshots, total, listen, removeAll, emit, setCustomBack }) => {
+const Old_ScreenShotTab = ({
+  botInstance,
+  getFolders,
+  getScreenshots,
+  folders,
+  screenshots,
+  total,
+  listen,
+  removeAll,
+  emit,
+  setCustomBack
+}) => {
   //const [folders, setFolders] = useState([]);
   const [offset, setOffset] = useReducer((state, offset) => offset, 0);
   const [page, setPage] = useState(1);
@@ -151,7 +168,7 @@ const Old_ScreenShotTab = ({ botInstance, getFolders, getScreenshots, folders, s
       case EVENTS.SCREENSHOTS:
         return [...action.data];
       case EVENTS.SCREENSHOT: {
-        if(state.length >= limit) {
+        if (state.length >= limit) {
           let temp = [...state];
           temp.pop();
           return [action.data, ...temp];
@@ -164,10 +181,13 @@ const Old_ScreenShotTab = ({ botInstance, getFolders, getScreenshots, folders, s
 
   const [images, setImages] = useReducer(imagesReducer, []);
 
-  const BackButton = <Back type={'primary'} onClick={() => setCurrentFolder(null)}>Back</Back>;
+  const BackButton = (
+    <Back type={"primary"} onClick={() => setCurrentFolder(null)}>
+      Back
+    </Back>
+  );
 
   useEffect(() => {
-
     getFolders({ instance_id: router.query.id, page, limit }).then(() => {
       setTotalFolders(total);
     });
@@ -183,11 +203,13 @@ const Old_ScreenShotTab = ({ botInstance, getFolders, getScreenshots, folders, s
   }, []);
 
   useEffect(() => {
-    return () => { removeAll(); };
+    return () => {
+      removeAll();
+    };
   }, []);
 
   useEffect(() => {
-    if(!reportMode) setIssuedScreenshots([]);
+    if (!reportMode) setIssuedScreenshots([]);
   }, [reportMode]);
 
   // useEffect(() => {
@@ -228,64 +250,103 @@ const Old_ScreenShotTab = ({ botInstance, getFolders, getScreenshots, folders, s
     setCurrentFolder(null);
   };
 
-  const selectCurrentFolder = (item) => {
+  const selectCurrentFolder = item => {
     setCurrentFolder(item);
-    getScreenshots({ instance_id: router.query.id, folder: item.id, page: 1, limit }).then(() => {
+    getScreenshots({
+      instance_id: router.query.id,
+      folder: item.id,
+      page: 1,
+      limit
+    }).then(() => {
       setTotalScreenshots(total);
     });
   };
 
-  const toFile = (item) => {
-    const blob = new Blob([item.thumbnail || item.data], { type: 'image/jpg' });
-    return new File([blob], item.name, { type: 'image/jpg' });
+  const toFile = item => {
+    const blob = new Blob([item.thumbnail || item.data], { type: "image/jpg" });
+    return new File([blob], item.name, { type: "image/jpg" });
   };
 
-  const toImage = (item) => ({ src: item.src || URL.createObjectURL(toFile(item)), caption: item.name, ...item });
+  const toImage = item => ({
+    src: item.src || URL.createObjectURL(toFile(item)),
+    caption: item.name,
+    ...item
+  });
 
   const selectImage = image => {
     const idx = issuedScreenshots.findIndex(item => item.name === image.name);
-    if(idx === -1) {
+    if (idx === -1) {
       setIssuedScreenshots([...issuedScreenshots, image]);
     } else {
-      setIssuedScreenshots([...issuedScreenshots.slice(0, idx), ...issuedScreenshots.slice(idx + 1)]);
+      setIssuedScreenshots([
+        ...issuedScreenshots.slice(0, idx),
+        ...issuedScreenshots.slice(idx + 1)
+      ]);
     }
   };
 
-  return(
+  return (
     <>
       <Content>
-        {
-          folders ? <>
-            {
-              currentFolder
-                ? <Button type={'primary'} onClick={backToFolders}>Back to folders</Button>
-                : null
-            }
+        {folders ? (
+          <>
+            {currentFolder ? (
+              <Button type={"primary"} onClick={backToFolders}>
+                Back to folders
+              </Button>
+            ) : null}
             <ScreenShots>
-              {
-                !currentFolder
-                  ? folders.map((item, idx) => <Image key={idx} src={item.thumbnail.url} caption={item.name}
-                    onClick={() => selectCurrentFolder(item)}/> )
-                  : screenshots.map((item, idx) => <Image key={idx} src={item.thumbnail.url}
-                    selected={issuedScreenshots.findIndex(image => item.name === image.name) > -1}
-                    caption={item.name} onClick={() => reportMode ? selectImage(item) : setCurrentImage(item)}
-                  />)
-              }
+              {!currentFolder
+                ? folders.map((item, idx) => (
+                    <Image
+                      key={idx}
+                      src={item.thumbnail.url}
+                      caption={item.name}
+                      onClick={() => selectCurrentFolder(item)}
+                    />
+                  ))
+                : screenshots.map((item, idx) => (
+                    <Image
+                      key={idx}
+                      src={item.thumbnail.url}
+                      selected={
+                        issuedScreenshots.findIndex(
+                          image => item.name === image.name
+                        ) > -1
+                      }
+                      caption={item.name}
+                      onClick={() =>
+                        reportMode ? selectImage(item) : setCurrentImage(item)
+                      }
+                    />
+                  ))}
             </ScreenShots>
-            <Paginator total={!currentFolder ? totalFolders : totalScreenshots} pageSize={limit} onChangePage={(page) => {
-              setPage(page);
-              !currentFolder
-                ? getFolders({ instance_id: router.query.id, page, limit })
-                : getScreenshots({ instance_id: router.query.id, folder: currentFolder.id, page, limit });
-            }}/>
-          </>
-            : <Loader type={'spinning-bubbles'} width={100} height={100} color={status.color}
-              caption={status.label}
+            <Paginator
+              total={!currentFolder ? totalFolders : totalScreenshots}
+              pageSize={limit}
+              onChangePage={page => {
+                setPage(page);
+                !currentFolder
+                  ? getFolders({ instance_id: router.query.id, page, limit })
+                  : getScreenshots({
+                      instance_id: router.query.id,
+                      folder: currentFolder.id,
+                      page,
+                      limit
+                    });
+              }}
             />
-        }
+          </>
+        ) : (
+          <Loader
+            type={"spinning-bubbles"}
+            width={100}
+            height={100}
+            color={status.color}
+            caption={status.label}
+          />
+        )}
       </Content>
-
-
 
       {/*{*/}
       {/*  !status && currentFolder && <FiltersSection>*/}
@@ -342,29 +403,32 @@ const Old_ScreenShotTab = ({ botInstance, getFolders, getScreenshots, folders, s
 };
 
 Old_ScreenShotTab.propTypes = {
-  setCustomBack:  PropTypes.func.isRequired,
-  botInstance:    PropTypes.object.isRequired,
-  getFolders:     PropTypes.func.isRequired,
+  setCustomBack: PropTypes.func.isRequired,
+  botInstance: PropTypes.object.isRequired,
+  getFolders: PropTypes.func.isRequired,
   getScreenshots: PropTypes.func.isRequired,
-  folders:        PropTypes.array.isRequired,
-  screenshots:    PropTypes.array.isRequired,
-  total:          PropTypes.number.isRequired,
-  removeAll:      PropTypes.func.isRequired,
-  listen:         PropTypes.func.isRequired,
-  theme:          PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired,
-  emit:           PropTypes.func.isRequired
+  folders: PropTypes.array.isRequired,
+  screenshots: PropTypes.array.isRequired,
+  total: PropTypes.number.isRequired,
+  removeAll: PropTypes.func.isRequired,
+  listen: PropTypes.func.isRequired,
+  theme: PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired,
+  emit: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   botInstance: state.bot.botInstance,
   folders: state.bot.folders,
   screenshots: state.bot.screenshots,
-  total: state.bot.total,
+  total: state.bot.total
 });
 
 const mapDispatchToProps = dispatch => ({
   getFolders: query => dispatch(getFolders(query)),
-  getScreenshots: query => dispatch(getScreenshots(query)),
+  getScreenshots: query => dispatch(getScreenshots(query))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Old_ScreenShotTab));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTheme(Old_ScreenShotTab));

@@ -1,16 +1,16 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import PropTypes from 'prop-types';
-import { css } from '@emotion/core';
+import React from "react";
+import styled from "@emotion/styled";
+import PropTypes from "prop-types";
+import { css } from "@emotion/core";
 
 const positionTop = css`
   & > * {
     &:after {
       bottom: calc(100% + 8px);
     }
-    &:before {      
+    &:before {
       top: -8px;
-      border-color: rgba(0,0,0,0.7) transparent transparent transparent;
+      border-color: rgba(0, 0, 0, 0.7) transparent transparent transparent;
     }
   }
 `;
@@ -20,9 +20,9 @@ const positionBottom = css`
     &:after {
       top: calc(100% + 8px);
     }
-    &:before {      
+    &:before {
       bottom: -8px;
-      border-color: transparent transparent rgba(0,0,0,0.7) transparent;
+      border-color: transparent transparent rgba(0, 0, 0, 0.7) transparent;
     }
   }
 `;
@@ -62,18 +62,19 @@ const TooltipContainer = styled.div`
       z-index: 2;
     }
   }
-  ${ props => props.position === 'top' ? positionTop : positionBottom };
+  ${props => (props.position === "top" ? positionTop : positionBottom)};
 `;
 
-export const Tooltip = ({ children, position = 'top', text, ...props }) =>
+export const Tooltip = ({ children, position = "top", text, ...props }) => (
   <TooltipContainer position={position} text={text} {...props}>
     <div>{children}</div>
-  </TooltipContainer>;
+  </TooltipContainer>
+);
 
 Tooltip.propTypes = {
   text: PropTypes.string.isRequired,
   children: PropTypes.any.isRequired,
-  position: PropTypes.oneOf(['top', 'bottom'])
+  position: PropTypes.oneOf(["top", "bottom"])
 };
 
 export default Tooltip;

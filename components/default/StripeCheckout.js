@@ -1,12 +1,20 @@
-import React from 'react';
-import StripeCheckout from 'react-stripe-checkout';
-import { BILLING_DETAILS } from '/config';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { createSubscription } from '/store/auth/actions';
+import React from "react";
+import StripeCheckout from "react-stripe-checkout";
+import { BILLING_DETAILS } from "/config";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { createSubscription } from "/store/auth/actions";
 
 const StripeCheckoutForm = props => {
-  const { user, onClose, description, amount, panelLabel = 'Subscribe', children, onSuccess } = props;
+  const {
+    user,
+    onClose,
+    description,
+    amount,
+    panelLabel = "Subscribe",
+    children,
+    onSuccess
+  } = props;
 
   return (
     <StripeCheckout
@@ -30,7 +38,7 @@ const StripeCheckoutForm = props => {
       opened={() => {}}
       closed={onClose}
       reconfigureOnUpdate={false}
-      triggerEvent={'onClick'}
+      triggerEvent={"onClick"}
     >
       {children}
     </StripeCheckout>
@@ -54,7 +62,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  createSubscription: (userId, plan, token) => dispatch(createSubscription(userId, plan, token))
+  createSubscription: (userId, plan, token) =>
+    dispatch(createSubscription(userId, plan, token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StripeCheckoutForm);

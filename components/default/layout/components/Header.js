@@ -1,14 +1,14 @@
-import React  from 'react';
-import styled from '@emotion/styled';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import Icon from '../../icons';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import DropDown from '/components/default/DropDown';
-import HamburgerButton from '../../HamburgerButton';
-import { logout } from '/store/auth/actions';
-import Router from 'next/router';
-import Link from 'next/link';
+import React from "react";
+import styled from "@emotion/styled";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import Icon from "../../icons";
+import "bootstrap/dist/css/bootstrap.min.css";
+import DropDown from "/components/default/DropDown";
+import HamburgerButton from "../../HamburgerButton";
+import { logout } from "/store/auth/actions";
+import Router from "next/router";
+import Link from "next/link";
 
 const Container = styled.nav`
   position: relative;
@@ -44,23 +44,38 @@ const UserName = styled.span`
 const Header = ({ user, sidebarOpened, onHamburgerClick, logout }) => {
   const onLogoutClick = () => {
     logout();
-    Router.push('/');
+    Router.push("/");
   };
 
-  return(
+  return (
     <Container>
-      <HamburgerButton opened={sidebarOpened} onClick={onHamburgerClick}/>
+      <HamburgerButton opened={sidebarOpened} onClick={onHamburgerClick} />
       <div className="nav-right">
-        <DropDown side='right' toggleItem={<UserName>
-          { user ? user.name : 'User'}<Arrow><Icon name={'arrow'} color={'white'}/></Arrow></UserName>}
+        <DropDown
+          side="right"
+          toggleItem={
+            <UserName>
+              {user ? user.name : "User"}
+              <Arrow>
+                <Icon name={"arrow"} color={"white"} />
+              </Arrow>
+            </UserName>
+          }
         >
-          <Link href={'/profile'}>
-            <a href="#" className="dropdown-item d-flex align-items-center justify-content-between">
-            Profile <Icon name={'user'} width={20} height={20}/>
+          <Link href={"/profile"}>
+            <a
+              href="#"
+              className="dropdown-item d-flex align-items-center justify-content-between"
+            >
+              Profile <Icon name={"user"} width={20} height={20} />
             </a>
           </Link>
-          <a className="dropdown-item d-flex align-items-center justify-content-between" href="#" onClick={onLogoutClick}>
-            Logout <Icon name={'exit'} />
+          <a
+            className="dropdown-item d-flex align-items-center justify-content-between"
+            href="#"
+            onClick={onLogoutClick}
+          >
+            Logout <Icon name={"exit"} />
           </a>
         </DropDown>
       </div>

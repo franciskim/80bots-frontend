@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import styled from "@emotion/styled";
 
 const BaseImageViewer = styled.div`
@@ -11,16 +11,21 @@ const BaseImageViewer = styled.div`
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, .8);
+  background-color: rgba(0, 0, 0, 0.8);
   img {
-    width: calc(100vw - 400px); 
+    width: calc(100vw - 400px);
   }
 `;
 
-const ImageViewer = ({item, onClose}) => {
+const ImageViewer = ({ item, onClose }) => {
   return (
     <BaseImageViewer onClick={() => onClose(item)}>
-      <img width={100} onClick={e => e.stopPropagation()} alt={item.name} src={item.url}/>
+      <img
+        width={100}
+        onClick={e => e.stopPropagation()}
+        alt={item.name}
+        src={item.url}
+      />
     </BaseImageViewer>
   );
 };

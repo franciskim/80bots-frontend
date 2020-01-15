@@ -1,9 +1,9 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import PropTypes from 'prop-types';
-import Loader from './Loader';
-import {css} from '@emotion/core';
-import {theme} from '/config';
+import React from "react";
+import styled from "@emotion/styled";
+import PropTypes from "prop-types";
+import Loader from "./Loader";
+import { css } from "@emotion/core";
+import { theme } from "/config";
 
 const DefaultButton = styled.button`
   display: inline-block;
@@ -15,39 +15,42 @@ const DefaultButton = styled.button`
   user-select: none;
   background-color: transparent;
   border: 1px #fff solid;
-  padding: .375rem 1rem;
+  padding: 0.375rem 1rem;
   line-height: 1.6;
   border-radius: 0.25rem;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
-  
-  &:not(&:disabled), [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled) {
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  &:not(&:disabled),
+  [type="button"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  [type="submit"]:not(:disabled) {
     cursor: pointer;
   }
-  
+
   &:focus {
     outline: none;
   }
 
   &:active {
-    box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
-    transition: all .20s ease;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
   }
-  
+
   &:hover {
-    box-shadow: 0 13px 27px -5px rgba(50, 50, 93, .25),
-     0 8px 16px -8px rgba(0, 0, 0, .3), 0 -6px 16px -6px rgba(0, 0, 0, .025);
-     border: 1px solid #7dffff;
+    box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
+      0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+    border: 1px solid #7dffff;
   }
-  
+
   &:disabled {
-    opacity: .65;
+    opacity: 0.65;
     cursor: default;
     &:hover {
       box-shadow: none;
     }
   }
-  
+
   ${props => props.styles};
 `;
 
@@ -81,29 +84,45 @@ const btnDanger = css`
   }
 `;
 
-export const Button = ({rounded = false, loading = 'false', type, children, loaderWidth, loaderHeight, ...props}) => {
+export const Button = ({
+  rounded = false,
+  loading = "false",
+  type,
+  children,
+  loaderWidth,
+  loaderHeight,
+  ...props
+}) => {
   const styles = css`
     ${rounded && btnRound};
-    ${type === 'success' && btnSuccess};
-    ${type === 'primary' && btnPrimary};
-    ${type === 'danger' && btnDanger};
+    ${type === "success" && btnSuccess};
+    ${type === "primary" && btnPrimary};
+    ${type === "danger" && btnDanger};
   `;
 
-  return <DefaultButton styles={styles} {...props}>{
-    loading === 'false'
-      ? children
-      : <Loader type={'spinning-bubbles'} color={theme.colors.white} width={loaderWidth} height={loaderHeight}/>
-  }
-  </DefaultButton>;
+  return (
+    <DefaultButton styles={styles} {...props}>
+      {loading === "false" ? (
+        children
+      ) : (
+        <Loader
+          type={"spinning-bubbles"}
+          color={theme.colors.white}
+          width={loaderWidth}
+          height={loaderHeight}
+        />
+      )}
+    </DefaultButton>
+  );
 };
 
 Button.propTypes = {
-  type: PropTypes.oneOf(['success', 'primary', 'danger']).isRequired,
+  type: PropTypes.oneOf(["success", "primary", "danger"]).isRequired,
   rounded: PropTypes.bool,
   children: PropTypes.any.isRequired,
-  loading: PropTypes.oneOf(['true', 'false']),
+  loading: PropTypes.oneOf(["true", "false"]),
   loaderWidth: PropTypes.number,
-  loaderHeight: PropTypes.number,
+  loaderHeight: PropTypes.number
 };
 
 export default Button;

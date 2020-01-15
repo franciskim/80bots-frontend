@@ -1,18 +1,18 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {useRouter} from 'next/router';
-import {withTheme} from 'emotion-theming';
-import styled from '@emotion/styled';
-import {css, keyframes} from '@emotion/core';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-import FileSystem from '/components/default/FileSystem';
-import {flush, open, close} from '/store/fileSystem/actions';
-import {Loader, Button} from '../../../default';
-import {theme} from '../../../../config';
-import Modal from '/components/default/Modal';
-import ReportEditor from './ReportIssue';
+import React, { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/router";
+import { withTheme } from "emotion-theming";
+import styled from "@emotion/styled";
+import { css, keyframes } from "@emotion/core";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import FileSystem from "/components/default/FileSystem";
+import { flush, open, close } from "/store/fileSystem/actions";
+import { Loader, Button } from "../../../default";
+import { theme } from "../../../../config";
+import Modal from "/components/default/Modal";
+import ReportEditor from "./ReportIssue";
 
-const rootFolder = 'screenshots';
+const rootFolder = "screenshots";
 const defaultLimit = 21;
 
 const Fade = keyframes`
@@ -21,46 +21,46 @@ const Fade = keyframes`
 `;
 
 const Container = styled.div`
-    position: relative;
-    flex: 1;
-    bottom: 0;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
+  position: relative;
+  flex: 1;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
 `;
 
 const Report = styled(Button)`
-    padding: 0 5px;
-    animation: ${Fade} 200ms ease-in;
+  padding: 0 5px;
+  animation: ${Fade} 200ms ease-in;
 `;
 
 const FiltersSection = styled.div`
-    width: 100%;
-    text-align: left;
-    padding: 1.25rem;
+  width: 100%;
+  text-align: left;
+  padding: 1.25rem;
 `;
 
 const Hint = styled.span`
-    font-size: 14px;
+  font-size: 14px;
 `;
 
 const STATUSES = {
   ERROR: {
-    label: 'Oops! Some error occurred...',
-    color: theme.colors.pink,
+    label: "Oops! Some error occurred...",
+    color: theme.colors.pink
   },
   LOADING: {
-    label: 'Receiving data',
-    color: theme.colors.mediumGreen,
+    label: "Receiving data",
+    color: theme.colors.mediumGreen
   },
   EMPTY: {
-    label: 'There is no data here yet, we are waiting for the updates...',
-    color: theme.colors.primary,
+    label: "There is no data here yet, we are waiting for the updates...",
+    color: theme.colors.primary
   },
   READY: {
-    label: 'Success',
-    color: theme.colors.primary,
-  },
+    label: "Success",
+    color: theme.colors.primary
+  }
 };
 
 const ScreenShotTab = ({
@@ -73,7 +73,7 @@ const ScreenShotTab = ({
   setCustomBack,
   loading,
   items,
-  botInstance,
+  botInstance
 }) => {
   const [limit] = useState(defaultLimit);
   const [status, setStatus] = useState({});
@@ -90,7 +90,7 @@ const ScreenShotTab = ({
 
   useEffect(() => {
     if (channel && !!openedFolder) return;
-    openItem({path: rootFolder}, {limit});
+    openItem({ path: rootFolder }, { limit });
   }, [channel, openedFolder]);
 
   useEffect(() => {
@@ -99,7 +99,7 @@ const ScreenShotTab = ({
     } else {
       setCustomBack(() => {
         closeItem(openedFolder);
-        openItem(previous, {limit});
+        openItem(previous, { limit });
       });
     }
   }, [openedFolder, previous]);
@@ -132,7 +132,7 @@ const ScreenShotTab = ({
       <Container>
         {loading || !items.length ? (
           <Loader
-            type={'spinning-bubbles'}
+            type={"spinning-bubbles"}
             width={100}
             height={100}
             color={status.color}
@@ -142,13 +142,19 @@ const ScreenShotTab = ({
           <>
             <FiltersSection>
               {isReportMode && <Hint>Select issued screenshots |&nbsp;</Hint>}
-              <Report type={'danger'} onClick={() => setReportMode(!isReportMode)}>
-                {isReportMode ? 'Cancel' : 'Report Issue'}
+              <Report
+                type={"danger"}
+                onClick={() => setReportMode(!isReportMode)}
+              >
+                {isReportMode ? "Cancel" : "Report Issue"}
               </Report>
               {isReportMode && (
                 <>
                   <Hint>&nbsp;|&nbsp;</Hint>
-                  <Report type={'success'} onClick={() => setShowReportModal(true)}>
+                  <Report
+                    type={"success"}
+                    onClick={() => setShowReportModal(true)}
+                  >
                     Proceed
                   </Report>
                 </>
@@ -162,15 +168,20 @@ const ScreenShotTab = ({
         )}
       </Container>
       <Modal
-        mode={showReportModal ? 'in' : 'closed'}
+        mode={showReportModal ? "in" : "closed"}
         ref={reportModal}
-        title={'Report Issue'}
+        title={"Report Issue"}
         contentStyles={css`
           min-width: 420px;
           max-width: 420px;
         `}
-        close={() => setShowReportModal(false)}>
-        <ReportEditor bot={botInstance} screenshots={reportItems} onClose={() => setShowReportModal(false)}/>
+        close={() => setShowReportModal(false)}
+      >
+        <ReportEditor
+          bot={botInstance}
+          screenshots={reportItems}
+          onClose={() => setShowReportModal(false)}
+        />
       </Modal>
     </>
   );
@@ -184,7 +195,7 @@ ScreenShotTab.propTypes = {
   openedFolder: PropTypes.object,
   previous: PropTypes.object,
   loading: PropTypes.bool,
-  setCustomBack: PropTypes.func.isRequired,
+  setCustomBack: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -193,13 +204,16 @@ const mapStateToProps = state => ({
   openedFolder: state.fileSystem.openedFolder,
   previous: state.fileSystem.history.slice(-1)?.[0]?.openedFolder,
   loading: state.fileSystem.loading,
-  items: state.fileSystem.items,
+  items: state.fileSystem.items
 });
 
 const mapDispatchToProps = dispatch => ({
   flush: () => dispatch(flush()),
   openItem: (item, query) => dispatch(open(item, query)),
-  closeItem: item => dispatch(close(item)),
+  closeItem: item => dispatch(close(item))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ScreenShotTab));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTheme(ScreenShotTab));

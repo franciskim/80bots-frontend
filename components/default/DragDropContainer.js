@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import styled from '@emotion/styled';
-import PropTypes from 'prop-types';
-import { css, keyframes } from '@emotion/core';
+import React, { useState } from "react";
+import styled from "@emotion/styled";
+import PropTypes from "prop-types";
+import { css, keyframes } from "@emotion/core";
 
 const Title = styled.h1`
   color: ${props => props.theme.colors.primary};
@@ -41,12 +41,19 @@ const BorderDiv = styled.div`
 
 const DropDiv = styled.div`
   display: flex;
-  flex: 1; 
+  flex: 1;
   flex-direction: column;
   transition: all 100ms ease-in-out;
 `;
 
-export const DragDropContainer = ({ children, onDrop, types, dropDivStyle, takeFirst, ...props }) => {
+export const DragDropContainer = ({
+  children,
+  onDrop,
+  types,
+  dropDivStyle,
+  takeFirst,
+  ...props
+}) => {
   const [isDragOverStarted, toggleDragOver] = useState(false);
   const [counter, setCount] = useState(0);
 
@@ -68,11 +75,12 @@ export const DragDropContainer = ({ children, onDrop, types, dropDivStyle, takeF
     e.preventDefault();
     setCount(0);
     toggleDragOver(false);
-    let filesFormData = new FormData(), files = [];
+    let filesFormData = new FormData(),
+      files = [];
     [...e.dataTransfer.files].forEach((file, index) => {
-      if(takeFirst && index >= 1) return;
-      if(!types || (types && types.includes(file.type))) {
-        filesFormData.append('files', file);
+      if (takeFirst && index >= 1) return;
+      if (!types || (types && types.includes(file.type))) {
+        filesFormData.append("files", file);
         files.push(file);
       }
     });
@@ -84,24 +92,38 @@ export const DragDropContainer = ({ children, onDrop, types, dropDivStyle, takeF
     e.stopPropagation();
   };
 
-  return(
-    <DropDiv onDrop={onFileDrop} onDragOver={onDragOver} onDragEnter={onDragEnter} onDragLeave={onDragLeave} {...props}>
-      { isDragOverStarted &&
-      <BorderDiv style={dropDivStyle} css={isDragOverStarted && css`background-color: rgba(255, 255, 255, 0.75);`}>
-        <Title>Drop Your Files Here</Title>
-      </BorderDiv>
-      }
-      { children }
+  return (
+    <DropDiv
+      onDrop={onFileDrop}
+      onDragOver={onDragOver}
+      onDragEnter={onDragEnter}
+      onDragLeave={onDragLeave}
+      {...props}
+    >
+      {isDragOverStarted && (
+        <BorderDiv
+          style={dropDivStyle}
+          css={
+            isDragOverStarted &&
+            css`
+              background-color: rgba(255, 255, 255, 0.75);
+            `
+          }
+        >
+          <Title>Drop Your Files Here</Title>
+        </BorderDiv>
+      )}
+      {children}
     </DropDiv>
   );
 };
 
 DragDropContainer.propTypes = {
-  children:     PropTypes.any.isRequired,
-  onDrop:       PropTypes.func.isRequired,
-  types:        PropTypes.array,
+  children: PropTypes.any.isRequired,
+  onDrop: PropTypes.func.isRequired,
+  types: PropTypes.array,
   dropDivStyle: PropTypes.object,
-  takeFirst:    PropTypes.bool,
+  takeFirst: PropTypes.bool
 };
 
 export default DragDropContainer;

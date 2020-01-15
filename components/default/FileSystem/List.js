@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import Item from './Item';
-import { CardBody } from '../Card';
-import { Paginator } from '../Paginator';
-import Button from '../Button';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import Item from "./Item";
+import { CardBody } from "../Card";
+import { Paginator } from "../Paginator";
+import Button from "../Button";
 
 const Row = styled.div`
   display: flex;
@@ -37,7 +37,15 @@ const PaginatorRow = styled(Row)`
   justify-content: flex-end;
 `;
 
-const List = ({ items, total, limit, page, onPageChange, onItemClick, className }) => {
+const List = ({
+  items,
+  total,
+  limit,
+  page,
+  onPageChange,
+  onItemClick,
+  className
+}) => {
   return (
     <Col className={className}>
       <Row>
@@ -72,7 +80,7 @@ List.propTypes = {
   onLimitChange: PropTypes.func,
   onPageChange: PropTypes.func,
   onItemClick: PropTypes.func,
-  className: PropTypes.string,
+  className: PropTypes.string
 };
 
 export default List;

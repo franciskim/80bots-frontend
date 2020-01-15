@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import Select from 'react-select';
-import Button from './Button';
-import Icon from './icons';
-import styled from '@emotion/styled';
-import dayjs from 'dayjs';
-import { theme, WEEKDAYS } from '/config';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import Select from "react-select";
+import Button from "./Button";
+import Icon from "./icons";
+import styled from "@emotion/styled";
+import dayjs from "dayjs";
+import { theme, WEEKDAYS } from "/config";
 
 const Buttons = styled.div`
   display: flex;
@@ -14,9 +14,9 @@ const Buttons = styled.div`
 `;
 
 const selectStyles = {
-  container: (provided) => ({
+  container: provided => ({
     ...provided,
-    width: '100%'
+    width: "100%"
   })
 };
 
@@ -69,32 +69,53 @@ const IconButton = styled(Button)`
 const Error = styled.span`
   font-size: 15px;
   text-align: center;
-  color: ${ props => props.theme.colors.darkishPink };
+  color: ${props => props.theme.colors.darkishPink};
 `;
 
 const TYPE_OPTIONS = [
-  { value: 'stop', label: 'Stop' },
-  { value: 'start', label: 'Start' }
+  { value: "stop", label: "Stop" },
+  { value: "start", label: "Start" }
 ];
 
 const DAY_OPTIONS = WEEKDAYS.map(day => ({ value: day, label: day }));
 
 const TIME_OPTIONS = (() => {
-  let startTime = dayjs().hour(0).minute(0).second(0);
-  const endTime = dayjs().hour(23).minute(30).second(0);
+  let startTime = dayjs()
+    .hour(0)
+    .minute(0)
+    .second(0);
+  const endTime = dayjs()
+    .hour(23)
+    .minute(30)
+    .second(0);
   let timeStops = [];
-  while(startTime.isBefore(endTime) || startTime.isSame(endTime)) {
-    let stop = startTime.format('HH:mm');
+  while (startTime.isBefore(endTime) || startTime.isSame(endTime)) {
+    let stop = startTime.format("HH:mm");
     timeStops.push({ value: stop, label: stop });
-    startTime = startTime.add(30, 'minute');
+    startTime = startTime.add(30, "minute");
   }
   return timeStops;
 })();
 
-const Schedule = ({ type, day, time, idx, add, remove, updateScheduleList, ...props }) => {
-  const [scheduleType, setScheduleType] = useState(TYPE_OPTIONS.find(item => item.value === type) || null);
-  const [scheduleDay, setScheduleDay] = useState(DAY_OPTIONS.find(item => item.value === day) || null);
-  const [scheduleTime, setScheduleTime] = useState(TIME_OPTIONS.find(item => item.value === time) || null);
+const Schedule = ({
+  type,
+  day,
+  time,
+  idx,
+  add,
+  remove,
+  updateScheduleList,
+  ...props
+}) => {
+  const [scheduleType, setScheduleType] = useState(
+    TYPE_OPTIONS.find(item => item.value === type) || null
+  );
+  const [scheduleDay, setScheduleDay] = useState(
+    DAY_OPTIONS.find(item => item.value === day) || null
+  );
+  const [scheduleTime, setScheduleTime] = useState(
+    TIME_OPTIONS.find(item => item.value === time) || null
+  );
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -110,8 +131,8 @@ const Schedule = ({ type, day, time, idx, add, remove, updateScheduleList, ...pr
   }, [time]);
 
   const addSchedule = () => {
-    if(!scheduleTime || !scheduleType || !scheduleDay ) {
-      setError('You must fill all fields');
+    if (!scheduleTime || !scheduleType || !scheduleDay) {
+      setError("You must fill all fields");
     } else {
       setError(null);
       setScheduleType(null);
@@ -132,41 +153,52 @@ const Schedule = ({ type, day, time, idx, add, remove, updateScheduleList, ...pr
     updateScheduleList(schedule, idx);
   };
 
-  return(
+  return (
     <Container {...props}>
       <SelectContainer>
         <SelectWrap>
           <Label>Type</Label>
-          <Select options={TYPE_OPTIONS} styles={selectStyles} defaultValue={scheduleType} value={scheduleType}
-            onChange={option => changeSchedule('type', setScheduleType, option)}
+          <Select
+            options={TYPE_OPTIONS}
+            styles={selectStyles}
+            defaultValue={scheduleType}
+            value={scheduleType}
+            onChange={option => changeSchedule("type", setScheduleType, option)}
           />
         </SelectWrap>
         <SelectWrap>
           <Label>Day</Label>
-          <Select options={DAY_OPTIONS} styles={selectStyles} defaultValue={scheduleDay} value={scheduleDay}
-            onChange={option => changeSchedule('day', setScheduleDay, option)}
+          <Select
+            options={DAY_OPTIONS}
+            styles={selectStyles}
+            defaultValue={scheduleDay}
+            value={scheduleDay}
+            onChange={option => changeSchedule("day", setScheduleDay, option)}
           />
         </SelectWrap>
         <SelectWrap>
           <Label>Time</Label>
-          <Select options={TIME_OPTIONS} styles={selectStyles} defaultValue={scheduleTime} value={scheduleTime}
-            onChange={option => changeSchedule('time', setScheduleTime, option)}
+          <Select
+            options={TIME_OPTIONS}
+            styles={selectStyles}
+            defaultValue={scheduleTime}
+            value={scheduleTime}
+            onChange={option => changeSchedule("time", setScheduleTime, option)}
           />
         </SelectWrap>
         <SelectWrap>
-          {
-            idx === 0
-              ? <IconButton type={'success'} onClick={addSchedule}>
-                <Icon name={'plus'} color={theme.colors.white}/>
-              </IconButton>
-              : <IconButton type={'danger'} onClick={remove}>
-                <Icon name={'garbage'} color={theme.colors.white}/>
-              </IconButton>
-          }
-
+          {idx === 0 ? (
+            <IconButton type={"success"} onClick={addSchedule}>
+              <Icon name={"plus"} color={theme.colors.white} />
+            </IconButton>
+          ) : (
+            <IconButton type={"danger"} onClick={remove}>
+              <Icon name={"garbage"} color={theme.colors.white} />
+            </IconButton>
+          )}
         </SelectWrap>
       </SelectContainer>
-      { error && <Error>{ error }</Error> }
+      {error && <Error>{error}</Error>}
     </Container>
   );
 };
@@ -178,7 +210,7 @@ const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
     setSchedules([{}].concat(schedules));
   };
 
-  const removeSchedule = (idx) => {
+  const removeSchedule = idx => {
     setSchedules([].concat(schedules.slice(0, idx), schedules.slice(idx + 1)));
   };
 
@@ -191,19 +223,27 @@ const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
     onUpdateClick(schedules.slice(1));
   };
 
-  return(
+  return (
     <>
-      {
-        schedules.map(
-          (schedule, idx) => <Schedule key={idx} type={schedule.type} day={schedule.day} idx={idx}
-            time={schedule.time} add={addSchedule} remove={() => removeSchedule(idx)}
-            updateScheduleList={updateScheduleList}
-          />
-        )
-      }
+      {schedules.map((schedule, idx) => (
+        <Schedule
+          key={idx}
+          type={schedule.type}
+          day={schedule.day}
+          idx={idx}
+          time={schedule.time}
+          add={addSchedule}
+          remove={() => removeSchedule(idx)}
+          updateScheduleList={updateScheduleList}
+        />
+      ))}
       <Buttons>
-        <Button type={'danger'} onClick={close}>Cancel</Button>
-        <Button type={'primary'} onClick={updateSchedule}>Update</Button>
+        <Button type={"danger"} onClick={close}>
+          Cancel
+        </Button>
+        <Button type={"primary"} onClick={updateSchedule}>
+          Update
+        </Button>
       </Buttons>
     </>
   );
@@ -212,7 +252,7 @@ const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
 ScheduleEditor.propTypes = {
   close: PropTypes.func.isRequired,
   schedules: PropTypes.array.isRequired,
-  onUpdateClick: PropTypes.func.isRequired,
+  onUpdateClick: PropTypes.func.isRequired
 };
 
 Schedule.propTypes = {

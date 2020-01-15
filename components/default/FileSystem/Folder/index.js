@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import {css, keyframes} from '@emotion/core';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import { css, keyframes } from "@emotion/core";
 
 const Fade = keyframes`
   from { opacity: 0 }
@@ -14,11 +14,13 @@ const Wrapper = styled.div`
   margin-right: 20px;
   animation: ${Fade} 200ms ease-in-out;
   cursor: pointer;
-  ${ props => props.styles };
-  ${ props => props.selected && css`
-    box-shadow: 0 0 10px ${ props.theme.colors.darkishPink };
-    border: 1px solid ${ props.theme.colors.darkishPink };
-  `}
+  ${props => props.styles};
+  ${props =>
+    props.selected &&
+    css`
+      box-shadow: 0 0 10px ${props.theme.colors.darkishPink};
+      border: 1px solid ${props.theme.colors.darkishPink};
+    `}
 `;
 
 const Caption = styled.span`
@@ -31,13 +33,13 @@ const Caption = styled.span`
   font-weight: bold;
 `;
 
-export const TYPE = 'folder';
+export const TYPE = "folder";
 
 const Folder = ({ item, onClick = () => null }) => {
-  const defaultThumbnail = '/images/thumbnails/folder.png';
-  return(
+  const defaultThumbnail = "/images/thumbnails/folder.png";
+  return (
     <Wrapper onClick={() => onClick(item)}>
-      <img src={item.thumbnail || defaultThumbnail} width="320" alt=""/>
+      <img src={item.thumbnail || defaultThumbnail} width="320" alt="" />
       <Caption>{item.name}</Caption>
     </Wrapper>
   );
@@ -45,7 +47,7 @@ const Folder = ({ item, onClick = () => null }) => {
 
 Folder.propTypes = {
   item: PropTypes.object.isRequired,
-  onClick: PropTypes.func,
+  onClick: PropTypes.func
 };
 
 export default Folder;

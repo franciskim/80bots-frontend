@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from '@emotion/styled';
+import React from "react";
+import styled from "@emotion/styled";
 
 const Content = styled.div`
   display: flex;
@@ -13,10 +13,7 @@ const Content = styled.div`
 `;
 
 const Dashboard = () => {
-  return(
-    <Content>
-    </Content>
-  );
+  return <Content></Content>;
 };
 
 export default Dashboard;

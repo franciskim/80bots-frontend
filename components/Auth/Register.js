@@ -1,14 +1,14 @@
-import React, { Fragment, useState } from 'react';
-import Head from '/components/default/layout/components/Head';
-import styled from '@emotion/styled';
-import PropTypes from 'prop-types';
-import Link from 'next/link';
-import { css } from '@emotion/core';
-import { connect } from 'react-redux';
-import { Input } from '../default/inputs';
-import { addNotification } from '/store/notification/actions';
-import { NOTIFICATION_TYPES } from '/config';
-import { register } from '/store/auth/actions';
+import React, { Fragment, useState } from "react";
+import Head from "/components/default/layout/components/Head";
+import styled from "@emotion/styled";
+import PropTypes from "prop-types";
+import Link from "next/link";
+import { css } from "@emotion/core";
+import { connect } from "react-redux";
+import { Input } from "../default/inputs";
+import { addNotification } from "/store/notification/actions";
+import { NOTIFICATION_TYPES } from "/config";
+import { register } from "/store/auth/actions";
 
 const Container = styled.div`
   display: flex;
@@ -49,18 +49,21 @@ const inputStyles = {
 };
 
 const Register = ({ addNotification, register }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
-  const submit = (e) => {
+  const submit = e => {
     e.preventDefault();
 
-    setEmailError('');
-    setPasswordError('');
-    addNotification({ type: NOTIFICATION_TYPES.INFO, message: 'Registration is temporary disabled' });
+    setEmailError("");
+    setPasswordError("");
+    addNotification({
+      type: NOTIFICATION_TYPES.INFO,
+      message: "Registration is temporary disabled"
+    });
     /*    register(email, password, passwordConfirm)
       .then(() => {
         Router.push('/dashboard');
@@ -75,27 +78,52 @@ const Register = ({ addNotification, register }) => {
       });*/
   };
 
-  return(
+  return (
     <Fragment>
-      <Head title={'Sign Up'}/>
+      <Head title={"Sign Up"} />
       <Container>
         <FormContainer>
           <form method="POST" className="flex-grow-1">
             <Logo href="/">
-              <img src="/images/80bots.svg" alt=""/>
+              <img src="/images/80bots.svg" alt="" />
             </Logo>
             <h4 className="text-center">Sign Up</h4>
 
-            <Input label={'Email'} type="email" onChange={e => setEmail(e.target.value)}
-              value={email} required autoFocus styles={inputStyles} error={emailError}/>
+            <Input
+              label={"Email"}
+              type="email"
+              onChange={e => setEmail(e.target.value)}
+              value={email}
+              required
+              autoFocus
+              styles={inputStyles}
+              error={emailError}
+            />
 
-            <Input label={'Password'} type="password" onChange={e => setPassword(e.target.value)}
-              value={password} required styles={inputStyles} error={passwordError}/>
+            <Input
+              label={"Password"}
+              type="password"
+              onChange={e => setPassword(e.target.value)}
+              value={password}
+              required
+              styles={inputStyles}
+              error={passwordError}
+            />
 
-            <Input label={'Confirm Password'} type="password" onChange={e => setPasswordConfirm(e.target.value)}
-              value={passwordConfirm} required styles={inputStyles}/>
+            <Input
+              label={"Confirm Password"}
+              type="password"
+              onChange={e => setPasswordConfirm(e.target.value)}
+              value={passwordConfirm}
+              required
+              styles={inputStyles}
+            />
 
-            <button type="submit" onClick={submit} className="btn btn-primary btn-block text-uppercase mb-3">
+            <button
+              type="submit"
+              onClick={submit}
+              className="btn btn-primary btn-block text-uppercase mb-3"
+            >
               Sign Up
             </button>
           </form>
@@ -103,8 +131,10 @@ const Register = ({ addNotification, register }) => {
         <SignUpWrap>
           <h5 className="text-white mb-0">
             Already a member?&nbsp;
-            <Link href={'/login'}>
-              <a href="#" className="text-white font-weight-bold">Sign In</a>
+            <Link href={"/login"}>
+              <a href="#" className="text-white font-weight-bold">
+                Sign In
+              </a>
             </Link>
           </h5>
         </SignUpWrap>
@@ -119,8 +149,9 @@ Register.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  register: (email, password, passwordConfirm) => dispatch(register(email, password, passwordConfirm)),
-  addNotification: payload => dispatch(addNotification(payload)),
+  register: (email, password, passwordConfirm) =>
+    dispatch(register(email, password, passwordConfirm)),
+  addNotification: payload => dispatch(addNotification(payload))
 });
 
 export default connect(null, mapDispatchToProps)(Register);

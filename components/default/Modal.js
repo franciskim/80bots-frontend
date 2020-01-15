@@ -1,12 +1,17 @@
-import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
-import styled from '@emotion/styled';
-import Icon from '/components/default/icons';
-import PropTypes from 'prop-types';
-import { css, keyframes, Global } from '@emotion/core';
-import { globalStyles } from '/config';
+import React, {
+  useState,
+  useEffect,
+  useImperativeHandle,
+  forwardRef
+} from "react";
+import styled from "@emotion/styled";
+import Icon from "/components/default/icons";
+import PropTypes from "prop-types";
+import { css, keyframes, Global } from "@emotion/core";
+import { globalStyles } from "/config";
 
 const bodyStyles = css`
-  ${ globalStyles };
+  ${globalStyles};
   body {
     overflow-y: hidden;
   }
@@ -36,22 +41,21 @@ const ModalDiv = styled.div`
   margin-top: 10vh;
   max-height: 80vh;
   overflow-y: scroll;
-  background-color: ${ props => props.theme.colors.paleGrey };
-  box-shadow: 0 0 10px ${ props => props.theme.colors.silver };
-  border: 1px solid ${ props => props.theme.colors.silver };
-  ${ props => props.styles };
-  
+  background-color: ${props => props.theme.colors.paleGrey};
+  box-shadow: 0 0 10px ${props => props.theme.colors.silver};
+  border: 1px solid ${props => props.theme.colors.silver};
+  ${props => props.styles};
+
   &::-webkit-scrollbar {
     width: 5px;
     background-color: transparent;
     border-radius: 10px;
-
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 5px;
-    background-color: ${ props => props.theme.colors.clearBlue }
+    background-color: ${props => props.theme.colors.clearBlue};
   }
-  
+
   @media (max-width: 900px), (max-height: 980px) {
     margin-top: 50px;
   }
@@ -67,8 +71,8 @@ const Container = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: ${ props => props.theme.colors.white };
-  ${ props => props.styles };
+  background-color: ${props => props.theme.colors.white};
+  ${props => props.styles};
 `;
 
 const IconContainer = styled.div`
@@ -77,13 +81,13 @@ const IconContainer = styled.div`
   right: 4px;
   opacity: 0.35;
   g {
-    fill: ${ props => props.theme.colors.slate };
+    fill: ${props => props.theme.colors.slate};
   }
   &:hover {
     cursor: pointer;
     opacity: 1;
     g {
-      fill: ${ props => props.theme.colors.clearBlue };
+      fill: ${props => props.theme.colors.clearBlue};
     }
   }
 `;
@@ -97,61 +101,73 @@ const ModalBodyContent = styled.div`
   min-height: 200px;
   max-height: 90%;
   overflow-y: scroll;
-  
+
   @media (max-width: 900px) {
     width: 100%;
   }
-  
-  ${ props => props.styles };
+
+  ${props => props.styles};
 `;
 
 const ModalHeader = styled.h3`
   text-align: center;
-  color: ${ props => props.theme.colors.slate };
+  color: ${props => props.theme.colors.slate};
   font-size: 22px;
   display: flex;
   align-self: center;
   margin: 0;
 `;
 
-const DefaultModal = ({ children, title, styles, containerStyles, contentStyles, onClose, mode, close,
-  disableSideClosing, enableScroll }) => {
+const DefaultModal = ({
+  children,
+  title,
+  styles,
+  containerStyles,
+  contentStyles,
+  onClose,
+  mode,
+  close,
+  disableSideClosing,
+  enableScroll
+}) => {
   useEffect(() => {
-    if(mode === 'closed') {
+    if (mode === "closed") {
       onClose && onClose();
     }
   }, [mode]);
 
-  const getContainerStyle = (mode = 'in') => {
+  const getContainerStyle = (mode = "in") => {
     const animation = keyframes`
-      ${mode === 'in' ? 'to' : 'from'} {
+      ${mode === "in" ? "to" : "from"} {
         background-color: rgba(255, 255, 255, 0.6);
       }
-      ${mode !== 'in' ? 'to' : 'from'} {
+      ${mode !== "in" ? "to" : "from"} {
         background-color: rgba(255, 255, 255, 0);
       }
     `;
     return css`
       animation: ${animation} 200ms ease-in-out;
-      background-color: ${mode === 'in' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0)'};
+      background-color: ${mode === "in"
+        ? "rgba(255, 255, 255, 0.6)"
+        : "rgba(255, 255, 255, 0)"};
     `;
   };
 
-  const getModalStyle = (mode = 'in') => {
+  const getModalStyle = (mode = "in") => {
     const animation = keyframes`
-      ${mode === 'in' ? 'to' : 'from'} {
+      ${mode === "in" ? "to" : "from"} {
         top: 5%;
         opacity: 1;
       }
-      ${mode !== 'in' ? 'to' : 'from'} {
+      ${mode !== "in" ? "to" : "from"} {
         opacity: 0;
         top: 10%;
       }
     `;
     return css`
       animation: ${animation} 200ms ease-in-out;
-      opacity: ${mode === 'in' ? 1 : 0};
-      top: ${mode === 'in' ? '5%' : '10%'};
+      opacity: ${mode === "in" ? 1 : 0};
+      top: ${mode === "in" ? "5%" : "10%"};
     `;
   };
 
@@ -160,42 +176,40 @@ const DefaultModal = ({ children, title, styles, containerStyles, contentStyles,
     ${containerStyles};
   `;
 
-  return(
-    mode !== 'closed'
-      ? <>
-        <Global styles={!enableScroll && bodyStyles}/>
-        <Container styles={getContainerStyle(mode)}>
-          <ModalContainer onClick={() => !disableSideClosing && close()}>
-            {/* preventing parent component to fire onClick by stopping event propagation */}
-            <ModalDiv styles={combinedStyles} onClick={e => e.stopPropagation()}>
-              <ModalBody styles={styles}>
-                <IconContainer onClick={() => close()}>
-                  <Icon name={'cross'} />
-                </IconContainer>
-                <ModalBodyContent styles={contentStyles}>
-                  { title && <ModalHeader>{title}</ModalHeader> }
-                  { children }
-                </ModalBodyContent>
-              </ModalBody>
-            </ModalDiv>
-          </ModalContainer>
-        </Container>
-      </>
-      : null
-  );
+  return mode !== "closed" ? (
+    <>
+      <Global styles={!enableScroll && bodyStyles} />
+      <Container styles={getContainerStyle(mode)}>
+        <ModalContainer onClick={() => !disableSideClosing && close()}>
+          {/* preventing parent component to fire onClick by stopping event propagation */}
+          <ModalDiv styles={combinedStyles} onClick={e => e.stopPropagation()}>
+            <ModalBody styles={styles}>
+              <IconContainer onClick={() => close()}>
+                <Icon name={"cross"} />
+              </IconContainer>
+              <ModalBodyContent styles={contentStyles}>
+                {title && <ModalHeader>{title}</ModalHeader>}
+                {children}
+              </ModalBodyContent>
+            </ModalBody>
+          </ModalDiv>
+        </ModalContainer>
+      </Container>
+    </>
+  ) : null;
 };
 
 // Using higher order component here because forwardRef does not support propTypes
 const Modal = (props, ref) => {
-  const [mode, setMode] = useState('closed');
+  const [mode, setMode] = useState("closed");
 
   const close = () => {
-    setMode('out');
-    setTimeout(() => setMode( 'closed' ), 200);
+    setMode("out");
+    setTimeout(() => setMode("closed"), 200);
   };
 
   const open = () => {
-    setMode('in');
+    setMode("in");
   };
 
   useImperativeHandle(ref, () => ({ open, close }));
@@ -205,7 +219,7 @@ const Modal = (props, ref) => {
 
 DefaultModal.propTypes = {
   children: PropTypes.any.isRequired,
-  mode: PropTypes.oneOf(['closed', 'in', 'out']).isRequired,
+  mode: PropTypes.oneOf(["closed", "in", "out"]).isRequired,
   close: PropTypes.func.isRequired,
   title: PropTypes.string,
   styles: PropTypes.object,
@@ -217,4 +231,3 @@ DefaultModal.propTypes = {
 };
 
 export default forwardRef(Modal);
-

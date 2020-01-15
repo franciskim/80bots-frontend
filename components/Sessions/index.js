@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import dayjs from 'dayjs';
-import { withTheme } from 'emotion-theming';
-import { connect } from 'react-redux';
-import { Card, CardBody } from '../default/Card';
-import { Table, Thead, Filters, LimitFilter } from '../default/Table';
-import { addNotification } from '/store/notification/actions';
-import { getSessions } from '/store/instanceSession/actions';
-import { Paginator } from '/components/default';
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import dayjs from "dayjs";
+import { withTheme } from "emotion-theming";
+import { connect } from "react-redux";
+import { Card, CardBody } from "../default/Card";
+import { Table, Thead, Filters, LimitFilter } from "../default/Table";
+import { addNotification } from "/store/notification/actions";
+import { getSessions } from "/store/instanceSession/actions";
+import { Paginator } from "/components/default";
 
 const Container = styled(Card)`
   background: #333;
@@ -24,19 +24,26 @@ const Sessions = ({ getSessions, sessions, total }) => {
     getSessions();
   }, []);
 
-  const renderRow = (session, idx) => <tr key={idx}>
-    <td>{ session.user }</td>
-    <td>{ session.instance_id }</td>
-    <td>{ session.type }</td>
-    <td>{ dayjs(session.time).format('YYYY-MM-DD HH:mm:ss') }</td>
-  </tr>;
+  const renderRow = (session, idx) => (
+    <tr key={idx}>
+      <td>{session.user}</td>
+      <td>{session.instance_id}</td>
+      <td>{session.type}</td>
+      <td>{dayjs(session.time).format("YYYY-MM-DD HH:mm:ss")}</td>
+    </tr>
+  );
 
-  return(
+  return (
     <>
       <Container>
         <CardBody>
           <Filters>
-            <LimitFilter onChange={({ value }) => {setLimit(value); getSessions({ page, limit: value }); }}/>
+            <LimitFilter
+              onChange={({ value }) => {
+                setLimit(value);
+                getSessions({ page, limit: value });
+              }}
+            />
           </Filters>
           <Table>
             <Thead>
@@ -47,12 +54,15 @@ const Sessions = ({ getSessions, sessions, total }) => {
                 <th>Date & Time</th>
               </tr>
             </Thead>
-            <tbody>
-              { sessions.map(renderRow) }
-            </tbody>
+            <tbody>{sessions.map(renderRow)}</tbody>
           </Table>
-          <Paginator total={total} pageSize={limit}
-            onChangePage={(page) => { setPage(page); getSessions({ page, limit }); }}
+          <Paginator
+            total={total}
+            pageSize={limit}
+            onChangePage={page => {
+              setPage(page);
+              getSessions({ page, limit });
+            }}
           />
         </CardBody>
       </Container>
@@ -80,4 +90,7 @@ const mapDispatchToProps = dispatch => ({
   getSessions: query => dispatch(getSessions(query))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Sessions));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTheme(Sessions));

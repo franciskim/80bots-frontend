@@ -1,38 +1,38 @@
-import React, { useEffect, useState, useRef } from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import { Table, Thead } from '/components/default/Table';
-import { Button } from '/components/default';
-import {css} from '@emotion/core';
-import {Select} from '../../../../../default/inputs';
-import Modal from '../../../../../default/Modal';
+import React, { useEffect, useState, useRef } from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import { Table, Thead } from "/components/default/Table";
+import { Button } from "/components/default";
+import { css } from "@emotion/core";
+import { Select } from "../../../../../default/inputs";
+import Modal from "../../../../../default/Modal";
 
 const VARIANTS = {
-  ALL: 'all',
-  CURRENT: 'current'
+  ALL: "all",
+  CURRENT: "current"
 };
 
 const TYPES = {
-  CSV: 'csv',
-  JSON: 'json',
-  IMAGE: 'image'
+  CSV: "csv",
+  JSON: "json",
+  IMAGE: "image"
 };
 
 const EXPORT_TYPES = [
-  { label: 'CSV', value: TYPES.CSV },
-  { label: 'JSON', value: TYPES.JSON },
+  { label: "CSV", value: TYPES.CSV },
+  { label: "JSON", value: TYPES.JSON }
 ];
 
 const EXPORT_VARIANTS = [
-  { label: 'All', value: VARIANTS.ALL },
-  { label: 'Current', value: VARIANTS.CURRENT },
+  { label: "All", value: VARIANTS.ALL },
+  { label: "Current", value: VARIANTS.CURRENT }
 ];
 
 const LinkTd = styled.td`
   cursor: pointer;
-  color: ${ props => props.theme.colors.primary };
+  color: ${props => props.theme.colors.primary};
   &:hover {
-    color: ${ props => props.theme.colors.clearBlue };
+    color: ${props => props.theme.colors.clearBlue};
   }
 `;
 
@@ -52,10 +52,20 @@ const JsonType = ({ output, setCustomBack }) => {
   const [data, setData] = useState(output || []);
   const exportModal = useRef(null);
 
-  const BackButton = <Back type={'danger'} onClick={() => { setData(output); setCustomBack(null); }}>Back</Back>;
+  const BackButton = (
+    <Back
+      type={"danger"}
+      onClick={() => {
+        setData(output);
+        setCustomBack(null);
+      }}
+    >
+      Back
+    </Back>
+  );
 
   useEffect(() => {
-    if(output) {
+    if (output) {
       setData(output);
     }
   }, [output]);
@@ -65,11 +75,11 @@ const JsonType = ({ output, setCustomBack }) => {
     setCustomBack(BackButton);
   };
 
-  const getHeader = (row) => {
+  const getHeader = row => {
     let columns = [];
     for (let key in row) {
-      if(row.hasOwnProperty(key)) {
-        columns.push(<th key={key}>{ key }</th>);
+      if (row.hasOwnProperty(key)) {
+        columns.push(<th key={key}>{key}</th>);
       }
     }
     return columns;
@@ -79,39 +89,42 @@ const JsonType = ({ output, setCustomBack }) => {
     let rowData = [];
     let rowIdx = 0;
     for (let key in row) {
-      if(row.hasOwnProperty(key)) {
-        if(typeof row[key] !== 'object') {
-          rowData.push(<td key={rowIdx}>{ row[key] }</td>);
+      if (row.hasOwnProperty(key)) {
+        if (typeof row[key] !== "object") {
+          rowData.push(<td key={rowIdx}>{row[key]}</td>);
         } else {
-          if(row[key] && row[key].length) {
-            rowData.push(<LinkTd onClick={() => viewNestedData(row[key])} key={rowIdx}>{ `See ${key}` }</LinkTd>);
+          if (row[key] && row[key].length) {
+            rowData.push(
+              <LinkTd
+                onClick={() => viewNestedData(row[key])}
+                key={rowIdx}
+              >{`See ${key}`}</LinkTd>
+            );
           } else {
-            rowData.push(<td key={rowIdx}>{ `No ${key}` }</td>);
+            rowData.push(<td key={rowIdx}>{`No ${key}`}</td>);
           }
         }
       }
       rowIdx++;
     }
-    return(
-      <tr key={idx}>
-        { rowData }
-      </tr>
-    );
+    return <tr key={idx}>{rowData}</tr>;
   };
 
   return (
     <Table>
-      {
-        data[0] && <Thead>
-          <tr>
-            { getHeader(data[0]) }
-          </tr>
+      {data[0] && (
+        <Thead>
+          <tr>{getHeader(data[0])}</tr>
         </Thead>
-      }
-      <tbody>
-        { data.map(renderRow) }
-      </tbody>
-      <Modal title={'Choose export options'} ref={exportModal} contentStyles={css`overflow: visible;`}>
+      )}
+      <tbody>{data.map(renderRow)}</tbody>
+      <Modal
+        title={"Choose export options"}
+        ref={exportModal}
+        contentStyles={css`
+          overflow: visible;
+        `}
+      >
         {/*<Inputs>*/}
         {/*  <Select label={'Export Variant'} options={EXPORT_VARIANTS} value={exportVariant}*/}
         {/*    onChange={(option) => setExportVariant(option)} styles={selectStyles}*/}
@@ -130,7 +143,7 @@ const JsonType = ({ output, setCustomBack }) => {
 };
 
 JsonType.propTypes = {
-  output:        PropTypes.array.isRequired,
-  setCustomBack: PropTypes.func.isRequired,
+  output: PropTypes.array.isRequired,
+  setCustomBack: PropTypes.func.isRequired
 };
 export default JsonType;

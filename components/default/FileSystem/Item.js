@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import Folder, { TYPE as FOLDER_TYPE } from './Folder';
-import File, { TYPE as FILE_TYPE } from './File';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import Folder, { TYPE as FOLDER_TYPE } from "./Folder";
+import File, { TYPE as FILE_TYPE } from "./File";
 
 const ItemFallback = styled.div`
   position: relative;
@@ -21,7 +21,7 @@ const renderByType = (item, props) => {
       return <File item={item} onClick={onClick} />;
     }
     default: {
-      return <ItemFallback>{'Can\'t process item type'}</ItemFallback>;
+      return <ItemFallback>{"Can't process item type"}</ItemFallback>;
     }
   }
 };
@@ -29,7 +29,7 @@ const renderByType = (item, props) => {
 const Item = ({ item, ...props }) => renderByType(item, props);
 
 Item.propTypes = {
-  item: PropTypes.object.isRequired,
+  item: PropTypes.object.isRequired
 };
 
 export default Item;

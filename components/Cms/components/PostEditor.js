@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
 import {
   FormContainer,
@@ -9,28 +9,28 @@ import {
   Error,
   selectStyles,
   FormGroup,
-  InlineInput,
-} from './PostEditorStyles';
-import { Button } from '/components/default';
-import { Input, Select } from '/components/default/inputs';
-import StaticPage from '../../../pages/admin/cms/posts/staticPost';
-import { JoditEditor } from '../../commonBlocks/JoditEditor';
+  InlineInput
+} from "./PostEditorStyles";
+import { Button } from "/components/default";
+import { Input, Select } from "/components/default/inputs";
+import StaticPage from "../../../pages/admin/cms/posts/staticPost";
+import { JoditEditor } from "../../commonBlocks/JoditEditor";
 
 const STATUSES = [
-  { value: 'draft', label: 'Draft' },
-  { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'Inactive' },
+  { value: "draft", label: "Draft" },
+  { value: "active", label: "Active" },
+  { value: "inactive", label: "Inactive" }
 ];
 
 const POST_TYPES = [
-  { value: 'post', label: 'Blog post' },
-  { value: 'page', label: 'Page' },
+  { value: "post", label: "Blog post" },
+  { value: "page", label: "Page" }
 ];
 
 const viewModes = {
   MODE_SPLIT: 3,
   MODE_SOURCE: 2,
-  MODE_EDITOR: 1,
+  MODE_EDITOR: 1
 };
 
 const CONTENT_EDITOR_CONFIG = {
@@ -43,9 +43,9 @@ const CONTENT_EDITOR_CONFIG = {
         e.setMode(e.mode < 3 ? e.mode + 1 : 1);
       },
       isActive: true,
-      tooltip: 'Change mode',
-    },
-  },
+      tooltip: "Change mode"
+    }
+  }
 };
 
 const STYLES_EDITOR_CONFIG = {
@@ -56,17 +56,24 @@ const STYLES_EDITOR_CONFIG = {
   showWordsCounter: false,
   showXPathInStatusbar: false,
   sourceEditorNativeOptions: {
-    mode: 'ace/mode/css',
+    mode: "ace/mode/css"
   }
 };
 
-const PostEditor = ({ type, post = {}, onSubmit, formErrors, onShowPreview, showPreview }) => {
-  const [title, setTitle] = useState(post.title || '');
-  const [content, setContent] = useState(post.content || '');
-  const [styles, setStyles] = useState(post.style || '');
-  const [postType, setPostType] = useState(post.type || 'page');
-  const [postUrl, setPostUrl] = useState(post.slug || '');
-  const [status, setStatus] = useState(post.status || 'draft');
+const PostEditor = ({
+  type,
+  post = {},
+  onSubmit,
+  formErrors,
+  onShowPreview,
+  showPreview
+}) => {
+  const [title, setTitle] = useState(post.title || "");
+  const [content, setContent] = useState(post.content || "");
+  const [styles, setStyles] = useState(post.style || "");
+  const [postType, setPostType] = useState(post.type || "page");
+  const [postUrl, setPostUrl] = useState(post.slug || "");
+  const [status, setStatus] = useState(post.status || "draft");
   const [errors, setErrors] = useState(formErrors || {});
 
   const getPostData = () => ({
@@ -75,7 +82,7 @@ const PostEditor = ({ type, post = {}, onSubmit, formErrors, onShowPreview, show
     status: status,
     slug: postUrl,
     type: postType,
-    style: styles,
+    style: styles
   });
 
   const findOption = (options, value) => {
@@ -85,9 +92,9 @@ const PostEditor = ({ type, post = {}, onSubmit, formErrors, onShowPreview, show
   const renderErrors = (errors = {}) => {
     return Object.keys(errors).map((el, index) => {
       return (
-        <div key={index} className='error-list'>
+        <div key={index} className="error-list">
           {errors[el].map((error, key) => (
-            <div key={key} className='error-li'>
+            <div key={key} className="error-li">
               {error}
             </div>
           ))}
@@ -109,8 +116,8 @@ const PostEditor = ({ type, post = {}, onSubmit, formErrors, onShowPreview, show
           <FormContainer>
             <FormGroup>
               <Input
-                type={'text'}
-                label={'Title *'}
+                type={"text"}
+                label={"Title *"}
                 value={title}
                 onChange={e => setTitle(e.target.value)}
               />
@@ -118,28 +125,33 @@ const PostEditor = ({ type, post = {}, onSubmit, formErrors, onShowPreview, show
 
             <FormGroup>
               <Select
-                label={'Post type *'}
+                label={"Post type *"}
                 onChange={option => setPostType(option.value)}
                 options={POST_TYPES}
                 value={findOption(POST_TYPES, postType)}
               />
             </FormGroup>
 
-            {post.id && postType === 'post' && (
+            {post.id && postType === "post" && (
               <FormGroup>
-                <div className='label'>URL</div>
-                <input type={'text'} disabled='disabled' className={'form-control'} value={postUrl} />
+                <div className="label">URL</div>
+                <input
+                  type={"text"}
+                  disabled="disabled"
+                  className={"form-control"}
+                  value={postUrl}
+                />
               </FormGroup>
             )}
 
-            {postType === 'page' && (
+            {postType === "page" && (
               <FormGroup>
-                <Label>{'URL *'}</Label>
+                <Label>{"URL *"}</Label>
                 <InlineInput>
-                  <div className='label'>cms/</div>
+                  <div className="label">cms/</div>
                   <input
-                    type={'text'}
-                    className={'form-control'}
+                    type={"text"}
+                    className={"form-control"}
                     value={postUrl}
                     onChange={e => setPostUrl(e.target.value)}
                   />
@@ -148,12 +160,16 @@ const PostEditor = ({ type, post = {}, onSubmit, formErrors, onShowPreview, show
             )}
 
             <FormGroup>
-              <Label>{'Content *'}</Label>
-              <JoditEditor value={content} onChange={setContent} config={CONTENT_EDITOR_CONFIG} />
+              <Label>{"Content *"}</Label>
+              <JoditEditor
+                value={content}
+                onChange={setContent}
+                config={CONTENT_EDITOR_CONFIG}
+              />
             </FormGroup>
 
             <FormGroup>
-              <Label>{'Styles'}</Label>
+              <Label>{"Styles"}</Label>
               <JoditEditor
                 value={styles}
                 onChange={setStyles}
@@ -167,7 +183,7 @@ const PostEditor = ({ type, post = {}, onSubmit, formErrors, onShowPreview, show
                 value={findOption(STATUSES, status)}
                 onChange={option => setStatus(option.value)}
                 styles={selectStyles}
-                label={'Status'}
+                label={"Status"}
               />
             </FormGroup>
             {errors && Object.keys(errors).length ? (
@@ -177,15 +193,20 @@ const PostEditor = ({ type, post = {}, onSubmit, formErrors, onShowPreview, show
             ) : null}
           </FormContainer>
           <Buttons>
-            <Button className='btn' type={'primary'} onClick={() => onSubmit(getPostData())}>
-              {type === 'add' ? 'Add' : 'Update'}
+            <Button
+              className="btn"
+              type={"primary"}
+              onClick={() => onSubmit(getPostData())}
+            >
+              {type === "add" ? "Add" : "Update"}
             </Button>
             <Button
-              className='btn'
-              type={'success'}
+              className="btn"
+              type={"success"}
               disabled={!content.length}
-              onClick={() => onShowPreview(true)}>
-                            Preview
+              onClick={() => onShowPreview(true)}
+            >
+              Preview
             </Button>
           </Buttons>
         </>
@@ -195,12 +216,12 @@ const PostEditor = ({ type, post = {}, onSubmit, formErrors, onShowPreview, show
 };
 
 PostEditor.propTypes = {
-  type: PropTypes.oneOf(['edit', 'add']).isRequired,
+  type: PropTypes.oneOf(["edit", "add"]).isRequired,
   formErrors: PropTypes.object,
   post: PropTypes.object,
   showPreview: PropTypes.bool,
   onSubmit: PropTypes.func.isRequired,
-  onShowPreview: PropTypes.func,
+  onShowPreview: PropTypes.func
 };
 
 export default PostEditor;

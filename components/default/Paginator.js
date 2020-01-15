@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import {Button} from '/components/default';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import { Button } from "/components/default";
 
 const PaginationContainer = styled.div`
   display: flex;
@@ -11,7 +11,7 @@ const PaginationContainer = styled.div`
 `;
 
 const PaginationList = styled.ul`
-  list-style: none; 
+  list-style: none;
   border-radius: 4px;
   margin: 20px 20px;
   padding: 0;
@@ -22,12 +22,12 @@ const PaginationList = styled.ul`
 
 const ListItem = styled.li`
   padding: 5px 10px;
-  background-color: ${'transparent'};
-  color: ${props => props.active ? '#7dffff' : '#ffffff'};
+  background-color: ${"transparent"};
+  color: ${props => (props.active ? "#7dffff" : "#ffffff")};
   transition: all 100ms ease-in-out;
   &:hover {
     cursor: pointer;
-    background-color: ${props => !props.active && '#000000'};
+    background-color: ${props => !props.active && "#000000"};
   }
 `;
 
@@ -42,7 +42,7 @@ export const Paginator = props => {
     startPage: null,
     endPage: null,
     startIndex: null,
-    endIndex: null,
+    endIndex: null
   });
   const [jumpPage, setJumpPage] = useState(props.jumpPage || 0);
 
@@ -67,7 +67,9 @@ export const Paginator = props => {
 
     const startIndex = (page - 1) * pageSize;
     const endIndex = Math.min(startIndex + pageSize - 1, total - 1);
-    const pages = [...Array((endPage + 1) - startPage).keys()].map(i => startPage + i);
+    const pages = [...Array(endPage + 1 - startPage).keys()].map(
+      i => startPage + i
+    );
 
     setTotalItems(total);
     setCurrentPage(page);
@@ -76,7 +78,7 @@ export const Paginator = props => {
       startPage,
       endPage,
       startIndex,
-      endIndex,
+      endIndex
     });
     setPages(pages);
   };
@@ -86,7 +88,8 @@ export const Paginator = props => {
   }, []);
 
   useEffect(() => {
-    if (props.initialPage && props.initialPage !== currentPage) setPaginator(props.initialPage);
+    if (props.initialPage && props.initialPage !== currentPage)
+      setPaginator(props.initialPage);
   }, [props.initialPage]);
 
   useEffect(() => {
@@ -100,7 +103,7 @@ export const Paginator = props => {
   }, [props.total, total, props.pageSize, pageSize]);
 
   const setPage = page => {
-    const {total, onChangePage} = props;
+    const { total, onChangePage } = props;
     if (page < 1 || page > Math.ceil(total / pageSize)) {
       return;
     }
@@ -113,37 +116,43 @@ export const Paginator = props => {
   }
 
   const pageJumpStyle = {
-    'text-align': 'center',
-    'border': '1px solid #111',
-    'border-radius': '3px',
-    'background': '#333',
-    'color': '#fff',
+    "text-align": "center",
+    border: "1px solid #111",
+    "border-radius": "3px",
+    background: "#333",
+    color: "#fff"
   };
 
   return (
     <PaginationContainer>
       <PaginationList>
         <ListItem onClick={() => setPage(1)}>&laquo;</ListItem>
-        <ListItem onClick={() => setPage(currentPage - 1)}>
-          &lsaquo;
-        </ListItem>
-        {pages.map((page, index) =>
-          <ListItem active={page === currentPage} key={index} onClick={() => setPage(page)}>
+        <ListItem onClick={() => setPage(currentPage - 1)}>&lsaquo;</ListItem>
+        {pages.map((page, index) => (
+          <ListItem
+            active={page === currentPage}
+            key={index}
+            onClick={() => setPage(page)}
+          >
             {page}
-          </ListItem>,
-        )}
-        <ListItem onClick={() => setPage(currentPage + 1)}>
-          &rsaquo;
-        </ListItem>
+          </ListItem>
+        ))}
+        <ListItem onClick={() => setPage(currentPage + 1)}>&rsaquo;</ListItem>
         <ListItem onClick={() => setPage(Math.ceil(total / pageSize))}>
           &raquo;
         </ListItem>
-        &nbsp;Page&nbsp;<input type={'text'} style={pageJumpStyle} size={'3'}
-                               onChange={event => setJumpPage(event.target.value)}
-                               placeholder={currentPage}/>&nbsp;of {totalPages}&nbsp;<Button type={'primary'}
-                                                                                             onClick={() => setPage(
-                                                                                               parseInt(
-                                                                                                 jumpPage))}>Go</Button>
+        &nbsp;Page&nbsp;
+        <input
+          type={"text"}
+          style={pageJumpStyle}
+          size={"3"}
+          onChange={event => setJumpPage(event.target.value)}
+          placeholder={currentPage}
+        />
+        &nbsp;of {totalPages}&nbsp;
+        <Button type={"primary"} onClick={() => setPage(parseInt(jumpPage))}>
+          Go
+        </Button>
       </PaginationList>
     </PaginationContainer>
   );
@@ -154,7 +163,7 @@ Paginator.propTypes = {
   onChangePage: PropTypes.func.isRequired,
   initialPage: PropTypes.number,
   pageSize: PropTypes.number,
-  jumpPage: PropTypes.number,
+  jumpPage: PropTypes.number
 };
 
 export default Paginator;

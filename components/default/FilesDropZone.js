@@ -1,15 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import styled from '@emotion/styled';
-import Icon from '/components/default/icons';
-import { theme } from '/config';
-import { DragDropContainer } from '/components/default';
-import { Card } from '/components/default/Card';
-import { css } from '@emotion/core';
+import React, { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
+import styled from "@emotion/styled";
+import Icon from "/components/default/icons";
+import { theme } from "/config";
+import { DragDropContainer } from "/components/default";
+import { Card } from "/components/default/Card";
+import { css } from "@emotion/core";
 
-const ACCEPT_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
+const ACCEPT_TYPES = ["image/png", "image/jpeg", "image/jpg"];
 
-const THUMB_SIZE = '80px';
+const THUMB_SIZE = "80px";
 
 const DropZone = styled.div`
   display: flex;
@@ -28,14 +28,14 @@ const Hint = styled.p`
   margin: 5px 0 0 0;
   padding: 0;
   font-size: 1em;
-  color: ${ props => props.theme.colors.grey };
+  color: ${props => props.theme.colors.grey};
 `;
 
 const ImageDiv = styled(Card)`
   width: ${THUMB_SIZE};
   min-width: ${THUMB_SIZE};
   height: ${THUMB_SIZE};
-  border: 1px dotted ${ props => props.theme.colors.primary };
+  border: 1px dotted ${props => props.theme.colors.primary};
   border-radius: 4px;
   display: flex;
   flex-basis: 23%;
@@ -43,18 +43,22 @@ const ImageDiv = styled(Card)`
   align-items: center;
   cursor: pointer;
   transition: 100ms all;
-  ${ props => props.imgSrc && css`
-    background-image: url(${props.imgSrc}); 
-    background-size: cover; 
-    background-position: center center;
-  `};
+  ${props =>
+    props.imgSrc &&
+    css`
+      background-image: url(${props.imgSrc});
+      background-size: cover;
+      background-position: center center;
+    `};
   margin-top: 10px;
   margin-right: 10px;
-  &:nth-of-type(4n) { margin-right: 0; }
+  &:nth-of-type(4n) {
+    margin-right: 0;
+  }
   &:hover {
-    border-color: ${ props => props.theme.colors.clearBlue };
+    border-color: ${props => props.theme.colors.clearBlue};
     g {
-      fill: ${ props => props.theme.colors.clearBlue };
+      fill: ${props => props.theme.colors.clearBlue};
     }
   }
 `;
@@ -70,22 +74,39 @@ const ImageDivFilled = styled(ImageDiv)`
     &:hover {
       cursor: pointer;
       g {
-        fill: ${ props => props.theme.colors.darkishPink };
+        fill: ${props => props.theme.colors.darkishPink};
       }
     }
   }
   &:hover {
-    g { fill: ${ props => props.theme.colors.white }; }
+    g {
+      fill: ${props => props.theme.colors.white};
+    }
   }
 `;
 
-const Add = ({ onClick, ...props }) => <ImageDiv onClick={onClick} {...props}>
-  <Icon name={'light-plus'} width={50} height={50} color={theme.colors.primary}/>
-</ImageDiv>;
+const Add = ({ onClick, ...props }) => (
+  <ImageDiv onClick={onClick} {...props}>
+    <Icon
+      name={"light-plus"}
+      width={50}
+      height={50}
+      color={theme.colors.primary}
+    />
+  </ImageDiv>
+);
 
-const Image = ({ src, onCancel, ...props }) => <ImageDivFilled imgSrc={src} {...props}>
-  <Icon name={'cross'} width={10} height={10} color={theme.colors.white} onClick={onCancel}/>
-</ImageDivFilled>;
+const Image = ({ src, onCancel, ...props }) => (
+  <ImageDivFilled imgSrc={src} {...props}>
+    <Icon
+      name={"cross"}
+      width={10}
+      height={10}
+      color={theme.colors.white}
+      onClick={onCancel}
+    />
+  </ImageDivFilled>
+);
 
 export const FilesDropZone = ({ onChange, predefined, hint, ...props }) => {
   const [files, setFiles] = useState([]);
@@ -97,12 +118,12 @@ export const FilesDropZone = ({ onChange, predefined, hint, ...props }) => {
   }, [files]);
 
   useEffect(() => {
-    if(predefined?.length) {
+    if (predefined?.length) {
       setFiles(predefined);
     }
   }, [predefined]);
 
-  const removeFile = (idx) => {
+  const removeFile = idx => {
     setFiles([...files.slice(0, idx), ...files.slice(idx + 1)]);
   };
 
@@ -111,36 +132,53 @@ export const FilesDropZone = ({ onChange, predefined, hint, ...props }) => {
     e.preventDefault();
     let data = [];
     [...e.target.files].forEach((file, index) => {
-      if(ACCEPT_TYPES.includes(file.type)) {
+      if (ACCEPT_TYPES.includes(file.type)) {
         data.push(file);
       }
     });
     setFiles([...files, ...data]);
   };
 
-  const renderFile = (item, idx) => <Image onCancel={() => removeFile(idx)} key={idx} src={URL.createObjectURL(item)}/>;
+  const renderFile = (item, idx) => (
+    <Image
+      onCancel={() => removeFile(idx)}
+      key={idx}
+      src={URL.createObjectURL(item)}
+    />
+  );
 
-  return(
+  return (
     <>
-      <Hint>{ hint || 'Drop your files below' }</Hint>
+      <Hint>{hint || "Drop your files below"}</Hint>
       <DropZone>
-        <DropContainer onDrop={(formData, data) => setFiles([...files, ...data])} types={ACCEPT_TYPES}>
-          { files.map(renderFile) }
+        <DropContainer
+          onDrop={(formData, data) => setFiles([...files, ...data])}
+          types={ACCEPT_TYPES}
+        >
+          {files.map(renderFile)}
           <Add onClick={() => fileInput.current.click()} />
         </DropContainer>
       </DropZone>
-      <input style={{display: 'none', position: 'absolute'}} type='file' ref={fileInput} multiple onChange={browse} />
+      <input
+        style={{ display: "none", position: "absolute" }}
+        type="file"
+        ref={fileInput}
+        multiple
+        onChange={browse}
+      />
     </>
   );
 };
 
 FilesDropZone.propTypes = {
-  onChange:   PropTypes.func.isRequired,
-  hint:       PropTypes.string,
-  predefined: PropTypes.arrayOf(PropTypes.shape({
-    size: PropTypes.number.isRequired,
-    type: PropTypes.string.isRequired
-  }))
+  onChange: PropTypes.func.isRequired,
+  hint: PropTypes.string,
+  predefined: PropTypes.arrayOf(
+    PropTypes.shape({
+      size: PropTypes.number.isRequired,
+      type: PropTypes.string.isRequired
+    })
+  )
 };
 
 Add.propTypes = {
@@ -148,7 +186,7 @@ Add.propTypes = {
 };
 
 Image.propTypes = {
-  src:      PropTypes.string.isRequired,
+  src: PropTypes.string.isRequired,
   onCancel: PropTypes.func.isRequired
 };
 
