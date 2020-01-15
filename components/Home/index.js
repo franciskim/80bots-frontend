@@ -26,7 +26,11 @@ const Header = styled.h1`
 const Home = () => {
   return (
     <Fragment>
-      <img src="/images/80bots-logo.svg" className={"logo"} />
+      <object
+        type="image/svg+xml"
+        data="/images/80bots-logo.svg"
+        className={"logo"}
+      />
       <style jsx global>{`
         body {
           background: #333;
