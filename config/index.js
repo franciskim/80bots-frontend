@@ -24,6 +24,7 @@ export const ROUTES = {
 
 export const theme = {
   colors: {
+    cyan: '#7dffff',
     blue: '#007bff',
     darkBlue: '#3490dc',
     primary: 'hsl(200, 100%, 40%)',
@@ -39,6 +40,7 @@ export const theme = {
     grey: '#dddddd',
     darkGrey: '#6c757d',
     paleGrey: '#f8f9fb',
+    darkerGrey: '#333333',
     slate: '#475364',
     silver: '#ced0da',
     orange: '#eab550',
@@ -47,10 +49,10 @@ export const theme = {
     whiteGrey: '#eeeeee',
     purple: '#6f42c1',
     table: {
-      color: '#212529',
-      border: '#dee2e6',
-      headerColor: '#868e96',
-      headerBackground: '#e8e9ef'
+      color: '#fff',
+      border: 'none',
+      headerColor: '#7dffff',
+      headerBackground: '#333'
     }
   }
 };
@@ -91,6 +93,7 @@ export const globalStyles = css`
 
   body {
     font-family: 'Anonymous Pro', monospace;
+    background: #333;
     margin: 0;
     display: flex;
     flex-direction: column;

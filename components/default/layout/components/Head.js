@@ -56,7 +56,7 @@ const Head = props => (
           "@context": "http://schema.org",
           "@type": "Organization",
           "name": "80bots",
-          "legalName" : "80bots LLC",
+          "legalName" : "80BOTS PTY LTD",
           "url": "https://80bots.com/",
           "logo": "https://80bots.com/logo.png",
           "foundingDate": "2018",

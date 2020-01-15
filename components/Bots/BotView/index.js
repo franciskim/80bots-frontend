@@ -63,8 +63,9 @@ const STATUSES = {
 };
 
 const Container = styled(Card)` 
-  border-radius: .25rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  background: #333;
+  border: none;
+  color: #fff;
   flex: 1;
 `;
 
@@ -171,7 +172,7 @@ const BotView = ({botInstance, user, getBot, clearBot, adminGetBot, theme, wsSub
     const isDisabled = isOffline && item === 'DISPLAY';
     return (
       <Tab disabled={isDisabled} type={activeTab.title === TABS[item].title ? 'success' : 'primary'}
-        key={idx} onClick={() => setActiveTab(TABS[item])}>
+           key={idx} onClick={() => setActiveTab(TABS[item])}>
         {TABS[item].title}
       </Tab>
     );

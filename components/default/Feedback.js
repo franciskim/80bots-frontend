@@ -32,6 +32,12 @@ const SubTitle = styled.p`
 
 const Submit = styled(Button)`
   padding: 0 10px;
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  &:hover {
+    color: #7dffff;
+  }
 `;
 
 const styles = {
@@ -107,7 +113,7 @@ const Feedback = ({ send, notify, ...props }) => {
         <Button disabled={!message} type={'primary'} onClick={submit}>Send</Button>
       </Modal>
 
-      <Submit type={'primary'} onClick={() => modal.current.open()}>
+      <Submit onClick={() => modal.current.open()}>
         Feedback
       </Submit>
     </>

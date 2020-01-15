@@ -4,21 +4,21 @@ import Link from 'next/link';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import Feedback from '/components/default/Feedback';
-import { css } from '@emotion/core';
-import { SIDEBAR_ANIMATION_TIME, ROUTES } from '/config';
+import {css} from '@emotion/core';
+import {SIDEBAR_ANIMATION_TIME, ROUTES} from '/config';
 
 const Container = styled.div`
     flex-direction: column;
     min-width: 250px;
     max-width: 250px;
-    background-color: ${props => props.theme.colors.whiteGrey};
+    background-color: ${props => props.theme.colors.darkerGrey};
     transition: margin-left ${SIDEBAR_ANIMATION_TIME}ms ease-out;
     ${props =>
-    !props.opened
-      ? css`
+  !props.opened
+    ? css`
             margin-left: -250px;
           `
-      : ''};
+    : ''};
 `;
 
 const LinkWrap = styled.div`
@@ -46,8 +46,8 @@ const Hr = styled.hr`
 `;
 
 const linkHoverStyle = css`
-    background-color: rgba(0, 0, 0, 0.2);
-    text-decoration: none;
+    color: ${props => props.theme.colors.cyan} !important;
+    text-decoration: underline;
 `;
 
 const A = styled.a`
@@ -55,9 +55,10 @@ const A = styled.a`
     padding: 0.625rem 1.5rem 0.625rem 2.75rem;
     font-weight: 400;
     text-decoration: none;
-    color: ${props => props.theme.colors.blue};
+    color: #ffffff;
     &:hover {
         ${linkHoverStyle};
+        color: ${props => props.theme.colors.cyan};
     }
     ${props => props.active && linkHoverStyle};
 `;
@@ -69,7 +70,7 @@ const Bottom = styled.div`
     flex-direction: column;
 `;
 
-const Sidebar = ({ opened = false, userRole }) => {
+const Sidebar = ({opened = false, userRole}) => {
   const renderLink = (link, idx) => (
     <Li key={idx}>
       <Link href={link.href}>
@@ -84,13 +85,12 @@ const Sidebar = ({ opened = false, userRole }) => {
     <Container opened={opened}>
       <LinkWrap>
         <Link href={'/dashboard'}>
-          <img src='/images/80bots.svg' alt='' />
+          <img src='/images/80bots-logo.svg' alt=''/>
         </Link>
       </LinkWrap>
       <Ul>{userRole && ROUTES[userRole].map(renderLink)}</Ul>
-      <Hr />
       <Bottom>
-        <Feedback />
+        <Feedback/>
       </Bottom>
     </Container>
   );

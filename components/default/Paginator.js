@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { Button } from '/components/default';
+import {Button} from '/components/default';
 
 const PaginationContainer = styled.div`
   display: flex;
@@ -22,12 +22,12 @@ const PaginationList = styled.ul`
 
 const ListItem = styled.li`
   padding: 5px 10px;
-  background-color: ${ props => props.active ? props.theme.colors.primary : 'transparent' };
-  color: ${ props => props.active ? props.theme.colors.white : props.theme.colors.primary };
+  background-color: ${'transparent'};
+  color: ${props => props.active ? '#7dffff' : '#ffffff'};
   transition: all 100ms ease-in-out;
   &:hover {
     cursor: pointer;
-    background-color: ${ props => !props.active && props.theme.colors.paleGrey };
+    background-color: ${props => !props.active && '#000000'};
   }
 `;
 
@@ -67,8 +67,7 @@ export const Paginator = props => {
 
     const startIndex = (page - 1) * pageSize;
     const endIndex = Math.min(startIndex + pageSize - 1, total - 1);
-    const pages = [...Array((endPage + 1) - startPage).keys()]
-      .map(i => startPage + i);
+    const pages = [...Array((endPage + 1) - startPage).keys()].map(i => startPage + i);
 
     setTotalItems(total);
     setCurrentPage(page);
@@ -87,21 +86,21 @@ export const Paginator = props => {
   }, []);
 
   useEffect(() => {
-    if(props.initialPage && props.initialPage !== currentPage) setPaginator(props.initialPage);
+    if (props.initialPage && props.initialPage !== currentPage) setPaginator(props.initialPage);
   }, [props.initialPage]);
 
   useEffect(() => {
-    if(total !== props.total) {
+    if (total !== props.total) {
       setTotal(props.total);
     }
-    if(pageSize !== props.pageSize) {
+    if (pageSize !== props.pageSize) {
       setPageSize(props.pageSize);
     }
     setPaginator(currentPage);
   }, [props.total, total, props.pageSize, pageSize]);
 
   const setPage = page => {
-    const { total, onChangePage } = props;
+    const {total, onChangePage} = props;
     if (page < 1 || page > Math.ceil(total / pageSize)) {
       return;
     }
@@ -114,11 +113,14 @@ export const Paginator = props => {
   }
 
   const pageJumpStyle = {
-    'text-align': 'center'
+    'text-align': 'center',
+    'border': '1px solid #111',
+    'border-radius': '3px',
+    'background': '#333',
+    'color': '#fff',
   };
 
-
-  return(
+  return (
     <PaginationContainer>
       <PaginationList>
         <ListItem onClick={() => setPage(1)}>&laquo;</ListItem>
@@ -128,16 +130,20 @@ export const Paginator = props => {
         {pages.map((page, index) =>
           <ListItem active={page === currentPage} key={index} onClick={() => setPage(page)}>
             {page}
-          </ListItem>
+          </ListItem>,
         )}
         <ListItem onClick={() => setPage(currentPage + 1)}>
           &rsaquo;
         </ListItem>
         <ListItem onClick={() => setPage(Math.ceil(total / pageSize))}>
-              &raquo;
+          &raquo;
         </ListItem>
-      &nbsp;Page&nbsp;<input type={'text'} style={pageJumpStyle} size={'3'} onChange={event => setJumpPage(event.target.value)}
-          placeholder={currentPage} />&nbsp;of {totalPages}&nbsp;<Button type={'primary'} onClick={() => setPage(parseInt(jumpPage))}>Go</Button>
+        &nbsp;Page&nbsp;<input type={'text'} style={pageJumpStyle} size={'3'}
+                               onChange={event => setJumpPage(event.target.value)}
+                               placeholder={currentPage}/>&nbsp;of {totalPages}&nbsp;<Button type={'primary'}
+                                                                                             onClick={() => setPage(
+                                                                                               parseInt(
+                                                                                                 jumpPage))}>Go</Button>
       </PaginationList>
     </PaginationContainer>
   );
@@ -148,7 +154,7 @@ Paginator.propTypes = {
   onChangePage: PropTypes.func.isRequired,
   initialPage: PropTypes.number,
   pageSize: PropTypes.number,
-  jumpPage: PropTypes.number
+  jumpPage: PropTypes.number,
 };
 
 export default Paginator;

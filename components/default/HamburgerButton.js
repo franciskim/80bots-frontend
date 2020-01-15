@@ -9,7 +9,7 @@ const hamburgerBaseStyle = css`
   border-radius: 1px;
   height: 3px;
   width: 24px;
-  background: #495057;
+  background: #7dffff;
   display: block;
   left: 0;
   right: 0;

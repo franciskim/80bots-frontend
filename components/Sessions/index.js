@@ -11,8 +11,9 @@ import { getSessions } from '/store/instanceSession/actions';
 import { Paginator } from '/components/default';
 
 const Container = styled(Card)`
-  border-radius: .25rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  background: #333;
+  border: none;
+  color: #fff;
 `;
 
 const Sessions = ({ getSessions, sessions, total }) => {

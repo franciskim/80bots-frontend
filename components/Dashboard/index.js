@@ -8,14 +8,13 @@ const Content = styled.div`
   align-items: center;
   h1 {
     font-size: 32px;
-    color: ${props => props.theme.colors.blue};
+    color: ${props => props.theme.colors.cyan};
   }
 `;
 
 const Dashboard = () => {
   return(
     <Content>
-      <h1>Metrics and graphs will be here soon.</h1>
     </Content>
   );
 };

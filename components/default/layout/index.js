@@ -13,7 +13,7 @@ import { withTheme } from 'emotion-theming';
 const Container = styled.div`
   display: flex;
   flex: 1;
-  background-color: #F5F9FC;
+  background-color: #333;
 `;
 
 const Main = styled.div`
@@ -27,7 +27,7 @@ const Content = styled(Main)`
   padding: 2rem;
 `;
 
-const AppLayout = ({ title, children, checkAuth, isAuthorized, loading, theme, user, hideBanner = false }) => {
+const AppLayout = ({ title, children, checkAuth, isAuthorized, loading, theme, user, hideBanner = true }) => {
   const [opened, toggle] = useState(true);
   useEffect(() => {
     if(!isAuthorized) checkAuth();

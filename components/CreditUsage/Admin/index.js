@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import AsyncSelect from 'react-select/async';
 import styled from '@emotion/styled';
-import { connect } from 'react-redux';
-import { withTheme } from 'emotion-theming';
-import { useRouter } from 'next/router';
-import { Card, CardBody, CardHeader } from '/components/default/Card';
-import { adminGetCreditUsageHistory } from '/store/history/actions';
-import { getRunningBots } from '/store/bot/actions';
-import { Filters, LimitFilter, ListFilter, Table, Th, Thead } from '/components/default/Table';
-import { Button, Paginator } from '/components/default';
+import {connect} from 'react-redux';
+import {withTheme} from 'emotion-theming';
+import {useRouter} from 'next/router';
+import {Card, CardBody, CardHeader} from '/components/default/Card';
+import {adminGetCreditUsageHistory} from '/store/history/actions';
+import {getRunningBots} from '/store/bot/actions';
+import {Filters, LimitFilter, ListFilter, Table, Th, Thead} from '/components/default/Table';
+import {Button, Paginator} from '/components/default';
 
 const Container = styled(Card)` 
-  border-radius: .25rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  background: #333;
+  border: none;
+  color: #fff;
 `;
 
 const Header = styled(CardHeader)`
@@ -40,79 +41,81 @@ const SelectWrap = styled.div`
 `;
 
 const FILTERS_ACTION_OPTIONS = [
-  { value: 'all', label: 'All actions' },
-  { value: 'added', label: 'Added action' },
-  { value: 'used', label: 'Used action' },
+  {value: 'all', label: 'All actions'},
+  {value: 'added', label: 'Added action'},
+  {value: 'used', label: 'Used action'},
 ];
 
-const CreditUsage = ({ getHistory, credits, total, getRunningBots, runningBots }) => {
+const CreditUsage = ({getHistory, credits, total, getRunningBots, runningBots}) => {
 
   const router = useRouter();
   const [action, setFilterAction] = useState('all');
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
-  const [order, setOrder] = useState({ value: '', field: '' });
+  const [order, setOrder] = useState({value: '', field: ''});
   const [instanceId, setInstanceId] = useState(null);
 
   useEffect(() => {
-    getHistory({ page, limit, action, user: router.query.id });
-    getRunningBots({ page: 1, limit: 50 });
+    getHistory({page, limit, action, user: router.query.id});
+    getRunningBots({page: 1, limit: 50});
   }, []);
 
   const onBotChange = (option) => {
-    getHistory({ page, limit, action, user: router.query.id, sort: order.field, order: order.value, instanceId: option.value });
+    getHistory(
+      {page, limit, action, user: router.query.id, sort: order.field, order: order.value, instanceId: option.value});
     setInstanceId(option.value);
   };
 
   const searchBots = (value, callback) => {
-    getRunningBots({ page: 1, limit: 50, search: value })
-      .then(action => callback(action.data.data.map(toOptions)));
+    getRunningBots({page: 1, limit: 50, search: value}).then(action => callback(action.data.data.map(toOptions)));
   };
 
   const toOptions = bot => ({
     value: bot.instance_id,
-    label: bot.instance_id + '|' + bot.name
+    label: bot.instance_id + '|' + bot.name,
   });
 
   const onOrderChange = (field, value) => {
-    setOrder({ field, value });
-    getHistory({ page, limit, action, user: router.query.id, sort: field, order: value, instanceId });
+    setOrder({field, value});
+    getHistory({page, limit, action, user: router.query.id, sort: field, order: value, instanceId});
   };
 
-  const onLimitChange = ({ value }) => {
+  const onLimitChange = ({value}) => {
     setLimit(value);
     getHistory({
-      page, limit, action: value, user: router.query.id, sort: order.field, order: order.value, instanceId
+      page, limit, action: value, user: router.query.id, sort: order.field, order: order.value, instanceId,
     });
   };
 
-  const onListChange = ({ value }) => {
+  const onListChange = ({value}) => {
     setFilterAction(value);
     getHistory({
-      page, limit, action: value, user: router.query.id, sort: order.field, order: order.value, instanceId
+      page, limit, action: value, user: router.query.id, sort: order.field, order: order.value, instanceId,
     });
   };
 
   const onPageChange = (page) => {
     setPage(page);
-    getHistory({ page, limit, action, user: router.query.id, sort: order.field, order: order.value, instanceId });
+    getHistory({page, limit, action, user: router.query.id, sort: order.field, order: order.value, instanceId});
   };
 
   const OrderTh = props => <Th {...props}
     // eslint-disable-next-line react/prop-types
-    order={(props.field === order.field) || (props.children === order.field) ? order.value : ''}
-    onClick={onOrderChange}
+                               order={(props.field === order.field) || (props.children === order.field)
+                                 ? order.value
+                                 : ''}
+                               onClick={onOrderChange}
   />;
 
   const renderRow = (history, idx) => <tr key={idx}>
-    <td>{ history.credits }</td>
-    <td>{ history.total }</td>
-    <td>{ history.action }</td>
-    <td>{ history.subject }</td>
-    <td>{ history.date }</td>
+    <td>{history.credits}</td>
+    <td>{history.total}</td>
+    <td>{history.action}</td>
+    <td>{history.subject}</td>
+    <td>{history.date}</td>
   </tr>;
 
-  return(
+  return (
     <>
       <Container>
         <CardBody>
@@ -120,10 +123,10 @@ const CreditUsage = ({ getHistory, credits, total, getRunningBots, runningBots }
             <LimitFilter onChange={onLimitChange}/>
             <SelectWrap>
               <AsyncSelect placeholder={'Select one of your running bots'} onChange={onBotChange}
-                loadOptions={searchBots} defaultOptions={runningBots.map(toOptions)}
+                           loadOptions={searchBots} defaultOptions={runningBots.map(toOptions)}
               />
             </SelectWrap>
-            <ListFilter options={FILTERS_ACTION_OPTIONS} onChange={onListChange} />
+            <ListFilter options={FILTERS_ACTION_OPTIONS} onChange={onListChange}/>
           </Filters>
           <Table responsive>
             <Thead>
@@ -136,10 +139,10 @@ const CreditUsage = ({ getHistory, credits, total, getRunningBots, runningBots }
               </tr>
             </Thead>
             <tbody>
-              { credits.map(renderRow) }
+            {credits.map(renderRow)}
             </tbody>
           </Table>
-          <Paginator total={total} pageSize={limit} onChangePage={onPageChange} />
+          <Paginator total={total} pageSize={limit} onChangePage={onPageChange}/>
         </CardBody>
       </Container>
     </>
@@ -148,10 +151,10 @@ const CreditUsage = ({ getHistory, credits, total, getRunningBots, runningBots }
 
 CreditUsage.propTypes = {
   getRunningBots: PropTypes.func.isRequired,
-  runningBots:    PropTypes.array.isRequired,
-  getHistory:     PropTypes.func.isRequired,
-  credits:        PropTypes.array.isRequired,
-  total:          PropTypes.number.isRequired,
+  runningBots: PropTypes.array.isRequired,
+  getHistory: PropTypes.func.isRequired,
+  credits: PropTypes.array.isRequired,
+  total: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({

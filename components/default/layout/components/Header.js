@@ -18,8 +18,7 @@ const Container = styled.nav`
   justify-content: space-between;
   padding: 0.5rem 1rem;
   flex-flow: row nowrap;
-  border-bottom: 1px solid #dee2e6;
-  background-color: white;
+  background-color: rgba(0, 0, 0, 0.2);
   width: 100%;
   max-height: 50px;
 `;
@@ -27,6 +26,7 @@ const Container = styled.nav`
 const Arrow = styled.div`
   transform: rotate(90deg);
   margin: 1px 0 0 6px;
+  color: #ffffff;
 `;
 
 const User = styled.div`
@@ -38,6 +38,7 @@ const UserName = styled.span`
   display: flex;
   align-items: center;
   font-size: 13px;
+  color: #fff;
 `;
 
 const Header = ({ user, sidebarOpened, onHamburgerClick, logout }) => {
@@ -50,8 +51,8 @@ const Header = ({ user, sidebarOpened, onHamburgerClick, logout }) => {
     <Container>
       <HamburgerButton opened={sidebarOpened} onClick={onHamburgerClick}/>
       <div className="nav-right">
-        <DropDown side='right' toggleItem={<UserName><User><Icon name={'user'} width={15} height={15} /></User>
-          { user ? user.name : 'User'}<Arrow><Icon name={'arrow'}/></Arrow></UserName>}
+        <DropDown side='right' toggleItem={<UserName>
+          { user ? user.name : 'User'}<Arrow><Icon name={'arrow'} color={'white'}/></Arrow></UserName>}
         >
           <Link href={'/profile'}>
             <a href="#" className="dropdown-item d-flex align-items-center justify-content-between">

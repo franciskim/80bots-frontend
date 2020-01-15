@@ -29,7 +29,7 @@ const Home = () => {
           background: transparent;
           border: none;
           font-size: 45px;
-          color: #FF7D7D;
+          color: #ffffff;
           width: 100%;
           }
           input:focus { outline: 0; }

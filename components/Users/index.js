@@ -17,8 +17,9 @@ import { updateUser } from '/store/user/actions';
 import { getUsers } from '/store/user/actions';
 
 const Container = styled(Card)`
-  border-radius: .25rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  background: #333;
+  border: none;
+  color: #fff;
 `;
 
 const IconButton = styled(Button)`
@@ -28,14 +29,19 @@ const IconButton = styled(Button)`
   margin-right: 5px;
   width: 30px;
   height: 30px;
+  background: transparent;
   &:last-child {
     margin-right: 0;
+  }
+  &:hover {
+    background: transparent;
+    border: 1px solid #7dffff;
   }
 `;
 
 const StatusButton = styled(Button)`
   padding: 2px 10px;
-  font-size: 16px;
+  font-size: 13px;
   text-transform: uppercase;
 `;
 
@@ -51,7 +57,7 @@ const Buttons = styled.div`
 `;
 
 const Role = styled(Badge)`
-  font-size: 14px;
+  font-size: 13px;
   text-transform: uppercase;
 `;
 
