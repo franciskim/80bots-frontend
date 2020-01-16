@@ -15,16 +15,17 @@ const Container = styled.div`
   flex: 1;
   justify-content: center;
   align-items: center;
-  background-image: radial-gradient(hsl(200, 100%, 65%), hsl(200, 100%, 40%));
+  background: #333;
+  color: #fff;
 `;
 
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: transparent;
   max-width: 400px;
   width: 100%;
-  border-radius: 3px;
+  border: none;
   padding: 1.5rem;
   margin-bottom: 1rem;
 `;
@@ -91,12 +92,39 @@ const Login = ({ addNotification, login, reset }) => {
             style={{ display: !formVisible ? "block" : "none" }}
           >
             <Link href={"/"}>
-              <Logo href="/" className="sidebar-brand text-decoration-none">
-                <object
-                  type="image/svg+xml"
-                  data="/images/80bots-logo.svg"
-                  className={"logo"}
-                />{" "}
+              <Logo
+                href="/"
+                className="sidebar-brand text-decoration-none"
+                style={{
+                  display: "inline-block",
+                  position: "relative",
+                  "z-index": "1",
+                  width: "100%",
+                  height: "51px",
+                  "text-align": "center",
+                  "margin-bottom": "100px"
+                }}
+              >
+                <span
+                  className={"pewpew"}
+                  style={{
+                    display: "inline-block",
+                    width: "202px",
+                    height: "51px"
+                  }}
+                >
+                  <object
+                    type="image/svg+xml"
+                    data="/images/80bots-logo.svg"
+                    className={"logo"}
+                    style={{
+                      position: "relative",
+                      "z-index": "-1",
+                      width: "202px",
+                      height: "51px"
+                    }}
+                  />
+                </span>
               </Logo>
             </Link>
             <h4 className="text-center">Sign In</h4>
@@ -140,7 +168,7 @@ const Login = ({ addNotification, login, reset }) => {
               <a
                 onClick={changeForms}
                 href="#"
-                className="text-dark text-decoration-none"
+                className="text-decoration-none"
               >
                 Forgot Password?
               </a>
@@ -187,7 +215,7 @@ const Login = ({ addNotification, login, reset }) => {
               <a
                 onClick={changeForms}
                 href="#"
-                className="text-dark text-decoration-none"
+                className="text-decoration-none"
               >
                 Back to Sign In
               </a>

@@ -184,14 +184,12 @@ const RunningBots = ({
       process.env.NODE_ENV === "development"
         ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
         : bot.ip;
-    navigator.clipboard
-      .writeText(text)
-      .then(() =>
-        notify({
-          type: NOTIFICATION_TYPES.INFO,
-          message: "Copied to clipboard"
-        })
-      );
+    navigator.clipboard.writeText(text).then(() =>
+      notify({
+        type: NOTIFICATION_TYPES.INFO,
+        message: "Copied to clipboard"
+      })
+    );
   };
 
   const Loading = (

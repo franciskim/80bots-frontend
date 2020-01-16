@@ -10,7 +10,7 @@ const googleAnalyticsId = "id";
 
 const Head = props => (
   <NextHead>
-    <title>{props.title + " | 80bots"}</title>
+    <title>{props.title + " | 80bots Web RPA"}</title>
     <meta charSet="UTF-8" />
     <meta
       name="description"

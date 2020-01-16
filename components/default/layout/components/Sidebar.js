@@ -84,12 +84,41 @@ const Sidebar = ({ opened = false, userRole }) => {
   return (
     <Container opened={opened}>
       <LinkWrap>
-        <Link href={"/dashboard"}>
-          <object
-            type="image/svg+xml"
-            data="/images/80bots-logo.svg"
-            className={"logo"}
-          />
+        <Link href={"/"}>
+          <a
+            href="/dashboard/"
+            className="sidebar-brand text-decoration-none"
+            style={{
+              display: "inline-block",
+              position: "relative",
+              "z-index": "1",
+              width: "100%",
+              height: "25px",
+              "text-align": "left",
+              "margin-bottom": "8px"
+            }}
+          >
+            <span
+              className={"pewpew"}
+              style={{
+                display: "inline-block",
+                width: "100px",
+                height: "25px"
+              }}
+            >
+              <object
+                type="image/svg+xml"
+                data="/images/80bots-logo.svg"
+                className={"logo"}
+                style={{
+                  position: "relative",
+                  "z-index": "-1",
+                  width: "100px",
+                  height: "25px"
+                }}
+              />
+            </span>
+          </a>
         </Link>
       </LinkWrap>
       <Ul>{userRole && ROUTES[userRole].map(renderLink)}</Ul>
