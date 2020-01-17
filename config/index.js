@@ -1,67 +1,67 @@
-import { css } from '@emotion/core';
+import { css } from "@emotion/core";
 
 export const ROUTES = {
   Admin: [
-    { name: 'Users', href: '/admin/users' },
-    { name: 'Running Bots', href: '/admin/bots/running' },
-    { name: 'Available Bots', href: '/admin/bots' },
-    { name: 'Bots Settings', href: '/admin/bots/settings' },
-    { name: 'Bots Schedule', href: '/admin/schedule' },
-    { name: 'Bots Sessions', href: '/admin/sessions' },
-    { name: 'Subscription Plans', href: '/admin/subscriptions' },
-    { name: 'Credit Usage History', href: '/admin/history' },
-    { name: 'Low Credit Notifications', href: '/admin/notifications' },
-    { name: 'CMS', href: '/admin/cms' },
+    { name: "Users", href: "/admin/users" },
+    { name: "Running Bots", href: "/admin/bots/running" },
+    { name: "Available Bots", href: "/admin/bots" },
+    { name: "Bots Settings", href: "/admin/bots/settings" },
+    { name: "Bots Schedule", href: "/admin/schedule" },
+    { name: "Bots Sessions", href: "/admin/sessions" },
+    { name: "Subscription Plans", href: "/admin/subscriptions" },
+    { name: "Credit Usage History", href: "/admin/history" },
+    { name: "Low Credit Notifications", href: "/admin/notifications" },
+    { name: "CMS", href: "/admin/cms" }
   ],
   User: [
-    { name: 'Running Bots', href: '/bots/running' },
-    { name: 'Available Bots', href: '/bots' },
-    { name: 'Bots Schedule', href: '/schedule' },
-    { name: 'My Subscription', href: '/subscription' },
-    { name: 'Credit Usage History', href: '/history' }
+    { name: "Running Bots", href: "/bots/running" },
+    { name: "Available Bots", href: "/bots" },
+    { name: "Bots Schedule", href: "/schedule" },
+    { name: "My Subscription", href: "/subscription" },
+    { name: "Credit Usage History", href: "/history" }
   ]
 };
 
 export const theme = {
   colors: {
-    cyan: '#7dffff',
-    blue: '#007bff',
-    darkBlue: '#3490dc',
-    primary: 'hsl(200, 100%, 40%)',
-    clearBlue: '#27a2ff',
-    clearBlueTwo: '#5cb3f5',
-    mediumGreen: '#35ad45',
-    clearGreen: '#19ad7a',
-    darkishPink: '#e54d93',
-    darkishPink2: '#dc1c74',
-    pink: '#e56fbc',
-    blueGrey: '#7f8fa4',
-    darkGreyBlue: '#354052',
-    grey: '#dddddd',
-    darkGrey: '#6c757d',
-    paleGrey: '#f8f9fb',
-    darkerGrey: '#333333',
-    slate: '#475364',
-    silver: '#ced0da',
-    orange: '#eab550',
-    black: '#0a0a0a',
-    white: '#ffffff',
-    whiteGrey: '#eeeeee',
-    purple: '#6f42c1',
+    cyan: "#7dffff",
+    blue: "#007bff",
+    darkBlue: "#3490dc",
+    primary: "#7dffff",
+    clearBlue: "#27a2ff",
+    clearBlueTwo: "#5cb3f5",
+    mediumGreen: "#35ad45",
+    clearGreen: "#19ad7a",
+    darkishPink: "#e54d93",
+    darkishPink2: "#dc1c74",
+    pink: "#e56fbc",
+    blueGrey: "#7f8fa4",
+    darkGreyBlue: "#354052",
+    grey: "#dddddd",
+    darkGrey: "#6c757d",
+    paleGrey: "#f8f9fb",
+    darkerGrey: "#333333",
+    slate: "#475364",
+    silver: "#ced0da",
+    orange: "#eab550",
+    black: "#0a0a0a",
+    white: "#ffffff",
+    whiteGrey: "#eeeeee",
+    purple: "#6f42c1",
     table: {
-      color: '#fff',
-      border: 'none',
-      headerColor: '#7dffff',
-      headerBackground: '#333'
+      color: "#fff",
+      border: "none",
+      headerColor: "#7dffff",
+      headerBackground: "#333"
     }
   }
 };
 
 export const NOTIFICATION_TYPES = {
-  HELP: 'help',
-  SUCCESS: 'success',
-  ERROR: 'error',
-  INFO: 'info'
+  HELP: "help",
+  SUCCESS: "success",
+  ERROR: "error",
+  INFO: "info"
 };
 
 export const NOTIFICATION_TIMINGS = {
@@ -71,28 +71,35 @@ export const NOTIFICATION_TIMINGS = {
 };
 
 export const BILLING_DETAILS = {
-  company: '80bots',
-  image: 'public/images/logos/stripe.svg',
-  currency: 'USD',
-  locale: 'en',
+  company: "80bots",
+  image: "public/images/logos/stripe.svg",
+  currency: "USD",
+  locale: "en",
   shippingAddress: false,
   billingDetails: false,
   zipCode: false,
   alipay: true,
   bitcoin: true,
-  allowRememberMe: true,
+  allowRememberMe: true
 };
 
 export const SIDEBAR_ANIMATION_TIME = 250;
 
-export const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+export const WEEKDAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday"
+];
 
 export const globalStyles = css`
-
-  @import url('https://fonts.googleapis.com/css?family=Anonymous+Pro:400,400i,700,700i&display=swap');
+  @import url("https://fonts.googleapis.com/css?family=Anonymous+Pro:400,400i,700,700i&display=swap");
 
   body {
-    font-family: 'Anonymous Pro', monospace;
+    font-family: "Anonymous Pro", monospace;
     background: #333;
     margin: 0;
     display: flex;
@@ -123,21 +130,44 @@ export const globalStyles = css`
     flex-direction: column;
     flex: 1;
   }
-  
-  .btn-primary {
-    background-color: hsl(200, 100%, 40%) !important;
-    border-color: hsl(200, 100%, 40%) !important;
+
+  btn, .btn-primary {
+    background-color: #7dffff;
+    border-color: #7dffff;
+    color: #333;
     &:hover {
-      background-color: hsl(200, 100%, 35%) !important;
-      border-color: hsl(200, 100%, 35%) !important;
+      background-color: #7dffff;
+      border-color: #7dffff;
+      color: #000;
     }
   }
   
-  .btn, .btn:active {
-    box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08) !important;
-    transition: all .20s ease;
+  .btn:active, .btn-primary:not(:disabled):not(.disabled).active,
+  .btn-primary:not(:disabled):not(.disabled):active,
+  .show > .btn-primary.dropdown-toggle,
+  .btn-primary:not(:disabled):not(.disabled).active:focus,
+  .btn-primary:not(:disabled):not(.disabled):active:focus,
+  .show > .btn-primary.dropdown-toggle:focus,
+  .btn-primary.focus,
+  .btn-primary:focus {
+    background-color: #ff7d7d;
+    border-color: #ff7d7d;
+    color: #333;
+    box-shadow: transparent;
+    transition: all 0.2s ease;
   }
-  .DraftEditor-editorContainer, .DraftEditor-root, .public-DraftEditor-content {
+  .DraftEditor-editorContainer,
+  .DraftEditor-root,
+  .public-DraftEditor-content {
     height: auto;
+  }
+  
+  a {
+    color: #7dffff;
+  }
+  
+  a:hover {
+    #ff7d7d;
+    text-decoration: underline;
   }
 `;

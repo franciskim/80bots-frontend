@@ -68,10 +68,10 @@ const Tr = styled.tr`
 `;
 
 const Ip = styled.span`
-  color: ${props => props.theme.colors.clearBlue};
+  color: ${props => props.theme.colors.cyan};
   cursor: pointer;
   &:hover {
-    border-bottom: 1px solid ${props => props.theme.colors.clearBlue};
+    border-bottom: 1px solid ${props => props.theme.colors.cyan};
   }
 `;
 

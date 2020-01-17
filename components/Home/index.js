@@ -44,11 +44,14 @@ const Home = () => {
           background: transparent;
           border: none;
           font-size: 45px;
-          color: #ffffff;
+          color: #ff7d7d;
           width: 100%;
         }
         input:focus {
           outline: 0;
+        }
+        input::placeholder {
+          color: #ff7d7d;
         }
         form {
           width: 100%;

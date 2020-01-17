@@ -9,8 +9,8 @@ import { SIDEBAR_ANIMATION_TIME, ROUTES } from "/config";
 
 const Container = styled.div`
   flex-direction: column;
-  min-width: 250px;
-  max-width: 250px;
+  min-width: 225px;
+  max-width: 225px;
   background-color: ${props => props.theme.colors.darkerGrey};
   transition: margin-left ${SIDEBAR_ANIMATION_TIME}ms ease-out;
   ${props =>

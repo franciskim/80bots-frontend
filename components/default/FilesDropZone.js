@@ -56,9 +56,9 @@ const ImageDiv = styled(Card)`
     margin-right: 0;
   }
   &:hover {
-    border-color: ${props => props.theme.colors.clearBlue};
+    border-color: ${props => props.theme.colors.cyan};
     g {
-      fill: ${props => props.theme.colors.clearBlue};
+      fill: ${props => props.theme.colors.cyan};
     }
   }
 `;

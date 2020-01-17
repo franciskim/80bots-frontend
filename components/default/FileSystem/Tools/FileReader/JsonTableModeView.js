@@ -42,7 +42,7 @@ const LinkTd = styled.td`
   cursor: pointer;
   color: ${props => props.theme.colors.primary};
   &:hover {
-    color: ${props => props.theme.colors.clearBlue};
+    color: ${props => props.theme.colors.cyan};
   }
 `;
 

@@ -53,7 +53,7 @@ const ModalDiv = styled.div`
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 5px;
-    background-color: ${props => props.theme.colors.clearBlue};
+    background-color: ${props => props.theme.colors.cyan};
   }
 
   @media (max-width: 900px), (max-height: 980px) {
@@ -87,7 +87,7 @@ const IconContainer = styled.div`
     cursor: pointer;
     opacity: 1;
     g {
-      fill: ${props => props.theme.colors.clearBlue};
+      fill: ${props => props.theme.colors.cyan};
     }
   }
 `;
