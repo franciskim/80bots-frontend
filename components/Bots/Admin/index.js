@@ -56,6 +56,10 @@ const IconButton = styled(Button)`
   &:last-child {
     margin-right: 0;
   }
+  svg {
+    width: 15px;
+    height: 15px;
+  }
 `;
 
 const StatusButton = styled(Launch)`
@@ -397,10 +401,10 @@ const Bots = ({
           <Table responsive>
             <Thead>
               <tr>
-                <OrderTh field={"platform"}>Bot Platform</OrderTh>
+                <OrderTh field={"platform"}>Platform</OrderTh>
                 <OrderTh field={"name"}>Bot Name</OrderTh>
                 <OrderTh field={"type"}>Bot Type</OrderTh>
-                <OrderTh field={"description"}>Bot Description</OrderTh>
+                <OrderTh field={"description"}>Description</OrderTh>
                 <th>Bot Tags</th>
                 <OrderTh field={"status"}>Status</OrderTh>
                 <th>Action</th>

@@ -25,6 +25,7 @@ export const ROUTES = {
 export const theme = {
   colors: {
     cyan: "#7dffff",
+    pink: "#ff7d7d",
     blue: "#007bff",
     darkBlue: "#3490dc",
     primary: "#7dffff",
@@ -34,7 +35,6 @@ export const theme = {
     clearGreen: "#19ad7a",
     darkishPink: "#e54d93",
     darkishPink2: "#dc1c74",
-    pink: "#e56fbc",
     blueGrey: "#7f8fa4",
     darkGreyBlue: "#354052",
     grey: "#dddddd",
@@ -170,4 +170,16 @@ export const globalStyles = css`
     #ff7d7d;
     text-decoration: underline;
   }
+
+  tr.running div[class*='singleValue'] {
+    color: #ff7d7d;
+  }
+    
+  tr.not-running, tr.not-running div[class*='singleValue'] {
+    color: #bbb;
+  }
+  
+  tr.terminated, tr.terminated div[class*='singleValue'] {
+    color: #777;
+  }  
 `;

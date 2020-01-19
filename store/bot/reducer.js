@@ -1,4 +1,4 @@
-import { success, error } from 'redux-saga-requests';
+import { success, error } from "redux-saga-requests";
 import {
   GET_FOLDERS,
   GET_SCREENSHOTS,
@@ -17,9 +17,19 @@ import {
   ADMIN_POST_LAUNCH_INSTANCE,
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
-  GET_TAGS, BOT_SETTINGS, SYNC_BOT_INSTANCES, AMIS, SYNC_BOTS, GET_BOT, CLEAR_BOT,
-  ADMIN_REGIONS, ADMIN_UPDATE_REGION, LIMIT_CHANGE, ADMIN_SYNC_REGIONS, GET_ALL_BOTS
-} from './types';
+  GET_TAGS,
+  BOT_SETTINGS,
+  SYNC_BOT_INSTANCES,
+  AMIS,
+  SYNC_BOTS,
+  GET_BOT,
+  CLEAR_BOT,
+  ADMIN_REGIONS,
+  ADMIN_UPDATE_REGION,
+  LIMIT_CHANGE,
+  ADMIN_SYNC_REGIONS,
+  GET_ALL_BOTS
+} from "./types";
 
 const initialState = {
   folders: [],
@@ -40,7 +50,7 @@ const initialState = {
   limit: 10,
   loading: true,
   syncLoading: false,
-  error: null,
+  error: null
 };
 
 export const reducer = (state = initialState, action) => {
@@ -76,7 +86,7 @@ export const reducer = (state = initialState, action) => {
       return { ...state, botInstance: {} };
 
     case LIMIT_CHANGE: {
-      localStorage.setItem('bot.limit', action.data);
+      localStorage.setItem("bot.limit", action.data);
       return { ...state, limit: action.data };
     }
 
@@ -150,20 +160,28 @@ export const reducer = (state = initialState, action) => {
 
     case success(ADMIN_UPDATE_BOT): {
       const botIdx = state.bots.findIndex(item => item.id === action.data.id);
-      if(botIdx || botIdx === 0) state.bots[botIdx] = action.data;
+      if (botIdx || botIdx === 0) state.bots[botIdx] = action.data;
       return { ...state, bots: [...state.bots], loading: false };
     }
 
     case success(UPDATE_RUNNING_BOT):
     case success(ADMIN_UPDATE_RUNNING_BOT): {
-      const userIdx = state.botInstances.findIndex(item => item.id === action.data.id);
-      if(userIdx || userIdx === 0) state.botInstances[userIdx] = action.data;
-      return { ...state, botInstances: [...state.botInstances], loading: false };
+      const userIdx = state.botInstances.findIndex(
+        item => item.id === action.data.id
+      );
+      if (userIdx || userIdx === 0) state.botInstances[userIdx] = action.data;
+      return {
+        ...state,
+        botInstances: [...state.botInstances],
+        loading: false
+      };
     }
 
     case success(ADMIN_UPDATE_REGION): {
-      const userIdx = state.regions.findIndex(item => item.id === action.data.id);
-      if(userIdx || userIdx === 0) state.regions[userIdx] = action.data;
+      const userIdx = state.regions.findIndex(
+        item => item.id === action.data.id
+      );
+      if (userIdx || userIdx === 0) state.regions[userIdx] = action.data;
       return { ...state, regions: [...state.regions], loading: false };
     }
 
@@ -185,7 +203,12 @@ export const reducer = (state = initialState, action) => {
       return { ...state, amis: action.data.data };
 
     case success(ADMIN_REGIONS):
-      return { ...state, regions: action.data.data, totalRegions: action.data.total, loading: false };
+      return {
+        ...state,
+        regions: action.data.data,
+        totalRegions: action.data.total,
+        loading: false
+      };
 
     case error(GET_FOLDERS):
     case error(GET_SCREENSHOTS):
@@ -209,7 +232,8 @@ export const reducer = (state = initialState, action) => {
     case error(ADMIN_UPDATE_REGION):
       return { ...state, loading: false, error: action.error };
 
-    default: return state;
+    default:
+      return state;
   }
 };
 

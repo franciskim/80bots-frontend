@@ -7,16 +7,18 @@ import Feedback from "/components/default/Feedback";
 import { css } from "@emotion/core";
 import { SIDEBAR_ANIMATION_TIME, ROUTES } from "/config";
 
+const sidebarWidth = "225";
+
 const Container = styled.div`
   flex-direction: column;
-  min-width: 225px;
-  max-width: 225px;
+  min-width: ${sidebarWidth}px;
+  max-width: ${sidebarWidth}px;
   background-color: ${props => props.theme.colors.darkerGrey};
   transition: margin-left ${SIDEBAR_ANIMATION_TIME}ms ease-out;
   ${props =>
     !props.opened
       ? css`
-          margin-left: -250px;
+          margin-left: ${sidebarWidth * -1}px;
         `
       : ""};
 `;
@@ -51,8 +53,9 @@ const linkHoverStyle = css`
 `;
 
 const A = styled.a`
+  cursor: pointer;
   display: block;
-  padding: 0.625rem 1.5rem 0.625rem 2.75rem;
+  padding: 0.625rem 1.5rem 0.625rem 1.5rem;
   font-weight: 400;
   text-decoration: none;
   color: #ffffff;
@@ -60,7 +63,10 @@ const A = styled.a`
     ${linkHoverStyle};
     color: ${props => props.theme.colors.cyan};
   }
-  ${props => props.active && linkHoverStyle};
+  &.active {
+    cursor: pointer;
+    color: ${props => props.theme.colors.pink};
+  }
 `;
 
 const Bottom = styled.div`
@@ -74,7 +80,13 @@ const Sidebar = ({ opened = false, userRole }) => {
   const renderLink = (link, idx) => (
     <Li key={idx}>
       <Link href={link.href}>
-        <A href="#" active={link.href === Router.router.route}>
+        <A
+          href='#'
+          active={link.href === Router.router.route}
+          className={
+            link.href === Router.router.route ? "active" : "not-active"
+          }
+        >
           {link.name}
         </A>
       </Link>

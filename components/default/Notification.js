@@ -46,7 +46,6 @@ const InfoNotificationDiv = styled.div`
   display: flex;
   min-width: 250px;
   min-height: 100px;
-  box-shadow: 0 0 15px ${props => props.theme.colors.grey};
   border-radius: 10px;
   top: 2rem;
   z-index: 5;

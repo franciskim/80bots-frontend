@@ -87,17 +87,18 @@ const AddButtonWrap = styled.div`
 `;
 
 const A = styled.a`
-  color: inherit;
-  text-decoration: underline;
   cursor: pointer;
+  color: #ff7d7d !important;
+  &:hover {
+    text-decoration: underline !important;
+  }
 `;
 
 const selectStyles = {
-  container: (provided, { selectProps: { width } }) => ({
+  container: (provided, state) => ({
     ...provided,
-    width: width,
-    minWidth: "150px",
-    color: "#fff"
+    width: state.selectProps.width,
+    minWidth: "150px"
   }),
   menuPortal: base => ({ ...base, zIndex: 5 }),
   control: (provided, state) => ({
@@ -296,16 +297,17 @@ const RunningBots = ({
   );
 
   const renderRow = (botInstance, idx) => (
-    <Tr key={idx} disabled={botInstance.status === "pending"}>
-      <td>{botInstance.region}</td>
-      <td>{botInstance.launched_by}</td>
-      <td>{botInstance.name}</td>
-      <td>{botInstance.bot_name}</td>
-      <td>{botInstance.instance_id}</td>
-      <NwTd>{minToTime(botInstance.uptime)}</NwTd>
-      <td>
-        <Ip onClick={() => copyToClipboard(botInstance)}>{botInstance.ip}</Ip>
-      </td>
+    <Tr
+      key={idx}
+      disabled={botInstance.status === "pending"}
+      className={
+        botInstance.status === "running"
+          ? "running"
+          : botInstance.status === "terminated"
+          ? "terminated"
+          : "not-running"
+      }
+    >
       <td>
         <Select
           options={OPTIONS}
@@ -322,27 +324,26 @@ const RunningBots = ({
           menuPlacement={"bottom"}
         />
       </td>
-      <td>{botInstance.launched_at}</td>
       <td>
         <Link
           href={"/admin/bots/running/[id]"}
           as={`/admin/bots/running/${botInstance.id}`}
         >
-          <A>View</A>
+          <A>&gt;&nbsp;View</A>
         </Link>
         {botInstance.status === "terminated" ? (
-          <Link
+          <div
             title={"Restore Bot"}
             onClick={() => choiceRestoreBot(botInstance)}
           >
-            <A>Restore</A>
-          </Link>
+            <A>&gt;&nbsp;Restore</A>
+          </div>
         ) : null}
         <div
           title={"Copy Instance"}
           onClick={() => choiceCopyInstance(botInstance)}
         >
-          <A>Clone</A>
+          <A>&gt;&nbsp;Clone</A>
         </div>
         <div
           disabled={botInstance.status === "terminated"}
@@ -350,9 +351,19 @@ const RunningBots = ({
           type={"success"}
           onClick={() => downloadEventHandler(botInstance)}
         >
-          <A>Key</A>
+          <A>&gt;&nbsp;Key</A>
         </div>
       </td>
+      <td>{botInstance.bot_name}</td>
+      <NwTd>{minToTime(botInstance.uptime)}</NwTd>
+      <td>
+        <Ip onClick={() => copyToClipboard(botInstance)}>{botInstance.ip}</Ip>
+      </td>
+      <td>{botInstance.launched_at}</td>
+      <td>{botInstance.name}</td>
+      <td>{botInstance.instance_id}</td>
+      <td>{botInstance.launched_by}</td>
+      <td>{botInstance.region}</td>
       {botInstance.status === "pending" && <Td colSpan={"9"}>{Loading}</Td>}
     </Tr>
   );
@@ -444,16 +455,16 @@ const RunningBots = ({
           <Table>
             <Thead>
               <tr>
-                <OrderTh field={"region"}>Region</OrderTh>
-                <OrderTh field={"launched_by"}>Launched By</OrderTh>
-                <OrderTh field={"name"}>Name</OrderTh>
-                <OrderTh field={"bot_name"}>Script</OrderTh>
-                <th>Instance ID</th>
+                <OrderTh field={"status"}>Status</OrderTh>
+                <th>Actions</th>
+                <OrderTh field={"bot_name"}>Bot</OrderTh>
                 <OrderTh field={"uptime"}>Uptime</OrderTh>
                 <OrderTh field={"ip"}>IP</OrderTh>
-                <OrderTh field={"status"}>Status</OrderTh>
                 <OrderTh field={"launched_at"}>Launch Time</OrderTh>
-                <th>Actions</th>
+                <OrderTh field={"name"}>Name</OrderTh>
+                <th>Instance ID</th>
+                <OrderTh field={"launched_by"}>Launched By</OrderTh>
+                <OrderTh field={"region"}>Region</OrderTh>
               </tr>
             </Thead>
             <tbody>{botInstances.map(renderRow)}</tbody>

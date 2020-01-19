@@ -32,16 +32,16 @@ import {
   ADMIN_SYNC_REGIONS,
   BOT_REPORT,
   REPORT_UPLOAD_PROGRESS,
-  LIMIT_CHANGE,
-} from './types';
-import { success } from 'redux-saga-requests';
+  LIMIT_CHANGE
+} from "./types";
+import { success } from "redux-saga-requests";
 
 export const getFolders = (query = { page: 1, limit: 1 }) => {
-  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  Object.keys(query).forEach(key => query[key] === "" && delete query[key]);
   return {
     type: GET_FOLDERS,
     request: {
-      method: 'GET',
+      method: "GET",
       url: `/instances/${query.instance_id}/objects`,
       params: query
     },
@@ -52,13 +52,13 @@ export const getFolders = (query = { page: 1, limit: 1 }) => {
 };
 
 export const getScreenshots = (query = { page: 1, limit: 1 }) => {
-  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  Object.keys(query).forEach(key => query[key] === "" && delete query[key]);
   return {
     type: GET_SCREENSHOTS,
     request: {
-      method: 'GET',
+      method: "GET",
       url: `/instances/${query.instance_id}/objects`,
-      params: {...query, type: 'screenshots'}
+      params: { ...query, type: "screenshots" }
     },
     meta: {
       thunk: true
@@ -67,13 +67,13 @@ export const getScreenshots = (query = { page: 1, limit: 1 }) => {
 };
 
 export const getImages = (query = { page: 1, limit: 1 }) => {
-  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  Object.keys(query).forEach(key => query[key] === "" && delete query[key]);
   return {
     type: GET_IMAGES,
     request: {
-      method: 'GET',
+      method: "GET",
       url: `/instances/${query.instance_id}/objects`,
-      params: {...query, type: 'images'}
+      params: { ...query, type: "images" }
     },
     meta: {
       thunk: true
@@ -81,14 +81,14 @@ export const getImages = (query = { page: 1, limit: 1 }) => {
   };
 };
 
-export const getLogs = (query) => {
-  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+export const getLogs = query => {
+  Object.keys(query).forEach(key => query[key] === "" && delete query[key]);
   return {
     type: GET_LOGS,
     request: {
-      method: 'GET',
-      url: '/instances/logs',
-      params: query,
+      method: "GET",
+      url: "/instances/logs",
+      params: query
     },
     meta: {
       thunk: true
@@ -96,14 +96,14 @@ export const getLogs = (query) => {
   };
 };
 
-export const getOutputJson = (query) => {
-  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+export const getOutputJson = query => {
+  Object.keys(query).forEach(key => query[key] === "" && delete query[key]);
   return {
     type: GET_OUTPUT_JSON,
     request: {
-      method: 'GET',
+      method: "GET",
       url: `/instances/${query.instance_id}/objects`,
-      params: {...query, type: 'json'}
+      params: { ...query, type: "json" }
     },
     meta: {
       thunk: true
@@ -112,12 +112,12 @@ export const getOutputJson = (query) => {
 };
 
 export const getBots = (query = { page: 1, limit: 1 }) => {
-  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  Object.keys(query).forEach(key => query[key] === "" && delete query[key]);
   return {
     type: GET_BOTS,
     request: {
-      method: 'GET',
-      url: '/bots',
+      method: "GET",
+      url: "/bots",
       params: query
     },
     meta: {
@@ -127,31 +127,31 @@ export const getBots = (query = { page: 1, limit: 1 }) => {
 };
 
 export const getRunningBots = (query = { page: 1, limit: 1 }) => {
-  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  Object.keys(query).forEach(key => query[key] === "" && delete query[key]);
   return {
     type: GET_RUNNING_BOTS,
     request: {
-      method: 'GET',
-      url: '/instances',
+      method: "GET",
+      url: "/instances",
       params: query
     },
     meta: {
-      thunk: true,
+      thunk: true
     }
   };
 };
 
 export const getAllBots = (query = { page: 1, limit: 1 }) => {
-  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  Object.keys(query).forEach(key => query[key] === "" && delete query[key]);
   return {
     type: GET_ALL_BOTS,
     request: {
-      method: 'GET',
-      url: '/bots',
+      method: "GET",
+      url: "/bots",
       params: query
     },
     meta: {
-      thunk: true,
+      thunk: true
     }
   };
 };
@@ -160,7 +160,7 @@ export const updateAdminRunningBot = (id, updateData) => {
   return {
     type: ADMIN_UPDATE_RUNNING_BOT,
     request: {
-      method: 'PUT',
+      method: "PUT",
       url: `/instances/${id}`,
       data: { update: updateData }
     },
@@ -175,8 +175,8 @@ export const launchInstance = (id, params) => {
   return {
     type: POST_LAUNCH_INSTANCE,
     request: {
-      method: 'POST',
-      url: '/instances/launch',
+      method: "POST",
+      url: "/instances/launch",
       data: { bot_id: id, params }
     },
     meta: {
@@ -189,7 +189,7 @@ export const updateRunningBot = (id, updateData) => {
   return {
     type: UPDATE_RUNNING_BOT,
     request: {
-      method: 'PUT',
+      method: "PUT",
       url: `/instances/${id}`,
       data: { update: updateData }
     },
@@ -203,8 +203,8 @@ export const adminLaunchInstance = (id, params) => {
   return {
     type: ADMIN_POST_LAUNCH_INSTANCE,
     request: {
-      method: 'POST',
-      url: '/instances/launch',
+      method: "POST",
+      url: "/instances/launch",
       data: { bot_id: id, params }
     },
     meta: {
@@ -214,12 +214,12 @@ export const adminLaunchInstance = (id, params) => {
 };
 
 export const adminGetRunningBots = (query = { page: 1, limit: 1 }) => {
-  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  Object.keys(query).forEach(key => query[key] === "" && delete query[key]);
   return {
     type: ADMIN_GET_RUNNING_BOTS,
     request: {
-      method: 'GET',
-      url: '/instances',
+      method: "GET",
+      url: "/instances",
       params: query
     },
     meta: {
@@ -233,7 +233,7 @@ export const adminUpdateBot = (id, updateData) => {
   return {
     type: ADMIN_UPDATE_BOT,
     request: {
-      method: 'PUT',
+      method: "PUT",
       url: `/admin/bots/${id}`,
       data: { update: updateData }
     },
@@ -245,14 +245,13 @@ export const adminUpdateBot = (id, updateData) => {
 };
 
 export const adminGetBots = (query = { page: 1, limit: 1 }) => {
-
-  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  Object.keys(query).forEach(key => query[key] === "" && delete query[key]);
 
   return {
     type: ADMIN_GET_BOTS,
     request: {
-      method: 'GET',
-      url: '/bots',
+      method: "GET",
+      url: "/bots",
       params: query
     },
     meta: {
@@ -266,8 +265,8 @@ export const downloadInstancePemFile = id => {
   return {
     type: DOWNLOAD_INSTANCE_PEM_FILE,
     request: {
-      method: 'GET',
-      url: '/admin/instances/pem',
+      method: "GET",
+      url: "/admin/instances/pem",
       params: { instance: id }
     },
     meta: {
@@ -277,12 +276,11 @@ export const downloadInstancePemFile = id => {
   };
 };
 
-
-export const addBot = (data) => ({
+export const addBot = data => ({
   type: ADD_BOT,
   request: {
-    method: 'POST',
-    url: '/bots',
+    method: "POST",
+    url: "/bots",
     data
   },
   meta: {
@@ -292,12 +290,12 @@ export const addBot = (data) => ({
 });
 
 export const getTags = (query = { page: 1, limit: 1 }) => {
-  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
+  Object.keys(query).forEach(key => query[key] === "" && delete query[key]);
   return {
     type: GET_TAGS,
     request: {
-      method: 'GET',
-      url: '/bots/tags',
+      method: "GET",
+      url: "/bots/tags",
       params: query
     },
     meta: {
@@ -315,8 +313,8 @@ export const botInstanceUpdated = botInstance => ({
 export const getBotSettings = () => ({
   type: BOT_SETTINGS,
   request: {
-    method: 'GET',
-    url: '/admin/aws'
+    method: "GET",
+    url: "/admin/aws"
   },
   meta: {
     thunk: true,
@@ -327,7 +325,7 @@ export const getBotSettings = () => ({
 export const updateBotSettings = (id, data) => ({
   type: UPDATE_BOT_SETTINGS,
   request: {
-    method: 'PUT',
+    method: "PUT",
     url: `/admin/aws/${id}`,
     data: { update: data }
   },
@@ -340,8 +338,8 @@ export const updateBotSettings = (id, data) => ({
 export const syncBotInstances = (id, data) => ({
   type: SYNC_BOT_INSTANCES,
   request: {
-    method: 'GET',
-    url: '/admin/instances/sync',
+    method: "GET",
+    url: "/admin/instances/sync",
     data: { update: data }
   },
   meta: {
@@ -350,10 +348,10 @@ export const syncBotInstances = (id, data) => ({
   }
 });
 
-export const adminDeleteBot = (id) => ({
+export const adminDeleteBot = id => ({
   type: ADMIN_DELETE_BOT,
   request: {
-    method: 'DELETE',
+    method: "DELETE",
     url: `/admin/bots/${id}`
   },
   meta: {
@@ -365,8 +363,8 @@ export const adminDeleteBot = (id) => ({
 export const getAMIs = (params = { region: 2 }) => ({
   type: AMIS,
   request: {
-    method: 'GET',
-    url: '/admin/instances/amis',
+    method: "GET",
+    url: "/admin/instances/amis",
     params: params
   },
   meta: {
@@ -378,8 +376,8 @@ export const getAMIs = (params = { region: 2 }) => ({
 export const syncLocalBots = () => ({
   type: SYNC_BOTS,
   request: {
-    method: 'GET',
-    url: '/admin/bots/sync'
+    method: "GET",
+    url: "/admin/bots/sync"
   },
   meta: {
     thunk: true,
@@ -387,10 +385,10 @@ export const syncLocalBots = () => ({
   }
 });
 
-export const getBot = (id) => ({
+export const getBot = id => ({
   type: GET_BOT,
   request: {
-    method: 'GET',
+    method: "GET",
     url: `/instances/${id}`
   },
   meta: {
@@ -399,10 +397,10 @@ export const getBot = (id) => ({
   }
 });
 
-export const adminGetBot = (id) => ({
+export const adminGetBot = id => ({
   type: GET_BOT,
   request: {
-    method: 'GET',
+    method: "GET",
     url: `/instances/${id}`
   },
   meta: {
@@ -412,14 +410,14 @@ export const adminGetBot = (id) => ({
 });
 
 export const clearBot = () => ({
-  type: CLEAR_BOT,
+  type: CLEAR_BOT
 });
 
-export const adminGetRegions = (query) => ({
+export const adminGetRegions = query => ({
   type: ADMIN_REGIONS,
   request: {
-    method: 'GET',
-    url: '/admin/instances/regions',
+    method: "GET",
+    url: "/admin/instances/regions",
     params: query
   },
   meta: {
@@ -430,7 +428,7 @@ export const adminGetRegions = (query) => ({
 export const adminUpdateRegion = (id, data) => ({
   type: ADMIN_UPDATE_REGION,
   request: {
-    method: 'PUT',
+    method: "PUT",
     url: `/admin/instances/regions/${id}`,
     data: { update: data }
   },
@@ -442,8 +440,8 @@ export const adminUpdateRegion = (id, data) => ({
 export const syncRegions = () => ({
   type: ADMIN_SYNC_REGIONS,
   request: {
-    method: 'GET',
-    url: '/admin/instances/regions/sync'
+    method: "GET",
+    url: "/admin/instances/regions/sync"
   },
   meta: {
     thunk: true,
@@ -451,17 +449,18 @@ export const syncRegions = () => ({
   }
 });
 
-export const reportBot = (id, data) => dispatch => dispatch({
-  type: BOT_REPORT,
-  request: {
-    method: 'POST',
-    url: `/instances/${id}/report`,
-    data
-  },
-  meta: {
-    thunk: true
-  }
-});
+export const reportBot = (id, data) => dispatch =>
+  dispatch({
+    type: BOT_REPORT,
+    request: {
+      method: "POST",
+      url: `/instances/${id}/report`,
+      data
+    },
+    meta: {
+      thunk: true
+    }
+  });
 
 export const setBotLimit = limit => ({
   type: LIMIT_CHANGE,
@@ -472,8 +471,8 @@ export const copyInstance = id => {
   return {
     type: COPY_INSTANCE,
     request: {
-      method: 'POST',
-      url: '/instances/copy',
+      method: "POST",
+      url: "/instances/copy",
       data: { instance_id: id }
     },
     meta: {
@@ -486,8 +485,8 @@ export const restoreBot = id => {
   return {
     type: RESTORE_INSTANCE,
     request: {
-      method: 'POST',
-      url: '/instances/restore',
+      method: "POST",
+      url: "/instances/restore",
       data: { instance_id: id }
     },
     meta: {
