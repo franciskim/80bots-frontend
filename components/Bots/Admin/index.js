@@ -363,7 +363,7 @@ const Bots = ({
 
   return (
     <>
-      <AddButtonWrap>
+      <AddButtonWrap style={{ marginBottom: "17px" }}>
         <Button type={"success"} onClick={() => addModal.current.open()}>
           Add Bot
         </Button>
