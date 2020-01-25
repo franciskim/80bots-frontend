@@ -30,7 +30,7 @@ const Content = styled(CardBody)`
 
 const STATUSES = {
   ERROR: {
-    label: "Oops! Some error occurs...",
+    label: "Oops! Some error occured...",
     color: theme.colors.pink
   },
   LOADING: {
@@ -111,6 +111,11 @@ const JsonType = ({
   return (
     <>
       <Content>
+        <style jsx global>{`
+        .pretty-json-container * {
+          color: #fff !important;
+        }
+      `}</style>
         {openedFile ? (
           <>
             <FiltersSection>
@@ -120,7 +125,11 @@ const JsonType = ({
                 value={selected}
                 styles={{
                   select: {
-                    container: provided => ({ ...provided, minWidth: "200px" })
+                    container: provided => ({
+                      ...provided,
+                      minWidth: "200px",
+                      color: "#fff"
+                    })
                   }
                 }}
               />

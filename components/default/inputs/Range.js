@@ -46,7 +46,7 @@ const RangeValue = styled.span`
   display: inline-block;
   position: relative;
   width: 50px;
-  color: ${props => props.theme.colors.white};
+  color: ${props => props.theme.colors.darkerGrey};
   line-height: 20px;
   text-align: center;
   border-radius: 3px;

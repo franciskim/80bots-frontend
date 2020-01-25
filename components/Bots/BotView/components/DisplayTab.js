@@ -41,7 +41,7 @@ const DisplayTab = ({ botInstance }) => {
           `
         }
         id={"display"}
-        src={`http://${botInstance.ip}:6080`}
+        src={`http://${botInstance.ip}:6080?autoconnect=1`}
       />
       {status && (
         <Loader

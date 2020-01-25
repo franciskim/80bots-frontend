@@ -41,9 +41,8 @@ const ModalDiv = styled.div`
   margin-top: 10vh;
   max-height: 80vh;
   overflow-y: scroll;
-  background-color: ${props => props.theme.colors.paleGrey};
-  box-shadow: 0 0 10px ${props => props.theme.colors.silver};
-  border: 1px solid ${props => props.theme.colors.silver};
+  background-color: ${props => props.theme.colors.darkerGrey};
+  border: none;
   ${props => props.styles};
 
   &::-webkit-scrollbar {
@@ -107,11 +106,12 @@ const ModalBodyContent = styled.div`
   }
 
   ${props => props.styles};
+  color: #fff;
 `;
 
 const ModalHeader = styled.h3`
   text-align: center;
-  color: ${props => props.theme.colors.slate};
+  color: #fff;
   font-size: 22px;
   display: flex;
   align-self: center;

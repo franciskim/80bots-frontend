@@ -330,7 +330,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   return !isAmountSet ? (
     <>
       <Range
-        label={"Choose amount of instances to launch"}
+        label={"Number of bot instances to launch"}
         styles={inputStyle}
         min={1}
         max={10}

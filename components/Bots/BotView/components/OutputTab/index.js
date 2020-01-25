@@ -28,6 +28,8 @@ const TypesNavigation = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  margin-top: 8px;
+  margin-bottom: 23px;
 `;
 
 const Fade = keyframes`
@@ -42,7 +44,7 @@ const Type = styled(Button)`
 
 const Hint = styled.span`
   font-size: 14px;
-  color: ${props => props.theme.colors.grey};
+  color: #fff;
 `;
 
 const OutputTab = ({ setCustomBack }) => {
