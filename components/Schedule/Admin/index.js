@@ -35,11 +35,12 @@ const Container = styled(Card)`
   background: #333;
   border: none;
   color: #fff;
+  align-self: flex-start;
 `;
 
 const IconButton = styled(Button)`
   display: inline-flex;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 2px;
   margin-right: 5px;
   width: 30px;
@@ -94,12 +95,41 @@ const Ul = styled.ul`
 const modalStyles = css`
   min-width: 500px;
   overflow-y: visible;
+  min-height: 500px;
 `;
 
 const FILTERS_LIST_OPTIONS = [
   { value: "all", label: "All Schedules" },
   { value: "my", label: "My Schedules" }
 ];
+
+const selectStyles = {
+  container: (provided, { selectProps: { width } }) => ({
+    ...provided,
+    width: width,
+    minWidth: "75px",
+    color: "#fff"
+  }),
+  menuPortal: base => ({ ...base }),
+  control: (provided, state) => ({
+    ...provided,
+    background: "rgba(0,0,0,0.2)",
+    // match with the menu
+    borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
+    // Overrides the different states of border
+    borderColor: state.isFocused ? "black" : "rgba(0,0,0,0.2)",
+    // Removes weird border around container
+    boxShadow: state.isFocused ? null : null,
+    "&:hover": {
+      // Overrides the different states of border
+      borderColor: "black"
+    }
+  }),
+  singleValue: (provided, state) => ({
+    ...provided,
+    color: "#fff"
+  })
+};
 
 const BotsSchedule = ({
   theme,
@@ -305,6 +335,11 @@ const BotsSchedule = ({
 
   return (
     <>
+      <style jsx global>{`
+        div[class*="-menu"] {
+          background: #000;
+        }
+      `}</style>
       <AddButtonWrap>
         <Button type={"primary"} onClick={toggleAddModal}>
           Add schedule list
@@ -399,19 +434,22 @@ const BotsSchedule = ({
         onClose={() => setInstanceId(null)}
       >
         <SelectWrap>
-          <Label>Select one of your running bots</Label>
+          <Label style={{ margin: "17px 0" }}>
+            Select one of your running bots
+          </Label>
           <AsyncSelect
             onChange={onBotChange}
             loadOptions={searchBots}
             defaultOptions={runningBots.map(toOptions)}
+            styles={selectStyles}
           />
         </SelectWrap>
         <Buttons>
-          <Button type={"primary"} onClick={addSchedule}>
-            Add
-          </Button>
           <Button type={"danger"} onClick={() => addModal.current.close()}>
             Cancel
+          </Button>
+          <Button type={"primary"} onClick={addSchedule}>
+            Add
           </Button>
         </Buttons>
       </Modal>

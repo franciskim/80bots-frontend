@@ -62,7 +62,7 @@ const AppLayout = ({
       ) : (
         <Loader
           type={"bubbles"}
-          color={theme.colors.blue}
+          color={theme.colors.cyan}
           width={100}
           height={100}
         />

@@ -3,20 +3,20 @@ import { css } from "@emotion/core";
 export const ROUTES = {
   Admin: [
     { name: "Users", href: "/admin/users" },
-    { name: "Running Bots", href: "/admin/bots/running" },
-    { name: "Available Bots", href: "/admin/bots" },
-    { name: "Bots Settings", href: "/admin/bots/settings" },
-    { name: "Bots Schedule", href: "/admin/schedule" },
-    { name: "Bots Sessions", href: "/admin/sessions" },
+    { name: "Workforce", href: "/admin/bots/running" },
+    { name: "Deploy Bots", href: "/admin/bots" },
+    { name: "Schedule Bots", href: "/admin/schedule" },
+    { name: "Settings", href: "/admin/bots/settings" },
+    { name: "Sessions", href: "/admin/sessions" },
     { name: "Subscription Plans", href: "/admin/subscriptions" },
     { name: "Credit Usage History", href: "/admin/history" },
     { name: "Low Credit Notifications", href: "/admin/notifications" },
     { name: "CMS", href: "/admin/cms" }
   ],
   User: [
-    { name: "Running Bots", href: "/bots/running" },
-    { name: "Available Bots", href: "/bots" },
-    { name: "Bots Schedule", href: "/schedule" },
+    { name: "Workforce", href: "/bots/running" },
+    { name: "Deploy Bots", href: "/bots" },
+    { name: "Schedule Bots", href: "/schedule" },
     { name: "My Subscription", href: "/subscription" },
     { name: "Credit Usage History", href: "/history" }
   ]
@@ -181,5 +181,6 @@ export const globalStyles = css`
   
   tr.terminated, tr.terminated div[class*='singleValue'] {
     color: #777;
-  }  
+  } 
+
 `;

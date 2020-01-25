@@ -355,11 +355,11 @@ const RunningBots = ({
         </div>
       </td>
       <td>{botInstance.bot_name}</td>
+      <td>{botInstance.launched_at}</td>
       <NwTd>{minToTime(botInstance.uptime)}</NwTd>
       <td>
         <Ip onClick={() => copyToClipboard(botInstance)}>{botInstance.ip}</Ip>
       </td>
-      <td>{botInstance.launched_at}</td>
       <td>{botInstance.name}</td>
       <td>{botInstance.instance_id}</td>
       <td>{botInstance.launched_by}</td>
@@ -458,12 +458,12 @@ const RunningBots = ({
                 <OrderTh field={"status"}>Status</OrderTh>
                 <th>Actions</th>
                 <OrderTh field={"bot_name"}>Bot</OrderTh>
+                <OrderTh field={"launched_at"}>Deployed At</OrderTh>
                 <OrderTh field={"uptime"}>Uptime</OrderTh>
                 <OrderTh field={"ip"}>IP</OrderTh>
-                <OrderTh field={"launched_at"}>Launch Time</OrderTh>
                 <OrderTh field={"name"}>Name</OrderTh>
                 <th>Instance ID</th>
-                <OrderTh field={"launched_by"}>Launched By</OrderTh>
+                <OrderTh field={"launched_by"}>Deployed By</OrderTh>
                 <OrderTh field={"region"}>Region</OrderTh>
               </tr>
             </Thead>

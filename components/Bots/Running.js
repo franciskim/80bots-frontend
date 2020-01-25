@@ -328,7 +328,7 @@ const RunningBots = ({
                 <OrderTh field={"credits_used"}>Credits Used</OrderTh>
                 <OrderTh field={"ip"}>IP</OrderTh>
                 <OrderTh field={"status"}>Status</OrderTh>
-                <OrderTh field={"launched_at"}>Launched At</OrderTh>
+                <OrderTh field={"launched_at"}>Deployed At</OrderTh>
                 <th>Actions</th>
               </tr>
             </Thead>

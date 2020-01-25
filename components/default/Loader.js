@@ -14,7 +14,7 @@ const LoaderContainer = styled.div`
 const Caption = styled.span`
   margin-top: 20px;
   font-size: 16px;
-  color: ${props => props.theme.colors.blueGrey};
+  color: ${props => props.theme.colors.darkerGrey};
 `;
 
 export const Loader = ({ type, caption, ...props }) => {

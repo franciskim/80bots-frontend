@@ -26,7 +26,7 @@ const Container = styled(Card)`
   color: #fff;
 `;
 
-const Launch = styled(Button)`
+const Deploy = styled(Button)`
   padding: 0 10px;
   font-size: 16px;
 `;
@@ -62,7 +62,7 @@ const Bots = ({
       .then(() => {
         notify({
           type: NOTIFICATION_TYPES.INFO,
-          message: "New instance is enqueued for launch"
+          message: "Bot instance is enqueued for deployment"
         });
         setTimeout(() => {
           Router.push("/bots/running");
@@ -103,15 +103,15 @@ const Bots = ({
           : "-"}
       </td>
       <td>
-        <Launch
+        <Deploy
           type={"primary"}
           onClick={() => {
             setClickedBot(bot);
             modal.current.open();
           }}
         >
-          Launch
-        </Launch>
+          Deploy
+        </Deploy>
       </td>
     </tr>
   );
@@ -199,7 +199,7 @@ const Bots = ({
 
       <Modal
         ref={modal}
-        title={"Launch selected bot?"}
+        title={"Deploy selected bot?"}
         onClose={() => setClickedBot(null)}
         contentStyles={css`
           overflow-x: visible;

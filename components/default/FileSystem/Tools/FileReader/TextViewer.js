@@ -15,6 +15,10 @@ const Textarea = styled(BaseTextarea)`
   height: 100%;
   width: 100%;
   padding: 15px;
+  background: #333;
+  color: #7dffff;
+  font-size: 10px;
+  border: 0;
 `;
 
 const TextViewer = ({ item }) => {

@@ -129,17 +129,20 @@ const BotEditor = ({
 
   useEffect(() => {
     if (bot) {
+      console.log(bot);
       setPlatform(
         toOptions(platforms.find(item => item.name === bot.platform))
       );
       setTags(
         tags.filter(item => bot.tags.indexOf(item.name) > -1).map(toOptions)
       );
-      setUsers(
-        users
-          .filter(item => bot.users.find(user => user.id === item.id))
-          .map(toOptions)
-      );
+      if (bot.users) {
+        setUsers(
+          users
+            .filter(item => bot.users.find(user => user.id === item.id))
+            .map(toOptions)
+        );
+      }
     }
   }, [tags, users, platforms]);
 

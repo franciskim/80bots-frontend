@@ -40,7 +40,7 @@ const Container = styled(Card)`
   color: #fff;
 `;
 
-const Launch = styled(Button)`
+const Deploy = styled(Button)`
   padding: 0 10px;
   font-size: 16px;
   margin-right: 5px;
@@ -62,8 +62,8 @@ const IconButton = styled(Button)`
   }
 `;
 
-const StatusButton = styled(Launch)`
-  text-transform: uppercase;
+const StatusButton = styled(Deploy)`
+  text-transform: capitalize;
   margin-right: 0;
 `;
 
@@ -161,7 +161,7 @@ const Bots = ({
       .then(() => {
         notify({
           type: NOTIFICATION_TYPES.INFO,
-          message: "New instance is enqueued for launch"
+          message: "New bot instance is deploying"
         });
         setTimeout(() => {
           Router.push("/admin/bots/running");
@@ -298,15 +298,15 @@ const Bots = ({
       </td>
       <td>
         <Buttons>
-          <Launch
+          <Deploy
             type={"primary"}
             onClick={() => {
               setClickedBot(bot);
               modal.current.open();
             }}
           >
-            Launch
-          </Launch>
+            Deploy
+          </Deploy>
           <IconButton
             title={"Edit Bot"}
             type={"primary"}
@@ -432,7 +432,7 @@ const Bots = ({
 
       <Modal
         ref={modal}
-        title={"Launch selected bot?"}
+        title={"Deploy selected bot?"}
         onClose={() => setClickedBot(null)}
         contentStyles={css`
           overflow-x: visible;
