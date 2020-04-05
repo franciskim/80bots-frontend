@@ -9,16 +9,7 @@ export const ROUTES = {
     { name: "Settings", href: "/admin/bots/settings" },
     { name: "Sessions", href: "/admin/sessions" },
     { name: "Subscription Plans", href: "/admin/subscriptions" },
-    { name: "Credit Usage History", href: "/admin/history" },
-    { name: "Low Credit Notifications", href: "/admin/notifications" },
-    { name: "CMS", href: "/admin/cms" }
-  ],
-  User: [
-    { name: "Workforce", href: "/bots/running" },
-    { name: "Deploy Bots", href: "/bots" },
-    { name: "Schedule Bots", href: "/schedule" },
-    { name: "My Subscription", href: "/subscription" },
-    { name: "Credit Usage History", href: "/history" }
+    { name: "Credit Usage History", href: "/admin/history" }
   ]
 };
 
