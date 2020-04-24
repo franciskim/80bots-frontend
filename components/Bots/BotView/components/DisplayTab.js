@@ -23,8 +23,8 @@ const Display = styled.iframe`
 `;
 
 const Link = styled.a`
-  display: flex;
-  flex: 1 1;
+  margin-top: 23px;
+  width: 100%;
   text-align: right;
 `;
 
