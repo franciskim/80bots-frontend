@@ -35,9 +35,11 @@ const DisplayTab = ({ botInstance }) => {
     <Content>
       <Link
         href={`http://${botInstance.ip}:6080?autoconnect=1`}
-        target={`_blank`}
+        styles={css`
+          margin-top: 23px;
+        `}
       >
-        View bot in real-time
+        <a target="_blank">View bot in real-time</a>
       </Link>
       <Display
         onLoad={() => setStatus(null)}
