@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { useTheme } from "emotion-theming";
 import { CardBody } from "/components/default/Card";
 import { Loader } from "/components/default";
+import Link from "next/link";
 
 const Content = styled(CardBody)`
   display: flex;
@@ -32,6 +33,12 @@ const DisplayTab = ({ botInstance }) => {
 
   return (
     <Content>
+      <Link
+        href={`http://${botInstance.ip}:6080?autoconnect=1`}
+        target={`_blank`}
+      >
+        View bot in real-time
+      </Link>
       <Display
         onLoad={() => setStatus(null)}
         styles={
