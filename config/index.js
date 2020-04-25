@@ -6,10 +6,10 @@ export const ROUTES = {
     { name: "Workforce", href: "/admin/bots/running" },
     { name: "Deploy Bots", href: "/admin/bots" },
     { name: "Schedule Bots", href: "/admin/schedule" },
-    { name: "Settings", href: "/admin/bots/settings" },
     { name: "Sessions", href: "/admin/sessions" },
     { name: "Subscription Plans", href: "/admin/subscriptions" },
     { name: "Credit Usage History", href: "/admin/history" },
+    { name: "AWS AMI Settings", href: "/admin/bots/settings" },
     // { name: "Low Credit Notifications", href: "/admin/notifications" },
   ],
   User: [
