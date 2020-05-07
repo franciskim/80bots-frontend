@@ -116,9 +116,9 @@ export const Paginator = props => {
   }
 
   const pageJumpStyle = {
-    "text-align": "center",
+    textAlign: "center",
     border: "1px solid #111",
-    "border-radius": "3px",
+    borderRadius: "3px",
     background: "#333",
     color: "#fff"
   };

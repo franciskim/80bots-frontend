@@ -109,11 +109,11 @@ const Reset = ({ addNotification, resetPassword }) => {
                 style={{
                   display: "inline-block",
                   position: "relative",
-                  "z-index": "1",
+                  zIndex: "1",
                   width: "100%",
                   height: "51px",
-                  "text-align": "center",
-                  "margin-bottom": "100px"
+                  textAlign: "center",
+                  marginBottom: "100px"
                 }}
               >
                 <span

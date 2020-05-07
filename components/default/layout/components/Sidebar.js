@@ -47,8 +47,8 @@ const Hr = styled.hr`
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
-const linkHoverStyle = css`
-  color: ${props => props.theme.colors.cyan} !important;
+const linkHoverStyle = (props) => css`
+  color: ${props.theme.colors.cyan} !important;
   text-decoration: underline;
 `;
 
@@ -103,11 +103,11 @@ const Sidebar = ({ opened = false, userRole }) => {
             style={{
               display: "inline-block",
               position: "relative",
-              "z-index": "1",
+              zIndex: "-1",
               width: "100%",
               height: "25px",
-              "text-align": "left",
-              "margin-bottom": "8px"
+              textAlign: "left",
+              marginBottom: "8px"
             }}
           >
             <span
@@ -124,7 +124,7 @@ const Sidebar = ({ opened = false, userRole }) => {
                 className={"logo"}
                 style={{
                   position: "relative",
-                  "z-index": "-1",
+                  zIndex: "-1",
                   width: "100px",
                   height: "25px"
                 }}

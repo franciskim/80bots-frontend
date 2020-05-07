@@ -141,7 +141,7 @@ const Feedback = ({ send, notify, ...props }) => {
         </Button>
       </Modal>
 
-      <Submit onClick={() => modal.current.open()}>Feedback</Submit>
+      <Submit type={"primary"} onClick={() => modal.current.open()}>Feedback</Submit>
     </>
   );
 };
