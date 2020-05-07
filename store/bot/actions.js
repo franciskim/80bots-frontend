@@ -29,7 +29,6 @@ import {
   CLEAR_BOT,
   ADMIN_REGIONS,
   ADMIN_UPDATE_REGION,
-  ADMIN_SYNC_REGIONS,
   BOT_REPORT,
   REPORT_UPLOAD_PROGRESS,
   LIMIT_CHANGE
@@ -434,18 +433,6 @@ export const adminUpdateRegion = (id, data) => ({
   },
   meta: {
     thunk: true
-  }
-});
-
-export const syncRegions = () => ({
-  type: ADMIN_SYNC_REGIONS,
-  request: {
-    method: "GET",
-    url: "/admin/instances/regions/sync"
-  },
-  meta: {
-    thunk: true,
-    admin: true
   }
 });
 

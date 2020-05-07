@@ -19,7 +19,6 @@ import { Card, CardBody } from "/components/default/Card";
 import {
   adminGetRegions,
   adminUpdateRegion,
-  syncRegions
 } from "/store/bot/actions";
 import { Button, Paginator } from "/components/default";
 import { Select } from "/components/default/inputs";
@@ -90,8 +89,6 @@ const Settings = ({
   total,
   getRegions,
   updateRegion,
-  syncRegions,
-  syncLoading
 }) => {
   const [clickedRegion, setClickedRegion] = useState(null);
   const [amis, setAmis] = useState([]);
@@ -195,22 +192,6 @@ const Settings = ({
     });
   };
 
-  const sync = () => {
-    syncRegions()
-      .then(() =>
-        addNotification({
-          type: NOTIFICATION_TYPES.INFO,
-          message: "Sync started"
-        })
-      )
-      .catch(() =>
-        addNotification({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: "Sync cannot be started"
-        })
-      );
-  };
-
   const renderRow = (region, idx) => (
     <tr key={idx}>
       <td>{region.name}</td>
@@ -238,14 +219,6 @@ const Settings = ({
           onClick={() => editSettingsModal.current.open()}
         >
           Edit Global Bot Settings
-        </Button>
-        <Button
-          type={"primary"}
-          onClick={sync}
-          loading={`${syncLoading}`}
-          loaderWidth={148}
-        >
-          Sync Regions
         </Button>
       </ButtonWrap>
       <Container>
@@ -350,15 +323,12 @@ Settings.propTypes = {
   total: PropTypes.number.isRequired,
   getRegions: PropTypes.func.isRequired,
   updateRegion: PropTypes.func.isRequired,
-  syncRegions: PropTypes.func.isRequired,
-  syncLoading: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   user: state.auth.user,
   regions: state.bot.regions,
   total: state.bot.totalRegions,
-  syncLoading: state.bot.syncLoading
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -367,7 +337,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(addListener(room, eventName, handler)),
   getRegions: (...args) => dispatch(adminGetRegions(...args)),
   updateRegion: (id, data) => dispatch(adminUpdateRegion(id, data)),
-  syncRegions: () => dispatch(syncRegions())
 });
 
 export default connect(

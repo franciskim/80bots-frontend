@@ -27,7 +27,6 @@ import {
   ADMIN_REGIONS,
   ADMIN_UPDATE_REGION,
   LIMIT_CHANGE,
-  ADMIN_SYNC_REGIONS,
   GET_ALL_BOTS
 } from "./types";
 
@@ -79,7 +78,6 @@ export const reducer = (state = initialState, action) => {
 
     case SYNC_BOT_INSTANCES:
     case SYNC_BOTS:
-    case ADMIN_SYNC_REGIONS:
       return { ...state, syncLoading: true };
 
     case CLEAR_BOT:
@@ -193,10 +191,8 @@ export const reducer = (state = initialState, action) => {
 
     case success(SYNC_BOT_INSTANCES):
     case success(SYNC_BOTS):
-    case success(ADMIN_SYNC_REGIONS):
     case error(SYNC_BOT_INSTANCES):
     case error(SYNC_BOTS):
-    case error(ADMIN_SYNC_REGIONS):
       return { ...state, syncLoading: false };
 
     case success(AMIS):
