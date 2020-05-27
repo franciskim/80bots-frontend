@@ -6,7 +6,7 @@ const withSourceMaps = require('@zeit/next-source-maps')();
 
 const config = ({
   webpack: config => {
-    config.plugins.push(new webpack.EnvironmentPlugin(localEnv));
+    config.plugins.push(new webpack.EnvironmentPlugin({...process.env, ...localEnv}));
     config.node = {
       fs: 'empty',
       setImmediate: true
