@@ -69,6 +69,9 @@ const selectStyles = {
     ...provided,
     padding: "0 8px",
     borderColor: "#ced4da"
+  }),
+  menuList: () => ({
+    color: '#000000'
   })
 };
 
