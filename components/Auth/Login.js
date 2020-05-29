@@ -119,7 +119,6 @@ const Login = ({ addNotification, login, reset }) => {
                     className={"logo"}
                     style={{
                       position: "relative",
-                      "z-index": "-1",
                       width: "202px",
                       height: "51px"
                     }}
