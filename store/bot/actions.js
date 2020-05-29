@@ -279,7 +279,7 @@ export const addBot = data => ({
   type: ADD_BOT,
   request: {
     method: "POST",
-    url: "/bots",
+    url: "/admin/bots",
     data
   },
   meta: {

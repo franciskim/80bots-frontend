@@ -9,7 +9,7 @@ import { getPlatforms } from "/store/platform/actions";
 import { getTags } from "/store/bot/actions";
 import { getUsers } from "/store/user/actions";
 import { Button } from "/components/default";
-import { Textarea, Input } from "/components/default/inputs";
+import { Textarea, Input, CodeEditor } from "/components/default/inputs";
 
 const FormContainer = styled.div`
   display: flex;
@@ -68,11 +68,15 @@ const selectStyles = {
   valueContainer: provided => ({
     ...provided,
     padding: "0 8px",
-    borderColor: "#ced4da"
+    borderColor: "#ced4da",
   }),
   menuList: () => ({
-    color: '#000000'
-  })
+    color: "#000000",
+  }),
+  menu: provided => ({
+    ...provided,
+    zIndex: "5",
+  }),
 };
 
 const inputStyles = {
@@ -226,11 +230,10 @@ const BotEditor = ({
           />
         </Row>
         <Row>
-          <Textarea
+          <CodeEditor
             label={"Bot Script"}
-            rows={10}
             value={botScript}
-            onChange={e => setBotScript(e.target.value)}
+            onChange={code => setBotScript(code)}
           />
         </Row>
         <Row>
