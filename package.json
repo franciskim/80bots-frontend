@@ -21,6 +21,7 @@
     "draftjs-to-html": "^0.8.4",
     "emotion-theming": "^10.0.19",
     "jodit-react": "^1.0.26",
+    "js-beautify": "^1.11.0",
     "laravel-echo": "^1.6.0",
     "lodash": "^4.17.15",
     "mime-types": "^2.1.24",
