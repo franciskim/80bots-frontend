@@ -75,7 +75,7 @@ const selectStyles = {
   }),
   menu: provided => ({
     ...provided,
-    zIndex: "5",
+    zIndex: "7",
   }),
 };
 

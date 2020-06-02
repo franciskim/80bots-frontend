@@ -10,6 +10,7 @@ import "ace-builds/src-min-noconflict/ext-language_tools";
 import "ace-builds/src-min-noconflict/ext-language_tools";
 
 import { Label, Wrap } from "./Input";
+import { Button } from "../Button";
 
 const beautifyJavaScript = (value) => {
   return beautify.js_beautify(value, {
@@ -31,9 +32,9 @@ const beautifyJavaScript = (value) => {
     e4x: true,
     indent_empty_lines: false
   });
-}
+};
 
-export const CodeEditor = ({ styles, label, value, onChange, ...props }) => {
+export const CodeEditor = ({ label, value, onChange, ...props }) => {
 
   const execFunc = useCallback(() => {
     // todo: beautify using shortcut
@@ -45,8 +46,8 @@ export const CodeEditor = ({ styles, label, value, onChange, ...props }) => {
   }
 
   return (
-    <Wrap styles={styles && styles.container}>
-      {label && <Label styles={styles && styles.label}>{label}</Label>}
+    <Wrap>
+      <Label>{label}</Label>
       <AceEditor
         mode="javascript"
         theme="monokai"
@@ -68,7 +69,9 @@ export const CodeEditor = ({ styles, label, value, onChange, ...props }) => {
         fontSize={'1rem'}
         setOptions={{ useWorker: false }}
       />
-      <button onClick={() => handleBeautify(value)}>Beautify</button>
+      <Button type={"primary"} onClick={() => handleBeautify(value)}>
+        Beautify
+      </Button>
     </Wrap>
   );
 }
