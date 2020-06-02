@@ -294,7 +294,7 @@ export const getTags = (query = { page: 1, limit: 1 }) => {
     type: GET_TAGS,
     request: {
       method: "GET",
-      url: "/bots/tags",
+      url: "/admin/bots/tags",
       params: query
     },
     meta: {
