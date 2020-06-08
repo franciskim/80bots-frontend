@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from "react";
+import React, {useCallback} from "react";
 import PropTypes from "prop-types";
 import AceEditor from "react-ace";
 import beautify from 'js-beautify';
@@ -9,7 +9,7 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-min-noconflict/ext-language_tools";
 import "ace-builds/src-min-noconflict/ext-language_tools";
 
-import { Label, Wrap } from "./Input";
+import {  Wrap } from "./Input";
 import { Button } from "../Button";
 
 const beautifyJavaScript = (value) => {
@@ -21,20 +21,20 @@ const beautifyJavaScript = (value) => {
     keep_array_indentation: false,
     break_chained_methods: false,
     indent_scripts: "normal",
-    brace_style: "expand",
+    brace_style: "collapse",
     space_before_conditional: true,
     unescape_strings: false,
     jslint_happy: true,
     end_with_newline: true,
     wrap_line_length: 40,
     indent_inner_html: false,
-    comma_first: true,
+    comma_first: false,
     e4x: true,
     indent_empty_lines: false
   });
 };
 
-export const CodeEditor = ({ label, value, onChange, ...props }) => {
+export const CodeEditor = ({ value, onChange, ...props }) => {
 
   const execFunc = useCallback(() => {
     // todo: beautify using shortcut
@@ -47,7 +47,6 @@ export const CodeEditor = ({ label, value, onChange, ...props }) => {
 
   return (
     <Wrap>
-      <Label>{label}</Label>
       <AceEditor
         mode="javascript"
         theme="monokai"

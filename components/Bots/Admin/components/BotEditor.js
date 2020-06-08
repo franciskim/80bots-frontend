@@ -5,6 +5,8 @@ import Select from "react-select";
 import AsyncSelect from "react-select/async";
 import { css } from "@emotion/core";
 import { connect } from "react-redux";
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
 import { getPlatforms } from "/store/platform/actions";
 import { getTags } from "/store/bot/actions";
 import { getUsers } from "/store/user/actions";
@@ -108,6 +110,7 @@ const BotEditor = ({
   const [botTags, setTags] = useState([]);
   const [botName, setBotName] = useState(bot ? bot.name : "");
   const [botScript, setBotScript] = useState(bot ? bot.aws_custom_script : "");
+  const [botPackageJSON, setBotPackageJSON,] = useState( bot ? bot.aws_custom_package_json : "");
   const [description, setDescription] = useState(bot ? bot.description : "");
   const [isPrivate, setPrivate] = useState(
     bot ? bot.type === "private" : false
@@ -199,6 +202,7 @@ const BotEditor = ({
         botName,
         isPrivate,
         botScript,
+        botPackageJSON,
         description,
         botTags: botTags.map(item => item.value),
         platform: platform.value,
@@ -230,12 +234,22 @@ const BotEditor = ({
           />
         </Row>
         <Row>
-          <CodeEditor
-            label={"Bot Script"}
-            value={botScript}
-            onChange={code => setBotScript(code)}
-          />
+          <Label>Bot Script</Label>
         </Row>
+        <Tabs defaultActiveKey="script" id="uncontrolled-tab-example">
+          <Tab eventKey="script" title="index.js">
+            <CodeEditor
+              value={botScript}
+              onChange={code => setBotScript(code)}
+            />
+          </Tab>
+          <Tab eventKey="json" title="package.json">
+            <CodeEditor
+              value={botPackageJSON}
+              onChange={code => setBotPackageJSON(code)}
+            />
+          </Tab>
+        </Tabs>
         <Row>
           <Textarea
             label={"Description"}

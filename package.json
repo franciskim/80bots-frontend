@@ -29,6 +29,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.10.1",
     "react-ace": "^9.0.0",
+    "react-bootstrap": "^1.0.1",
     "react-dom": "^16.10.1",
     "react-draft-wysiwyg": "^1.13.2",
     "react-json-view": "^1.19.1",

@@ -183,6 +183,7 @@ const Bots = ({
     description: botData.description,
     platform: botData.platform,
     aws_custom_script: botData.botScript,
+    aws_custom_package_json: botData.botPackageJSON,
     tags: botData.botTags,
     users: botData.users.map(user => user.id),
     type: botData.isPrivate ? "private" : "public"
