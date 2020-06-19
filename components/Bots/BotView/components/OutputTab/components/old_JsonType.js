@@ -4,29 +4,7 @@ import styled from "@emotion/styled";
 import { Table, Thead } from "/components/default/Table";
 import { Button } from "/components/default";
 import { css } from "@emotion/core";
-import { Select } from "../../../../../default/inputs";
 import Modal from "../../../../../default/Modal";
-
-const VARIANTS = {
-  ALL: "all",
-  CURRENT: "current"
-};
-
-const TYPES = {
-  CSV: "csv",
-  JSON: "json",
-  IMAGE: "image"
-};
-
-const EXPORT_TYPES = [
-  { label: "CSV", value: TYPES.CSV },
-  { label: "JSON", value: TYPES.JSON }
-];
-
-const EXPORT_VARIANTS = [
-  { label: "All", value: VARIANTS.ALL },
-  { label: "Current", value: VARIANTS.CURRENT }
-];
 
 const LinkTd = styled.td`
   cursor: pointer;
@@ -34,13 +12,6 @@ const LinkTd = styled.td`
   &:hover {
     color: ${props => props.theme.colors.cyan};
   }
-`;
-
-const Inputs = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-  margin-bottom: 10px;
 `;
 
 const Back = styled(Button)`
@@ -125,18 +96,6 @@ const JsonType = ({ output, setCustomBack }) => {
           overflow: visible;
         `}
       >
-        {/*<Inputs>*/}
-        {/*  <Select label={'Export Variant'} options={EXPORT_VARIANTS} value={exportVariant}*/}
-        {/*    onChange={(option) => setExportVariant(option)} styles={selectStyles}*/}
-        {/*  />*/}
-        {/*  <Select label={'Export Data Type'} options={EXPORT_TYPES} defaultValue={exportType}*/}
-        {/*    onChange={(option) => setExportType(option)} styles={selectStyles}*/}
-        {/*  />*/}
-        {/*</Inputs>*/}
-        {/*<Buttons>*/}
-        {/*  <Button type={'danger'} onClick={() => exportModal.current.close()}>Cancel</Button>*/}
-        {/*  <Button type={'primary'} onClick={exportOutput}>Export</Button>*/}
-        {/*</Buttons>*/}
       </Modal>
     </Table>
   );

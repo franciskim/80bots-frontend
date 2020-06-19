@@ -49,11 +49,9 @@ const STATUSES = {
 const LogsTab = ({
   items,
   flush,
-  channel,
   openItem,
   openedFolder,
   openedFile,
-  setCustomBack,
   loading
 }) => {
   const router = useRouter();
@@ -147,11 +145,9 @@ const LogsTab = ({
 };
 
 LogsTab.propTypes = {
-  setCustomBack: PropTypes.func.isRequired,
   items: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
   flush: PropTypes.func.isRequired,
-  channel: PropTypes.string,
   openItem: PropTypes.func.isRequired,
   openedFolder: PropTypes.object,
   openedFile: PropTypes.object

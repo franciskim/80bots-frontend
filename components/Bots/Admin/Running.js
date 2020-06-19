@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
-import Icon from "/components/default/icons";
 import Select from "react-select";
 import Link from "next/link";
 import { withTheme } from "emotion-theming";
@@ -35,20 +34,6 @@ const Container = styled(Card)`
   background: #333;
   border: none;
   color: #fff;
-`;
-
-const IconButton = styled(Button)`
-  display: inline-flex;
-  justify-content: center;
-  padding: 2px;
-  margin-right: 3px;
-  width: 23x;
-  height: 23px;
-  &:last-child {
-    margin-right: 0;
-  }
-  background: transparent;
-  border: 1px solid #fff;
 `;
 
 const Td = styled.td`
