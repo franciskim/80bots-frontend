@@ -13,12 +13,9 @@ import saga from './saga';
 import auth from './auth/reducer';
 import notification from './notification/reducer';
 import user from './user/reducer';
-import history from './history/reducer';
 import bot from './bot/reducer';
 import cms from './cms/reducer';
 import schedule from './schedule/reducer';
-import subscription from './subscription/reducer';
-import eventNotification from './eventNotification/reducer';
 import instanceSession from './instanceSession/reducer';
 import platform from './platform/reducer';
 import fileSystem from './fileSystem/reducer';
@@ -30,7 +27,7 @@ const botMiddleware = createBotMiddleware();
 const fileSystemMiddleware = createFileSystemMiddleware();
 
 const rootReducer = combineReducers({
-  auth, fileSystem, notification, user, history, bot, cms, schedule, subscription, eventNotification, instanceSession, platform
+  auth, fileSystem, notification, user, bot, cms, schedule, instanceSession, platform
 });
 
 export function initializeStore(initialState = undefined) {
