@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { parseUrl } from "/lib/helpers";
 import { lookup } from "mime-types";
@@ -63,7 +63,6 @@ const TextViewer = ({ item }) => {
   const [json, setJson] = useState(null);
   const [mode, setMode] = useState(MODS.STRUCTURED);
   const [error, serError] = useState("");
-  const [availableMods, setAvailableMods] = useState([MODS.RAW]);
   const [valid, setValid] = useState(false);
 
   const onLoaded = res => {

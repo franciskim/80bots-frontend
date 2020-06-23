@@ -4,7 +4,6 @@ import styled from "@emotion/styled";
 import Item from "./Item";
 import { CardBody } from "../Card";
 import { Paginator } from "../Paginator";
-import Button from "../Button";
 
 const Row = styled.div`
   display: flex;

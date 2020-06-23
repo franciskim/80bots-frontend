@@ -4,10 +4,7 @@ import styled from "@emotion/styled";
 import {
   Table as BaseTable,
   Thead,
-  Filters,
   LimitFilter,
-  SearchFilter,
-  ListFilter
 } from "/components/default/Table";
 import { Paginator } from "/components/default/Paginator";
 

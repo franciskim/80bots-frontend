@@ -96,44 +96,6 @@ const Profile = ({
                 />
               </div>
             </div>
-            <div className="col-md-6 col-sm-12">
-              <div className="form-group">
-                <label htmlFor="">Used Credits</label>
-                <input
-                  type="text"
-                  name="credit_used"
-                  value={user.used_credits}
-                  readOnly
-                  className="form-control"
-                />
-              </div>
-            </div>
-            <div className="col-md-6 col-sm-12">
-              <div className="form-group">
-                <label htmlFor="">Remaining Credits</label>
-                <input
-                  type="text"
-                  name="credits"
-                  value={user.credits}
-                  readOnly
-                  className="form-control"
-                />
-              </div>
-            </div>
-            {user.plan && (
-              <div className="col-md-12 col-sm-12">
-                <div className="form-group">
-                  <label htmlFor="">Active Plan</label>
-                  <input
-                    type="text"
-                    name="plan"
-                    className="form-control"
-                    value={user.plan}
-                    readOnly
-                  />
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
