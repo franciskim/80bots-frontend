@@ -72,10 +72,6 @@ Env file configuration:
 
 `SOCKET_URL` - Base Socket host URL
 
-`STRIPE_PUBLIC_KEY` - Stripe client public key for the Stripe checkout functionality
-
-`SENTRY_DSN` - Sentry DSN for tracking and monitoring the errors
-
 TODOs:
 - Interact with the offline bots using API
 - Connect to the single Socket.io server instead of connecting to the bots separately.
