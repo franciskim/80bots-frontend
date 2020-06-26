@@ -40,7 +40,6 @@ const Users = ({
 }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
-  const [order, setOrder] = useState({ value: "", field: "" });
   const [search, setSearch] = useState(null);
 
   useEffect(() => {
@@ -64,25 +63,17 @@ const Users = ({
     getUsers({
       page,
       limit,
-      sort: order.field,
-      order: order.value,
       search: value
     });
   };
 
-  const onOrderChange = (field, value) => {
-    setOrder({ field, value });
-    getUsers({ page, limit, sort: field, order: value, search });
+  const onOrderChange = () => {
+    getUsers({ page, limit, search });
   };
 
   const OrderTh = props => (
     <Th
       {...props}
-      order={
-        props.field === order.field || props.children === order.field
-          ? order.value
-          : ""
-      }
       onClick={onOrderChange}
     />
   );
@@ -114,8 +105,6 @@ const Users = ({
                 getUsers({
                   page,
                   limit: value,
-                  sort: order.field,
-                  order: order.value,
                   search
                 });
               }}
@@ -145,8 +134,6 @@ const Users = ({
               getUsers({
                 page,
                 limit,
-                sort: order.field,
-                order: order.value,
                 search
               });
             }}

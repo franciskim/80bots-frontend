@@ -28,7 +28,7 @@ export const getUsers = (query = { page: 1, limit: 1 }) => ({
   type: USERS,
   request: {
     method: 'GET',
-    url: '/admin/user',
+    url: '/user',
     params: query
   },
   meta: {
@@ -40,7 +40,7 @@ export const updateUser = (id, updateData) => ({
   type: UPDATE_USER,
   request: {
     method: 'PUT',
-    url: `/admin/user/${id}`,
+    url: `/user/${id}`,
     data: {
       update: updateData
     }
