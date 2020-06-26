@@ -50,7 +50,7 @@ const Login = ({ addNotification, login, reset }) => {
   const submit = e => {
     e.preventDefault();
     login(email, password)
-      .then(() => Router.push("/admin/bots/running"))
+      .then(() => Router.push("/bots/running"))
       .catch(({ error: { response } }) => {
         if (response) {
           const { message } = response.data;

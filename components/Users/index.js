@@ -36,7 +36,7 @@ const Users = ({
   getUsers,
   updateUser,
   users,
-  total
+  total,
 }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);

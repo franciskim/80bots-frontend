@@ -165,7 +165,6 @@ export const updateAdminRunningBot = (id, updateData) => {
     },
     meta: {
       thunk: true,
-      admin: true
     }
   };
 };
@@ -223,7 +222,6 @@ export const adminGetRunningBots = (query = { page: 1, limit: 1 }) => {
     },
     meta: {
       thunk: true,
-      admin: true
     }
   };
 };
@@ -238,7 +236,6 @@ export const adminUpdateBot = (id, updateData) => {
     },
     meta: {
       thunk: true,
-      admin: true
     }
   };
 };
@@ -255,7 +252,6 @@ export const adminGetBots = (query = { page: 1, limit: 1 }) => {
     },
     meta: {
       thunk: true,
-      admin: true
     }
   };
 };
@@ -270,7 +266,6 @@ export const downloadInstancePemFile = id => {
     },
     meta: {
       thunk: true,
-      admin: true
     }
   };
 };
@@ -284,7 +279,6 @@ export const addBot = data => ({
   },
   meta: {
     thunk: true,
-    admin: true
   }
 });
 
@@ -299,7 +293,6 @@ export const getTags = (query = { page: 1, limit: 1 }) => {
     },
     meta: {
       thunk: true,
-      admin: true
     }
   };
 };
@@ -317,7 +310,6 @@ export const getBotSettings = () => ({
   },
   meta: {
     thunk: true,
-    admin: true
   }
 });
 
@@ -330,7 +322,6 @@ export const updateBotSettings = (id, data) => ({
   },
   meta: {
     thunk: true,
-    admin: true
   }
 });
 
@@ -343,7 +334,6 @@ export const syncBotInstances = (id, data) => ({
   },
   meta: {
     thunk: true,
-    admin: true
   }
 });
 
@@ -355,7 +345,6 @@ export const adminDeleteBot = id => ({
   },
   meta: {
     thunk: true,
-    admin: true
   }
 });
 
@@ -368,7 +357,6 @@ export const getAMIs = (params = { region: 2 }) => ({
   },
   meta: {
     thunk: true,
-    admin: true
   }
 });
 
@@ -380,7 +368,6 @@ export const syncLocalBots = () => ({
   },
   meta: {
     thunk: true,
-    admin: true
   }
 });
 

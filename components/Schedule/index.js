@@ -1,42 +1,46 @@
 import React, { useRef, useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
-import ScheduleEditor from "../default/ScheduleEditor";
-import AsyncSelect from "react-select/async";
-import Icon from "../default/icons";
-import Modal from "../default/Modal";
-import { css } from "@emotion/core";
 import { withTheme } from "emotion-theming";
-import { connect } from "react-redux";
-import { addNotification } from "/store/notification/actions";
-import { NOTIFICATION_TYPES } from "/config";
-import { Badge, Button, Paginator } from "../default";
-import {
-  getSchedules,
-  updateSchedule,
-  deleteSchedule,
-  createSchedule
-} from "/store/schedule/actions";
-import { getRunningBots } from "/store/bot/actions";
-import { Card, CardBody } from "../default/Card";
+import { Card, CardBody } from "/components/default/Card";
 import {
   Filters,
   LimitFilter,
+  ListFilter,
   SearchFilter,
   Table,
   Th,
   Thead
 } from "/components/default/Table";
+import Button from "/components/default/Button";
+import Badge from "/components/default/Badge";
+import Icon from "/components/default/icons";
+import Modal from "/components/default/Modal";
+import { addNotification } from "/store/notification/actions";
+import { connect } from "react-redux";
+import { NOTIFICATION_TYPES } from "/config";
+import Paginator from "/components/default/Paginator";
+import {
+  adminGetSchedules,
+  adminCreateSchedule,
+  adminUpdateSchedule,
+  adminDeleteSchedule
+} from "/store/schedule/actions";
+import { getRunningBots } from "/store/bot/actions";
+import { css } from "@emotion/core";
+import ScheduleEditor from "/components/default/ScheduleEditor";
+import AsyncSelect from "react-select/async";
 
 const Container = styled(Card)`
   background: #333;
   border: none;
   color: #fff;
+  align-self: flex-start;
 `;
 
 const IconButton = styled(Button)`
   display: inline-flex;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 2px;
   margin-right: 5px;
   width: 30px;
@@ -91,21 +95,57 @@ const Ul = styled.ul`
 const modalStyles = css`
   min-width: 500px;
   overflow-y: visible;
+  min-height: 500px;
 `;
 
+const FILTERS_LIST_OPTIONS = [
+  { value: "all", label: "All Schedules" },
+  { value: "my", label: "My Schedules" }
+];
+
+const selectStyles = {
+  container: (provided, { selectProps: { width } }) => ({
+    ...provided,
+    width: width,
+    minWidth: "75px",
+    color: "#fff"
+  }),
+  menuPortal: base => ({ ...base }),
+  control: (provided, state) => ({
+    ...provided,
+    background: "rgba(0,0,0,0.2)",
+    // match with the menu
+    borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
+    // Overrides the different states of border
+    borderColor: state.isFocused ? "black" : "rgba(0,0,0,0.2)",
+    // Removes weird border around container
+    boxShadow: state.isFocused ? null : null,
+    "&:hover": {
+      // Overrides the different states of border
+      borderColor: "black"
+    }
+  }),
+  singleValue: (provided, state) => ({
+    ...provided,
+    color: "#fff"
+  })
+};
+
 const BotsSchedule = ({
-  theme,
-  notify,
-  getSchedules,
-  getRunningBots,
-  createSchedule,
-  deleteSchedule,
-  schedules,
-  total,
-  runningBots,
-  ...props
-}) => {
+                        theme,
+                        addNotification,
+                        adminGetSchedules,
+                        adminCreateSchedule,
+                        adminUpdateSchedule,
+                        adminDeleteSchedule,
+                        getRunningBots,
+                        schedules,
+                        total,
+                        runningBots,
+                        ...props
+                      }) => {
   const [clickedSchedule, setClickedSchedule] = useState(null);
+  const [list, setFilterList] = useState("all");
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [order, setOrder] = useState({ value: "", field: "" });
@@ -117,12 +157,12 @@ const BotsSchedule = ({
   const editModal = useRef(null);
 
   useEffect(() => {
-    getSchedules({ page, limit });
+    adminGetSchedules({ page, limit, list });
   }, []);
 
   const searchBots = (value, callback) => {
     getRunningBots({ page: 1, limit: 50, search: value }).then(action =>
-      callback(action.data.data.map(toOptions))
+        callback(action.data.data.map(toOptions))
     );
   };
 
@@ -137,22 +177,21 @@ const BotsSchedule = ({
 
   const changeScheduleStatus = schedule => {
     const statusName =
-      schedule.status === "active" ? "deactivated" : "activated";
+        schedule.status === "active" ? "deactivated" : "activated";
     const status = schedule.status === "active" ? "inactive" : "active";
-    props
-      .updateSchedule(schedule.id, { status })
-      .then(() =>
-        notify({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: `Schedule was successfully ${statusName}!`
-        })
-      )
-      .catch(() =>
-        notify({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: "Status update failed"
-        })
-      );
+    adminUpdateSchedule(schedule.id, { status })
+        .then(() =>
+            addNotification({
+              type: NOTIFICATION_TYPES.SUCCESS,
+              message: `Schedule was successfully ${statusName}!`
+            })
+        )
+        .catch(() =>
+            addNotification({
+              type: NOTIFICATION_TYPES.ERROR,
+              message: "Status update failed"
+            })
+        );
   };
 
   const toggleModal = schedule => {
@@ -172,8 +211,8 @@ const BotsSchedule = ({
 
   const addSchedule = () => {
     if (instanceId) {
-      createSchedule({ instanceId }).then(() => {
-        getSchedules({
+      adminCreateSchedule({ instanceId }).then(() => {
+        adminGetSchedules({
           page: 1,
           limit,
           sort: order.field,
@@ -181,7 +220,7 @@ const BotsSchedule = ({
           search
         });
         addModal.current.close();
-        notify({
+        addNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
           message: "Schedule was successfully added"
         });
@@ -191,63 +230,62 @@ const BotsSchedule = ({
 
   const updateSchedule = editedSchedules => {
     editModal.current.close();
-    props
-      .updateSchedule(clickedSchedule.id, { details: editedSchedules })
-      .then(() =>
-        notify({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: "Schedule was successfully updated"
-        })
-      )
-      .catch(() =>
-        notify({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: "Update of schedule failed"
-        })
-      )
-      .finally(() => setClickedSchedule(null));
+    adminUpdateSchedule(clickedSchedule.id, { details: editedSchedules })
+        .then(() =>
+            addNotification({
+              type: NOTIFICATION_TYPES.SUCCESS,
+              message: "Schedule was successfully updated"
+            })
+        )
+        .catch(() =>
+            addNotification({
+              type: NOTIFICATION_TYPES.ERROR,
+              message: "Update of schedule failed"
+            })
+        )
+        .finally(() => setClickedSchedule(null));
   };
 
   const modalDeleteSchedule = () => {
     modal.current.close();
-    deleteSchedule(clickedSchedule.id)
-      .then(() =>
-        notify({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: "Schedule was successfully deleted"
-        })
-      )
-      .catch(() =>
-        notify({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: "Removal of Schedule failed"
-        })
-      )
-      .finally(() => setClickedSchedule(null));
+    adminDeleteSchedule(clickedSchedule.id)
+        .then(() =>
+            addNotification({
+              type: NOTIFICATION_TYPES.SUCCESS,
+              message: "Schedule was successfully deleted"
+            })
+        )
+        .catch(() =>
+            addNotification({
+              type: NOTIFICATION_TYPES.ERROR,
+              message: "Removal of Schedule failed"
+            })
+        )
+        .finally(() => setClickedSchedule(null));
   };
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value });
-    getSchedules({ page, limit, sort: field, order: value, search });
+    adminGetSchedules({ page, limit, sort: field, order: value, search });
   };
 
   // eslint-disable-next-line react/prop-types
   const OrderTh = props => (
-    <Th
-      {...props}
-      // eslint-disable-next-line react/prop-types
-      order={
-        props.field === order.field || props.children === order.field
-          ? order.value
-          : ""
-      }
-      onClick={onOrderChange}
-    />
+      <Th
+          {...props}
+          // eslint-disable-next-line react/prop-types
+          order={
+            props.field === order.field || props.children === order.field
+                ? order.value
+                : ""
+          }
+          onClick={onOrderChange}
+      />
   );
 
   const searchSchedules = value => {
     setSearch(value);
-    getSchedules({
+    adminGetSchedules({
       page,
       limit,
       sort: order.field,
@@ -257,152 +295,178 @@ const BotsSchedule = ({
   };
 
   const renderRow = (schedule, idx) => (
-    <tr key={idx}>
-      <td>{schedule.instance_id}</td>
-      <td>{schedule.bot_name}</td>
-      <td>
-        <StatusButton
-          type={schedule.status === "active" ? "success" : "danger"}
-          onClick={() => changeScheduleStatus(schedule)}
-        >
-          {schedule.status}
-        </StatusButton>
-      </td>
-      <td>
-        {schedule.details.length > 0 ? (
-          <Ul>
-            {schedule.details.map((detail, idx) => (
-              <li key={idx}>
-                <Tag pill type={"info"}>
-                  {detail.type + " at " + detail.day + ", " + detail.time}
-                </Tag>
-              </li>
-            ))}
-          </Ul>
-        ) : (
-          "No schedules added yet"
-        )}
-      </td>
-      <td>
-        <IconButton type={"primary"} onClick={() => toggleEditModal(schedule)}>
-          <Icon name={"edit"} color={theme.colors.white} />
-        </IconButton>
-        <IconButton type={"danger"} onClick={() => toggleModal(schedule)}>
-          <Icon name={"garbage"} color={theme.colors.white} />
-        </IconButton>
-      </td>
-    </tr>
+      <tr key={idx}>
+        <td>{schedule.user}</td>
+        <td>{schedule.instance_id}</td>
+        <td>{schedule.bot_name}</td>
+        <td>
+          <StatusButton
+              type={schedule.status === "active" ? "success" : "danger"}
+              onClick={() => changeScheduleStatus(schedule)}
+          >
+            {schedule.status}
+          </StatusButton>
+        </td>
+        <td>
+          {schedule.details.length > 0 ? (
+              <Ul>
+                {schedule.details.map((detail, idx) => (
+                    <li key={idx}>
+                      <Tag pill type={"info"}>
+                        {detail.type + " at " + detail.day + ", " + detail.time}
+                      </Tag>
+                    </li>
+                ))}
+              </Ul>
+          ) : (
+              "No schedules added yet"
+          )}
+        </td>
+        <td>
+          <IconButton type={"primary"} onClick={() => toggleEditModal(schedule)}>
+            <Icon name={"edit"} color={theme.colors.white} />
+          </IconButton>
+          <IconButton type={"danger"} onClick={() => toggleModal(schedule)}>
+            <Icon name={"garbage"} color={theme.colors.white} />
+          </IconButton>
+        </td>
+      </tr>
   );
 
   return (
-    <>
-      <AddButtonWrap>
-        <Button type={"primary"} onClick={toggleAddModal}>
-          Add schedule list
-        </Button>
-      </AddButtonWrap>
-      <Container>
-        <CardBody>
-          <Filters>
-            <LimitFilter
-              onChange={({ value }) => {
-                setLimit(value);
-                getSchedules({
-                  page,
-                  limit: value,
-                  sort: order.field,
-                  order: order.value,
-                  search
-                });
-              }}
+      <>
+        <style jsx global>{`
+        div[class*="-menu"] {
+          background: #000;
+        }
+      `}</style>
+        <AddButtonWrap>
+          <Button type={"primary"} onClick={toggleAddModal}>
+            Add schedule list
+          </Button>
+        </AddButtonWrap>
+        <Container>
+          <CardBody>
+            <Filters>
+              <LimitFilter
+                  onChange={({ value }) => {
+                    setLimit(value);
+                    adminGetSchedules({
+                      page,
+                      limit: value,
+                      list,
+                      sort: order.field,
+                      order: order.value,
+                      search
+                    });
+                  }}
+              />
+              <ListFilter
+                  options={FILTERS_LIST_OPTIONS}
+                  onChange={({ value }) => {
+                    setFilterList(value);
+                    adminGetSchedules({
+                      page,
+                      limit,
+                      list: value,
+                      sort: order.field,
+                      order: order.value,
+                      search
+                    });
+                  }}
+              />
+              <SearchFilter
+                  onChange={value => {
+                    searchSchedules(value);
+                  }}
+              />
+            </Filters>
+            <Table>
+              <Thead>
+                <tr>
+                  <OrderTh field={"user"}>User</OrderTh>
+                  <OrderTh field={"instance_id"}>Instance Id</OrderTh>
+                  <OrderTh field={"bot_name"}>Bot Name</OrderTh>
+                  <OrderTh field={"status"}>Status</OrderTh>
+                  <th>Details</th>
+                  <th>Actions</th>
+                </tr>
+              </Thead>
+              <tbody>{schedules.map(renderRow)}</tbody>
+            </Table>
+            <Paginator
+                total={total}
+                pageSize={limit}
+                onChangePage={page => {
+                  setPage(page);
+                  adminGetSchedules({
+                    page,
+                    limit,
+                    list,
+                    sort: order.field,
+                    order: order.value,
+                    search
+                  });
+                }}
             />
-            <SearchFilter
-              onChange={value => {
-                searchSchedules(value);
-              }}
+          </CardBody>
+        </Container>
+
+        <Modal
+            ref={modal}
+            title={"Delete this schedule?"}
+            onClose={() => setClickedSchedule(null)}
+        >
+          <Buttons>
+            <Button type={"primary"} onClick={modalDeleteSchedule}>
+              Yes
+            </Button>
+            <Button type={"danger"} onClick={() => modal.current.close()}>
+              Cancel
+            </Button>
+          </Buttons>
+        </Modal>
+
+        <Modal
+            ref={addModal}
+            title={"Add Schedule"}
+            contentStyles={modalStyles}
+            onClose={() => setInstanceId(null)}
+        >
+          <SelectWrap>
+            <Label style={{ margin: "17px 0" }}>
+              Select one of your running bots
+            </Label>
+            <AsyncSelect
+                onChange={onBotChange}
+                loadOptions={searchBots}
+                defaultOptions={runningBots.map(toOptions)}
+                styles={selectStyles}
             />
-          </Filters>
-          <Table>
-            <Thead>
-              <tr>
-                <OrderTh field={"instance_id"}>Instance Id</OrderTh>
-                <OrderTh field={"bot_name"}>Bot Name</OrderTh>
-                <OrderTh field={"status"}>Status</OrderTh>
-                <OrderTh field={"details"}>Details</OrderTh>
-                <th>Actions</th>
-              </tr>
-            </Thead>
-            <tbody>{schedules.map(renderRow)}</tbody>
-          </Table>
-          <Paginator
-            total={total}
-            pageSize={limit}
-            onChangePage={page => {
-              setPage(page);
-              getSchedules({
-                page,
-                limit,
-                sort: order.field,
-                order: order.value,
-                search
-              });
-            }}
+          </SelectWrap>
+          <Buttons>
+            <Button type={"danger"} onClick={() => addModal.current.close()}>
+              Cancel
+            </Button>
+            <Button type={"primary"} onClick={addSchedule}>
+              Add
+            </Button>
+          </Buttons>
+        </Modal>
+
+        <Modal
+            ref={editModal}
+            title={"Schedule Editor"}
+            contentStyles={modalStyles}
+            onClose={() => setClickedSchedule(null)}
+        >
+          <ScheduleEditor
+              schedules={clickedSchedule ? clickedSchedule.details : []}
+              close={() => editModal.current.close()}
+              onUpdateClick={updateSchedule}
           />
-        </CardBody>
-      </Container>
-
-      <Modal
-        ref={modal}
-        title={"Delete this schedule?"}
-        onClose={() => setClickedSchedule(null)}
-      >
-        <Buttons>
-          <Button type={"danger"} onClick={() => modal.current.close()}>
-            Cancel
-          </Button>
-          <Button type={"primary"} onClick={modalDeleteSchedule}>
-            Yes
-          </Button>
-        </Buttons>
-      </Modal>
-
-      <Modal
-        ref={addModal}
-        title={"Add Schedule"}
-        contentStyles={modalStyles}
-        onClose={() => setInstanceId(null)}
-      >
-        <SelectWrap>
-          <Label>Select one of your running bots</Label>
-          <AsyncSelect
-            onChange={onBotChange}
-            loadOptions={searchBots}
-            defaultOptions={runningBots.map(toOptions)}
-          />
-        </SelectWrap>
-        <Buttons>
-          <Button type={"danger"} onClick={() => addModal.current.close()}>
-            Cancel
-          </Button>
-          <Button type={"primary"} onClick={addSchedule}>
-            Add
-          </Button>
-        </Buttons>
-      </Modal>
-
-      <Modal
-        ref={editModal}
-        title={"Schedule Editor"}
-        contentStyles={modalStyles}
-        onClose={() => setClickedSchedule(null)}
-      >
-        <ScheduleEditor
-          schedules={clickedSchedule ? clickedSchedule.details : []}
-          close={() => editModal.current.close()}
-          onUpdateClick={updateSchedule}
-        />
-      </Modal>
-    </>
+        </Modal>
+      </>
   );
 };
 
@@ -410,12 +474,12 @@ BotsSchedule.propTypes = {
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
-  notify: PropTypes.func.isRequired,
-  getSchedules: PropTypes.func.isRequired,
-  updateSchedule: PropTypes.func.isRequired,
-  deleteSchedule: PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired,
+  adminGetSchedules: PropTypes.func.isRequired,
+  adminCreateSchedule: PropTypes.func.isRequired,
+  adminUpdateSchedule: PropTypes.func.isRequired,
+  adminDeleteSchedule: PropTypes.func.isRequired,
   getRunningBots: PropTypes.func.isRequired,
-  createSchedule: PropTypes.func.isRequired,
   schedules: PropTypes.array.isRequired,
   runningBots: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired
@@ -428,15 +492,15 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  notify: payload => dispatch(addNotification(payload)),
-  getSchedules: query => dispatch(getSchedules(query)),
-  createSchedule: data => dispatch(createSchedule(data)),
-  updateSchedule: (id, data) => dispatch(updateSchedule(id, data)),
-  deleteSchedule: id => dispatch(deleteSchedule(id)),
+  addNotification: payload => dispatch(addNotification(payload)),
+  adminGetSchedules: query => dispatch(adminGetSchedules(query)),
+  adminCreateSchedule: data => dispatch(adminCreateSchedule(data)),
+  adminUpdateSchedule: (id, data) => dispatch(adminUpdateSchedule(id, data)),
+  adminDeleteSchedule: id => dispatch(adminDeleteSchedule(id)),
   getRunningBots: query => dispatch(getRunningBots(query))
 });
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(withTheme(BotsSchedule));

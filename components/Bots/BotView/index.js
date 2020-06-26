@@ -159,9 +159,7 @@ const BotView = ({
   }, [botInstance]);
 
   useEffect(() => {
-    user.role === "Admin"
-      ? adminGetBot(router.query.id)
-      : getBot(router.query.id);
+    adminGetBot(router.query.id);
     return () => {
       clearBot();
     };

@@ -1,20 +1,13 @@
 import { css } from "@emotion/core";
 
-export const ROUTES = {
-  Admin: [
-    { name: "Users", href: "/admin/users" },
-    { name: "Workforce", href: "/admin/bots/running" },
-    { name: "Deploy Bots", href: "/admin/bots" },
-    { name: "Schedule Bots", href: "/admin/schedule" },
-    { name: "Sessions", href: "/admin/sessions" },
-    { name: "AWS AMI Settings", href: "/admin/bots/settings" },
-  ],
-  User: [
+export const ROUTES = [
+    { name: "Users", href: "/users" },
     { name: "Workforce", href: "/bots/running" },
     { name: "Deploy Bots", href: "/bots" },
     { name: "Schedule Bots", href: "/schedule" },
-  ]
-};
+    { name: "Sessions", href: "/sessions" },
+    { name: "AWS AMI Settings", href: "/bots/settings" },
+];
 
 export const theme = {
   colors: {
@@ -62,19 +55,6 @@ export const NOTIFICATION_TIMINGS = {
   DURATION: 200,
   INFO_HIDE_DELAY: 2000,
   HELP_HIDE_DELAY: 5000
-};
-
-export const BILLING_DETAILS = {
-  company: "80bots",
-  image: "public/images/logos/stripe.svg",
-  currency: "USD",
-  locale: "en",
-  shippingAddress: false,
-  billingDetails: false,
-  zipCode: false,
-  alipay: true,
-  bitcoin: true,
-  allowRememberMe: true
 };
 
 export const SIDEBAR_ANIMATION_TIME = 250;

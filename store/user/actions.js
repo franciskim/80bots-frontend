@@ -33,7 +33,6 @@ export const getUsers = (query = { page: 1, limit: 1 }) => ({
   },
   meta: {
     thunk: true,
-    admin: true
   }
 });
 
@@ -48,7 +47,6 @@ export const updateUser = (id, updateData) => ({
   },
   meta: {
     thunk: true,
-    admin: true
   }
 });
 
