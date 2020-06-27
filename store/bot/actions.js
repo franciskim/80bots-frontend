@@ -306,7 +306,7 @@ export const getBotSettings = () => ({
   type: BOT_SETTINGS,
   request: {
     method: "GET",
-    url: "/admin/aws"
+    url: "/aws"
   },
   meta: {
     thunk: true,
@@ -317,7 +317,7 @@ export const updateBotSettings = (id, data) => ({
   type: UPDATE_BOT_SETTINGS,
   request: {
     method: "PUT",
-    url: `/admin/aws/${id}`,
+    url: `/aws/${id}`,
     data: { update: data }
   },
   meta: {
