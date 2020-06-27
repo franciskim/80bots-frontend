@@ -21,14 +21,14 @@ import { connect } from "react-redux";
 import { NOTIFICATION_TYPES } from "/config";
 import Paginator from "/components/default/Paginator";
 import {
-  adminGetSchedules,
-  adminCreateSchedule,
-  adminUpdateSchedule,
-  adminDeleteSchedule
+  getSchedules,
+  createSchedule,
+  updateSchedule,
+  deleteSchedule
 } from "/store/schedule/actions";
 import { getRunningBots } from "/store/bot/actions";
 import { css } from "@emotion/core";
-import ScheduleEditor from "/components/default/ScheduleEditor";
+import ScheduleEditor from "./components/ScheduleEditor";
 import AsyncSelect from "react-select/async";
 
 const Container = styled(Card)`
@@ -134,10 +134,10 @@ const selectStyles = {
 const BotsSchedule = ({
                         theme,
                         addNotification,
-                        adminGetSchedules,
-                        adminCreateSchedule,
-                        adminUpdateSchedule,
-                        adminDeleteSchedule,
+                        getSchedules,
+                        createSchedule,
+                        updateSchedule,
+                        deleteSchedule,
                         getRunningBots,
                         schedules,
                         total,
@@ -157,7 +157,7 @@ const BotsSchedule = ({
   const editModal = useRef(null);
 
   useEffect(() => {
-    adminGetSchedules({ page, limit, list });
+      getSchedules({ page, limit, list });
   }, []);
 
   const searchBots = (value, callback) => {
@@ -179,7 +179,7 @@ const BotsSchedule = ({
     const statusName =
         schedule.status === "active" ? "deactivated" : "activated";
     const status = schedule.status === "active" ? "inactive" : "active";
-    adminUpdateSchedule(schedule.id, { status })
+      updateSchedule(schedule.id, { status })
         .then(() =>
             addNotification({
               type: NOTIFICATION_TYPES.SUCCESS,
@@ -211,8 +211,8 @@ const BotsSchedule = ({
 
   const addSchedule = () => {
     if (instanceId) {
-      adminCreateSchedule({ instanceId }).then(() => {
-        adminGetSchedules({
+        createSchedule({ instanceId }).then(() => {
+          getSchedules({
           page: 1,
           limit,
           sort: order.field,
@@ -228,9 +228,9 @@ const BotsSchedule = ({
     }
   };
 
-  const updateSchedule = editedSchedules => {
+  const updateScheduleInstance = editedSchedules => {
     editModal.current.close();
-    adminUpdateSchedule(clickedSchedule.id, { details: editedSchedules })
+      updateSchedule(clickedSchedule.id, { details: editedSchedules })
         .then(() =>
             addNotification({
               type: NOTIFICATION_TYPES.SUCCESS,
@@ -248,7 +248,7 @@ const BotsSchedule = ({
 
   const modalDeleteSchedule = () => {
     modal.current.close();
-    adminDeleteSchedule(clickedSchedule.id)
+      deleteSchedule(clickedSchedule.id)
         .then(() =>
             addNotification({
               type: NOTIFICATION_TYPES.SUCCESS,
@@ -266,7 +266,7 @@ const BotsSchedule = ({
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value });
-    adminGetSchedules({ page, limit, sort: field, order: value, search });
+      getSchedules({ page, limit, sort: field, order: value, search });
   };
 
   // eslint-disable-next-line react/prop-types
@@ -285,7 +285,7 @@ const BotsSchedule = ({
 
   const searchSchedules = value => {
     setSearch(value);
-    adminGetSchedules({
+    getSchedules({
       page,
       limit,
       sort: order.field,
@@ -351,7 +351,7 @@ const BotsSchedule = ({
               <LimitFilter
                   onChange={({ value }) => {
                     setLimit(value);
-                    adminGetSchedules({
+                    getSchedules({
                       page,
                       limit: value,
                       list,
@@ -365,7 +365,7 @@ const BotsSchedule = ({
                   options={FILTERS_LIST_OPTIONS}
                   onChange={({ value }) => {
                     setFilterList(value);
-                    adminGetSchedules({
+                    getSchedules({
                       page,
                       limit,
                       list: value,
@@ -399,7 +399,7 @@ const BotsSchedule = ({
                 pageSize={limit}
                 onChangePage={page => {
                   setPage(page);
-                  adminGetSchedules({
+                  getSchedules({
                     page,
                     limit,
                     list,
@@ -463,7 +463,7 @@ const BotsSchedule = ({
           <ScheduleEditor
               schedules={clickedSchedule ? clickedSchedule.details : []}
               close={() => editModal.current.close()}
-              onUpdateClick={updateSchedule}
+              onUpdateClick={updateScheduleInstance}
           />
         </Modal>
       </>
@@ -475,10 +475,10 @@ BotsSchedule.propTypes = {
     colors: PropTypes.object.isRequired
   }).isRequired,
   addNotification: PropTypes.func.isRequired,
-  adminGetSchedules: PropTypes.func.isRequired,
-  adminCreateSchedule: PropTypes.func.isRequired,
-  adminUpdateSchedule: PropTypes.func.isRequired,
-  adminDeleteSchedule: PropTypes.func.isRequired,
+  getSchedules: PropTypes.func.isRequired,
+  createSchedule: PropTypes.func.isRequired,
+  updateSchedule: PropTypes.func.isRequired,
+  deleteSchedule: PropTypes.func.isRequired,
   getRunningBots: PropTypes.func.isRequired,
   schedules: PropTypes.array.isRequired,
   runningBots: PropTypes.array.isRequired,
@@ -493,10 +493,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
-  adminGetSchedules: query => dispatch(adminGetSchedules(query)),
-  adminCreateSchedule: data => dispatch(adminCreateSchedule(data)),
-  adminUpdateSchedule: (id, data) => dispatch(adminUpdateSchedule(id, data)),
-  adminDeleteSchedule: id => dispatch(adminDeleteSchedule(id)),
+  getSchedules: query => dispatch(getSchedules(query)),
+  createSchedule: data => dispatch(createSchedule(data)),
+  updateSchedule: (id, data) => dispatch(updateSchedule(id, data)),
+  deleteSchedule: id => dispatch(deleteSchedule(id)),
   getRunningBots: query => dispatch(getRunningBots(query))
 });
 
