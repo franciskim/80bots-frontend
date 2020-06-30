@@ -23,7 +23,7 @@ import {
   getBots,
   updateBot,
   addBot,
-  adminLaunchInstance,
+  launchInstance,
   getBotSettings,
   updateBotSettings,
   deleteBot,
@@ -115,7 +115,7 @@ const modalStyles = css`
 const Bots = ({
   getBots,
   updateBot,
-  adminLaunchInstance,
+  launchInstance,
   bots,
   total,
   notify,
@@ -157,7 +157,7 @@ const Bots = ({
   const launchBot = params => {
     modal.current.close();
 
-    adminLaunchInstance(clickedBot.id, params)
+    launchInstance(clickedBot.id, params)
       .then(() => {
         notify({
           type: NOTIFICATION_TYPES.INFO,
@@ -510,7 +510,7 @@ Bots.propTypes = {
   user: PropTypes.object,
   getBots: PropTypes.func.isRequired,
   updateBot: PropTypes.func.isRequired,
-  adminLaunchInstance: PropTypes.func.isRequired,
+  launchInstance: PropTypes.func.isRequired,
   deleteBot: PropTypes.func.isRequired,
   notify: PropTypes.func.isRequired,
   setLimit: PropTypes.func.isRequired,
@@ -533,8 +533,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getBots: query => dispatch(getBots(query)),
   notify: payload => dispatch(addNotification(payload)),
-  adminLaunchInstance: (id, params) =>
-    dispatch(adminLaunchInstance(id, params)),
+  launchInstance: (id, params) =>
+    dispatch(launchInstance(id, params)),
   updateBot: (id, data) => dispatch(updateBot(id, data)),
   deleteBot: id => dispatch(deleteBot(id)),
   addBot: data => dispatch(addBot(data)),

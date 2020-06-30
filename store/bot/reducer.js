@@ -5,26 +5,22 @@ import {
   GET_IMAGES,
   GET_LOGS,
   GET_OUTPUT_JSON,
-  GET_RUNNING_BOTS,
-  POST_LAUNCH_INSTANCE,
   COPY_INSTANCE,
   RESTORE_INSTANCE,
   UPDATE_RUNNING_BOT,
   GET_BOTS,
-  ADMIN_GET_RUNNING_BOTS,
+  GET_RUNNING_BOTS,
   UPDATE_BOT,
-  ADMIN_POST_LAUNCH_INSTANCE,
-  ADMIN_UPDATE_RUNNING_BOT,
+  POST_LAUNCH_INSTANCE,
   DOWNLOAD_INSTANCE_PEM_FILE,
   GET_TAGS,
   BOT_SETTINGS,
   SYNC_BOT_INSTANCES,
-  AMIS,
   SYNC_BOTS,
   GET_BOT,
   CLEAR_BOT,
-  ADMIN_REGIONS,
-  ADMIN_UPDATE_REGION,
+  REGIONS,
+  UPDATE_REGION,
   LIMIT_CHANGE,
 } from "./types";
 
@@ -59,17 +55,14 @@ export const reducer = (state = initialState, action) => {
     case GET_OUTPUT_JSON:
     case GET_BOTS:
     case GET_RUNNING_BOTS:
-    case ADMIN_GET_RUNNING_BOTS:
     case GET_BOT:
-    case POST_LAUNCH_INSTANCE:
     case COPY_INSTANCE:
     case RESTORE_INSTANCE:
-    case ADMIN_POST_LAUNCH_INSTANCE:
+    case POST_LAUNCH_INSTANCE:
     case UPDATE_RUNNING_BOT:
     case UPDATE_BOT:
-    case ADMIN_UPDATE_RUNNING_BOT:
     case DOWNLOAD_INSTANCE_PEM_FILE:
-    case ADMIN_UPDATE_REGION:
+    case UPDATE_REGION:
       return { ...state, loading: true, error: null };
 
     case SYNC_BOT_INSTANCES:
@@ -135,7 +128,6 @@ export const reducer = (state = initialState, action) => {
       };
 
     case success(GET_RUNNING_BOTS):
-    case success(ADMIN_GET_RUNNING_BOTS):
       return {
         ...state,
         botInstances: action.data.data,
@@ -146,7 +138,6 @@ export const reducer = (state = initialState, action) => {
     case success(COPY_INSTANCE):
     case success(RESTORE_INSTANCE):
     case success(POST_LAUNCH_INSTANCE):
-    case success(ADMIN_POST_LAUNCH_INSTANCE):
     case success(DOWNLOAD_INSTANCE_PEM_FILE):
       return { ...state, loading: false };
 
@@ -156,8 +147,7 @@ export const reducer = (state = initialState, action) => {
       return { ...state, bots: [...state.bots], loading: false };
     }
 
-    case success(UPDATE_RUNNING_BOT):
-    case success(ADMIN_UPDATE_RUNNING_BOT): {
+    case success(UPDATE_RUNNING_BOT): {
       const userIdx = state.botInstances.findIndex(
         item => item.id === action.data.id
       );
@@ -169,7 +159,7 @@ export const reducer = (state = initialState, action) => {
       };
     }
 
-    case success(ADMIN_UPDATE_REGION): {
+    case success(UPDATE_REGION): {
       const userIdx = state.regions.findIndex(
         item => item.id === action.data.id
       );
@@ -189,10 +179,7 @@ export const reducer = (state = initialState, action) => {
     case error(SYNC_BOTS):
       return { ...state, syncLoading: false };
 
-    case success(AMIS):
-      return { ...state, amis: action.data.data };
-
-    case success(ADMIN_REGIONS):
+    case success(REGIONS):
       return {
         ...state,
         regions: action.data.data,
@@ -208,16 +195,13 @@ export const reducer = (state = initialState, action) => {
     case error(GET_BOT):
     case error(GET_BOTS):
     case error(GET_RUNNING_BOTS):
-    case error(ADMIN_GET_RUNNING_BOTS):
-    case error(POST_LAUNCH_INSTANCE):
     case error(COPY_INSTANCE):
     case error(RESTORE_INSTANCE):
-    case error(ADMIN_POST_LAUNCH_INSTANCE):
+    case error(POST_LAUNCH_INSTANCE):
     case error(UPDATE_RUNNING_BOT):
     case error(UPDATE_BOT):
-    case error(ADMIN_UPDATE_RUNNING_BOT):
     case error(DOWNLOAD_INSTANCE_PEM_FILE):
-    case error(ADMIN_UPDATE_REGION):
+    case error(UPDATE_REGION):
       return { ...state, loading: false, error: action.error };
 
     default:

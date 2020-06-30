@@ -17,8 +17,8 @@ import {
 } from "/components/default/Table";
 import { Card, CardBody } from "/components/default/Card";
 import {
-  adminGetRegions,
-  adminUpdateRegion,
+  getRegions,
+  updateRegion,
 } from "/store/bot/actions";
 import { Button, Paginator } from "/components/default";
 import { Select } from "/components/default/inputs";
@@ -335,8 +335,8 @@ const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   addListener: (room, eventName, handler) =>
     dispatch(addListener(room, eventName, handler)),
-  getRegions: (...args) => dispatch(adminGetRegions(...args)),
-  updateRegion: (id, data) => dispatch(adminUpdateRegion(id, data)),
+  getRegions: (...args) => dispatch(getRegions(...args)),
+  updateRegion: (id, data) => dispatch(updateRegion(id, data)),
 });
 
 export default connect(

@@ -20,8 +20,8 @@ import { NOTIFICATION_TYPES } from "/config";
 import {
   copyInstance,
   restoreBot,
-  adminGetRunningBots,
-  updateAdminRunningBot,
+  getRunningBots,
+  updateRunningBot,
   downloadInstancePemFile,
   botInstanceUpdated,
   syncBotInstances
@@ -121,11 +121,11 @@ const FILTERS_LIST_OPTIONS = [
 const RunningBots = ({
    theme,
    notify,
-   adminGetRunningBots,
+   getRunningBots,
    copyInstance,
    restoreBot,
    downloadInstancePemFile,
-   updateAdminRunningBot,
+   updateRunningBot,
    botInstances,
    total,
    user,
@@ -142,7 +142,7 @@ const RunningBots = ({
   const [search, setSearch] = useState(null);
 
   useEffect(() => {
-    adminGetRunningBots({ page, limit, list });
+    getRunningBots({ page, limit, list });
     addListener(`running.${user.id}`, "InstanceLaunched", event => {
       if (event.instance) {
         const status =
@@ -157,7 +157,7 @@ const RunningBots = ({
       }
     });
     addListener(`running.${user.id}`, "InstanceStatusUpdated", () => {
-      adminGetRunningBots({
+      getRunningBots({
         page: 1,
         limit,
         list,
@@ -167,7 +167,7 @@ const RunningBots = ({
     });
     addListener(`bots.${user.id}`, "BotsSyncSucceeded", () => {
       notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Sync completed" });
-      adminGetRunningBots({
+      getRunningBots({
         page,
         limit,
         list,
@@ -200,7 +200,7 @@ const RunningBots = ({
             type: NOTIFICATION_TYPES.INFO,
             message: "The instance was successfully queued for cloning"
           });
-          adminGetRunningBots({ page, limit, list });
+          getRunningBots({ page, limit, list });
         })
         .catch(() =>
             notify({ type: NOTIFICATION_TYPES.ERROR, message: "Cloning failed" })
@@ -228,7 +228,7 @@ const RunningBots = ({
   };
 
   const changeBotInstanceStatus = (option, id) => {
-    updateAdminRunningBot(id, { status: option.value })
+     updateRunningBot(id, { status: option.value })
         .then(() =>
             notify({
               type: NOTIFICATION_TYPES.INFO,
@@ -354,7 +354,7 @@ const RunningBots = ({
   );
   const onOrderChange = (field, value) => {
     setOrder({ field, value });
-    adminGetRunningBots({
+    getRunningBots({
       page,
       limit,
       list,
@@ -379,7 +379,7 @@ const RunningBots = ({
 
   const searchRunningBots = value => {
     setSearch(value);
-    adminGetRunningBots({
+    getRunningBots({
       page,
       limit,
       list,
@@ -407,7 +407,7 @@ const RunningBots = ({
               <LimitFilter
                   onChange={({ value }) => {
                     setLimit(value);
-                    adminGetRunningBots({
+                    getRunningBots({
                       page,
                       limit: value,
                       list,
@@ -421,7 +421,7 @@ const RunningBots = ({
                   options={FILTERS_LIST_OPTIONS}
                   onChange={({ value }) => {
                     setFilterList(value);
-                    adminGetRunningBots({
+                    getRunningBots({
                       page,
                       limit,
                       list: value,
@@ -459,7 +459,7 @@ const RunningBots = ({
                 pageSize={limit}
                 onChangePage={page => {
                   setPage(page);
-                  adminGetRunningBots({
+                  getRunningBots({
                     page,
                     limit,
                     list,
@@ -479,9 +479,9 @@ RunningBots.propTypes = {
   notify: PropTypes.func.isRequired,
   copyInstance: PropTypes.func.isRequired,
   restoreBot: PropTypes.func.isRequired,
-  adminGetRunningBots: PropTypes.func.isRequired,
+  getRunningBots: PropTypes.func.isRequired,
   downloadInstancePemFile: PropTypes.func.isRequired,
-  updateAdminRunningBot: PropTypes.func.isRequired,
+  updateRunningBot: PropTypes.func.isRequired,
   addListener: PropTypes.func.isRequired,
   removeAllListeners: PropTypes.func.isRequired,
   botInstanceUpdated: PropTypes.func.isRequired,
@@ -506,10 +506,10 @@ const mapDispatchToProps = dispatch => ({
   notify: payload => dispatch(addNotification(payload)),
   copyInstance: id => dispatch(copyInstance(id)),
   restoreBot: id => dispatch(restoreBot(id)),
-  adminGetRunningBots: query => dispatch(adminGetRunningBots(query)),
+  getRunningBots: query => dispatch(getRunningBots(query)),
   downloadInstancePemFile: id => dispatch(downloadInstancePemFile(id)),
-  updateAdminRunningBot: (id, data) =>
-      dispatch(updateAdminRunningBot(id, data)),
+  updateRunningBot: (id, data) =>
+      dispatch(updateRunningBot(id, data)),
   addListener: (room, eventName, handler) =>
       dispatch(addListener(room, eventName, handler)),
   removeAllListeners: () => dispatch(removeAllListeners()),
