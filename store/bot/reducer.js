@@ -5,15 +5,14 @@ import {
   GET_IMAGES,
   GET_LOGS,
   GET_OUTPUT_JSON,
-  GET_BOTS,
   GET_RUNNING_BOTS,
   POST_LAUNCH_INSTANCE,
   COPY_INSTANCE,
   RESTORE_INSTANCE,
   UPDATE_RUNNING_BOT,
-  ADMIN_GET_BOTS,
+  GET_BOTS,
   ADMIN_GET_RUNNING_BOTS,
-  ADMIN_UPDATE_BOT,
+  UPDATE_BOT,
   ADMIN_POST_LAUNCH_INSTANCE,
   ADMIN_UPDATE_RUNNING_BOT,
   DOWNLOAD_INSTANCE_PEM_FILE,
@@ -27,7 +26,6 @@ import {
   ADMIN_REGIONS,
   ADMIN_UPDATE_REGION,
   LIMIT_CHANGE,
-  GET_ALL_BOTS
 } from "./types";
 
 const initialState = {
@@ -60,8 +58,6 @@ export const reducer = (state = initialState, action) => {
     case GET_LOGS:
     case GET_OUTPUT_JSON:
     case GET_BOTS:
-    case ADMIN_GET_BOTS:
-    case GET_ALL_BOTS:
     case GET_RUNNING_BOTS:
     case ADMIN_GET_RUNNING_BOTS:
     case GET_BOT:
@@ -70,7 +66,7 @@ export const reducer = (state = initialState, action) => {
     case RESTORE_INSTANCE:
     case ADMIN_POST_LAUNCH_INSTANCE:
     case UPDATE_RUNNING_BOT:
-    case ADMIN_UPDATE_BOT:
+    case UPDATE_BOT:
     case ADMIN_UPDATE_RUNNING_BOT:
     case DOWNLOAD_INSTANCE_PEM_FILE:
     case ADMIN_UPDATE_REGION:
@@ -131,7 +127,6 @@ export const reducer = (state = initialState, action) => {
       };
 
     case success(GET_BOTS):
-    case success(ADMIN_GET_BOTS):
       return {
         ...state,
         bots: action.data.data,
@@ -139,7 +134,6 @@ export const reducer = (state = initialState, action) => {
         loading: false
       };
 
-    case success(GET_ALL_BOTS):
     case success(GET_RUNNING_BOTS):
     case success(ADMIN_GET_RUNNING_BOTS):
       return {
@@ -156,7 +150,7 @@ export const reducer = (state = initialState, action) => {
     case success(DOWNLOAD_INSTANCE_PEM_FILE):
       return { ...state, loading: false };
 
-    case success(ADMIN_UPDATE_BOT): {
+    case success(UPDATE_BOT): {
       const botIdx = state.bots.findIndex(item => item.id === action.data.id);
       if (botIdx || botIdx === 0) state.bots[botIdx] = action.data;
       return { ...state, bots: [...state.bots], loading: false };
@@ -213,8 +207,6 @@ export const reducer = (state = initialState, action) => {
     case error(GET_OUTPUT_JSON):
     case error(GET_BOT):
     case error(GET_BOTS):
-    case error(ADMIN_GET_BOTS):
-    case error(GET_ALL_BOTS):
     case error(GET_RUNNING_BOTS):
     case error(ADMIN_GET_RUNNING_BOTS):
     case error(POST_LAUNCH_INSTANCE):
@@ -222,7 +214,7 @@ export const reducer = (state = initialState, action) => {
     case error(RESTORE_INSTANCE):
     case error(ADMIN_POST_LAUNCH_INSTANCE):
     case error(UPDATE_RUNNING_BOT):
-    case error(ADMIN_UPDATE_BOT):
+    case error(UPDATE_BOT):
     case error(ADMIN_UPDATE_RUNNING_BOT):
     case error(DOWNLOAD_INSTANCE_PEM_FILE):
     case error(ADMIN_UPDATE_REGION):

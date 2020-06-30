@@ -20,13 +20,13 @@ import {
 } from "/components/default/Table";
 import { connect } from "react-redux";
 import {
-  adminGetBots,
-  adminUpdateBot,
+  getBots,
+  updateBot,
   addBot,
   adminLaunchInstance,
   getBotSettings,
   updateBotSettings,
-  adminDeleteBot,
+  deleteBot,
   syncLocalBots,
   setBotLimit
 } from "/store/bot/actions";
@@ -113,14 +113,14 @@ const modalStyles = css`
 `;
 
 const Bots = ({
-  adminGetBots,
-  adminUpdateBot,
+  getBots,
+  updateBot,
   adminLaunchInstance,
   bots,
   total,
   notify,
   theme,
-  adminDeleteBot,
+  deleteBot,
   syncLocalBots,
   syncLoading,
   addListener,
@@ -140,10 +140,10 @@ const Bots = ({
   const deleteModal = useRef(null);
 
   useEffect(() => {
-    adminGetBots({ page, limit });
+    getBots({ page, limit });
     addListener(`bots.${user.id}`, "BotsSyncSucceeded", () => {
       notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Sync completed" });
-      adminGetBots({
+        getBots({
         page,
         limit,
         sort: order.field,
@@ -195,7 +195,7 @@ const Bots = ({
       .then(() => {
         notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Bot added!" });
         addModal.current.close();
-        adminGetBots({
+        getBots({
           page,
           limit,
           sort: order.field,
@@ -208,8 +208,8 @@ const Bots = ({
       );
   };
 
-  const updateBot = botData => {
-    adminUpdateBot(clickedBot.id, convertBotData(botData))
+  const getUpdateBot = botData => {
+    updateBot(clickedBot.id, convertBotData(botData))
       .then(() => {
         notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Bot updated!" });
         editModal.current.close();
@@ -223,7 +223,7 @@ const Bots = ({
     const statusName = bot.status === "active" ? "deactivated" : "activated";
     const status = bot.status === "active" ? "inactive" : "active";
 
-    adminUpdateBot(bot.id, { status })
+    updateBot(bot.id, { status })
       .then(() =>
         notify({
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -238,12 +238,12 @@ const Bots = ({
       );
   };
 
-  const deleteBot = () => {
+  const getDeleteBot = () => {
     setClickedBot(null);
-    adminDeleteBot(clickedBot.id)
+    deleteBot(clickedBot.id)
       .then(() => {
         notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Bot removed!" });
-        adminGetBots({
+        getBots({
           page,
           limit,
           sort: order.field,
@@ -335,7 +335,7 @@ const Bots = ({
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value });
-    adminGetBots({ page, limit, sort: field, order: value, search });
+    getBots({ page, limit, sort: field, order: value, search });
   };
 
   const OrderTh = props => (
@@ -353,7 +353,7 @@ const Bots = ({
 
   const searchBots = value => {
     setSearch(value);
-    adminGetBots({
+    getBots({
       page,
       limit,
       sort: order.field,
@@ -384,7 +384,7 @@ const Bots = ({
               defaultValue={limit}
               onChange={({ value }) => {
                 setLimit(value);
-                adminGetBots({
+                getBots({
                   page,
                   limit: value,
                   sort: order.field,
@@ -419,7 +419,7 @@ const Bots = ({
             initialPage={page}
             onChangePage={page => {
               setPage(page);
-              adminGetBots({
+              getBots({
                 page,
                 limit,
                 sort: order.field,
@@ -471,7 +471,7 @@ const Bots = ({
         <BotEditor
           type={"edit"}
           bot={clickedBot}
-          onSubmit={updateBot}
+          onSubmit={getUpdateBot}
           onClose={() => editModal.current.close()}
         />
       </Modal>
@@ -493,7 +493,7 @@ const Bots = ({
           >
             Cancel
           </Button>
-          <Button type={"primary"} onClick={deleteBot}>
+          <Button type={"primary"} onClick={getDeleteBot}>
             Yes
           </Button>
         </Buttons>
@@ -508,10 +508,10 @@ Bots.propTypes = {
   limit: PropTypes.number.isRequired,
   syncLoading: PropTypes.bool.isRequired,
   user: PropTypes.object,
-  adminGetBots: PropTypes.func.isRequired,
-  adminUpdateBot: PropTypes.func.isRequired,
+  getBots: PropTypes.func.isRequired,
+  updateBot: PropTypes.func.isRequired,
   adminLaunchInstance: PropTypes.func.isRequired,
-  adminDeleteBot: PropTypes.func.isRequired,
+  deleteBot: PropTypes.func.isRequired,
   notify: PropTypes.func.isRequired,
   setLimit: PropTypes.func.isRequired,
   addBot: PropTypes.func.isRequired,
@@ -531,12 +531,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  adminGetBots: query => dispatch(adminGetBots(query)),
+  getBots: query => dispatch(getBots(query)),
   notify: payload => dispatch(addNotification(payload)),
   adminLaunchInstance: (id, params) =>
     dispatch(adminLaunchInstance(id, params)),
-  adminUpdateBot: (id, data) => dispatch(adminUpdateBot(id, data)),
-  adminDeleteBot: id => dispatch(adminDeleteBot(id)),
+  updateBot: (id, data) => dispatch(updateBot(id, data)),
+  deleteBot: id => dispatch(deleteBot(id)),
   addBot: data => dispatch(addBot(data)),
   getBotSettings: () => dispatch(getBotSettings()),
   updateBotSettings: (id, data) => dispatch(updateBotSettings(id, data)),
