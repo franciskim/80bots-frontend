@@ -237,7 +237,7 @@ const BotEditor = ({
         </Row>
         <Row>
           <InputWrap>
-            <Tabs defaultActiveKey="script" id="uncontrolled-tab-example">
+            <Tabs defaultActiveKey="script" id="tabs-script">
               <Tab eventKey="script" title="index.js">
                 <CodeEditor
                     value={botScript}

@@ -7,7 +7,6 @@ import { css } from "@emotion/core";
 import { connect } from "react-redux";
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-import { getPlatforms } from "/store/platform/actions";
 import { getTags, addBot } from "/store/bot/actions";
 import { getUsers } from "/store/user/actions";
 import { addNotification } from "/store/notification/actions";
@@ -16,7 +15,7 @@ import { Textarea, Input, CodeEditor } from "/components/default/inputs";
 import { NOTIFICATION_TYPES } from "/config";
 import Router from "next/router";
 
-const FormContainer = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin: 20px 0 10px 0;
@@ -88,6 +87,7 @@ const selectStyles = {
 const inputStyles = {
     container: css`
     color: #fff;
+    font-size: 16px;
     &:first-of-type {
       margin-right: 10px;
     }
@@ -98,9 +98,7 @@ const inputStyles = {
 };
 
 const AddBot = ({
-   getPlatforms,
    getTags,
-   platforms,
    tags,
    getUsers,
    users,
@@ -109,8 +107,6 @@ const AddBot = ({
   ...props
 }) => {
     const [tagName, setTagName] = useState("");
-    const [platformName, setPlatformName] = useState("");
-    const [platform, setPlatform] = useState("");
     const [botTags, setTags] = useState([]);
     const [botName, setBotName] = useState(bot ? bot.name : "");
     const [botScript, setBotScript] = useState(bot ? bot.aws_custom_script : "");
@@ -136,17 +132,12 @@ const AddBot = ({
     };
 
     useEffect(() => {
-        getPlatforms({ page: 1, limit: 50 });
         getTags({ page: 1, limit: 50 });
         getUsers({ page: 1, limit: 25 });
     }, []);
 
     useEffect(() => {
         if (bot) {
-            console.log(bot);
-            setPlatform(
-                toOptions(platforms.find(item => item.name === bot.platform))
-            );
             setTags(
                 tags.filter(item => bot.tags.indexOf(item.name) > -1).map(toOptions)
             );
@@ -158,16 +149,12 @@ const AddBot = ({
                 );
             }
         }
-    }, [tags, users, platforms]);
+    }, [tags, users]);
 
     const onUsersSearch = (value, callback) => {
         getUsers({ page: 1, limit: 25, search: value }).then(action =>
             callback(action.data.data.map(toOptions))
         );
-    };
-
-    const onPlatformInputChange = newValue => {
-        setPlatformName(newValue);
     };
 
     const onTagInputChange = newValue => {
@@ -185,21 +172,9 @@ const AddBot = ({
         return options;
     };
 
-    const getPlatformOptions = () => {
-        let options = platforms.map(toOptions);
-        if (
-            platformName &&
-            !options.find(item => item.label.match(new RegExp(platformName, "ig")))
-        ) {
-            options = [{ value: platformName, label: platformName }].concat(options);
-        }
-        return options;
-    };
-
     const convertBotData = botData => ({
         name: botData.botName,
         description: botData.description,
-        platform: botData.platform,
         aws_custom_script: botData.botScript,
         aws_custom_package_json: botData.botPackageJSON,
         tags: botData.botTags,
@@ -220,7 +195,6 @@ const AddBot = ({
                 botPackageJSON,
                 description,
                 botTags: botTags.map(item => item.value),
-                platform: platform.value,
                 ...users
             };
             props
@@ -237,18 +211,8 @@ const AddBot = ({
 
     return (
         <>
-            <FormContainer>
+            <Container>
                 <Row>
-                    <InputWrap>
-                        <Label>Platform</Label>
-                        <Select
-                            onChange={option => setPlatform(option)}
-                            styles={selectStyles}
-                            value={platform}
-                            onInputChange={onPlatformInputChange}
-                            options={getPlatformOptions()}
-                        />
-                    </InputWrap>
                     <Input
                         type={"text"}
                         label={"Bot Name *"}
@@ -262,7 +226,7 @@ const AddBot = ({
                 </Row>
                 <Row>
                     <InputWrap>
-                        <Tabs defaultActiveKey="script" id="uncontrolled-tab-example">
+                        <Tabs defaultActiveKey="script" id="tabs-script">
                             <Tab eventKey="script" title="index.js">
                                 <CodeEditor
                                     value={botScript}
@@ -325,7 +289,7 @@ const AddBot = ({
                     </Row>
                 )}
                 {error && <Error>{error}</Error>}
-            </FormContainer>
+            </Container>
             <Buttons>
                 <Button type={"primary"} onClick={submit}>
                     Add
@@ -337,10 +301,8 @@ const AddBot = ({
 
 AddBot.propTypes = {
     bot: PropTypes.object,
-    platforms: PropTypes.array.isRequired,
     tags: PropTypes.array.isRequired,
     users: PropTypes.array.isRequired,
-    getPlatforms: PropTypes.func.isRequired,
     getTags: PropTypes.func.isRequired,
     getUsers: PropTypes.func.isRequired,
     addBot: PropTypes.func.isRequired,
@@ -348,14 +310,11 @@ AddBot.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    platforms: state.platform.platforms,
-    types: state.platform.types,
     tags: state.bot.tags,
     users: state.user.users
 });
 
 const mapDispatchToProps = dispatch => ({
-    getPlatforms: query => dispatch(getPlatforms(query)),
     getTags: query => dispatch(getTags(query)),
     getUsers: query => dispatch(getUsers(query)),
     addBot: data => dispatch(addBot(data)),
