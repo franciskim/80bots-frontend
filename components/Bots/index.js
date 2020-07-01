@@ -22,7 +22,6 @@ import { connect } from "react-redux";
 import {
   getBots,
   updateBot,
-  addBot,
   launchInstance,
   getBotSettings,
   updateBotSettings,
@@ -135,7 +134,6 @@ const Bots = ({
   const [search, setSearch] = useState(null);
 
   const modal = useRef(null);
-  const addModal = useRef(null);
   const editModal = useRef(null);
   const deleteModal = useRef(null);
 
@@ -188,25 +186,6 @@ const Bots = ({
     users: botData.users.map(user => user.id),
     type: botData.isPrivate ? "private" : "public"
   });
-
-  const addBot = botData => {
-    props
-      .addBot(convertBotData(botData))
-      .then(() => {
-        notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Bot added!" });
-        addModal.current.close();
-        getBots({
-          page,
-          limit,
-          sort: order.field,
-          order: order.value,
-          search
-        });
-      })
-      .catch(() =>
-        notify({ type: NOTIFICATION_TYPES.ERROR, message: "Add failed!" })
-      );
-  };
 
   const getUpdateBot = botData => {
     updateBot(clickedBot.id, convertBotData(botData))
@@ -365,7 +344,7 @@ const Bots = ({
   return (
     <>
       <AddButtonWrap style={{ marginBottom: "17px" }}>
-        <Button type={"success"} onClick={() => addModal.current.open()}>
+        <Button type={"success"} onClick={() => Router.push("/bots/add")}>
           Add Bot
         </Button>
         <Button
@@ -449,20 +428,6 @@ const Bots = ({
       </Modal>
 
       <Modal
-        ref={addModal}
-        title={"Add Bot"}
-        contentStyles={modalStyles}
-        containerStyles={modalContainerStyles}
-        disableSideClosing
-      >
-        <BotEditor
-          type={"add"}
-          onSubmit={addBot}
-          onClose={() => addModal.current.close()}
-        />
-      </Modal>
-
-      <Modal
         ref={editModal}
         title={"Edit Bot"}
         contentStyles={modalStyles}
@@ -514,7 +479,6 @@ Bots.propTypes = {
   deleteBot: PropTypes.func.isRequired,
   notify: PropTypes.func.isRequired,
   setLimit: PropTypes.func.isRequired,
-  addBot: PropTypes.func.isRequired,
   syncLocalBots: PropTypes.func.isRequired,
   addListener: PropTypes.func.isRequired,
   theme: PropTypes.shape({
@@ -537,7 +501,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(launchInstance(id, params)),
   updateBot: (id, data) => dispatch(updateBot(id, data)),
   deleteBot: id => dispatch(deleteBot(id)),
-  addBot: data => dispatch(addBot(data)),
   getBotSettings: () => dispatch(getBotSettings()),
   updateBotSettings: (id, data) => dispatch(updateBotSettings(id, data)),
   syncLocalBots: () => dispatch(syncLocalBots()),

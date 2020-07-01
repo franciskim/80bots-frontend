@@ -4,6 +4,7 @@ export const ROUTES = [
     { name: "Users", href: "/users" },
     { name: "Workforce", href: "/bots/running" },
     { name: "Deploy Bots", href: "/bots" },
+    { name: "Add Bot", href: "/bots/add" },
     { name: "Schedule Bots", href: "/schedule" },
     { name: "Sessions", href: "/sessions" },
     { name: "AWS AMI Settings", href: "/bots/settings" },

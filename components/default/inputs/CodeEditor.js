@@ -5,7 +5,7 @@ import beautify from 'js-beautify';
 
 import "ace-builds/src-noconflict/ace";
 import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-tomorrow_night_eighties";
 import "ace-builds/src-min-noconflict/ext-language_tools";
 import "ace-builds/src-min-noconflict/ext-language_tools";
 
@@ -42,14 +42,14 @@ export const CodeEditor = ({ value, onChange, ...props }) => {
 
   const handleBeautify = (code) => {
     const result = beautifyJavaScript(code);
-    onChange(result)
-  }
+    onChange(result);
+  };
 
   return (
-    <Wrap>
+    <>
       <AceEditor
         mode="javascript"
-        theme="monokai"
+        theme="tomorrow_night_eighties"
         value={value}
         onChange={(value) => {
           onChange(value);
@@ -71,9 +71,9 @@ export const CodeEditor = ({ value, onChange, ...props }) => {
       <Button type={"primary"} onClick={() => handleBeautify(value)}>
         Beautify
       </Button>
-    </Wrap>
+    </>
   );
-}
+};
 
 CodeEditor.propTypes = {
   label: PropTypes.string,

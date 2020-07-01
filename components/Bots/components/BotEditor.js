@@ -101,7 +101,6 @@ const BotEditor = ({
   onClose,
   getUsers,
   users,
-  type,
   bot
 }) => {
   const [tagName, setTagName] = useState("");
@@ -236,20 +235,24 @@ const BotEditor = ({
         <Row>
           <Label>Bot Script</Label>
         </Row>
-        <Tabs defaultActiveKey="script" id="uncontrolled-tab-example">
-          <Tab eventKey="script" title="index.js">
-            <CodeEditor
-              value={botScript}
-              onChange={code => setBotScript(code)}
-            />
-          </Tab>
-          <Tab eventKey="json" title="package.json">
-            <CodeEditor
-              value={botPackageJSON}
-              onChange={code => setBotPackageJSON(code)}
-            />
-          </Tab>
-        </Tabs>
+        <Row>
+          <InputWrap>
+            <Tabs defaultActiveKey="script" id="uncontrolled-tab-example">
+              <Tab eventKey="script" title="index.js">
+                <CodeEditor
+                    value={botScript}
+                    onChange={code => setBotScript(code)}
+                />
+              </Tab>
+              <Tab eventKey="json" title="package.json">
+                <CodeEditor
+                    value={botPackageJSON}
+                    onChange={code => setBotPackageJSON(code)}
+                />
+              </Tab>
+            </Tabs>
+          </InputWrap>
+        </Row>
         <Row>
           <Textarea
             label={"Description"}
@@ -302,7 +305,7 @@ const BotEditor = ({
           Cancel
         </Button>
         <Button type={"primary"} onClick={submit}>
-          {type === "add" ? "Add" : "Update"}
+         Update
         </Button>
       </Buttons>
     </>
@@ -310,7 +313,6 @@ const BotEditor = ({
 };
 
 BotEditor.propTypes = {
-  type: PropTypes.oneOf(["edit", "add"]).isRequired,
   bot: PropTypes.object,
   platforms: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired,
