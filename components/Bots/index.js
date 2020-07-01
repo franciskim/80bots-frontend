@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import styled from "@emotion/styled";
-import LaunchEditor from "./components/LaunchEditor";
+import BotEditor from "./components/BotEditor";
+import Icon from "/components/default/icons";
 import Router from "next/router";
-import Modal from "../default/Modal";
+import LaunchEditor from "./components/LaunchEditor";
+import Modal from "/components/default/Modal";
 import { css } from "@emotion/core";
-import { connect } from "react-redux";
+import { withTheme } from "emotion-theming";
 import { Button, Badge, Paginator } from "/components/default";
 import { Card, CardBody } from "/components/default/Card";
 import {
@@ -16,9 +18,21 @@ import {
   SearchFilter,
   Th
 } from "/components/default/Table";
-import { getBots, launchInstance, setBotLimit } from "/store/bot/actions";
-import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from "/config";
+import { connect } from "react-redux";
+import {
+  getBots,
+  updateBot,
+  addBot,
+  launchInstance,
+  getBotSettings,
+  updateBotSettings,
+  deleteBot,
+  syncLocalBots,
+  setBotLimit
+} from "/store/bot/actions";
 import { addNotification } from "/store/notification/actions";
+import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from "/config";
+import { addListener } from "/store/socket/actions";
 
 const Container = styled(Card)`
   background: #333;
@@ -29,6 +43,45 @@ const Container = styled(Card)`
 const Deploy = styled(Button)`
   padding: 0 10px;
   font-size: 16px;
+  margin-right: 5px;
+`;
+
+const IconButton = styled(Button)`
+  display: inline-flex;
+  justify-content: center;
+  padding: 2px;
+  margin-right: 5px;
+  width: 27px;
+  height: 27px;
+  &:last-child {
+    margin-right: 0;
+  }
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+`;
+
+const StatusButton = styled(Deploy)`
+  text-transform: capitalize;
+  margin-right: 0;
+`;
+
+const AddButtonWrap = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+  button {
+    margin-right: 20px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+`;
+
+const BotType = styled(Badge)`
+  font-size: 14px;
+  text-transform: uppercase;
 `;
 
 const Tag = styled(Badge)`
@@ -39,14 +92,42 @@ const Tag = styled(Badge)`
   }
 `;
 
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const modalContainerStyles = css`
+  margin-top: 0;
+`;
+
+const modalStyles = css`
+  min-width: 800px;
+  max-width: 800px;
+  overflow-y: visible;
+  @media (max-height: 900px) {
+    max-height: 700px;
+    overflow-y: scroll;
+  }
+`;
+
 const Bots = ({
-  notify,
   getBots,
+  updateBot,
   launchInstance,
   bots,
   total,
+  notify,
+  theme,
+  deleteBot,
+  syncLocalBots,
+  syncLoading,
+  addListener,
+  user,
   limit,
-  setLimit
+  setLimit,
+  ...props
 }) => {
   const [clickedBot, setClickedBot] = useState(null);
   const [page, setPage] = useState(1);
@@ -54,6 +135,24 @@ const Bots = ({
   const [search, setSearch] = useState(null);
 
   const modal = useRef(null);
+  const addModal = useRef(null);
+  const editModal = useRef(null);
+  const deleteModal = useRef(null);
+
+  useEffect(() => {
+    getBots({ page, limit });
+    addListener(`bots.${user.id}`, "BotsSyncSucceeded", () => {
+      notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Sync completed" });
+        getBots({
+        page,
+        limit,
+        sort: order.field,
+        order: order.value,
+        search
+      });
+      setPage(1);
+    });
+  }, []);
 
   const launchBot = params => {
     modal.current.close();
@@ -62,56 +161,174 @@ const Bots = ({
       .then(() => {
         notify({
           type: NOTIFICATION_TYPES.INFO,
-          message: "Bot instance is enqueued for deployment"
+          message: "New bot instance is deploying"
         });
         setTimeout(() => {
           Router.push("/bots/running");
         }, NOTIFICATION_TIMINGS.DURATION * 2 + NOTIFICATION_TIMINGS.INFO_HIDE_DELAY);
       })
-      .catch(({ error: { response } }) => {
-        if (response && response.data) {
-          notify({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: response.data.message
-          });
-        } else {
-          notify({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: "Error occurred during new instance launch"
-          });
-        }
-      })
-      .finally(() => {});
+      .catch(action => {
+        notify({
+          type: NOTIFICATION_TYPES.ERROR,
+          message:
+            action.error?.response?.data?.message ||
+            "Error occurred during new instance launch",
+          delay: 1500
+        });
+      });
   };
 
-  useEffect(() => {
-    getBots({ limit, page });
-  }, []);
+  const convertBotData = botData => ({
+    name: botData.botName,
+    description: botData.description,
+    platform: botData.platform,
+    aws_custom_script: botData.botScript,
+    aws_custom_package_json: botData.botPackageJSON,
+    tags: botData.botTags,
+    users: botData.users.map(user => user.id),
+    type: botData.isPrivate ? "private" : "public"
+  });
+
+  const addBot = botData => {
+    props
+      .addBot(convertBotData(botData))
+      .then(() => {
+        notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Bot added!" });
+        addModal.current.close();
+        getBots({
+          page,
+          limit,
+          sort: order.field,
+          order: order.value,
+          search
+        });
+      })
+      .catch(() =>
+        notify({ type: NOTIFICATION_TYPES.ERROR, message: "Add failed!" })
+      );
+  };
+
+  const getUpdateBot = botData => {
+    updateBot(clickedBot.id, convertBotData(botData))
+      .then(() => {
+        notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Bot updated!" });
+        editModal.current.close();
+      })
+      .catch(() =>
+        notify({ type: NOTIFICATION_TYPES.ERROR, message: "Update failed!" })
+      );
+  };
+
+  const changeBotStatus = bot => {
+    const statusName = bot.status === "active" ? "deactivated" : "activated";
+    const status = bot.status === "active" ? "inactive" : "active";
+
+    updateBot(bot.id, { status })
+      .then(() =>
+        notify({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `Bot was successfully ${statusName}!`
+        })
+      )
+      .catch(() =>
+        notify({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: "Status update failed"
+        })
+      );
+  };
+
+  const getDeleteBot = () => {
+    setClickedBot(null);
+    deleteBot(clickedBot.id)
+      .then(() => {
+        notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Bot removed!" });
+        getBots({
+          page,
+          limit,
+          sort: order.field,
+          order: order.value,
+          search
+        });
+        deleteModal.current.close();
+      })
+      .catch(() =>
+        notify({ type: NOTIFICATION_TYPES.ERROR, message: "Bot delete failed" })
+      );
+  };
+
+  const sync = () => {
+    syncLocalBots()
+      .then(() =>
+        notify({ type: NOTIFICATION_TYPES.INFO, message: "Sync started" })
+      )
+      .catch(() =>
+        notify({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: "Sync cannot be started"
+        })
+      );
+  };
 
   const renderRow = (bot, idx) => (
     <tr key={idx}>
       <td>{bot.platform}</td>
       <td>{bot.name}</td>
+      <td>
+        <BotType type={bot.type === "public" ? "info" : "danger"} pill>
+          {bot.type}
+        </BotType>
+      </td>
       <td>{bot.description}</td>
       <td>
         {bot.tags && bot.tags.length > 0
           ? bot.tags.map((tag, idx) => (
               <Tag key={idx} pill type={"info"}>
-                {tag["name"]}
+                {tag}
               </Tag>
             ))
           : "-"}
       </td>
       <td>
-        <Deploy
-          type={"primary"}
-          onClick={() => {
-            setClickedBot(bot);
-            modal.current.open();
-          }}
+        <StatusButton
+          type={bot.status === "active" ? "success" : "danger"}
+          onClick={() => changeBotStatus(bot)}
         >
-          Deploy
-        </Deploy>
+          {bot.status}
+        </StatusButton>
+      </td>
+      <td>
+        <Buttons>
+          <Deploy
+            type={"primary"}
+            onClick={() => {
+              setClickedBot(bot);
+              modal.current.open();
+            }}
+          >
+            Deploy
+          </Deploy>
+          <IconButton
+            title={"Edit Bot"}
+            type={"primary"}
+            onClick={() => {
+              setClickedBot(bot);
+              editModal.current.open();
+            }}
+          >
+            <Icon name={"edit"} color={theme.colors.white} />
+          </IconButton>
+          <IconButton
+            title={"Delete Bot"}
+            type={"danger"}
+            onClick={() => {
+              setClickedBot(bot);
+              deleteModal.current.open();
+            }}
+          >
+            <Icon name={"garbage"} color={theme.colors.white} />
+          </IconButton>
+        </Buttons>
       </td>
     </tr>
   );
@@ -147,10 +364,24 @@ const Bots = ({
 
   return (
     <>
+      <AddButtonWrap style={{ marginBottom: "17px" }}>
+        <Button type={"success"} onClick={() => addModal.current.open()}>
+          Add Bot
+        </Button>
+        <Button
+          type={"primary"}
+          onClick={sync}
+          loading={`${syncLoading}`}
+          loaderWidth={148}
+        >
+          Sync Bots From Repo
+        </Button>
+      </AddButtonWrap>
       <Container>
         <CardBody>
           <Filters>
             <LimitFilter
+              defaultValue={limit}
               onChange={({ value }) => {
                 setLimit(value);
                 getBots({
@@ -171,10 +402,12 @@ const Bots = ({
           <Table responsive>
             <Thead>
               <tr>
-                <OrderTh field={"platform"}>Bot Platform</OrderTh>
+                <OrderTh field={"platform"}>Platform</OrderTh>
                 <OrderTh field={"name"}>Bot Name</OrderTh>
+                <OrderTh field={"type"}>Bot Type</OrderTh>
                 <OrderTh field={"description"}>Description</OrderTh>
-                <th>Tags</th>
+                <th>Bot Tags</th>
+                <OrderTh field={"status"}>Status</OrderTh>
                 <th>Action</th>
               </tr>
             </Thead>
@@ -183,6 +416,7 @@ const Bots = ({
           <Paginator
             total={total}
             pageSize={limit}
+            initialPage={page}
             onChangePage={page => {
               setPage(page);
               getBots({
@@ -205,6 +439,7 @@ const Bots = ({
           overflow-x: visible;
           overflow-y: hidden;
         `}
+        disableSideClosing
       >
         <LaunchEditor
           onSubmit={launchBot}
@@ -212,31 +447,103 @@ const Bots = ({
           bot={clickedBot}
         />
       </Modal>
+
+      <Modal
+        ref={addModal}
+        title={"Add Bot"}
+        contentStyles={modalStyles}
+        containerStyles={modalContainerStyles}
+        disableSideClosing
+      >
+        <BotEditor
+          type={"add"}
+          onSubmit={addBot}
+          onClose={() => addModal.current.close()}
+        />
+      </Modal>
+
+      <Modal
+        ref={editModal}
+        title={"Edit Bot"}
+        contentStyles={modalStyles}
+        containerStyles={modalContainerStyles}
+      >
+        <BotEditor
+          type={"edit"}
+          bot={clickedBot}
+          onSubmit={getUpdateBot}
+          onClose={() => editModal.current.close()}
+        />
+      </Modal>
+
+      <Modal
+        ref={deleteModal}
+        title={"Delete Bot"}
+        contentStyles={css`
+          min-width: 300px;
+        `}
+      >
+        <Buttons>
+          <Button
+            type={"danger"}
+            onClick={() => {
+              setClickedBot(null);
+              deleteModal.current.close();
+            }}
+          >
+            Cancel
+          </Button>
+          <Button type={"primary"} onClick={getDeleteBot}>
+            Yes
+          </Button>
+        </Buttons>
+      </Modal>
     </>
   );
 };
 
 Bots.propTypes = {
-  launchInstance: PropTypes.func.isRequired,
-  setLimit: PropTypes.func.isRequired,
-  getBots: PropTypes.func.isRequired,
-  notify: PropTypes.func.isRequired,
+  bots: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
   limit: PropTypes.number.isRequired,
-  bots: PropTypes.array.isRequired
+  syncLoading: PropTypes.bool.isRequired,
+  user: PropTypes.object,
+  getBots: PropTypes.func.isRequired,
+  updateBot: PropTypes.func.isRequired,
+  launchInstance: PropTypes.func.isRequired,
+  deleteBot: PropTypes.func.isRequired,
+  notify: PropTypes.func.isRequired,
+  setLimit: PropTypes.func.isRequired,
+  addBot: PropTypes.func.isRequired,
+  syncLocalBots: PropTypes.func.isRequired,
+  addListener: PropTypes.func.isRequired,
+  theme: PropTypes.shape({
+    colors: PropTypes.object.isRequired
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
   bots: state.bot.bots,
   total: state.bot.total,
+  syncLoading: state.bot.syncLoading,
+  user: state.auth.user,
   limit: state.bot.limit
 });
 
 const mapDispatchToProps = dispatch => ({
   getBots: query => dispatch(getBots(query)),
   notify: payload => dispatch(addNotification(payload)),
-  launchInstance: (id, params) => dispatch(launchInstance(id, params)),
+  launchInstance: (id, params) =>
+    dispatch(launchInstance(id, params)),
+  updateBot: (id, data) => dispatch(updateBot(id, data)),
+  deleteBot: id => dispatch(deleteBot(id)),
+  addBot: data => dispatch(addBot(data)),
+  getBotSettings: () => dispatch(getBotSettings()),
+  updateBotSettings: (id, data) => dispatch(updateBotSettings(id, data)),
+  syncLocalBots: () => dispatch(syncLocalBots()),
+  addListener: (room, eventName, handler) =>
+    dispatch(addListener(room, eventName, handler)),
   setLimit: limit => dispatch(setBotLimit(limit))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Bots);
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Bots));

@@ -16,7 +16,7 @@ import {
 } from "../default/Table";
 import { NOTIFICATION_TYPES } from "/config";
 import { addNotification } from "/store/notification/actions";
-import { updateUser } from "/store/user/actions";
+import { updateStatus } from "/store/user/actions";
 import { getUsers } from "/store/user/actions";
 
 const Container = styled(Card)`
@@ -34,13 +34,12 @@ const StatusButton = styled(Button)`
 const Users = ({
   addNotification,
   getUsers,
-  updateUser,
+  updateStatus,
   users,
-  total
+  total,
 }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
-  const [order, setOrder] = useState({ value: "", field: "" });
   const [search, setSearch] = useState(null);
 
   useEffect(() => {
@@ -48,7 +47,7 @@ const Users = ({
   }, []);
 
   const changeUserStatus = user => {
-    updateUser(user.id, {
+    updateStatus(user.id, {
       status: user.status === "active" ? "inactive" : "active"
     }).then(() => {
       const status = user.status === "active" ? "deactivated" : "activated";
@@ -64,25 +63,17 @@ const Users = ({
     getUsers({
       page,
       limit,
-      sort: order.field,
-      order: order.value,
       search: value
     });
   };
 
-  const onOrderChange = (field, value) => {
-    setOrder({ field, value });
-    getUsers({ page, limit, sort: field, order: value, search });
+  const onOrderChange = () => {
+    getUsers({ page, limit, search });
   };
 
   const OrderTh = props => (
     <Th
       {...props}
-      order={
-        props.field === order.field || props.children === order.field
-          ? order.value
-          : ""
-      }
       onClick={onOrderChange}
     />
   );
@@ -114,8 +105,6 @@ const Users = ({
                 getUsers({
                   page,
                   limit: value,
-                  sort: order.field,
-                  order: order.value,
                   search
                 });
               }}
@@ -145,8 +134,6 @@ const Users = ({
               getUsers({
                 page,
                 limit,
-                sort: order.field,
-                order: order.value,
                 search
               });
             }}
@@ -162,7 +149,7 @@ Users.propTypes = {
     colors: PropTypes.object.isRequired
   }).isRequired,
   addNotification: PropTypes.func.isRequired,
-  updateUser: PropTypes.func.isRequired,
+  updateStatus: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
   users: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired
@@ -176,7 +163,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   getUsers: query => dispatch(getUsers(query)),
-  updateUser: (id, updateData) => dispatch(updateUser(id, updateData))
+  updateStatus: (id, updateData) => dispatch(updateStatus(id, updateData))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Users));

@@ -47,7 +47,7 @@ const AppLayout = ({
       <Head title={title} />
       {!loading ? (
         <Container>
-          <Sidebar opened={opened} userRole={user && user.role} />
+          <Sidebar opened={opened}/>
           <Main>
             <Header
               sidebarOpened={opened}

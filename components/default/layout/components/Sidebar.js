@@ -76,7 +76,7 @@ const Bottom = styled.div`
   flex-direction: column;
 `;
 
-const Sidebar = ({ opened = false, userRole }) => {
+const Sidebar = ({ opened = false }) => {
   const renderLink = (link, idx) => (
     <Li key={idx}>
       <Link href={link.href}>
@@ -133,7 +133,7 @@ const Sidebar = ({ opened = false, userRole }) => {
           </a>
         </Link>
       </LinkWrap>
-      <Ul>{userRole && ROUTES[userRole].map(renderLink)}</Ul>
+      <Ul>{ROUTES.map(renderLink)}</Ul>
       <Bottom>
         <Feedback />
       </Bottom>
@@ -143,7 +143,6 @@ const Sidebar = ({ opened = false, userRole }) => {
 
 Sidebar.propTypes = {
   opened: PropTypes.bool,
-  userRole: PropTypes.oneOf(["User", "Admin"])
 };
 
 export default Sidebar;

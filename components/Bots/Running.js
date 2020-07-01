@@ -1,34 +1,34 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
-import Icon from "../default/icons";
 import Select from "react-select";
-import Modal from "../default/Modal";
 import Link from "next/link";
-import { connect } from "react-redux";
 import { withTheme } from "emotion-theming";
-import { css } from "@emotion/core";
-import { addNotification } from "/store/notification/actions";
-import { NOTIFICATION_TYPES } from "/config";
-import {
-  copyInstance,
-  restoreBot,
-  botInstanceUpdated,
-  getRunningBots,
-  updateRunningBot,
-  setBotLimit
-} from "/store/bot/actions";
-import { addListener, removeAllListeners } from "/store/socket/actions";
-import { Paginator, Loader, Button } from "../default";
-import { Card, CardBody } from "../default/Card";
+import { connect } from "react-redux";
+import { Card, CardBody } from "/components/default/Card";
 import {
   Table,
   Thead,
   Th,
   Filters,
   LimitFilter,
+  ListFilter,
   SearchFilter
-} from "../default/Table";
+} from "/components/default/Table";
+import { addNotification } from "/store/notification/actions";
+import { NOTIFICATION_TYPES } from "/config";
+import {
+  copyInstance,
+  restoreBot,
+  getRunningBots,
+  updateRunningBot,
+  downloadInstancePemFile,
+  botInstanceUpdated,
+  syncBotInstances
+} from "/store/bot/actions";
+import { addListener, removeAllListeners } from "/store/socket/actions";
+import { Paginator, Loader, Button } from "/components/default";
+import { download, minToTime } from "/lib/helpers";
 
 const Container = styled(Card)`
   background: #333;
@@ -36,22 +36,14 @@ const Container = styled(Card)`
   color: #fff;
 `;
 
-const IconButton = styled(Button)`
-  display: inline-flex;
-  justify-content: center;
-  padding: 2px;
-  margin-right: 5px;
-  width: 30px;
-  height: 30px;
-  &:last-child {
-    margin-right: 0;
-  }
-`;
-
 const Td = styled.td`
   position: absolute;
   left: 20px;
   width: calc(100% - 40px);
+`;
+
+const NwTd = styled.td`
+  white-space: nowrap;
 `;
 
 const Tr = styled.tr`
@@ -68,22 +60,50 @@ const Ip = styled.span`
   }
 `;
 
-const A = styled.a`
-  color: inherit;
-  text-decoration: none;
+const AddButtonWrap = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+  button {
+    &:last-child {
+      margin-left: 20px;
+    }
+  }
 `;
 
-const modalStyles = css`
-  min-width: 500px;
-  overflow-y: visible;
+const A = styled.a`
+  cursor: pointer;
+  color: #ff7d7d !important;
+  &:hover {
+    text-decoration: underline !important;
+  }
 `;
 
 const selectStyles = {
-  container: provided => ({
+  container: (provided, state) => ({
     ...provided,
-    minWidth: "90px"
+    width: state.selectProps.width,
+    minWidth: "150px"
   }),
-  menuPortal: base => ({ ...base, zIndex: 5 })
+  menuPortal: base => ({ ...base, zIndex: 5 }),
+  control: (provided, state) => ({
+    ...provided,
+    background: "rgba(0,0,0,0.2)",
+    // match with the menu
+    borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
+    // Overrides the different states of border
+    borderColor: state.isFocused ? "black" : "rgba(0,0,0,0.2)",
+    // Removes weird border around container
+    boxShadow: state.isFocused ? null : null,
+    "&:hover": {
+      // Overrides the different states of border
+      borderColor: "black"
+    }
+  }),
+  singleValue: (provided, state) => ({
+    ...provided,
+    color: "#fff"
+  })
 };
 
 const OPTIONS = [
@@ -93,43 +113,67 @@ const OPTIONS = [
   { value: "terminated", label: "Terminated" }
 ];
 
+const FILTERS_LIST_OPTIONS = [
+  { value: "all", label: "All Instances" },
+  { value: "my", label: "My Instances" }
+];
+
 const RunningBots = ({
-  theme,
-  notify,
-  getRunningBots,
-  updateRunningBot,
-  botInstances,
-  copyInstance,
-  restoreBot,
-  total,
-  user,
-  addListener,
-  removeAllListeners,
-  botInstanceUpdated,
-  setLimit,
-  limit
+   theme,
+   notify,
+   getRunningBots,
+   copyInstance,
+   restoreBot,
+   downloadInstancePemFile,
+   updateRunningBot,
+   botInstances,
+   total,
+   user,
+   addListener,
+   removeAllListeners,
+   botInstanceUpdated,
+   syncBotInstances,
+   syncLoading
 }) => {
-  const [clickedBotInstance, setClickedBotInstance] = useState(null);
+  const [list, setFilterList] = useState("all");
+  const [limit, setLimit] = useState(10);
   const [order, setOrder] = useState({ value: "", field: "" });
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState(null);
 
-  const modal = useRef(null);
-
   useEffect(() => {
-    getRunningBots({ page, limit });
+    getRunningBots({ page, limit, list });
     addListener(`running.${user.id}`, "InstanceLaunched", event => {
       if (event.instance) {
         const status =
-          event.instance.status === "running"
-            ? "launched"
-            : event.instance.status;
+            event.instance.status === "running"
+                ? "launched"
+                : event.instance.status;
         notify({
           type: NOTIFICATION_TYPES.SUCCESS,
           message: `Bot ${event.instance.bot_name} successfully ${status}`
         });
         botInstanceUpdated(event.instance);
       }
+    });
+    addListener(`running.${user.id}`, "InstanceStatusUpdated", () => {
+      getRunningBots({
+        page: 1,
+        limit,
+        list,
+        sort: order.field,
+        order: order.value
+      });
+    });
+    addListener(`bots.${user.id}`, "BotsSyncSucceeded", () => {
+      notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Sync completed" });
+      getRunningBots({
+        page,
+        limit,
+        list,
+        sort: order.field,
+        order: order.value
+      });
     });
     return () => {
       removeAllListeners();
@@ -138,152 +182,199 @@ const RunningBots = ({
 
   const choiceRestoreBot = instance => {
     restoreBot(instance.id)
-      .then(() =>
-        notify({
-          type: NOTIFICATION_TYPES.INFO,
-          message: "The instance was successfully queued for restoring"
-        })
-      )
-      .catch(() =>
-        notify({ type: NOTIFICATION_TYPES.ERROR, message: "Restore failed" })
-      );
+        .then(() =>
+            notify({
+              type: NOTIFICATION_TYPES.INFO,
+              message: "The instance was successfully queued for restoring"
+            })
+        )
+        .catch(() =>
+            notify({ type: NOTIFICATION_TYPES.ERROR, message: "Restore failed" })
+        );
   };
 
   const choiceCopyInstance = instance => {
     copyInstance(instance.id)
-      .then(() => {
-        notify({
-          type: NOTIFICATION_TYPES.INFO,
-          message: "The instance was successfully queued for cloning"
+        .then(() => {
+          notify({
+            type: NOTIFICATION_TYPES.INFO,
+            message: "The instance was successfully queued for cloning"
+          });
+          getRunningBots({ page, limit, list });
+        })
+        .catch(() =>
+            notify({ type: NOTIFICATION_TYPES.ERROR, message: "Cloning failed" })
+        );
+  };
+
+  const downloadEventHandler = instance => {
+    downloadInstancePemFile(instance.id)
+        .then(({ data }) => {
+          download(data, `${instance.instance_id}.pem`, "application/x-pem-file");
+        })
+        .catch(({ error: { response } }) => {
+          if (response && response.data) {
+            notify({
+              type: NOTIFICATION_TYPES.ERROR,
+              message: response.data.message
+            });
+          } else {
+            notify({
+              type: NOTIFICATION_TYPES.ERROR,
+              message: "Error occurred while downloading file"
+            });
+          }
         });
-        getRunningBots({ page, limit });
-      })
-      .catch(() =>
-        notify({ type: NOTIFICATION_TYPES.ERROR, message: "Cloning failed" })
-      );
   };
 
   const changeBotInstanceStatus = (option, id) => {
-    updateRunningBot(id, { status: option.value })
-      .then(() =>
-        notify({
-          type: NOTIFICATION_TYPES.INFO,
-          message: `Enqueued status change: ${option.value}`
-        })
-      )
-      .catch(() =>
-        notify({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: "Status update failed"
-        })
-      );
+     updateRunningBot(id, { status: option.value })
+        .then(() =>
+            notify({
+              type: NOTIFICATION_TYPES.INFO,
+              message: `Enqueued status change: ${option.value}`
+            })
+        )
+        .catch(() =>
+            notify({
+              type: NOTIFICATION_TYPES.ERROR,
+              message: "Status update failed"
+            })
+        );
+  };
+
+  const syncWithAWS = () => {
+    syncBotInstances()
+        .then(() =>
+            notify({
+              type: NOTIFICATION_TYPES.INFO,
+              message: "Sync sequence started"
+            })
+        )
+        .catch(() =>
+            notify({
+              type: NOTIFICATION_TYPES.ERROR,
+              message: "Can't start sync sequence"
+            })
+        );
   };
 
   const copyToClipboard = bot => {
     const text =
-      process.env.NODE_ENV === "development"
-        ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
-        : bot.ip;
+        process.env.NODE_ENV === "development"
+            ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
+            : bot.ip;
     navigator.clipboard.writeText(text).then(() =>
-      notify({
-        type: NOTIFICATION_TYPES.INFO,
-        message: "Copied to clipboard"
-      })
+        notify({
+          type: NOTIFICATION_TYPES.INFO,
+          message: "Copied to clipboard"
+        })
     );
   };
 
   const Loading = (
-    <Loader
-      type={"bubbles"}
-      width={45}
-      height={45}
-      color={theme.colors.primary}
-    />
+      <Loader
+          type={"bubbles"}
+          width={40}
+          height={40}
+          color={theme.colors.primary}
+      />
   );
 
   const renderRow = (botInstance, idx) => (
-    <Tr key={idx} disabled={botInstance.status === "pending"}>
-      <td>{botInstance.region}</td>
-      <td>{botInstance.name}</td>
-      <td>{botInstance.used_credit}</td>
-      <td>
-        <Ip onClick={() => copyToClipboard(botInstance)}>{botInstance.ip}</Ip>
-      </td>
-      <td>
-        <Select
-          options={OPTIONS}
-          value={OPTIONS.find(item => item.value === botInstance.status)}
-          onChange={option => changeBotInstanceStatus(option, botInstance.id)}
-          isOptionDisabled={option => option.readOnly}
-          isDisabled={
-            botInstance.status === "pending" ||
-            botInstance.status === "terminated"
+      <Tr
+          key={idx}
+          disabled={botInstance.status === "pending"}
+          className={
+            botInstance.status === "running"
+                ? "running"
+                : botInstance.status === "terminated"
+                ? "terminated"
+                : "not-running"
           }
-          styles={selectStyles}
-          menuPortalTarget={document.body}
-          menuPosition={"absolute"}
-          menuPlacement={"bottom"}
-        />
-      </td>
-      <td>{botInstance.launched_at}</td>
-      <td>
-        <IconButton title={"View Bot"} type={"primary"}>
+      >
+        <td>
+          <Select
+              options={OPTIONS}
+              value={OPTIONS.find(item => item.value === botInstance.status)}
+              onChange={option => changeBotInstanceStatus(option, botInstance.id)}
+              styles={selectStyles}
+              isOptionDisabled={option => option.readOnly}
+              isDisabled={
+                botInstance.status === "pending" ||
+                botInstance.status === "terminated"
+              }
+              menuPortalTarget={document.body}
+              menuPosition={"absolute"}
+              menuPlacement={"bottom"}
+          />
+        </td>
+        <td>
           <Link
-            href={"/bots/running/[id]"}
-            as={`/bots/running/${botInstance.id}`}
+              href={"/bots/running/[id]"}
+              as={`/bots/running/${botInstance.id}`}
           >
-            <A>
-              <Icon name={"eye"} color={"white"} />
-            </A>
+            <A>&gt;&nbsp;View</A>
           </Link>
-        </IconButton>
-        <IconButton
-          type={"primary"}
-          onClick={() => {
-            setClickedBotInstance(botInstance);
-            modal.current.open();
-          }}
-        >
-          <Icon name={"edit"} color={theme.colors.white} />
-        </IconButton>
-        {botInstance.status === "terminated" ? (
-          <IconButton
-            title={"Restore Bot"}
-            type={"success"}
-            onClick={() => choiceRestoreBot(botInstance)}
+          {botInstance.status === "terminated" ? (
+              <div
+                  title={"Restore Bot"}
+                  onClick={() => choiceRestoreBot(botInstance)}
+              >
+                <A>&gt;&nbsp;Restore</A>
+              </div>
+          ) : null}
+          <div
+              title={"Copy Instance"}
+              onClick={() => choiceCopyInstance(botInstance)}
           >
-            <Icon name={"restore"} color={"white"} />
-          </IconButton>
-        ) : null}
-        <IconButton
-          title={"Copy Instance"}
-          type={"success"}
-          onClick={() => choiceCopyInstance(botInstance)}
-        >
-          <Icon name={"copy"} color={"white"} />
-        </IconButton>
-      </td>
-      {botInstance.status === "pending" && <Td colSpan={"9"}>{Loading}</Td>}
-    </Tr>
+            <A>&gt;&nbsp;Clone</A>
+          </div>
+          <div
+              disabled={botInstance.status === "terminated"}
+              title={"Download PEM"}
+              type={"success"}
+              onClick={() => downloadEventHandler(botInstance)}
+          >
+            <A>&gt;&nbsp;Key</A>
+          </div>
+        </td>
+        <td>{botInstance.bot_name}</td>
+        <td>{botInstance.launched_at}</td>
+        <NwTd>{minToTime(botInstance.uptime)}</NwTd>
+        <td>
+          <Ip onClick={() => copyToClipboard(botInstance)}>{botInstance.ip}</Ip>
+        </td>
+        <td>{botInstance.name}</td>
+        <td>{botInstance.instance_id}</td>
+        <td>{botInstance.launched_by}</td>
+        <td>{botInstance.region}</td>
+        {botInstance.status === "pending" && <Td colSpan={"9"}>{Loading}</Td>}
+      </Tr>
   );
-
   const onOrderChange = (field, value) => {
     setOrder({ field, value });
-    getRunningBots({ page, limit, sort: field, order: value, search });
+    getRunningBots({
+      page,
+      limit,
+      list,
+      sort: field,
+      order: value,
+      search
+    });
   };
 
-  // eslint-disable-next-line react/prop-types
   const OrderTh = props => (
-    <Th
-      {...props}
-      // eslint-disable-next-line react/prop-types
-      order={
-        props.field === order.field || props.children === order.field
-          ? order.value
-          : ""
-      }
-      onClick={onOrderChange}
-    />
+      <Th
+          {...props}
+          // eslint-disable-next-line react/prop-types
+          order={
+            props.field === order.field || props.children === order.field
+                ? order.value
+                : ""
+          }
+          onClick={onOrderChange}
+      />
   );
 
   const searchRunningBots = value => {
@@ -291,6 +382,7 @@ const RunningBots = ({
     getRunningBots({
       page,
       limit,
+      list,
       sort: order.field,
       order: order.value,
       search: value
@@ -298,83 +390,105 @@ const RunningBots = ({
   };
 
   return (
-    <>
-      <Container>
-        <CardBody>
-          <Filters>
-            <LimitFilter
-              onChange={({ value }) => {
-                setLimit(value);
-                getRunningBots({
-                  page,
-                  limit: value,
-                  sort: order.field,
-                  order: order.value,
-                  search
-                });
-              }}
+      <>
+        <AddButtonWrap>
+          <Button
+              type={"primary"}
+              onClick={syncWithAWS}
+              loading={`${syncLoading}`}
+              loaderWidth={140}
+          >
+            Sync Bot Instances
+          </Button>
+        </AddButtonWrap>
+        <Container>
+          <CardBody>
+            <Filters>
+              <LimitFilter
+                  onChange={({ value }) => {
+                    setLimit(value);
+                    getRunningBots({
+                      page,
+                      limit: value,
+                      list,
+                      sort: order.field,
+                      order: order.value,
+                      search
+                    });
+                  }}
+              />
+              <ListFilter
+                  options={FILTERS_LIST_OPTIONS}
+                  onChange={({ value }) => {
+                    setFilterList(value);
+                    getRunningBots({
+                      page,
+                      limit,
+                      list: value,
+                      sort: order.field,
+                      order: order.value,
+                      search
+                    });
+                  }}
+              />
+              <SearchFilter
+                  onChange={value => {
+                    searchRunningBots(value);
+                  }}
+              />
+            </Filters>
+            <Table>
+              <Thead>
+                <tr>
+                  <OrderTh field={"status"}>Status</OrderTh>
+                  <th>Actions</th>
+                  <OrderTh field={"bot_name"}>Bot</OrderTh>
+                  <OrderTh field={"launched_at"}>Deployed At</OrderTh>
+                  <OrderTh field={"uptime"}>Uptime</OrderTh>
+                  <OrderTh field={"ip"}>IP</OrderTh>
+                  <OrderTh field={"name"}>Name</OrderTh>
+                  <th>Instance ID</th>
+                  <OrderTh field={"launched_by"}>Deployed By</OrderTh>
+                  <OrderTh field={"region"}>Region</OrderTh>
+                </tr>
+              </Thead>
+              <tbody>{botInstances.map(renderRow)}</tbody>
+            </Table>
+            <Paginator
+                total={total}
+                pageSize={limit}
+                onChangePage={page => {
+                  setPage(page);
+                  getRunningBots({
+                    page,
+                    limit,
+                    list,
+                    sort: order.field,
+                    order: order.value,
+                    search
+                  });
+                }}
             />
-            <SearchFilter
-              onChange={value => {
-                searchRunningBots(value);
-              }}
-            />
-          </Filters>
-          <Table>
-            <Thead>
-              <tr>
-                <OrderTh field={"region"}>Region</OrderTh>
-                <OrderTh field={"name"}>Name</OrderTh>
-                <OrderTh field={"credits_used"}>Credits Used</OrderTh>
-                <OrderTh field={"ip"}>IP</OrderTh>
-                <OrderTh field={"status"}>Status</OrderTh>
-                <OrderTh field={"launched_at"}>Deployed At</OrderTh>
-                <th>Actions</th>
-              </tr>
-            </Thead>
-            <tbody>{botInstances.map(renderRow)}</tbody>
-          </Table>
-          <Paginator
-            total={total}
-            pageSize={limit}
-            onChangePage={page => {
-              setPage(page);
-              getRunningBots({
-                page,
-                limit,
-                sort: order.field,
-                order: order.value,
-                search
-              });
-            }}
-          />
-        </CardBody>
-      </Container>
-      <Modal
-        ref={modal}
-        title={"Edit Bot"}
-        contentStyles={modalStyles}
-        onClose={() => {}}
-      >
-        <span>Edit Bot here</span>
-      </Modal>
-    </>
+          </CardBody>
+        </Container>
+      </>
   );
 };
 
 RunningBots.propTypes = {
-  removeAllListeners: PropTypes.func.isRequired,
-  botInstanceUpdated: PropTypes.func.isRequired,
-  updateRunningBot: PropTypes.func.isRequired,
-  getRunningBots: PropTypes.func.isRequired,
+  notify: PropTypes.func.isRequired,
   copyInstance: PropTypes.func.isRequired,
   restoreBot: PropTypes.func.isRequired,
-  botInstances: PropTypes.array.isRequired,
+  getRunningBots: PropTypes.func.isRequired,
+  downloadInstancePemFile: PropTypes.func.isRequired,
+  updateRunningBot: PropTypes.func.isRequired,
   addListener: PropTypes.func.isRequired,
-  setLimit: PropTypes.func.isRequired,
-  notify: PropTypes.func.isRequired,
+  removeAllListeners: PropTypes.func.isRequired,
+  botInstanceUpdated: PropTypes.func.isRequired,
+  syncBotInstances: PropTypes.func.isRequired,
+  botInstances: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
-  limit: PropTypes.number.isRequired,
+  syncLoading: PropTypes.bool.isRequired,
   user: PropTypes.object,
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
@@ -385,7 +499,7 @@ const mapStateToProps = state => ({
   botInstances: state.bot.botInstances,
   total: state.bot.total,
   user: state.auth.user,
-  limit: state.bot.limit
+  syncLoading: state.bot.syncLoading
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -393,15 +507,17 @@ const mapDispatchToProps = dispatch => ({
   copyInstance: id => dispatch(copyInstance(id)),
   restoreBot: id => dispatch(restoreBot(id)),
   getRunningBots: query => dispatch(getRunningBots(query)),
-  updateRunningBot: (id, data) => dispatch(updateRunningBot(id, data)),
+  downloadInstancePemFile: id => dispatch(downloadInstancePemFile(id)),
+  updateRunningBot: (id, data) =>
+      dispatch(updateRunningBot(id, data)),
   addListener: (room, eventName, handler) =>
-    dispatch(addListener(room, eventName, handler)),
+      dispatch(addListener(room, eventName, handler)),
   removeAllListeners: () => dispatch(removeAllListeners()),
   botInstanceUpdated: botInstance => dispatch(botInstanceUpdated(botInstance)),
-  setLimit: limit => dispatch(setBotLimit(limit))
+  syncBotInstances: () => dispatch(syncBotInstances())
 });
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(withTheme(RunningBots));

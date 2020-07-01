@@ -9,7 +9,7 @@ export const getSessions = (query = { page: 1, limit: 1 }) => {
     type: GET_SESSIONS,
     request: {
       method: 'GET',
-      url: '/admin/session',
+      url: '/session',
       params: query
     },
     meta: {
