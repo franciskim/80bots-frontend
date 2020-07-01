@@ -50,6 +50,20 @@ export const updateUser = (id, updateData) => ({
   }
 });
 
+export const updateStatus = (id, updateData) => ({
+  type: UPDATE_USER,
+  request: {
+    method: 'PUT',
+    url: `/user/status/${id}`,
+    data: {
+      update: updateData
+    }
+  },
+  meta: {
+    thunk: true,
+  }
+});
+
 export const updateUserProfile = (updateData) => ({
   type: UPDATE_USER_PROFILE,
   request: {

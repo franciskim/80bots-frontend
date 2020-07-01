@@ -16,7 +16,7 @@ import {
 } from "../default/Table";
 import { NOTIFICATION_TYPES } from "/config";
 import { addNotification } from "/store/notification/actions";
-import { updateUser } from "/store/user/actions";
+import { updateStatus } from "/store/user/actions";
 import { getUsers } from "/store/user/actions";
 
 const Container = styled(Card)`
@@ -34,7 +34,7 @@ const StatusButton = styled(Button)`
 const Users = ({
   addNotification,
   getUsers,
-  updateUser,
+  updateStatus,
   users,
   total,
 }) => {
@@ -47,7 +47,7 @@ const Users = ({
   }, []);
 
   const changeUserStatus = user => {
-    updateUser(user.id, {
+    updateStatus(user.id, {
       status: user.status === "active" ? "inactive" : "active"
     }).then(() => {
       const status = user.status === "active" ? "deactivated" : "activated";
@@ -149,7 +149,7 @@ Users.propTypes = {
     colors: PropTypes.object.isRequired
   }).isRequired,
   addNotification: PropTypes.func.isRequired,
-  updateUser: PropTypes.func.isRequired,
+  updateStatus: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
   users: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired
@@ -163,7 +163,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addNotification: payload => dispatch(addNotification(payload)),
   getUsers: query => dispatch(getUsers(query)),
-  updateUser: (id, updateData) => dispatch(updateUser(id, updateData))
+  updateStatus: (id, updateData) => dispatch(updateStatus(id, updateData))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Users));
