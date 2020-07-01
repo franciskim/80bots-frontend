@@ -2,14 +2,11 @@ import React, {useCallback} from "react";
 import PropTypes from "prop-types";
 import AceEditor from "react-ace";
 import beautify from 'js-beautify';
-
 import "ace-builds/src-noconflict/ace";
 import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-tomorrow_night_eighties";
 import "ace-builds/src-min-noconflict/ext-language_tools";
 import "ace-builds/src-min-noconflict/ext-language_tools";
-
-import {  Wrap } from "./Input";
 import { Button } from "../Button";
 
 const beautifyJavaScript = (value) => {
@@ -42,14 +39,14 @@ export const CodeEditor = ({ value, onChange, ...props }) => {
 
   const handleBeautify = (code) => {
     const result = beautifyJavaScript(code);
-    onChange(result)
-  }
+    onChange(result);
+  };
 
   return (
-    <Wrap>
+    <>
       <AceEditor
         mode="javascript"
-        theme="monokai"
+        theme="tomorrow_night_eighties"
         value={value}
         onChange={(value) => {
           onChange(value);
@@ -61,8 +58,8 @@ export const CodeEditor = ({ value, onChange, ...props }) => {
         }]}
         name="BOT_EDITOR"
         editorProps={{ $blockScrolling: true }}
-        enableBasicAutocompletion={true}
-        enableLiveAutocompletion={true}
+        enableBasicAutocompletion={false}
+        enableLiveAutocompletion={false}
         enableSnippets={false}
         width="100%"
         fontSize={'1rem'}
@@ -71,9 +68,9 @@ export const CodeEditor = ({ value, onChange, ...props }) => {
       <Button type={"primary"} onClick={() => handleBeautify(value)}>
         Beautify
       </Button>
-    </Wrap>
+    </>
   );
-}
+};
 
 CodeEditor.propTypes = {
   label: PropTypes.string,
