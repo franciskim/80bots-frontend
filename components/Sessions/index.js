@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { withTheme } from "emotion-theming";
 import { connect } from "react-redux";
 import { Card, CardBody } from "../default/Card";
-import { Table, Thead, Filters, LimitFilter } from "../default/Table";
+import {Table, Thead, Filters, LimitFilter, SearchFilter, Th} from "../default/Table";
 import { addNotification } from "/store/notification/actions";
 import { getSessions } from "/store/instanceSession/actions";
 import { Paginator } from "/components/default";
@@ -19,9 +19,10 @@ const Container = styled(Card)`
 const Sessions = ({ getSessions, sessions, total }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState(null);
 
   useEffect(() => {
-    getSessions();
+    getSessions({ page, limit });
   }, []);
 
   const renderRow = (session, idx) => (
@@ -33,25 +34,54 @@ const Sessions = ({ getSessions, sessions, total }) => {
     </tr>
   );
 
+  const searchSession = value => {
+    setSearch(value);
+    getSessions({
+      page,
+      limit,
+      search: value
+    });
+  };
+
+  const onOrderChange = () => {
+      getSessions({ page, limit, search });
+  };
+
+  const OrderTh = props => (
+    <Th
+        {...props}
+        onClick={onOrderChange}
+    />
+  );
+
   return (
     <>
       <Container>
         <CardBody>
           <Filters>
             <LimitFilter
-              onChange={({ value }) => {
-                setLimit(value);
-                getSessions({ page, limit: value });
-              }}
+                onChange={({ value }) => {
+                  setLimit(value);
+                  getSessions({
+                    page,
+                    limit: value,
+                    search
+                  });
+                }}
+            />
+            <SearchFilter
+                onChange={value => {
+                  searchSession(value);
+                }}
             />
           </Filters>
           <Table>
             <Thead>
               <tr>
-                <th>User</th>
-                <th>Instance Id</th>
-                <th>Type</th>
-                <th>Date & Time</th>
+                <OrderTh field={"user"}>User</OrderTh>
+                <OrderTh field={"instance_id"}>Instance Id</OrderTh>
+                <OrderTh field={"type"}>Type</OrderTh>
+                <OrderTh field={"date"}>Date & Time</OrderTh>
               </tr>
             </Thead>
             <tbody>{sessions.map(renderRow)}</tbody>
@@ -61,7 +91,7 @@ const Sessions = ({ getSessions, sessions, total }) => {
             pageSize={limit}
             onChangePage={page => {
               setPage(page);
-              getSessions({ page, limit });
+              getSessions({ page, limit, search });
             }}
           />
         </CardBody>
