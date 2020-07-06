@@ -3,6 +3,9 @@ import {
   CREATE_SCHEDULE,
   UPDATE_SCHEDULE,
   DELETE_SCHEDULE,
+  CREATE_SCHEDULE_DETAIL,
+  UPDATE_SCHEDULE_DETAIL,
+  DELETE_SCHEDULE_DETAIL,
 } from './types';
 
 export const getSchedules = (query = { page: 1, limit: 1 }) => {
@@ -58,6 +61,49 @@ export const deleteSchedule = (id) => {
     request: {
       method: 'DELETE',
       url: `/schedule/${id}`,
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const createScheduleDetail = ({ scheduleId }) => {
+  return {
+    type: CREATE_SCHEDULE_DETAIL,
+    request: {
+      method: 'POST',
+      url: `/schedule/${scheduleId}/details`,
+      data: {
+        instance_id: scheduleId
+      }
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const updateScheduleDetail = (scheduleId, id, updateData) => {
+  return {
+    type: UPDATE_SCHEDULE_DETAIL,
+    request: {
+      method: 'PUT',
+      url: `/schedule/${scheduleId}/details/${id}`,
+      data: { update: updateData }
+    },
+    meta: {
+      thunk: true
+    }
+  };
+};
+
+export const deleteScheduleDetail = (scheduleId,id) => {
+  return {
+    type: DELETE_SCHEDULE_DETAIL,
+    request: {
+      method: 'DELETE',
+      url: `/schedule/${scheduleId}/details/${id}`,
     },
     meta: {
       thunk: true

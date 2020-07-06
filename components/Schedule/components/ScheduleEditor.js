@@ -6,6 +6,15 @@ import Icon from "/components/default/icons";
 import styled from "@emotion/styled";
 import dayjs from "dayjs";
 import { theme, WEEKDAYS } from "/config";
+import {
+    createScheduleDetail,
+    updateScheduleDetail,
+    deleteScheduleDetail
+} from "/store/schedule/actions";
+import {connect} from "react-redux";
+import {withTheme} from "emotion-theming";
+import {addNotification} from "../../../store/notification/actions";
+import {NOTIFICATION_TYPES} from "../../../config";
 
 const Buttons = styled.div`
   display: flex;
@@ -104,15 +113,15 @@ const TIME_OPTIONS = (() => {
 })();
 
 const Schedule = ({
-                      type,
-                      day,
-                      time,
-                      idx,
-                      add,
-                      remove,
-                      updateScheduleList,
-                      ...props
-                  }) => {
+  type,
+  day,
+  time,
+  idx,
+  add,
+  remove,
+  updateScheduleList,
+  ...props
+}) => {
     const [scheduleType, setScheduleType] = useState(
         TYPE_OPTIONS.find(item => item.value === type) || null
     );
@@ -209,7 +218,13 @@ const Schedule = ({
     );
 };
 
-const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
+const ScheduleEditor = ({
+    close,
+    onUpdateClick,
+    scheduleId,
+    ...props
+}) => {
+    console.log(  scheduleId);
     const [schedules, setSchedules] = useState([{}].concat(props.schedules));
 
     const addSchedule = () => {
@@ -258,7 +273,11 @@ const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
 ScheduleEditor.propTypes = {
     close: PropTypes.func.isRequired,
     schedules: PropTypes.array.isRequired,
-    onUpdateClick: PropTypes.func.isRequired
+    scheduleId: PropTypes.number,
+    onUpdateClick: PropTypes.func.isRequired,
+    createScheduleDetail: PropTypes.func.isRequired,
+    updateScheduleDetail: PropTypes.func.isRequired,
+    deleteScheduleDetail: PropTypes.func.isRequired,
 };
 
 Schedule.propTypes = {
@@ -268,7 +287,16 @@ Schedule.propTypes = {
     updateScheduleList: PropTypes.func.isRequired,
     time: PropTypes.string,
     day: PropTypes.string,
-    type: PropTypes.string
+    type: PropTypes.string,
 };
 
-export default ScheduleEditor;
+const mapDispatchToProps = dispatch => ({
+    addNotification: payload => dispatch(addNotification(payload)),
+    createScheduleDetail: (scheduleId, data) => dispatch(createScheduleDetail(scheduleId, data)),
+    updateScheduleDetail: (scheduleId, id, data) => dispatch(updateScheduleDetail(scheduleId, id, data)),
+    deleteScheduleDetail: (scheduleId, id) => dispatch(deleteScheduleDetail(scheduleId, id)),
+});
+
+export default connect(
+    mapDispatchToProps
+)(withTheme(ScheduleEditor));

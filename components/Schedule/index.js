@@ -464,6 +464,7 @@ const BotsSchedule = ({
               schedules={clickedSchedule ? clickedSchedule.details : []}
               close={() => editModal.current.close()}
               onUpdateClick={updateScheduleInstance}
+              scheduleId={clickedSchedule ? clickedSchedule.id : null}
           />
         </Modal>
       </>
