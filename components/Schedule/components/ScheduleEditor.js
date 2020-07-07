@@ -6,15 +6,6 @@ import Icon from "/components/default/icons";
 import styled from "@emotion/styled";
 import dayjs from "dayjs";
 import { theme, WEEKDAYS } from "/config";
-import {
-    createScheduleDetail,
-    updateScheduleDetail,
-    deleteScheduleDetail
-} from "/store/schedule/actions";
-import {connect} from "react-redux";
-import {withTheme} from "emotion-theming";
-import {addNotification} from "../../../store/notification/actions";
-import {NOTIFICATION_TYPES} from "../../../config";
 
 const Buttons = styled.div`
   display: flex;
@@ -96,13 +87,13 @@ const DAY_OPTIONS = WEEKDAYS.map(day => ({ value: day, label: day }));
 
 const TIME_OPTIONS = (() => {
     let startTime = dayjs()
-        .hour(0)
-        .minute(0)
-        .second(0);
+      .hour(0)
+      .minute(0)
+      .second(0);
     const endTime = dayjs()
-        .hour(23)
-        .minute(30)
-        .second(0);
+      .hour(23)
+      .minute(30)
+      .second(0);
     let timeStops = [];
     while (startTime.isBefore(endTime) || startTime.isSame(endTime)) {
         let stop = startTime.format("HH:mm");
@@ -113,23 +104,23 @@ const TIME_OPTIONS = (() => {
 })();
 
 const Schedule = ({
-  type,
-  day,
-  time,
-  idx,
-  add,
-  remove,
-  updateScheduleList,
-  ...props
-}) => {
+                      type,
+                      day,
+                      time,
+                      idx,
+                      add,
+                      remove,
+                      updateScheduleList,
+                      ...props
+                  }) => {
     const [scheduleType, setScheduleType] = useState(
-        TYPE_OPTIONS.find(item => item.value === type) || null
+      TYPE_OPTIONS.find(item => item.value === type) || null
     );
     const [scheduleDay, setScheduleDay] = useState(
-        DAY_OPTIONS.find(item => item.value === day) || null
+      DAY_OPTIONS.find(item => item.value === day) || null
     );
     const [scheduleTime, setScheduleTime] = useState(
-        TIME_OPTIONS.find(item => item.value === time) || null
+      TIME_OPTIONS.find(item => item.value === time) || null
     );
     const [error, setError] = useState(null);
 
@@ -169,62 +160,56 @@ const Schedule = ({
     };
 
     return (
-        <Container {...props}>
-            <SelectContainer>
-                <SelectWrap>
-                    <Label>Type</Label>
-                    <Select
-                        options={TYPE_OPTIONS}
-                        styles={selectStyles}
-                        defaultValue={scheduleType}
-                        value={scheduleType}
-                        onChange={option => changeSchedule("type", setScheduleType, option)}
-                    />
-                </SelectWrap>
-                <SelectWrap>
-                    <Label>Day</Label>
-                    <Select
-                        options={DAY_OPTIONS}
-                        styles={selectStyles}
-                        defaultValue={scheduleDay}
-                        value={scheduleDay}
-                        onChange={option => changeSchedule("day", setScheduleDay, option)}
-                    />
-                </SelectWrap>
-                <SelectWrap>
-                    <Label>Time</Label>
-                    <Select
-                        options={TIME_OPTIONS}
-                        styles={selectStyles}
-                        defaultValue={scheduleTime}
-                        value={scheduleTime}
-                        onChange={option => changeSchedule("time", setScheduleTime, option)}
-                    />
-                </SelectWrap>
-                <SelectWrap>
-                    {idx === 0 ? (
-                        <IconButton type={"success"} onClick={addSchedule}>
-                            <Icon name={"plus"} color={theme.colors.white} />
-                        </IconButton>
-                    ) : (
-                        <IconButton type={"danger"} onClick={remove}>
-                            <Icon name={"garbage"} color={theme.colors.white} />
-                        </IconButton>
-                    )}
-                </SelectWrap>
-            </SelectContainer>
-            {error && <Error>{error}</Error>}
-        </Container>
+      <Container {...props}>
+          <SelectContainer>
+              <SelectWrap>
+                  <Label>Type</Label>
+                  <Select
+                    options={TYPE_OPTIONS}
+                    styles={selectStyles}
+                    defaultValue={scheduleType}
+                    value={scheduleType}
+                    onChange={option => changeSchedule("type", setScheduleType, option)}
+                  />
+              </SelectWrap>
+              <SelectWrap>
+                  <Label>Day</Label>
+                  <Select
+                    options={DAY_OPTIONS}
+                    styles={selectStyles}
+                    defaultValue={scheduleDay}
+                    value={scheduleDay}
+                    onChange={option => changeSchedule("day", setScheduleDay, option)}
+                  />
+              </SelectWrap>
+              <SelectWrap>
+                  <Label>Time</Label>
+                  <Select
+                    options={TIME_OPTIONS}
+                    styles={selectStyles}
+                    defaultValue={scheduleTime}
+                    value={scheduleTime}
+                    onChange={option => changeSchedule("time", setScheduleTime, option)}
+                  />
+              </SelectWrap>
+              <SelectWrap>
+                  {idx === 0 ? (
+                    <IconButton type={"success"} onClick={addSchedule}>
+                        <Icon name={"plus"} color={theme.colors.white} />
+                    </IconButton>
+                  ) : (
+                    <IconButton type={"danger"} onClick={remove}>
+                        <Icon name={"garbage"} color={theme.colors.white} />
+                    </IconButton>
+                  )}
+              </SelectWrap>
+          </SelectContainer>
+          {error && <Error>{error}</Error>}
+      </Container>
     );
 };
 
-const ScheduleEditor = ({
-    close,
-    onUpdateClick,
-    scheduleId,
-    ...props
-}) => {
-    console.log(  scheduleId);
+const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
     const [schedules, setSchedules] = useState([{}].concat(props.schedules));
 
     const addSchedule = () => {
@@ -245,39 +230,35 @@ const ScheduleEditor = ({
     };
 
     return (
-        <>
-            {schedules.map((schedule, idx) => (
-                <Schedule
-                    key={idx}
-                    type={schedule.type}
-                    day={schedule.day}
-                    idx={idx}
-                    time={schedule.time}
-                    add={addSchedule}
-                    remove={() => removeSchedule(idx)}
-                    updateScheduleList={updateScheduleList}
-                />
-            ))}
-            <Buttons>
-                <Button type={"danger"} onClick={close}>
-                    Cancel
-                </Button>
-                <Button type={"primary"} onClick={updateSchedule}>
-                    Update
-                </Button>
-            </Buttons>
-        </>
+      <>
+          {schedules.map((schedule, idx) => (
+            <Schedule
+              key={idx}
+              type={schedule.type}
+              day={schedule.day}
+              idx={idx}
+              time={schedule.time}
+              add={addSchedule}
+              remove={() => removeSchedule(idx)}
+              updateScheduleList={updateScheduleList}
+            />
+          ))}
+          <Buttons>
+              <Button type={"danger"} onClick={close}>
+                  Cancel
+              </Button>
+              <Button type={"primary"} onClick={updateSchedule}>
+                  Update
+              </Button>
+          </Buttons>
+      </>
     );
 };
 
 ScheduleEditor.propTypes = {
     close: PropTypes.func.isRequired,
     schedules: PropTypes.array.isRequired,
-    scheduleId: PropTypes.number,
-    onUpdateClick: PropTypes.func.isRequired,
-    createScheduleDetail: PropTypes.func.isRequired,
-    updateScheduleDetail: PropTypes.func.isRequired,
-    deleteScheduleDetail: PropTypes.func.isRequired,
+    onUpdateClick: PropTypes.func.isRequired
 };
 
 Schedule.propTypes = {
@@ -287,16 +268,7 @@ Schedule.propTypes = {
     updateScheduleList: PropTypes.func.isRequired,
     time: PropTypes.string,
     day: PropTypes.string,
-    type: PropTypes.string,
+    type: PropTypes.string
 };
 
-const mapDispatchToProps = dispatch => ({
-    addNotification: payload => dispatch(addNotification(payload)),
-    createScheduleDetail: (scheduleId, data) => dispatch(createScheduleDetail(scheduleId, data)),
-    updateScheduleDetail: (scheduleId, id, data) => dispatch(updateScheduleDetail(scheduleId, id, data)),
-    deleteScheduleDetail: (scheduleId, id) => dispatch(deleteScheduleDetail(scheduleId, id)),
-});
-
-export default connect(
-    mapDispatchToProps
-)(withTheme(ScheduleEditor));
+export default ScheduleEditor;
