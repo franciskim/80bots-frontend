@@ -250,6 +250,13 @@ const BotsSchedule = ({
     modal.current.close();
     deleteSchedule(clickedSchedule.id)
       .then(() =>
+        getSchedules({
+          page: 1,
+          limit,
+          sort: order.field,
+          order: order.value,
+          search
+        }),
         addNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
           message: "Schedule was successfully deleted"

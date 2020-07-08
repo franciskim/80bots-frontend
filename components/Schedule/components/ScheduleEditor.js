@@ -79,8 +79,8 @@ const Error = styled.span`
 `;
 
 const TYPE_OPTIONS = [
-    { value: "stop", label: "Stop" },
-    { value: "start", label: "Start" }
+    { value: "stopped", label: "Stopped" },
+    { value: "running", label: "Running" }
 ];
 
 const DAY_OPTIONS = WEEKDAYS.map(day => ({ value: day, label: day }));
@@ -104,7 +104,7 @@ const TIME_OPTIONS = (() => {
 })();
 
 const Schedule = ({
-                      type,
+                      status,
                       day,
                       time,
                       idx,
@@ -114,7 +114,7 @@ const Schedule = ({
                       ...props
                   }) => {
     const [scheduleType, setScheduleType] = useState(
-      TYPE_OPTIONS.find(item => item.value === type) || null
+      TYPE_OPTIONS.find(item => item.value === status) || null
     );
     const [scheduleDay, setScheduleDay] = useState(
       DAY_OPTIONS.find(item => item.value === day) || null
@@ -125,8 +125,8 @@ const Schedule = ({
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        setScheduleType(TYPE_OPTIONS.find(item => item.value === type) || null);
-    }, [type]);
+        setScheduleType(TYPE_OPTIONS.find(item => item.value === status) || null);
+    }, [status]);
 
     useEffect(() => {
         setScheduleDay(DAY_OPTIONS.find(item => item.value === day) || null);
@@ -151,7 +151,7 @@ const Schedule = ({
     const changeSchedule = (fieldName, setter, option) => {
         setter(option);
         let schedule = {
-            type: scheduleType && scheduleType.value,
+            status: scheduleType && scheduleType.value,
             day: scheduleDay && scheduleDay.value,
             time: scheduleTime && scheduleTime.value
         };
@@ -163,13 +163,13 @@ const Schedule = ({
       <Container {...props}>
           <SelectContainer>
               <SelectWrap>
-                  <Label>Type</Label>
+                  <Label>Status</Label>
                   <Select
                     options={TYPE_OPTIONS}
                     styles={selectStyles}
                     defaultValue={scheduleType}
                     value={scheduleType}
-                    onChange={option => changeSchedule("type", setScheduleType, option)}
+                    onChange={option => changeSchedule("status", setScheduleType, option)}
                   />
               </SelectWrap>
               <SelectWrap>
@@ -234,7 +234,7 @@ const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
           {schedules.map((schedule, idx) => (
             <Schedule
               key={idx}
-              type={schedule.type}
+              status={schedule.status}
               day={schedule.day}
               idx={idx}
               time={schedule.time}
@@ -268,7 +268,7 @@ Schedule.propTypes = {
     updateScheduleList: PropTypes.func.isRequired,
     time: PropTypes.string,
     day: PropTypes.string,
-    type: PropTypes.string
+    status: PropTypes.string
 };
 
 export default ScheduleEditor;
