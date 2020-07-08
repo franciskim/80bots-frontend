@@ -92,13 +92,13 @@ const TIME_OPTIONS = (() => {
       .second(0);
     const endTime = dayjs()
       .hour(23)
-      .minute(30)
+      .minute(10)
       .second(0);
     let timeStops = [];
     while (startTime.isBefore(endTime) || startTime.isSame(endTime)) {
         let stop = startTime.format("HH:mm");
         timeStops.push({ value: stop, label: stop });
-        startTime = startTime.add(30, "minute");
+        startTime = startTime.add(10, "minute");
     }
     return timeStops;
 })();
