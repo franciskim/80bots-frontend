@@ -150,6 +150,7 @@ const Bots = ({
       });
       setPage(1);
     });
+    return setPage(1);
   }, []);
 
   const launchBot = params => {

@@ -157,12 +157,12 @@ const BotsSchedule = ({
   const editModal = useRef(null);
 
   useEffect(() => {
-      getSchedules({ page, limit, list });
+    getSchedules({ page, limit, list });
   }, []);
 
   const searchBots = (value, callback) => {
     getRunningBots({ page: 1, limit: 50, search: value }).then(action =>
-        callback(action.data.data.map(toOptions))
+      callback(action.data.data.map(toOptions))
     );
   };
 
@@ -177,21 +177,21 @@ const BotsSchedule = ({
 
   const changeScheduleStatus = schedule => {
     const statusName =
-        schedule.status === "active" ? "deactivated" : "activated";
+      schedule.status === "active" ? "deactivated" : "activated";
     const status = schedule.status === "active" ? "inactive" : "active";
-      updateSchedule(schedule.id, { status })
-        .then(() =>
-            addNotification({
-              type: NOTIFICATION_TYPES.SUCCESS,
-              message: `Schedule was successfully ${statusName}!`
-            })
-        )
-        .catch(() =>
-            addNotification({
-              type: NOTIFICATION_TYPES.ERROR,
-              message: "Status update failed"
-            })
-        );
+    updateSchedule(schedule.id, { status })
+      .then(() =>
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `Schedule was successfully ${statusName}!`
+        })
+      )
+      .catch(() =>
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: "Status update failed"
+        })
+      );
   };
 
   const toggleModal = schedule => {
@@ -211,8 +211,8 @@ const BotsSchedule = ({
 
   const addSchedule = () => {
     if (instanceId) {
-        createSchedule({ instanceId }).then(() => {
-          getSchedules({
+      createSchedule({ instanceId }).then(() => {
+        getSchedules({
           page: 1,
           limit,
           sort: order.field,
@@ -230,57 +230,64 @@ const BotsSchedule = ({
 
   const updateScheduleInstance = editedSchedules => {
     editModal.current.close();
-      updateSchedule(clickedSchedule.id, { details: editedSchedules })
-        .then(() =>
-            addNotification({
-              type: NOTIFICATION_TYPES.SUCCESS,
-              message: "Schedule was successfully updated"
-            })
-        )
-        .catch(() =>
-            addNotification({
-              type: NOTIFICATION_TYPES.ERROR,
-              message: "Update of schedule failed"
-            })
-        )
-        .finally(() => setClickedSchedule(null));
+    updateSchedule(clickedSchedule.id, { details: editedSchedules })
+      .then(() =>
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: "Schedule was successfully updated"
+        })
+      )
+      .catch(() =>
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: "Update of schedule failed"
+        })
+      )
+      .finally(() => setClickedSchedule(null));
   };
 
   const modalDeleteSchedule = () => {
     modal.current.close();
-      deleteSchedule(clickedSchedule.id)
-        .then(() =>
-            addNotification({
-              type: NOTIFICATION_TYPES.SUCCESS,
-              message: "Schedule was successfully deleted"
-            })
-        )
-        .catch(() =>
-            addNotification({
-              type: NOTIFICATION_TYPES.ERROR,
-              message: "Removal of Schedule failed"
-            })
-        )
-        .finally(() => setClickedSchedule(null));
+    deleteSchedule(clickedSchedule.id)
+      .then(() =>
+        getSchedules({
+          page: 1,
+          limit,
+          sort: order.field,
+          order: order.value,
+          search
+        }),
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: "Schedule was successfully deleted"
+        })
+      )
+      .catch(() =>
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: "Removal of Schedule failed"
+        })
+      )
+      .finally(() => setClickedSchedule(null));
   };
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value });
-      getSchedules({ page, limit, sort: field, order: value, search });
+    getSchedules({ page, limit, sort: field, order: value, search });
   };
 
   // eslint-disable-next-line react/prop-types
   const OrderTh = props => (
-      <Th
-          {...props}
-          // eslint-disable-next-line react/prop-types
-          order={
-            props.field === order.field || props.children === order.field
-                ? order.value
-                : ""
-          }
-          onClick={onOrderChange}
-      />
+    <Th
+      {...props}
+      // eslint-disable-next-line react/prop-types
+      order={
+        props.field === order.field || props.children === order.field
+          ? order.value
+          : ""
+      }
+      onClick={onOrderChange}
+    />
   );
 
   const searchSchedules = value => {
@@ -295,178 +302,178 @@ const BotsSchedule = ({
   };
 
   const renderRow = (schedule, idx) => (
-      <tr key={idx}>
-        <td>{schedule.user}</td>
-        <td>{schedule.instance_id}</td>
-        <td>{schedule.bot_name}</td>
-        <td>
-          <StatusButton
-              type={schedule.status === "active" ? "success" : "danger"}
-              onClick={() => changeScheduleStatus(schedule)}
-          >
-            {schedule.status}
-          </StatusButton>
-        </td>
-        <td>
-          {schedule.details.length > 0 ? (
-              <Ul>
-                {schedule.details.map((detail, idx) => (
-                    <li key={idx}>
-                      <Tag pill type={"info"}>
-                        {detail.type + " at " + detail.day + ", " + detail.time}
-                      </Tag>
-                    </li>
-                ))}
-              </Ul>
-          ) : (
-              "No schedules added yet"
-          )}
-        </td>
-        <td>
-          <IconButton type={"primary"} onClick={() => toggleEditModal(schedule)}>
-            <Icon name={"edit"} color={theme.colors.white} />
-          </IconButton>
-          <IconButton type={"danger"} onClick={() => toggleModal(schedule)}>
-            <Icon name={"garbage"} color={theme.colors.white} />
-          </IconButton>
-        </td>
-      </tr>
+    <tr key={idx}>
+      <td>{schedule.user}</td>
+      <td>{schedule.instance_id}</td>
+      <td>{schedule.bot_name}</td>
+      <td>
+        <StatusButton
+          type={schedule.status === "active" ? "success" : "danger"}
+          onClick={() => changeScheduleStatus(schedule)}
+        >
+          {schedule.status}
+        </StatusButton>
+      </td>
+      <td>
+        {schedule.details.length > 0 ? (
+          <Ul>
+            {schedule.details.map((detail, idx) => (
+              <li key={idx}>
+                <Tag pill type={"info"}>
+                  {detail.type + " at " + detail.day + ", " + detail.time}
+                </Tag>
+              </li>
+            ))}
+          </Ul>
+        ) : (
+          "No schedules added yet"
+        )}
+      </td>
+      <td>
+        <IconButton type={"primary"} onClick={() => toggleEditModal(schedule)}>
+          <Icon name={"edit"} color={theme.colors.white} />
+        </IconButton>
+        <IconButton type={"danger"} onClick={() => toggleModal(schedule)}>
+          <Icon name={"garbage"} color={theme.colors.white} />
+        </IconButton>
+      </td>
+    </tr>
   );
 
   return (
-      <>
-        <style jsx global>{`
+    <>
+      <style jsx global>{`
         div[class*="-menu"] {
           background: #000;
         }
       `}</style>
-        <AddButtonWrap>
-          <Button type={"primary"} onClick={toggleAddModal}>
-            Add schedule list
-          </Button>
-        </AddButtonWrap>
-        <Container>
-          <CardBody>
-            <Filters>
-              <LimitFilter
-                  onChange={({ value }) => {
-                    setLimit(value);
-                    getSchedules({
-                      page,
-                      limit: value,
-                      list,
-                      sort: order.field,
-                      order: order.value,
-                      search
-                    });
-                  }}
-              />
-              <ListFilter
-                  options={FILTERS_LIST_OPTIONS}
-                  onChange={({ value }) => {
-                    setFilterList(value);
-                    getSchedules({
-                      page,
-                      limit,
-                      list: value,
-                      sort: order.field,
-                      order: order.value,
-                      search
-                    });
-                  }}
-              />
-              <SearchFilter
-                  onChange={value => {
-                    searchSchedules(value);
-                  }}
-              />
-            </Filters>
-            <Table>
-              <Thead>
-                <tr>
-                  <OrderTh field={"user"}>User</OrderTh>
-                  <OrderTh field={"instance_id"}>Instance Id</OrderTh>
-                  <OrderTh field={"bot_name"}>Bot Name</OrderTh>
-                  <OrderTh field={"status"}>Status</OrderTh>
-                  <th>Details</th>
-                  <th>Actions</th>
-                </tr>
-              </Thead>
-              <tbody>{schedules.map(renderRow)}</tbody>
-            </Table>
-            <Paginator
-                total={total}
-                pageSize={limit}
-                onChangePage={page => {
-                  setPage(page);
-                  getSchedules({
-                    page,
-                    limit,
-                    list,
-                    sort: order.field,
-                    order: order.value,
-                    search
-                  });
-                }}
+      <AddButtonWrap>
+        <Button type={"primary"} onClick={toggleAddModal}>
+          Add schedule list
+        </Button>
+      </AddButtonWrap>
+      <Container>
+        <CardBody>
+          <Filters>
+            <LimitFilter
+              onChange={({ value }) => {
+                setLimit(value);
+                getSchedules({
+                  page,
+                  limit: value,
+                  list,
+                  sort: order.field,
+                  order: order.value,
+                  search
+                });
+              }}
             />
-          </CardBody>
-        </Container>
-
-        <Modal
-            ref={modal}
-            title={"Delete this schedule?"}
-            onClose={() => setClickedSchedule(null)}
-        >
-          <Buttons>
-            <Button type={"primary"} onClick={modalDeleteSchedule}>
-              Yes
-            </Button>
-            <Button type={"danger"} onClick={() => modal.current.close()}>
-              Cancel
-            </Button>
-          </Buttons>
-        </Modal>
-
-        <Modal
-            ref={addModal}
-            title={"Add Schedule"}
-            contentStyles={modalStyles}
-            onClose={() => setInstanceId(null)}
-        >
-          <SelectWrap>
-            <Label style={{ margin: "17px 0" }}>
-              Select one of your running bots
-            </Label>
-            <AsyncSelect
-                onChange={onBotChange}
-                loadOptions={searchBots}
-                defaultOptions={runningBots.map(toOptions)}
-                styles={selectStyles}
+            <ListFilter
+              options={FILTERS_LIST_OPTIONS}
+              onChange={({ value }) => {
+                setFilterList(value);
+                getSchedules({
+                  page,
+                  limit,
+                  list: value,
+                  sort: order.field,
+                  order: order.value,
+                  search
+                });
+              }}
             />
-          </SelectWrap>
-          <Buttons>
-            <Button type={"danger"} onClick={() => addModal.current.close()}>
-              Cancel
-            </Button>
-            <Button type={"primary"} onClick={addSchedule}>
-              Add
-            </Button>
-          </Buttons>
-        </Modal>
-
-        <Modal
-            ref={editModal}
-            title={"Schedule Editor"}
-            contentStyles={modalStyles}
-            onClose={() => setClickedSchedule(null)}
-        >
-          <ScheduleEditor
-              schedules={clickedSchedule ? clickedSchedule.details : []}
-              close={() => editModal.current.close()}
-              onUpdateClick={updateScheduleInstance}
+            <SearchFilter
+              onChange={value => {
+                searchSchedules(value);
+              }}
+            />
+          </Filters>
+          <Table>
+            <Thead>
+              <tr>
+                <OrderTh field={"user"}>User</OrderTh>
+                <OrderTh field={"instance_id"}>Instance Id</OrderTh>
+                <OrderTh field={"bot_name"}>Bot Name</OrderTh>
+                <OrderTh field={"status"}>Status</OrderTh>
+                <th>Details</th>
+                <th>Actions</th>
+              </tr>
+            </Thead>
+            <tbody>{schedules.map(renderRow)}</tbody>
+          </Table>
+          <Paginator
+            total={total}
+            pageSize={limit}
+            onChangePage={page => {
+              setPage(page);
+              getSchedules({
+                page,
+                limit,
+                list,
+                sort: order.field,
+                order: order.value,
+                search
+              });
+            }}
           />
-        </Modal>
-      </>
+        </CardBody>
+      </Container>
+
+      <Modal
+        ref={modal}
+        title={"Delete this schedule?"}
+        onClose={() => setClickedSchedule(null)}
+      >
+        <Buttons>
+          <Button type={"primary"} onClick={modalDeleteSchedule}>
+            Yes
+          </Button>
+          <Button type={"danger"} onClick={() => modal.current.close()}>
+            Cancel
+          </Button>
+        </Buttons>
+      </Modal>
+
+      <Modal
+        ref={addModal}
+        title={"Add Schedule"}
+        contentStyles={modalStyles}
+        onClose={() => setInstanceId(null)}
+      >
+        <SelectWrap>
+          <Label style={{ margin: "17px 0" }}>
+            Select one of your running bots
+          </Label>
+          <AsyncSelect
+            onChange={onBotChange}
+            loadOptions={searchBots}
+            defaultOptions={runningBots.map(toOptions)}
+            styles={selectStyles}
+          />
+        </SelectWrap>
+        <Buttons>
+          <Button type={"danger"} onClick={() => addModal.current.close()}>
+            Cancel
+          </Button>
+          <Button type={"primary"} onClick={addSchedule}>
+            Add
+          </Button>
+        </Buttons>
+      </Modal>
+
+      <Modal
+        ref={editModal}
+        title={"Schedule Editor"}
+        contentStyles={modalStyles}
+        onClose={() => setClickedSchedule(null)}
+      >
+        <ScheduleEditor
+          schedules={clickedSchedule ? clickedSchedule.details : []}
+          close={() => editModal.current.close()}
+          onUpdateClick={updateScheduleInstance}
+        />
+      </Modal>
+    </>
   );
 };
 
@@ -501,6 +508,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(withTheme(BotsSchedule));
