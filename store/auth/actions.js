@@ -1,5 +1,5 @@
 import {
-  AUTH_CHECK, LOGIN, REGISTER, LOGOUT, RESET, RESET_PASSWORD
+  AUTH_CHECK, LOGIN, REGISTER, LOGOUT, RESET, RESET_PASSWORD, UPDATE_USER_PROFILE
 } from './types';
 import Router from 'next/router';
 
@@ -92,3 +92,17 @@ export const createSubscription = () => dispatch => dispatch({
     thunk: true
   }
 }).catch(() => Router.push('/login'));
+
+export const updateUserProfile = (updateData) => ({
+  type: UPDATE_USER_PROFILE,
+  request: {
+    method: 'PUT',
+    url: '/user/profile',
+    data: {
+      update: updateData
+    }
+  },
+  meta: {
+    thunk: true
+  }
+});

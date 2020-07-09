@@ -6,6 +6,7 @@ import Icon from "/components/default/icons";
 import styled from "@emotion/styled";
 import dayjs from "dayjs";
 import { theme, WEEKDAYS } from "/config";
+import {formatTimezone} from "../../../lib/helpers";
 
 const Buttons = styled.div`
   display: flex;
@@ -92,27 +93,27 @@ const TIME_OPTIONS = (() => {
       .second(0);
     const endTime = dayjs()
       .hour(23)
-      .minute(10)
+      .minute(30)
       .second(0);
     let timeStops = [];
     while (startTime.isBefore(endTime) || startTime.isSame(endTime)) {
         let stop = startTime.format("HH:mm");
         timeStops.push({ value: stop, label: stop });
-        startTime = startTime.add(10, "minute");
+        startTime = startTime.add(30, "minute");
     }
     return timeStops;
 })();
 
 const Schedule = ({
-                      status,
-                      day,
-                      time,
-                      idx,
-                      add,
-                      remove,
-                      updateScheduleList,
-                      ...props
-                  }) => {
+  status,
+  day,
+  time,
+  idx,
+  add,
+  remove,
+  updateScheduleList,
+  ...props
+}) => {
     const [scheduleType, setScheduleType] = useState(
       TYPE_OPTIONS.find(item => item.value === status) || null
     );
@@ -158,6 +159,8 @@ const Schedule = ({
         schedule[fieldName] = option.value;
         updateScheduleList(schedule, idx);
     };
+
+    formatTimezone();
 
     return (
       <Container {...props}>

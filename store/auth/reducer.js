@@ -1,6 +1,6 @@
 import { success, error } from 'redux-saga-requests';
 import {
-  LOGIN, REGISTER, LOGOUT, AUTH_CHECK, RESET, RESET_PASSWORD
+  LOGIN, REGISTER, LOGOUT, AUTH_CHECK, RESET, RESET_PASSWORD, UPDATE_USER_PROFILE
 } from './types';
 
 const initialState = {
@@ -18,6 +18,7 @@ export const reducer = (state = initialState, action) => {
     case AUTH_CHECK:
     case RESET:
     case RESET_PASSWORD:
+    case UPDATE_USER_PROFILE:
       return { ...state, loading: true, error: null };
 
     case success(LOGIN):
@@ -26,6 +27,9 @@ export const reducer = (state = initialState, action) => {
       localStorage.setItem('token', action.data.token);
       return { ...state, user: action.data.user, loading: false, isAuthorized: true };
     }
+
+    case success(UPDATE_USER_PROFILE):
+      return { ...state, user: action.data.user, loading: false };
 
     case success(AUTH_CHECK):
       return { ...state, user: action.data.user, loading: false, isAuthorized: true };
@@ -44,6 +48,7 @@ export const reducer = (state = initialState, action) => {
     case error(AUTH_CHECK):
     case error(RESET):
     case error(RESET_PASSWORD):
+    case error(UPDATE_USER_PROFILE):
       return { ...state, loading: false, error: action.error, isAuthorized: false };
 
     default: return state;

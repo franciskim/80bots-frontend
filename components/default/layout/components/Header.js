@@ -9,6 +9,7 @@ import HamburgerButton from "../../HamburgerButton";
 import { logout } from "/store/auth/actions";
 import Router from "next/router";
 import Link from "next/link";
+import ClockBlock from "/components/default/ClockBlock";
 
 const Container = styled.nav`
   position: relative;
@@ -29,17 +30,17 @@ const Arrow = styled.div`
   color: #ffffff;
 `;
 
-const User = styled.div`
-  display: inline-flex;
-  margin: 0 5px 0 0;
-`;
-
 const UserName = styled.span`
   display: flex;
   align-items: center;
   font-size: 13px;
   color: #fff;
 `;
+
+const clockStyle = {
+  color: '#7dffff',
+  fontSize: '13px',
+};
 
 const Header = ({ user, sidebarOpened, onHamburgerClick, logout }) => {
   const onLogoutClick = () => {
@@ -50,6 +51,11 @@ const Header = ({ user, sidebarOpened, onHamburgerClick, logout }) => {
   return (
     <Container>
       <HamburgerButton opened={sidebarOpened} onClick={onHamburgerClick} />
+      <ClockBlock
+        style={clockStyle}
+        useTimezone={user.timezone}
+        format={'dddd Do, MMMM, YYYY, h:mm A'}
+      />
       <div className="nav-right">
         <DropDown
           side="right"

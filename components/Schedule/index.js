@@ -132,18 +132,18 @@ const selectStyles = {
 };
 
 const BotsSchedule = ({
-                        theme,
-                        addNotification,
-                        getSchedules,
-                        createSchedule,
-                        updateSchedule,
-                        deleteSchedule,
-                        getRunningBots,
-                        schedules,
-                        total,
-                        runningBots,
-                        ...props
-                      }) => {
+  theme,
+  addNotification,
+  getSchedules,
+  createSchedule,
+  updateSchedule,
+  deleteSchedule,
+  getRunningBots,
+  schedules,
+  total,
+  runningBots,
+  ...props
+}) => {
   const [clickedSchedule, setClickedSchedule] = useState(null);
   const [list, setFilterList] = useState("all");
   const [limit, setLimit] = useState(10);
@@ -320,7 +320,7 @@ const BotsSchedule = ({
             {schedule.details.map((detail, idx) => (
               <li key={idx}>
                 <Tag pill type={"info"}>
-                  {detail.type + " at " + detail.day + ", " + detail.time}
+                  {detail.type + " at " + detail.day + ", " + detail.time + ", " + detail.timezone}
                 </Tag>
               </li>
             ))}

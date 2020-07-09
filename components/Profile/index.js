@@ -3,14 +3,46 @@ import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import Select from "react-select";
 import Button from "../default/Button";
+import { Input } from "/components/default/inputs";
+import ClockBlock from "/components/default/ClockBlock";
 import { connect } from "react-redux";
 import { addNotification } from "/store/notification/actions";
 import { NOTIFICATION_TYPES } from "/config";
 import {
   getTimezones,
-  updateUserProfile,
   getRegions
 } from "/store/user/actions";
+
+import {
+  updateUserProfile,
+} from "/store/auth/actions";
+import {css} from "@emotion/core";
+
+const Block = styled.div`
+  border: 1px solid #fff; 
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0 10px 0;
+`;
+
+const Row = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  padding: 15px;
+`;
+
+const Label = styled.label`
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: #7dffff;
+`;
+
+const TextLabel = styled.label`
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: #fff;
+`;
 
 const Container = styled.div`
   display: flex;
@@ -24,6 +56,29 @@ const ButtonContainer = styled.div`
   justify-content: flex-start;
   margin-top: 15px;
 `;
+
+const inputStyles = {
+  container: css`
+    color: #fff;
+    font-size: 16px;
+    &:first-of-type {
+      margin-right: 10px;
+    }
+    &:last-of-type {
+      margin-left: 10px;
+    }
+  `
+};
+
+const clockStyle = {
+  color: '#7dffff',
+  fontSize: '16px',
+};
+
+const currClockStyle = {
+  color: '#7CFC00',
+  fontSize: '16px',
+};
 
 const Profile = ({
   user,
@@ -78,33 +133,42 @@ const Profile = ({
 
   return (
     <>
-      <div className="card">
-        <div className="card-header d-flex align-items-center justify-content-between">
-          <h5 className="mb-0">User Profile</h5>
-        </div>
-        <div className="card-body">
-          <div className="row">
-            <div className="col-md-12 col-sm-12">
-              <div className="form-group">
-                <label htmlFor="">Email</label>
-                <input
-                  type="text"
-                  name="email"
-                  className="form-control"
-                  value={user.email}
-                  readOnly
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Block>
+        <Row>
+          <Label>User Profile</Label>
+        </Row>
+        <Row>
+          <Input
+            type={"text"}
+            label={"Email"}
+            value={user.email}
+            styles={inputStyles}
+            readOnly
+          />
+        </Row>
+      </Block>
       <br />
-      <div className="card">
-        <div className="card-header d-flex align-items-center justify-content-between">
-          <h5 className="mb-0">My Timezone</h5>
-        </div>
-        <div className="card-body">
+      <Block>
+        <Row>
+          <Label>My Timezone</Label>
+        </Row>
+        <Row>
+          <TextLabel>Current Time: </TextLabel>
+          <ClockBlock
+            style={currClockStyle}
+            useTimezone={null}
+            format={' dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
+          />
+        </Row>
+        <Row>
+          <TextLabel>Platform Time: </TextLabel>
+          <ClockBlock
+            style={clockStyle}
+            useTimezone={user.timezone}
+            format={' dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
+          />
+        </Row>
+        <Row>
           <Container>
             <Select
               options={timezones.map(item => ({
@@ -120,14 +184,14 @@ const Profile = ({
               </Button>
             </ButtonContainer>
           </Container>
-        </div>
-      </div>
+        </Row>
+      </Block>
       <br />
-      <div className="card">
-        <div className="card-header d-flex align-items-center justify-content-between">
-          <h5 className="mb-0">Preferred Region</h5>
-        </div>
-        <div className="card-body">
+      <Block>
+        <Row>
+          <Label>Preferred Region</Label>
+        </Row>
+        <Row>
           <Container>
             <Select
               options={regions.map(item => ({
@@ -143,8 +207,8 @@ const Profile = ({
               </Button>
             </ButtonContainer>
           </Container>
-        </div>
-      </div>
+        </Row>
+      </Block>
     </>
   );
 };
