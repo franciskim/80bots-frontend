@@ -142,6 +142,7 @@ const BotsSchedule = ({
   schedules,
   total,
   runningBots,
+  user,
   ...props
 }) => {
   const [clickedSchedule, setClickedSchedule] = useState(null);
@@ -471,6 +472,7 @@ const BotsSchedule = ({
           schedules={clickedSchedule ? clickedSchedule.details : []}
           close={() => editModal.current.close()}
           onUpdateClick={updateScheduleInstance}
+          user={user}
         />
       </Modal>
     </>
@@ -489,13 +491,15 @@ BotsSchedule.propTypes = {
   getRunningBots: PropTypes.func.isRequired,
   schedules: PropTypes.array.isRequired,
   runningBots: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired
+  total: PropTypes.number.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   schedules: state.schedule.schedules,
   runningBots: state.bot.botInstances,
-  total: state.schedule.total
+  total: state.schedule.total,
+  user: state.auth.user,
 });
 
 const mapDispatchToProps = dispatch => ({
