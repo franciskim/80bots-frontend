@@ -153,7 +153,7 @@ const Profile = ({
           <Label>My Timezone</Label>
         </Row>
         <Row>
-          <TextLabel>Current Time: </TextLabel>
+          <TextLabel>Your current time: </TextLabel>
           <ClockBlock
             style={currClockStyle}
             useTimezone={null}
@@ -161,7 +161,7 @@ const Profile = ({
           />
         </Row>
         <Row>
-          <TextLabel>Platform Time: </TextLabel>
+          <TextLabel>Current platform time: </TextLabel>
           <ClockBlock
             style={clockStyle}
             useTimezone={user.timezone}

@@ -60,16 +60,6 @@ export const NOTIFICATION_TIMINGS = {
 
 export const SIDEBAR_ANIMATION_TIME = 250;
 
-export const WEEKDAYS = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday"
-];
-
 export const globalStyles = css`
   @import url("https://fonts.googleapis.com/css?family=Anonymous+Pro:400,400i,700,700i&display=swap");
 

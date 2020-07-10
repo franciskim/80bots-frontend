@@ -321,7 +321,7 @@ const BotsSchedule = ({
             {schedule.details.map((detail, idx) => (
               <li key={idx}>
                 <Tag pill type={"info"}>
-                  {detail.type + " at " + detail.day + ", " + detail.time + ", " + detail.timezone}
+                  {detail.type + " at " + detail.platform_time + ", " + detail.timezone}
                 </Tag>
               </li>
             ))}
