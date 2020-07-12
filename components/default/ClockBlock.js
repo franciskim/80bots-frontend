@@ -9,6 +9,7 @@ const ClockBlock = ({useTimezone, style, format}) => {
       format={format}
       timezone={useTimezone}
       style={style}
+      ticking = { true }
     />
   );
 };

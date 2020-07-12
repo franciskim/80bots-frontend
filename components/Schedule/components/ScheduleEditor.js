@@ -8,8 +8,6 @@ import { theme } from "/config";
 import {formatTimezone, formatDate, formatToDate} from "../../../lib/helpers";
 import DatePicker from "react-datepicker";
 
-import "react-datepicker/dist/react-datepicker.css";
-
 const Buttons = styled.div`
   display: flex;
   flex-direction: row;
@@ -17,15 +15,33 @@ const Buttons = styled.div`
 `;
 
 const selectStyles = {
-    valueContainer: provided => ({
+    control: (provided, state) => ({
         ...provided,
-        padding: "0 8px",
-        borderColor: "#ced4da",
+        width: 200,
+        border: "solid 1px hsl(0,0%,80%)",
+        borderRadius: "4px",
+        color: "#fff",
+        backgroundColor: "transparent",
+            "&:hover": {
+                borderColor: "#7dffff"
+            }
     }),
-    menuList: () => ({
-        color: "#000000",
-        backgroundColor: "#f8f9fa",
-
+    singleValue: (provided, state) => ({
+        ...provided,
+        color: "#fff"
+    }),
+    menu: (provided, state) => ({
+        ...provided,
+        border: "solid 1px hsl(0,0%,80%)",
+        borderRadius: "4px",
+    }),
+    menuList: (provided, state) => ({
+        ...provided,
+        backgroundColor: "#333",
+    }),
+    option: (provided, state) => ({
+        ...provided,
+        color: state.isFocused ? "black" : "#fff",
     }),
 };
 
@@ -82,19 +98,20 @@ const Error = styled.span`
 `;
 
 const InputWrapper = styled.div`
-    align-items: center;
-    border-color: hsl(0,0%,80%);
     border-radius: 4px;
-    border-style: solid;
-    border-width: 1px;
+    border: solid 1px hsl(0,0%,80%);
     cursor: pointer;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: list-item;
     min-height: 38px;
     outline: 0 !important;
     transition: all 100ms;
     box-sizing: border-box;
+    padding: 7px 4px 0 4px ;
+    color: #fff;
+    background-color: transparent;
+      &:hover {
+        border: solid 1px #7dffff;
+      }
 `;
 
 const TYPE_OPTIONS = [
@@ -172,10 +189,11 @@ const Schedule = ({
                   <Label>Status</Label>
                   <Select
                     options={TYPE_OPTIONS}
-                    styles={selectStyles}
                     defaultValue={scheduleType}
                     value={scheduleType}
                     onChange={option => changeSchedule("schedule type", setScheduleType, option)}
+                    styles={selectStyles}
+
                   />
               </SelectWrap>
               <SelectWrap>
