@@ -3,7 +3,6 @@ import styled from "@emotion/styled";
 import Link from "next/link";
 import Router from "next/router";
 import PropTypes from "prop-types";
-import Feedback from "/components/default/Feedback";
 import { css } from "@emotion/core";
 import { SIDEBAR_ANIMATION_TIME, ROUTES } from "/config";
 
@@ -134,9 +133,6 @@ const Sidebar = ({ opened = false }) => {
         </Link>
       </LinkWrap>
       <Ul>{ROUTES.map(renderLink)}</Ul>
-      <Bottom>
-        <Feedback />
-      </Bottom>
     </Container>
   );
 };
