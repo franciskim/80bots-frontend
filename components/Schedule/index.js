@@ -30,6 +30,7 @@ import { getRunningBots } from "/store/bot/actions";
 import { css } from "@emotion/core";
 import ScheduleEditor from "./components/ScheduleEditor";
 import AsyncSelect from "react-select/async";
+import dayjs from "dayjs";
 
 const Container = styled(Card)`
   background: #333;
@@ -325,7 +326,7 @@ const BotsSchedule = ({
             {schedule.details.map((detail, idx) => (
               <li key={idx}>
                 <Tag pill type={"info"}>
-                  {detail.type + " at " + detail.platform_time + ", " + detail.timezone}
+                  {detail.type + " at " + dayjs(detail.platform_time).format("YYYY-MM-DD hh:mm A") + ", " + detail.timezone}
                 </Tag>
               </li>
             ))}
