@@ -82,17 +82,6 @@ export const logout = () => ({
   type: LOGOUT
 });
 
-export const createSubscription = () => dispatch => dispatch({
-  type: AUTH_CHECK,
-  request: {
-    method: 'GET',
-    url: '/auth/login'
-  },
-  meta: {
-    thunk: true
-  }
-}).catch(() => Router.push('/login'));
-
 export const updateUserProfile = (updateData) => ({
   type: UPDATE_USER_PROFILE,
   request: {
