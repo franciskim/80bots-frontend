@@ -30,7 +30,9 @@ const Sessions = ({ getSessions, sessions, total }) => {
       <td>{session.user}</td>
       <td>{session.instance_id}</td>
       <td>{session.type}</td>
-      <td>{dayjs(session.time).format("YYYY-MM-DD HH:mm:ss")}</td>
+      <td>{dayjs(session.time).format("YYYY-MM-DD hh:mm A")}</td>
+      <td>{session.time_zone}</td>
+      <td>{session.status}</td>
     </tr>
   );
 
@@ -82,6 +84,8 @@ const Sessions = ({ getSessions, sessions, total }) => {
                 <OrderTh field={"instance_id"}>Instance Id</OrderTh>
                 <OrderTh field={"type"}>Type</OrderTh>
                 <OrderTh field={"date"}>Date & Time</OrderTh>
+                <OrderTh field={"timezone"}>Time Zone</OrderTh>
+                <OrderTh field={"status"}>Status</OrderTh>
               </tr>
             </Thead>
             <tbody>{sessions.map(renderRow)}</tbody>
