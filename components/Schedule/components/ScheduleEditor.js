@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import PropTypes from "prop-types";
 import Select from "react-select";
 import Button from "/components/default/Button";
 import Icon from "/components/default/icons";
 import styled from "@emotion/styled";
-import dayjs from "dayjs";
-import { theme, WEEKDAYS } from "/config";
+import { theme } from "/config";
+import {formatTimezone, formatDate, formatToDate} from "../../../lib/helpers";
+import DatePicker from "react-datepicker";
 
 const Buttons = styled.div`
   display: flex;
@@ -14,15 +15,33 @@ const Buttons = styled.div`
 `;
 
 const selectStyles = {
-    valueContainer: provided => ({
+    control: (provided, state) => ({
         ...provided,
-        padding: "0 8px",
-        borderColor: "#ced4da",
+        width: 200,
+        border: "solid 1px hsl(0,0%,80%)",
+        borderRadius: "4px",
+        color: "#fff",
+        backgroundColor: "transparent",
+            "&:hover": {
+                borderColor: "#7dffff"
+            }
     }),
-    menuList: () => ({
-        color: "#000000",
-        backgroundColor: "#f8f9fa",
-
+    singleValue: (provided, state) => ({
+        ...provided,
+        color: "#fff"
+    }),
+    menu: (provided, state) => ({
+        ...provided,
+        border: "solid 1px hsl(0,0%,80%)",
+        borderRadius: "4px",
+    }),
+    menuList: (provided, state) => ({
+        ...provided,
+        backgroundColor: "#333",
+    }),
+    option: (provided, state) => ({
+        ...provided,
+        color: state.isFocused ? "black" : "#fff",
     }),
 };
 
@@ -78,50 +97,45 @@ const Error = styled.span`
   color: ${props => props.theme.colors.darkishPink};
 `;
 
+const InputWrapper = styled.div`
+    border-radius: 4px;
+    border: solid 1px hsl(0,0%,80%);
+    cursor: pointer;
+    display: list-item;
+    min-height: 38px;
+    outline: 0 !important;
+    transition: all 100ms;
+    box-sizing: border-box;
+    padding: 7px 4px 0 4px ;
+    color: #fff;
+    background-color: transparent;
+      &:hover {
+        border: solid 1px #7dffff;
+      }
+`;
+
 const TYPE_OPTIONS = [
     { value: "stopped", label: "Stopped" },
     { value: "running", label: "Running" }
 ];
 
-const DAY_OPTIONS = WEEKDAYS.map(day => ({ value: day, label: day }));
-
-const TIME_OPTIONS = (() => {
-    let startTime = dayjs()
-      .hour(0)
-      .minute(0)
-      .second(0);
-    const endTime = dayjs()
-      .hour(23)
-      .minute(10)
-      .second(0);
-    let timeStops = [];
-    while (startTime.isBefore(endTime) || startTime.isSame(endTime)) {
-        let stop = startTime.format("HH:mm");
-        timeStops.push({ value: stop, label: stop });
-        startTime = startTime.add(10, "minute");
-    }
-    return timeStops;
-})();
-
 const Schedule = ({
-                      status,
-                      day,
-                      time,
-                      idx,
-                      add,
-                      remove,
-                      updateScheduleList,
-                      ...props
-                  }) => {
+  status,
+  time,
+  idx,
+  add,
+  remove,
+  updateScheduleList,
+  timezone,
+  ...props
+}) => {
+
     const [scheduleType, setScheduleType] = useState(
       TYPE_OPTIONS.find(item => item.value === status) || null
     );
-    const [scheduleDay, setScheduleDay] = useState(
-      DAY_OPTIONS.find(item => item.value === day) || null
-    );
-    const [scheduleTime, setScheduleTime] = useState(
-      TIME_OPTIONS.find(item => item.value === time) || null
-    );
+
+    const [scheduleDate, setScheduleDate] = useState(time ? formatToDate(time) : null);
+
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -129,35 +143,44 @@ const Schedule = ({
     }, [status]);
 
     useEffect(() => {
-        setScheduleDay(DAY_OPTIONS.find(item => item.value === day) || null);
-    }, [day]);
-
-    useEffect(() => {
-        setScheduleTime(TIME_OPTIONS.find(item => item.value === time) || null);
+        setScheduleDate( time ? formatToDate(time) : null);
     }, [time]);
 
     const addSchedule = () => {
-        if (!scheduleTime || !scheduleType || !scheduleDay) {
+        if ( !scheduleType || !scheduleDate) {
             setError("You must fill all fields");
         } else {
             setError(null);
             setScheduleType(null);
-            setScheduleDay(null);
-            setScheduleTime(null);
+            setScheduleDate(null);
             add();
         }
     };
 
-    const changeSchedule = (fieldName, setter, option) => {
+    const changeSchedule = (type, setter, option) => {
         setter(option);
         let schedule = {
             status: scheduleType && scheduleType.value,
-            day: scheduleDay && scheduleDay.value,
-            time: scheduleTime && scheduleTime.value
         };
-        schedule[fieldName] = option.value;
+        switch (type) {
+            case "schedule date":
+                schedule['platform_time'] = formatDate(option);
+                schedule['schedule_time'] = formatTimezone(option, timezone, 'UTC');
+                break;
+            case "schedule type":
+                schedule['type'] = option.value;
+                break;
+            default:
+                break;
+        }
         updateScheduleList(schedule, idx);
     };
+
+    const ref = React.createRef();
+
+    const CustomDateInput = forwardRef(({ onClick, value }, ref) => (
+      <InputWrapper onClick={onClick} value={value} onChange={onClick} ref={ref}> { value } </InputWrapper>
+    ));
 
     return (
       <Container {...props}>
@@ -166,30 +189,24 @@ const Schedule = ({
                   <Label>Status</Label>
                   <Select
                     options={TYPE_OPTIONS}
-                    styles={selectStyles}
                     defaultValue={scheduleType}
                     value={scheduleType}
-                    onChange={option => changeSchedule("status", setScheduleType, option)}
+                    onChange={option => changeSchedule("schedule type", setScheduleType, option)}
+                    styles={selectStyles}
+
                   />
               </SelectWrap>
               <SelectWrap>
-                  <Label>Day</Label>
-                  <Select
-                    options={DAY_OPTIONS}
-                    styles={selectStyles}
-                    defaultValue={scheduleDay}
-                    value={scheduleDay}
-                    onChange={option => changeSchedule("day", setScheduleDay, option)}
-                  />
-              </SelectWrap>
-              <SelectWrap>
-                  <Label>Time</Label>
-                  <Select
-                    options={TIME_OPTIONS}
-                    styles={selectStyles}
-                    defaultValue={scheduleTime}
-                    value={scheduleTime}
-                    onChange={option => changeSchedule("time", setScheduleTime, option)}
+                  <Label>Day & Time</Label>
+                  <DatePicker
+                    selected={scheduleDate}
+                    onChange={date => changeSchedule("schedule date", setScheduleDate, date)}
+                    timeInputLabel="Time:"
+                    dateFormat="yyy-MM-dd h:mm aa"
+                    showTimeInput
+                    customInput={
+                        <CustomDateInput ref={ref}/>
+                    }
                   />
               </SelectWrap>
               <SelectWrap>
@@ -209,7 +226,8 @@ const Schedule = ({
     );
 };
 
-const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
+const ScheduleEditor = ({ close, onUpdateClick, user, ...props }) => {
+
     const [schedules, setSchedules] = useState([{}].concat(props.schedules));
 
     const addSchedule = () => {
@@ -235,10 +253,10 @@ const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
             <Schedule
               key={idx}
               status={schedule.status}
-              day={schedule.day}
               idx={idx}
-              time={schedule.time}
+              time={schedule.platform_time}
               add={addSchedule}
+              timezone={user.timezone}
               remove={() => removeSchedule(idx)}
               updateScheduleList={updateScheduleList}
             />
@@ -258,7 +276,8 @@ const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
 ScheduleEditor.propTypes = {
     close: PropTypes.func.isRequired,
     schedules: PropTypes.array.isRequired,
-    onUpdateClick: PropTypes.func.isRequired
+    onUpdateClick: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
 };
 
 Schedule.propTypes = {
@@ -268,7 +287,10 @@ Schedule.propTypes = {
     updateScheduleList: PropTypes.func.isRequired,
     time: PropTypes.string,
     day: PropTypes.string,
-    status: PropTypes.string
+    status: PropTypes.string,
+    onClick: PropTypes.func,
+    value:PropTypes.string,
+    timezone:PropTypes.string,
 };
 
 export default ScheduleEditor;

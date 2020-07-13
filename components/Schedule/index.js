@@ -104,46 +104,51 @@ const FILTERS_LIST_OPTIONS = [
 ];
 
 const selectStyles = {
-  container: (provided, { selectProps: { width } }) => ({
+  control: (provided,  { selectProps: { width } }) => ({
     ...provided,
     width: width,
     minWidth: "75px",
-    color: "#fff"
-  }),
-  menuPortal: base => ({ ...base }),
-  control: (provided, state) => ({
-    ...provided,
-    background: "rgba(0,0,0,0.2)",
-    // match with the menu
-    borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
-    // Overrides the different states of border
-    borderColor: state.isFocused ? "black" : "rgba(0,0,0,0.2)",
-    // Removes weird border around container
-    boxShadow: state.isFocused ? null : null,
+    border: "solid 1px hsl(0,0%,80%)",
+    borderRadius: "4px",
+    color: "#fff",
+    backgroundColor: "transparent",
     "&:hover": {
-      // Overrides the different states of border
-      borderColor: "black"
+      borderColor: "#7dffff"
     }
   }),
   singleValue: (provided, state) => ({
     ...provided,
     color: "#fff"
-  })
+  }),
+  menu: (provided, state) => ({
+    ...provided,
+    border: "solid 1px hsl(0,0%,80%)",
+    borderRadius: "4px",
+  }),
+  menuList: (provided, state) => ({
+    ...provided,
+    backgroundColor: "#333",
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    color: state.isFocused ? "black" : "#fff",
+  }),
 };
 
 const BotsSchedule = ({
-                        theme,
-                        addNotification,
-                        getSchedules,
-                        createSchedule,
-                        updateSchedule,
-                        deleteSchedule,
-                        getRunningBots,
-                        schedules,
-                        total,
-                        runningBots,
-                        ...props
-                      }) => {
+  theme,
+  addNotification,
+  getSchedules,
+  createSchedule,
+  updateSchedule,
+  deleteSchedule,
+  getRunningBots,
+  schedules,
+  total,
+  runningBots,
+  user,
+  ...props
+}) => {
   const [clickedSchedule, setClickedSchedule] = useState(null);
   const [list, setFilterList] = useState("all");
   const [limit, setLimit] = useState(10);
@@ -320,7 +325,7 @@ const BotsSchedule = ({
             {schedule.details.map((detail, idx) => (
               <li key={idx}>
                 <Tag pill type={"info"}>
-                  {detail.type + " at " + detail.day + ", " + detail.time}
+                  {detail.type + " at " + detail.platform_time + ", " + detail.timezone}
                 </Tag>
               </li>
             ))}
@@ -471,6 +476,7 @@ const BotsSchedule = ({
           schedules={clickedSchedule ? clickedSchedule.details : []}
           close={() => editModal.current.close()}
           onUpdateClick={updateScheduleInstance}
+          user={user}
         />
       </Modal>
     </>
@@ -489,13 +495,15 @@ BotsSchedule.propTypes = {
   getRunningBots: PropTypes.func.isRequired,
   schedules: PropTypes.array.isRequired,
   runningBots: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired
+  total: PropTypes.number.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   schedules: state.schedule.schedules,
   runningBots: state.bot.botInstances,
-  total: state.schedule.total
+  total: state.schedule.total,
+  user: state.auth.user,
 });
 
 const mapDispatchToProps = dispatch => ({

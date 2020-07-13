@@ -60,18 +60,9 @@ export const NOTIFICATION_TIMINGS = {
 
 export const SIDEBAR_ANIMATION_TIME = 250;
 
-export const WEEKDAYS = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday"
-];
-
 export const globalStyles = css`
   @import url("https://fonts.googleapis.com/css?family=Anonymous+Pro:400,400i,700,700i&display=swap");
+  @import url("https://cdnjs.cloudflare.com/ajax/libs/react-datepicker/3.1.3/react-datepicker.min.css");
 
   body {
     font-family: "Anonymous Pro", monospace;
