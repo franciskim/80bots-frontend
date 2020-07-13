@@ -11,7 +11,7 @@ const Content = styled(CardBody)`
   display: flex;
   height: 85vh;
   flex-flow: row wrap;
-  justify-content: space-between;
+  flex-direction: column;
   ${props => props.styles};
 `;
 
@@ -23,9 +23,9 @@ const Display = styled.iframe`
 `;
 
 const Link = styled.a`
-  margin-top: 23px;
-  width: 100%;
+  padding: 20px;
   text-align: right;
+  display: block;
 `;
 
 const STATUSES = {
