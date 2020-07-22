@@ -102,7 +102,7 @@ const Sidebar = ({ opened = false }) => {
             style={{
               display: "inline-block",
               position: "relative",
-              zIndex: "-1",
+              zIndex: "1",
               width: "100%",
               height: "25px",
               textAlign: "left",
