@@ -16,7 +16,7 @@ const Container = styled(Card)`
   color: #fff;
 `;
 
-const Sessions = ({ getSessions, sessions, total }) => {
+const SchedulerLog = ({ getSessions, sessions, total }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState(null);
@@ -104,7 +104,7 @@ const Sessions = ({ getSessions, sessions, total }) => {
   );
 };
 
-Sessions.propTypes = {
+SchedulerLog.propTypes = {
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
   }).isRequired,
@@ -127,4 +127,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withTheme(Sessions));
+)(withTheme(SchedulerLog));
