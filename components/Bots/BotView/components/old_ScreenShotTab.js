@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import styled from "@emotion/styled";
-import ScreenShot from "./ScreenShot";
 import { css, keyframes } from "@emotion/core";
 import { withTheme } from "emotion-theming";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { CardBody } from "/components/default/Card";
 import { getFolders, getScreenshots } from "/store/bot/actions";
-import { Loader, Button, Paginator } from "/components/default";
-import { theme } from "/config";
+import { Loader80bots, Button, Paginator } from "/components/default";
 
 const Fade = keyframes`
   from { opacity: 0 }
@@ -23,7 +21,7 @@ const Content = styled(CardBody)`
   ${props => props.styles};
 `;
 
-const Image = styled(ScreenShot)`
+const Image = styled.div`
   margin-bottom: 20px;
   margin-right: 20px;
   animation: ${Fade} 200ms ease-in-out;
@@ -44,37 +42,21 @@ const ScreenShots = styled.div`
   ${props => props.styles};
 `;
 
-const STATUSES = {
-  FOLDERS: {
-    label: "Receiving Folders",
-    color: theme.colors.primary
-  },
-  DATA: {
-    label: "Receiving Data",
-    color: theme.colors.mediumGreen
-  }
-};
-
 const Old_ScreenShotTab = ({
-  botInstance,
   getFolders,
   getScreenshots,
   folders,
   screenshots,
   total,
-  listen,
   removeAll,
-  emit,
-  setCustomBack
 }) => {
+  const limit = 10;
+  const reportMode = false;
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
   const [totalFolders, setTotalFolders] = useState(null);
   const [totalScreenshots, setTotalScreenshots] = useState(null);
-  const [status, setStatus] = useState(STATUSES.FOLDERS);
   const [currentFolder, setCurrentFolder] = useState(null);
   const [currentImage, setCurrentImage] = useState(null);
-  const [reportMode, setReportMode] = useState(false);
   const [issuedScreenshots, setIssuedScreenshots] = useState([]);
 
   const router = useRouter();
@@ -177,12 +159,11 @@ const Old_ScreenShotTab = ({
             />
           </>
         ) : (
-          <Loader
-            type={"spinning-bubbles"}
-            width={100}
-            height={100}
-            color={status.color}
-            caption={status.label}
+          <Loader80bots
+            data={"light"}
+            styled={{
+              width: "200px"
+            }}
           />
         )}
       </Content>
@@ -191,17 +172,12 @@ const Old_ScreenShotTab = ({
 };
 
 Old_ScreenShotTab.propTypes = {
-  setCustomBack: PropTypes.func.isRequired,
-  botInstance: PropTypes.object.isRequired,
   getFolders: PropTypes.func.isRequired,
   getScreenshots: PropTypes.func.isRequired,
   folders: PropTypes.array.isRequired,
   screenshots: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
   removeAll: PropTypes.func.isRequired,
-  listen: PropTypes.func.isRequired,
-  theme: PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired,
-  emit: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

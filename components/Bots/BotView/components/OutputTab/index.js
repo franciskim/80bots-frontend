@@ -3,9 +3,8 @@ import styled from "@emotion/styled";
 import ImagesType from "./components/ImagesType";
 import JsonType from "./components/JsonType";
 import { keyframes } from "@emotion/core";
-import { connect } from "react-redux";
 import { CardBody } from "/components/default/Card";
-import { Button, Loader } from "/components/default";
+import { Button, Loader80bots } from "/components/default";
 
 const OUTPUT_TYPES = {
   JSON: {
@@ -47,6 +46,7 @@ const Hint = styled.span`
   color: #fff;
 `;
 
+// eslint-disable-next-line react/prop-types
 const OutputTab = ({ setCustomBack }) => {
   const [currentType, setCurrentType] = useState(OUTPUT_TYPES.JSON);
 
@@ -58,12 +58,11 @@ const OutputTab = ({ setCustomBack }) => {
         return <JsonType setCustomBack={setCustomBack} />;
       default:
         return (
-          <Loader
-            type={"spinning-bubbles"}
-            width={100}
-            height={100}
-            color={status.color}
-            caption={"Loading..."}
+          <Loader80bots
+            data={"light"}
+            styled={{
+              width: "200px"
+            }}
           />
         );
     }
@@ -96,8 +95,4 @@ const OutputTab = ({ setCustomBack }) => {
   );
 };
 
-const mapStateToProps = state => ({});
-
-const mapDispatchToProps = dispatch => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(OutputTab);
+export default OutputTab;

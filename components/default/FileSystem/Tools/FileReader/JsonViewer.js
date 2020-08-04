@@ -9,7 +9,7 @@ import { Textarea as BaseTextarea } from "/components/default/inputs";
 import BaseButton from "/components/default/Button";
 import JsonTableModeView from "./JsonTableModeView";
 import _ from "lodash";
-import { Loader } from "/components/default/Loader";
+import { Loader80bots } from "/components/default";
 
 const Wrapper = styled.div`
   display: flex;
@@ -62,7 +62,6 @@ const TextViewer = ({ item }) => {
   const [jsonRaw, setJsonRaw] = useState(null);
   const [json, setJson] = useState(null);
   const [mode, setMode] = useState(MODS.STRUCTURED);
-  const [error, serError] = useState("");
   const [valid, setValid] = useState(false);
 
   const onLoaded = res => {
@@ -76,11 +75,6 @@ const TextViewer = ({ item }) => {
     } catch (e) {
       return setValid(false);
     }
-  };
-
-  const onError = err => {
-    serError(err);
-    return null;
   };
 
   const renderByMode = () => {
@@ -104,7 +98,7 @@ const TextViewer = ({ item }) => {
   };
 
   useEffect(() => {
-    parseUrl(item.url, lookup(item.url), onLoaded, onError);
+    parseUrl(item.url, lookup(item.url), onLoaded);
   }, [item]);
 
   const getLink = (item, dataString) => {
@@ -157,11 +151,11 @@ const TextViewer = ({ item }) => {
           </Viewer>
         </>
       ) : (
-        <Loader
-          type={"spinning-bubbles"}
-          width={100}
-          height={100}
-          caption={"Loading file.."}
+        <Loader80bots
+          data={"light"}
+          styled={{
+            width: "200px"
+          }}
         />
       )}
     </Wrapper>

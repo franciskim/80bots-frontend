@@ -3,9 +3,8 @@ import PropTypes from "prop-types";
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
 import { connect } from "react-redux";
-import { useTheme } from "emotion-theming";
 import { CardBody } from "/components/default/Card";
-import { Loader } from "/components/default";
+import { Loader80bots } from "/components/default";
 
 const Content = styled(CardBody)`
   display: flex;
@@ -34,7 +33,6 @@ const STATUSES = {
 
 const DisplayTab = ({ botInstance }) => {
   const [status, setStatus] = useState(STATUSES.LOAD);
-  const theme = useTheme();
 
   return (
     <Content>
@@ -56,12 +54,11 @@ const DisplayTab = ({ botInstance }) => {
         src={`http://${botInstance.ip}:6080?autoconnect=1`}
       />
       {status && (
-        <Loader
-          type={"spinning-bubbles"}
-          width={100}
-          height={100}
-          color={theme.colors.primary}
-          caption={status}
+        <Loader80bots
+          data={"light"}
+          styled={{
+            width: "200px"
+          }}
         />
       )}
     </Content>

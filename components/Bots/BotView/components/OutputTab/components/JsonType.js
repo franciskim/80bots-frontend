@@ -4,12 +4,10 @@ import styled from "@emotion/styled";
 import { connect } from "react-redux";
 import { CardBody } from "/components/default/Card";
 import { Filters } from "/components/default/Table";
-import { Loader } from "/components/default";
-import { useRouter } from "next/router";
+import { Loader80bots } from "/components/default";
 import { flush, open, close } from "/store/fileSystem/actions";
 import FileSystem from "/components/default/FileSystem";
 import { Select } from "/components/default/inputs";
-import { theme } from "/config";
 
 const rootFolder = "output/json";
 const defaultLimit = 20;
@@ -28,55 +26,24 @@ const Content = styled(CardBody)`
   ${props => props.styles};
 `;
 
-const STATUSES = {
-  ERROR: {
-    label: "Oops! Some error occured...",
-    color: theme.colors.pink
-  },
-  LOADING: {
-    label: "Receiving Data",
-    color: theme.colors.mediumGreen
-  },
-  EMPTY: {
-    label: "There is no data here yet, we are waiting for the updates...",
-    color: theme.colors.primary
-  },
-  READY: {
-    label: "Success",
-    color: theme.colors.primary
-  }
-};
-
 const JsonType = ({
   items,
   flush,
-  channel,
   openItem,
   openedFolder,
   openedFile,
-  setCustomBack,
-  loading
 }) => {
-  const router = useRouter();
   const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState(null);
-  const [status, setStatus] = useState({});
 
   useEffect(() => {
+    // eslint-disable-next-line no-console
     console.log(openedFolder);
     if (!openedFolder || !openedFolder.path.startsWith(rootFolder)) {
       openItem({ path: rootFolder }, { limit: defaultLimit });
     }
     return () => flush();
   }, [openedFolder]);
-
-  useEffect(() => {
-    if (loading) {
-      setStatus(STATUSES.LOADING);
-    } else if (!items.length || !openedFile) {
-      setStatus(STATUSES.EMPTY);
-    }
-  }, [loading, items, openedFile]);
 
   useEffect(() => {
     const newOptions = items.map(item => {
@@ -137,12 +104,11 @@ const JsonType = ({
             <FileSystem hideNavigator={true} />
           </>
         ) : (
-          <Loader
-            type={"spinning-bubbles"}
-            width={100}
-            height={100}
-            color={status.color}
-            caption={status.label}
+          <Loader80bots
+            data={"light"}
+            styled={{
+              width: "200px"
+            }}
           />
         )}
       </Content>
@@ -151,11 +117,8 @@ const JsonType = ({
 };
 
 JsonType.propTypes = {
-  setCustomBack: PropTypes.func.isRequired,
   items: PropTypes.array.isRequired,
-  loading: PropTypes.bool.isRequired,
   flush: PropTypes.func.isRequired,
-  channel: PropTypes.string,
   openItem: PropTypes.func.isRequired,
   openedFolder: PropTypes.object,
   openedFile: PropTypes.object
@@ -164,7 +127,6 @@ JsonType.propTypes = {
 const mapStateToProps = state => ({
   items: state.fileSystem.items,
   openedFile: state.fileSystem.openedFile,
-  loading: state.fileSystem.loading
 });
 
 const mapDispatchToProps = dispatch => ({

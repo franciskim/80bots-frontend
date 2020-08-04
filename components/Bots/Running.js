@@ -27,7 +27,7 @@ import {
   syncBotInstances
 } from "/store/bot/actions";
 import { addListener, removeAllListeners } from "/store/socket/actions";
-import { Paginator, Loader, Button } from "/components/default";
+import { Paginator, Loader80bots, Button } from "/components/default";
 import { download, minToTime } from "/lib/helpers";
 
 const Container = styled(Card)`
@@ -119,7 +119,6 @@ const FILTERS_LIST_OPTIONS = [
 ];
 
 const RunningBots = ({
-   theme,
    notify,
    getRunningBots,
    copyInstance,
@@ -273,12 +272,13 @@ const RunningBots = ({
   };
 
   const Loading = (
-      <Loader
-          type={"bubbles"}
-          width={40}
-          height={40}
-          color={theme.colors.primary}
-      />
+    <Loader80bots
+      data={"dark"}
+      styled={{
+        width: "100px",
+        height: "75px"
+      }}
+    />
   );
 
   const renderRow = (botInstance, idx) => (
@@ -396,7 +396,8 @@ const RunningBots = ({
               type={"primary"}
               onClick={syncWithAWS}
               loading={`${syncLoading}`}
-              loaderWidth={140}
+              loaderWidth={"30px"}
+              loaderHeight={"20px"}
           >
             Sync Bot Instances
           </Button>

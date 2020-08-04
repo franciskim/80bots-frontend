@@ -7,8 +7,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FileSystem from "/components/default/FileSystem";
 import { flush, open, close } from "/store/fileSystem/actions";
-import { Loader, Button } from "../../../default";
-import { theme } from "../../../../config";
+import { Loader80bots, Button } from "/components/default";
 import Modal from "/components/default/Modal";
 import ReportEditor from "./ReportIssue";
 
@@ -44,25 +43,6 @@ const Hint = styled.span`
   font-size: 14px;
 `;
 
-const STATUSES = {
-  ERROR: {
-    label: "Oops! Some error occurred...",
-    color: theme.colors.pink
-  },
-  LOADING: {
-    label: "Receiving data",
-    color: theme.colors.mediumGreen
-  },
-  EMPTY: {
-    label: "There is no data here yet, we are waiting for the updates...",
-    color: theme.colors.primary
-  },
-  READY: {
-    label: "Success",
-    color: theme.colors.primary
-  }
-};
-
 const ScreenShotTab = ({
   flush,
   channel,
@@ -76,7 +56,6 @@ const ScreenShotTab = ({
   botInstance
 }) => {
   const [limit] = useState(defaultLimit);
-  const [status, setStatus] = useState({});
   const [reportItems, setReportItems] = useState([]);
   const [isReportMode, setReportMode] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -104,16 +83,6 @@ const ScreenShotTab = ({
     }
   }, [openedFolder, previous]);
 
-  useEffect(() => {
-    if (loading) {
-      setStatus(STATUSES.LOADING);
-    } else if (items.length) {
-      setStatus(STATUSES.READY);
-    } else if (!items.length) {
-      setStatus(STATUSES.EMPTY);
-    }
-  }, [loading, items]);
-
   React.useEffect(() => {
     !isReportMode && setReportItems([]);
   }, [isReportMode]);
@@ -131,12 +100,11 @@ const ScreenShotTab = ({
     <>
       <Container>
         {loading || !items.length ? (
-          <Loader
-            type={"spinning-bubbles"}
-            width={100}
-            height={100}
-            color={status.color}
-            caption={status.label}
+          <Loader80bots
+            data={"light"}
+            styled={{
+              width: "200px"
+            }}
           />
         ) : (
           <>
@@ -195,7 +163,9 @@ ScreenShotTab.propTypes = {
   openedFolder: PropTypes.object,
   previous: PropTypes.object,
   loading: PropTypes.bool,
-  setCustomBack: PropTypes.func.isRequired
+  setCustomBack: PropTypes.func.isRequired,
+  items: PropTypes.array.isRequired,
+  botInstance: PropTypes.object,
 };
 
 const mapStateToProps = state => ({

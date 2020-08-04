@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
-import Loader from "./Loader";
+import Loader80bots from "./Loader80bots";
 import { css } from "@emotion/core";
 import { theme } from "/config";
 
@@ -116,11 +116,12 @@ export const Button = ({
       {loading === "false" ? (
         children
       ) : (
-        <Loader
-          type={"spinning-bubbles"}
-          color={theme.colors.white}
-          width={loaderWidth}
-          height={loaderHeight}
+        <Loader80bots
+          data={"light"}
+          styled={{
+            width: loaderWidth,
+            height: loaderHeight
+          }}
         />
       )}
     </DefaultButton>
@@ -132,8 +133,8 @@ Button.propTypes = {
   rounded: PropTypes.bool,
   children: PropTypes.any.isRequired,
   loading: PropTypes.oneOf(["true", "false"]),
-  loaderWidth: PropTypes.number,
-  loaderHeight: PropTypes.number
+  loaderWidth: PropTypes.string,
+  loaderHeight: PropTypes.string
 };
 
 export default Button;

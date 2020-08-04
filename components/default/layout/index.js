@@ -5,7 +5,7 @@ import Head from "./components/Head";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Banner from "./components/Banner";
-import Loader from "../Loader";
+import { Loader80bots } from "/components/default";
 import { checkAuth } from "/store/auth/actions";
 import { connect } from "react-redux";
 import { withTheme } from "emotion-theming";
@@ -33,8 +33,6 @@ const AppLayout = ({
   checkAuth,
   isAuthorized,
   loading,
-  theme,
-  user,
   hideBanner = true
 }) => {
   const [opened, toggle] = useState(true);
@@ -60,11 +58,11 @@ const AppLayout = ({
           </Main>
         </Container>
       ) : (
-        <Loader
-          type={"bubbles"}
-          color={theme.colors.cyan}
-          width={100}
-          height={100}
+        <Loader80bots
+          data={"light"}
+          styled={{
+            width: "200px"
+          }}
         />
       )}
     </Fragment>

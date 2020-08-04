@@ -12,7 +12,7 @@ import { theme } from "/config";
 import { Card, CardBody, CardHeader } from "/components/default/Card";
 import { getBot, clearBot } from "/store/bot/actions";
 import { subscribe, unsubscribe } from "/store/socket/actions";
-import { Badge, Button, Loader } from "/components/default";
+import { Badge, Button, Loader80bots } from "/components/default";
 
 const TABS = {
   SCREENSHOTS: {
@@ -133,17 +133,15 @@ const ConnectionStatus = ({ status, color }) => (
 
 const BotView = ({
   botInstance,
-  user,
   clearBot,
   getBot,
-  theme,
   wsSubscribe,
   wsUnsubscribe
 }) => {
+  const viewMode = null;
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
   const [status, setStatus] = useState(STATUSES.CONNECTING);
   const [customBack, setCustomBack] = useState(null);
-  const [viewMode, setViewMode] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -198,11 +196,12 @@ const BotView = ({
           {Object.keys(botInstance).length ? (
             botInstance.name + " | " + botInstance.bot_name
           ) : (
-            <Loader
-              type={"bubbles"}
-              width={20}
-              height={20}
-              color={theme.colors.primary}
+            <Loader80bots
+              data={"light"}
+              styled={{
+                width: "50px",
+                height: "25px"
+              }}
             />
           )}
         </H6>
@@ -213,12 +212,11 @@ const BotView = ({
       </Header>
       {status === STATUSES.CONNECTING ? (
         <Content>
-          <Loader
-            type={"spinning-bubbles"}
-            width={100}
-            height={100}
-            color={status.color}
-            caption={status.label}
+          <Loader80bots
+            data={"light"}
+            styled={{
+              width: "200px"
+            }}
           />
         </Content>
       ) : (
@@ -234,8 +232,6 @@ BotView.propTypes = {
   wsSubscribe: PropTypes.func.isRequired,
   wsUnsubscribe: PropTypes.func.isRequired,
   botInstance: PropTypes.object.isRequired,
-  user: PropTypes.object,
-  theme: PropTypes.shape({ colors: PropTypes.object.isRequired }).isRequired
 };
 
 ConnectionStatus.propTypes = {

@@ -352,7 +352,8 @@ const Bots = ({
           type={"primary"}
           onClick={sync}
           loading={`${syncLoading}`}
-          loaderWidth={148}
+          loaderWidth={"30px"}
+          loaderHeight={"20px"}
         >
           Sync Bots From Repo
         </Button>
