@@ -13,7 +13,9 @@ import {
   GET_CHANNEL
 } from './types';
 import {
-  AUTH_CHECK
+  AUTH_CHECK,
+  LOGIN,
+  REGISTER
 } from '../auth/types';
 export default function createWebSocketMiddleware() {
   return (store) => {
@@ -36,10 +38,14 @@ export default function createWebSocketMiddleware() {
     };
     return next => action => {
       switch (action.type) {
+        case success(REGISTER):
+        case success(LOGIN):
         case success(AUTH_CHECK): {
           socket = connect();
           return next(action);
         }
+        case error(REGISTER):
+        case error(LOGIN):
         case error(AUTH_CHECK): {
           socket = null;
           return next(action);
