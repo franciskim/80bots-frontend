@@ -138,7 +138,6 @@ const BotView = ({
   wsSubscribe,
   wsUnsubscribe
 }) => {
-  const viewMode = null;
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS);
   const [status, setStatus] = useState(STATUSES.CONNECTING);
   const [customBack, setCustomBack] = useState(null);
@@ -167,14 +166,12 @@ const BotView = ({
   }, [activeTab]);
 
   const renderTab = (item, idx) => {
-    const isOffline = viewMode === "OFFLINE";
-    const isDisabled = isOffline && item === "DISPLAY";
     return (
       <Tab
-        disabled={isDisabled}
+        disabled={false}
         type={activeTab.title === TABS[item].title ? "success" : "primary"}
         key={idx}
-        onClick={() => setActiveTab(TABS[item])}
+        onClick={() => ((item === "DISPLAY" && window.location.protocol === "https:") ? window.open(`http://${botInstance.ip}:6080?autoconnect=1`) : setActiveTab(TABS[item]))}
       >
         {TABS[item].title}
       </Tab>
