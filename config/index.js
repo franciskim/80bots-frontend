@@ -44,6 +44,16 @@ export const theme = {
     }
   }
 };
+export const WEEKDAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday"
+];
+
 
 export const NOTIFICATION_TYPES = {
   HELP: "help",
