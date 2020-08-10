@@ -264,7 +264,7 @@ const Bots = ({
         {bot.tags && bot.tags.length > 0
           ? bot.tags.map((tag, idx) => (
               <Tag key={idx} pill type={"info"}>
-                {tag}
+                {tag.name}
               </Tag>
             ))
           : "-"}
