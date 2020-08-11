@@ -11,6 +11,7 @@ import {
   GET_BOTS,
   GET_RUNNING_BOTS,
   UPDATE_BOT,
+  UPDATE_STATUS,
   POST_LAUNCH_INSTANCE,
   DOWNLOAD_INSTANCE_PEM_FILE,
   GET_TAGS,
@@ -61,6 +62,7 @@ export const reducer = (state = initialState, action) => {
     case POST_LAUNCH_INSTANCE:
     case UPDATE_RUNNING_BOT:
     case UPDATE_BOT:
+    case UPDATE_STATUS:
     case DOWNLOAD_INSTANCE_PEM_FILE:
     case UPDATE_REGION:
       return { ...state, loading: true, error: null };
@@ -141,6 +143,7 @@ export const reducer = (state = initialState, action) => {
     case success(DOWNLOAD_INSTANCE_PEM_FILE):
       return { ...state, loading: false };
 
+    case success(UPDATE_STATUS):
     case success(UPDATE_BOT): {
       const botIdx = state.bots.findIndex(item => item.id === action.data.id);
       if (botIdx || botIdx === 0) state.bots[botIdx] = action.data;
@@ -202,6 +205,7 @@ export const reducer = (state = initialState, action) => {
     case error(UPDATE_BOT):
     case error(DOWNLOAD_INSTANCE_PEM_FILE):
     case error(UPDATE_REGION):
+    case error(UPDATE_STATUS):
       return { ...state, loading: false, error: action.error };
 
     default:

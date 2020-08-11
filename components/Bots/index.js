@@ -22,6 +22,7 @@ import { connect } from "react-redux";
 import {
   getBots,
   updateBot,
+  updateStatusBot,
   launchInstance,
   getBotSettings,
   updateBotSettings,
@@ -114,6 +115,7 @@ const modalStyles = css`
 const Bots = ({
   getBots,
   updateBot,
+  updateStatusBot,
   launchInstance,
   bots,
   total,
@@ -185,7 +187,8 @@ const Bots = ({
     aws_custom_package_json: botData.botPackageJSON,
     tags: botData.botTags,
     users: botData.users.map(user => user.id),
-    type: botData.isPrivate ? "private" : "public"
+    type: botData.isPrivate ? "private" : "public",
+    status: botData.status
   });
 
   const getUpdateBot = botData => {
@@ -203,7 +206,7 @@ const Bots = ({
     const statusName = bot.status === "active" ? "deactivated" : "activated";
     const status = bot.status === "active" ? "inactive" : "active";
 
-    updateBot(bot.id, { status })
+    updateStatusBot(bot.id, { status })
       .then(() =>
         notify({
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -477,6 +480,7 @@ Bots.propTypes = {
   user: PropTypes.object,
   getBots: PropTypes.func.isRequired,
   updateBot: PropTypes.func.isRequired,
+  updateStatusBot: PropTypes.func.isRequired,
   launchInstance: PropTypes.func.isRequired,
   deleteBot: PropTypes.func.isRequired,
   notify: PropTypes.func.isRequired,
@@ -502,6 +506,7 @@ const mapDispatchToProps = dispatch => ({
   launchInstance: (id, params) =>
     dispatch(launchInstance(id, params)),
   updateBot: (id, data) => dispatch(updateBot(id, data)),
+  updateStatusBot: (id, data) => dispatch(updateStatusBot(id, data)),
   deleteBot: id => dispatch(deleteBot(id)),
   getBotSettings: () => dispatch(getBotSettings()),
   updateBotSettings: (id, data) => dispatch(updateBotSettings(id, data)),

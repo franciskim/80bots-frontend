@@ -205,6 +205,7 @@ const BotEditor = ({
         description,
         botTags: botTags.map(item => item.value),
         platform: platform.value,
+        status: bot.status,
         ...users
       });
     }
