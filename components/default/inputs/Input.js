@@ -64,8 +64,8 @@ export const DefaultInput = styled.input`
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #495057;
-  background-color: #fff;
+  color: #fff;
+  background-color: transparent;
   background-clip: padding-box;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
@@ -139,22 +139,26 @@ export const Input = ({
   descriptionPosition,
   error,
   ...props
-}) => (
-  <Wrap styles={styles && styles.container}>
-    <LabelWrap>
-      {label && <Label styles={styles && styles.label}>{label}</Label>}
-      {description && (
-        <Description text={description} position={descriptionPosition} />
-      )}
-    </LabelWrap>
-    <DefaultInput
-      styles={styles && styles.input}
-      {...props}
-      isInputError={!!error}
-    />
-    <Error styles={styles && styles.error}>{error}</Error>
-  </Wrap>
-);
+}) => {
+  console.log(styles.container['styles']);
+
+  return (
+      <Wrap styles={styles && styles.container}>
+      <LabelWrap>
+        {label && <Label styles={styles && styles.label}>{label}</Label>}
+        {description && (
+          <Description text={description} position={descriptionPosition} />
+        )}
+      </LabelWrap>
+      <DefaultInput
+        styles={styles && styles.input && styles.container['styles']}
+        {...props}
+        isInputError={!!error}
+      />
+      <Error styles={styles && styles.error}>{error}</Error>
+    </Wrap>
+  );
+};
 
 Input.propTypes = {
   description: PropTypes.string,
