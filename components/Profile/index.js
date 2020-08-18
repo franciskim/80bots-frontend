@@ -17,6 +17,7 @@ import {
   updateUserProfile,
 } from "/store/auth/actions";
 import {css} from "@emotion/core";
+import AsyncSelect from "react-select/async/dist/react-select.esm";
 
 const Block = styled.div`
   border: 1px solid #fff; 
@@ -78,6 +79,37 @@ const clockStyle = {
 const currClockStyle = {
   color: '#7CFC00',
   fontSize: '16px',
+};
+
+const selectStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    border: "solid 1px hsl(0,0%,80%)",
+    borderRadius: "4px",
+    color: "#fff",
+    backgroundColor: "transparent",
+    "&:hover": {
+      borderColor: "#7dffff"
+    }
+  }),
+  singleValue: (provided, state) => ({
+    ...provided,
+    color: "#fff"
+  }),
+  menu: (provided, state) => ({
+    ...provided,
+    border: "solid 1px hsl(0,0%,80%)",
+    borderRadius: "4px",
+    zIndex: "7",
+  }),
+  menuList: (provided, state) => ({
+    ...provided,
+    backgroundColor: "#333",
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    color: state.isFocused ? "black" : "#fff",
+  }),
 };
 
 const Profile = ({
@@ -175,6 +207,7 @@ const Profile = ({
                 value: item.id,
                 label: item.value
               }))}
+              styles={selectStyles}
               onChange={option => setTimezone(option)}
               value={timezone}
             />
@@ -198,6 +231,7 @@ const Profile = ({
                 value: item.id,
                 label: item.name
               }))}
+              styles={selectStyles}
               onChange={option => setRegion(option)}
               value={region}
             />

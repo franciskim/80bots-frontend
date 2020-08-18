@@ -140,7 +140,6 @@ export const Input = ({
   error,
   ...props
 }) => {
-  console.log(styles.container['styles']);
 
   return (
       <Wrap styles={styles && styles.container}>
