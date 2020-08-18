@@ -3,6 +3,7 @@ export const UPDATE_BOT_SETTINGS = "UPDATE_BOT_SETTINGS";
 
 export const GET_BOTS = "GET_BOTS";
 export const UPDATE_BOT = "UPDATE_BOT";
+export const UPDATE_STATUS = "UPDATE_STATUS";
 export const ADD_BOT = "ADD_BOT";
 export const DELETE_BOT = "DELETE_BOT";
 

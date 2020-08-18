@@ -3,6 +3,7 @@ import {
   UPDATE_BOT_SETTINGS,
   GET_BOTS,
   UPDATE_BOT,
+  UPDATE_STATUS,
   ADD_BOT,
   GET_TAGS,
   DELETE_BOT,
@@ -71,6 +72,20 @@ export const updateBot = (id, updateData) => {
       method: "PUT",
       url: `/bots/${id}`,
       data: { update: updateData }
+    },
+    meta: {
+      thunk: true,
+    }
+  };
+};
+
+export const updateStatusBot = (id, updateStatus) => {
+  return {
+    type: UPDATE_STATUS,
+    request: {
+      method: "PUT",
+      url: `/bots/status/${id}`,
+      data: { update: updateStatus }
     },
     meta: {
       thunk: true,

@@ -70,17 +70,33 @@ const Error = styled.span`
 `;
 
 const selectStyles = {
-    valueContainer: provided => ({
+    control: (provided, state) => ({
         ...provided,
-        padding: "0 8px",
-        borderColor: "#ced4da",
+        border: "solid 1px hsl(0,0%,80%)",
+        borderRadius: "4px",
+        color: "#fff",
+        backgroundColor: "transparent",
+        "&:hover": {
+            borderColor: "#7dffff"
+        }
     }),
-    menuList: () => ({
-        color: "#000000",
-    }),
-    menu: provided => ({
+    singleValue: (provided, state) => ({
         ...provided,
+        color: "#fff"
+    }),
+    menu: (provided, state) => ({
+        ...provided,
+        border: "solid 1px hsl(0,0%,80%)",
+        borderRadius: "4px",
         zIndex: "7",
+    }),
+    menuList: (provided, state) => ({
+        ...provided,
+        backgroundColor: "#333",
+    }),
+    option: (provided, state) => ({
+        ...provided,
+        color: state.isFocused ? "black" : "#fff",
     }),
 };
 
