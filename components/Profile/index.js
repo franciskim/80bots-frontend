@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Select from "react-select";
 import Button from "../default/Button";
 import { Input } from "/components/default/inputs";
-import ClockBlock from "/components/default/ClockBlock";
+import Clock from 'react-live-clock';
 import { connect } from "react-redux";
 import { addNotification } from "/store/notification/actions";
 import { NOTIFICATION_TYPES } from "/config";
@@ -17,7 +17,6 @@ import {
   updateUserProfile,
 } from "/store/auth/actions";
 import {css} from "@emotion/core";
-import AsyncSelect from "react-select/async/dist/react-select.esm";
 
 const Block = styled.div`
   border: 1px solid #fff; 
@@ -186,18 +185,20 @@ const Profile = ({
         </Row>
         <Row>
           <TextLabel>Your current time: </TextLabel>
-          <ClockBlock
+          <Clock
+            format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
+            timezone={null}
             style={currClockStyle}
-            useTimezone={null}
-            format={' dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
+            ticking={true}
           />
         </Row>
         <Row>
           <TextLabel>Current platform time: </TextLabel>
-          <ClockBlock
+          <Clock
+            format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
+            timezone={user.timezone}
             style={clockStyle}
-            useTimezone={user.timezone}
-            format={' dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
+            ticking={true}
           />
         </Row>
         <Row>

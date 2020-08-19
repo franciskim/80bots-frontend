@@ -28,7 +28,8 @@ import {
 } from "/store/bot/actions";
 import { addListener, removeAllListeners } from "/store/socket/actions";
 import { Paginator, Loader80bots, Button } from "/components/default";
-import { download, minToTime } from "/lib/helpers";
+import { download } from "/lib/helpers";
+import UpTime from "/components/default/UpTime";
 
 const Container = styled(Card)`
   background: #333;
@@ -281,67 +282,72 @@ const RunningBots = ({
     />
   );
 
-  const renderRow = (botInstance, idx) => (
+  const renderRow = (botInstance, idx) => {
+
+    return (
       <Tr
-          key={idx}
-          disabled={botInstance.status === "pending"}
-          className={
-            botInstance.status === "running"
-                ? "running"
-                : botInstance.status === "terminated"
-                ? "terminated"
-                : "not-running"
-          }
+        key={idx}
+        disabled={botInstance.status === "pending"}
+        className={
+          botInstance.status === "running"
+            ? "running"
+            : botInstance.status === "terminated"
+            ? "terminated"
+            : "not-running"
+        }
       >
         <td>
           <Select
-              options={OPTIONS}
-              value={OPTIONS.find(item => item.value === botInstance.status)}
-              onChange={option => changeBotInstanceStatus(option, botInstance.id)}
-              styles={selectStyles}
-              isOptionDisabled={option => option.readOnly}
-              isDisabled={
-                botInstance.status === "pending" ||
-                botInstance.status === "terminated"
-              }
-              menuPortalTarget={document.body}
-              menuPosition={"absolute"}
-              menuPlacement={"bottom"}
+            options={OPTIONS}
+            value={OPTIONS.find(item => item.value === botInstance.status)}
+            onChange={option => changeBotInstanceStatus(option, botInstance.id)}
+            styles={selectStyles}
+            isOptionDisabled={option => option.readOnly}
+            isDisabled={
+              botInstance.status === "pending" ||
+              botInstance.status === "terminated"
+            }
+            menuPortalTarget={document.body}
+            menuPosition={"absolute"}
+            menuPlacement={"bottom"}
           />
         </td>
         <td>
           <Link
-              href={"/bots/running/[id]"}
-              as={`/bots/running/${botInstance.id}`}
+            href={"/bots/running/[id]"}
+            as={`/bots/running/${botInstance.id}`}
           >
             <A>&gt;&nbsp;View</A>
           </Link>
           {botInstance.status === "terminated" ? (
-              <div
-                  title={"Restore Bot"}
-                  onClick={() => choiceRestoreBot(botInstance)}
-              >
-                <A>&gt;&nbsp;Restore</A>
-              </div>
+            <div
+              title={"Restore Bot"}
+              onClick={() => choiceRestoreBot(botInstance)}
+            >
+              <A>&gt;&nbsp;Restore</A>
+            </div>
           ) : null}
           <div
-              title={"Copy Instance"}
-              onClick={() => choiceCopyInstance(botInstance)}
+            title={"Copy Instance"}
+            onClick={() => choiceCopyInstance(botInstance)}
           >
             <A>&gt;&nbsp;Clone</A>
           </div>
           <div
-              disabled={botInstance.status === "terminated"}
-              title={"Download PEM"}
-              type={"success"}
-              onClick={() => downloadEventHandler(botInstance)}
+            disabled={botInstance.status === "terminated"}
+            title={"Download PEM"}
+            type={"success"}
+            onClick={() => downloadEventHandler(botInstance)}
           >
             <A>&gt;&nbsp;Key</A>
           </div>
         </td>
         <td>{botInstance.bot_name}</td>
         <td>{botInstance.launched_at}</td>
-        <NwTd>{minToTime(botInstance.uptime)}</NwTd>
+        <UpTime
+          uptime={botInstance.uptime}
+          status={botInstance.status}
+        />
         <td>
           <Ip onClick={() => copyToClipboard(botInstance)}>{botInstance.ip}</Ip>
         </td>
@@ -351,7 +357,9 @@ const RunningBots = ({
         <td>{botInstance.region}</td>
         {botInstance.status === "pending" && <Td colSpan={"9"}>{Loading}</Td>}
       </Tr>
-  );
+    );
+  };
+
   const onOrderChange = (field, value) => {
     setOrder({ field, value });
     getRunningBots({

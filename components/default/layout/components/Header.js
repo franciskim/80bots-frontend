@@ -9,7 +9,7 @@ import HamburgerButton from "../../HamburgerButton";
 import { logout } from "/store/auth/actions";
 import Router from "next/router";
 import Link from "next/link";
-import ClockBlock from "/components/default/ClockBlock";
+import Clock from 'react-live-clock';
 
 const Container = styled.nav`
   position: relative;
@@ -51,10 +51,11 @@ const Header = ({ user, sidebarOpened, onHamburgerClick, logout }) => {
   return (
     <Container>
       <HamburgerButton opened={sidebarOpened} onClick={onHamburgerClick} />
-      <ClockBlock
+      <Clock
+        format={'dddd Do, MMMM Mo, YYYY, h:mm A'}
+        timezone={user.timezone}
         style={clockStyle}
-        useTimezone={user.timezone}
-        format={'dddd Do, MMMM, YYYY, h:mm A'}
+        ticking={true}
       />
       <div className="nav-right">
         <DropDown
