@@ -30,6 +30,8 @@ import { addListener, removeAllListeners } from "/store/socket/actions";
 import { Paginator, Loader80bots, Button } from "/components/default";
 import { download } from "/lib/helpers";
 import UpTime from "/components/default/UpTime";
+import { subscribe, unsubscribe } from "/store/socket/actions";
+import { openScriptNotification } from "/store/scriptNotification/actions";
 
 const Container = styled(Card)`
   background: #333;
@@ -133,7 +135,10 @@ const RunningBots = ({
    removeAllListeners,
    botInstanceUpdated,
    syncBotInstances,
-   syncLoading
+   syncLoading,
+   wsSubscribe,
+   wsUnsubscribe,
+   getStatus,
 }) => {
   const [list, setFilterList] = useState("all");
   const [limit, setLimit] = useState(10);
@@ -283,6 +288,12 @@ const RunningBots = ({
   );
 
   const renderRow = (botInstance, idx) => {
+    const { notification_channel } = botInstance;
+
+    if(botInstance.status === "running") {
+      wsSubscribe(notification_channel, true);
+      getStatus({signal: "notification", channel: notification_channel});
+    }
 
     return (
       <Tr
@@ -343,6 +354,7 @@ const RunningBots = ({
           </div>
         </td>
         <td>{botInstance.bot_name}</td>
+        <td>{botInstance?.notification}</td>
         <td>{botInstance.launched_at}</td>
         <UpTime
           uptime={botInstance.uptime}
@@ -452,6 +464,7 @@ const RunningBots = ({
                   <OrderTh field={"status"}>Status</OrderTh>
                   <th>Actions</th>
                   <OrderTh field={"bot_name"}>Bot</OrderTh>
+                  <OrderTh field={"script_notification"}>Notification</OrderTh>
                   <OrderTh field={"launched_at"}>Deployed At</OrderTh>
                   <OrderTh field={"uptime"}>Uptime</OrderTh>
                   <OrderTh field={"ip"}>IP</OrderTh>
@@ -501,14 +514,17 @@ RunningBots.propTypes = {
   user: PropTypes.object,
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
-  }).isRequired
+  }).isRequired,
+  wsSubscribe: PropTypes.func.isRequired,
+  wsUnsubscribe: PropTypes.func.isRequired,
+  getStatus: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   botInstances: state.bot.botInstances,
   total: state.bot.total,
   user: state.auth.user,
-  syncLoading: state.bot.syncLoading
+  syncLoading: state.bot.syncLoading,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -523,7 +539,10 @@ const mapDispatchToProps = dispatch => ({
       dispatch(addListener(room, eventName, handler)),
   removeAllListeners: () => dispatch(removeAllListeners()),
   botInstanceUpdated: botInstance => dispatch(botInstanceUpdated(botInstance)),
-  syncBotInstances: () => dispatch(syncBotInstances())
+  syncBotInstances: () => dispatch(syncBotInstances()),
+  wsSubscribe: (channel, isPrivate) => dispatch(subscribe(channel, isPrivate)),
+  getStatus: (item, query) => dispatch(openScriptNotification(item, query)),
+  wsUnsubscribe: channel => dispatch(unsubscribe(channel)),
 });
 
 export default connect(

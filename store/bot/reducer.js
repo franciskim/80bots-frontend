@@ -23,6 +23,7 @@ import {
   REGIONS,
   UPDATE_REGION,
   LIMIT_CHANGE,
+  ADD_SCRIPT_NOTIFICATION,
 } from "./types";
 
 const initialState = {
@@ -36,7 +37,10 @@ const initialState = {
   amis: [],
   regions: [],
   botInstances: [],
-  botInstance: {},
+  botInstance: {
+    storage_channel: undefined,
+    notification_channel: undefined
+  },
   platforms: [],
   botSettings: {},
   totalRegions: 0,
@@ -189,6 +193,22 @@ export const reducer = (state = initialState, action) => {
         totalRegions: action.data.total,
         loading: false
       };
+
+    case ADD_SCRIPT_NOTIFICATION: {
+      const {notification, instanceId } = action.data.item;
+      const scriptIdx = state.botInstances.findIndex(
+        item => item.instance_id === instanceId
+      );
+
+      if (scriptIdx || scriptIdx === 0) {
+        state.botInstances[scriptIdx].notification = notification;
+      }
+      return {
+        ...state,
+        botInstances: [...state.botInstances],
+        loading: false
+      };
+    }
 
     case error(GET_FOLDERS):
     case error(GET_SCREENSHOTS):
