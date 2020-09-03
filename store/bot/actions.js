@@ -23,7 +23,8 @@ import {
   UPDATE_REGION,
   BOT_REPORT,
   LIMIT_CHANGE,
-  ADD_SCRIPT_NOTIFICATION
+  ADD_SCRIPT_NOTIFICATION,
+  ADD_SCRIPT_SUBSCRIBE
 } from "./types";
 import { success } from "redux-saga-requests";
 
@@ -335,6 +336,15 @@ export const updateRegion = (id, data) => ({
 export const addScriptNotification = (item) => {
   return {
     type: ADD_SCRIPT_NOTIFICATION,
+    data: {
+      item
+    }
+  };
+};
+
+export const addSubscribe = (item) => {
+  return {
+    type: ADD_SCRIPT_SUBSCRIBE,
     data: {
       item
     }

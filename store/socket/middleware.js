@@ -73,10 +73,6 @@ export default function createWebSocketMiddleware() {
         }
         case ADD_WHISPER_LISTENER: {
           const { channel, signal, callback } = action.data;
-          console.log('middleware socket: {channel, signal, callback} ---------------------->', {channel, signal, callback} );
-
-          console.log('middleware socket: room ------------------>', rooms[channel]?.listenForWhisper(signal, callback));
-
           rooms[channel]?.listenForWhisper(signal, callback);
           return next(action);
         }

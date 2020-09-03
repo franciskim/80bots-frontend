@@ -24,14 +24,15 @@ import {
   updateRunningBot,
   downloadInstancePemFile,
   botInstanceUpdated,
-  syncBotInstances
+  syncBotInstances,
+  addSubscribe
 } from "/store/bot/actions";
 import { addListener, removeAllListeners } from "/store/socket/actions";
 import { Paginator, Loader80bots, Button } from "/components/default";
 import { download } from "/lib/helpers";
 import UpTime from "/components/default/UpTime";
 import { subscribe, unsubscribe } from "/store/socket/actions";
-import { openScriptNotification } from "/store/scriptNotification/actions";
+import { openScriptNotification, closeScriptNotification } from "/store/scriptNotification/actions";
 
 const Container = styled(Card)`
   background: #333;
@@ -138,7 +139,9 @@ const RunningBots = ({
    syncLoading,
    wsSubscribe,
    wsUnsubscribe,
-   getStatus,
+   openScriptNotification,
+   closeScriptNotification,
+   addSubscribe
 }) => {
   const [list, setFilterList] = useState("all");
   const [limit, setLimit] = useState(10);
@@ -184,6 +187,36 @@ const RunningBots = ({
       removeAllListeners();
     };
   }, []);
+
+  useEffect( () => {
+    botInstances.map(async (botInstance) => {
+      let subscribe;
+      const { notification_channel, status, subscribe_channel } = botInstance;
+
+      if(botInstance.hasOwnProperty("subscribe_channel")) {
+        subscribe = subscribe_channel;
+      } else {
+        subscribe = false;
+      }
+
+      if((status === "running") && !subscribe) {
+        await addSubscribe({channel: notification_channel, type: true});
+        await wsSubscribe(notification_channel, true);
+        await openScriptNotification({signal: "notification", channel: notification_channel});
+      }
+    });
+    return () => {
+      botInstances.map(async (botInstance) => {
+        const {notification_channel, status } = botInstance;
+
+        if (status === "pending" && !botInstance.hasOwnProperty("subscribe_channel")) {
+          await addSubscribe({channel: notification_channel, type: false});
+          await wsUnsubscribe(notification_channel);
+          await closeScriptNotification({channel: notification_channel});
+        }
+      });
+    };
+  },[botInstances]);
 
   const choiceRestoreBot = instance => {
     restoreBot(instance.id)
@@ -288,13 +321,6 @@ const RunningBots = ({
   );
 
   const renderRow = (botInstance, idx) => {
-    const { notification_channel } = botInstance;
-
-    if(botInstance.status === "running") {
-      wsSubscribe(notification_channel, true);
-      getStatus({signal: "notification", channel: notification_channel});
-    }
-
     return (
       <Tr
         key={idx}
@@ -517,7 +543,9 @@ RunningBots.propTypes = {
   }).isRequired,
   wsSubscribe: PropTypes.func.isRequired,
   wsUnsubscribe: PropTypes.func.isRequired,
-  getStatus: PropTypes.func.isRequired,
+  openScriptNotification: PropTypes.func.isRequired,
+  closeScriptNotification: PropTypes.func.isRequired,
+  addSubscribe: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -541,8 +569,10 @@ const mapDispatchToProps = dispatch => ({
   botInstanceUpdated: botInstance => dispatch(botInstanceUpdated(botInstance)),
   syncBotInstances: () => dispatch(syncBotInstances()),
   wsSubscribe: (channel, isPrivate) => dispatch(subscribe(channel, isPrivate)),
-  getStatus: (item, query) => dispatch(openScriptNotification(item, query)),
+  openScriptNotification: (item) => dispatch(openScriptNotification(item)),
+  closeScriptNotification: (item) => dispatch(closeScriptNotification(item)),
   wsUnsubscribe: channel => dispatch(unsubscribe(channel)),
+  addSubscribe: channel => dispatch(addSubscribe(channel)),
 });
 
 export default connect(

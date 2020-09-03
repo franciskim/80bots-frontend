@@ -8,7 +8,7 @@ import {
   stopListeningForWhisper,
 } from "../socket/actions";
 import {
-  addScriptNotification
+  addScriptNotification,
 } from "../bot/actions";
 
 export default function scriptNotificationMiddleware() {
@@ -26,45 +26,50 @@ export default function scriptNotificationMiddleware() {
       if(!item) return next(action);
 
       const {signal, channel} = item;
-
+      console.log('{signal, channel} ', {signal, channel} );
       if(!channel) {
         console.error('Unknown script storage channel');
         return next(action);
       }
-      console.log('listeners-------------------------------------------------------------->', listeners);
+      const listener = {
+        channel,
+        signal,
+        ...item,
+        unsubscribe: () => {
+          console.debug('SOCKET: STOP LISTEN ', signal);
+          listeners.pop();
+          return dispatch(stopListeningForWhisper(channel, signal));
+        },
+        subscribe: () => {
+          console.debug('SOCKET: LISTEN ', signal);
+          return dispatch(listenForWhisper(channel, signal, (data) => {
+            console.log({signal, data});
+            if(signal === "notification") {
+              dispatch(addScriptNotification(data));
+            }
+          }));
+        }
+      };
+
       switch (action.type) {
         case OPEN_SCRIPT_NOTIFICATION: {
-          listeners.forEach(listener => {
-            if(listener.signal === item.signal) {
-              listener.unsubscribe();
-            }
-          });
-          const listener = {
-            channel,
-            signal,
-            ...item,
-            unsubscribe: function () {
-              console.debug('SOCKET: STOP LISTEN', this.signal);
-              return dispatch(stopListeningForWhisper(this.channel, this.signal));
-            },
-            subscribe: function () {
-              console.debug('SOCKET: LISTEN', this.signal);
-              return dispatch(listenForWhisper(this.channel, this.signal, (data) => {
-                console.log('fs middleware: {signal, data} -------------------------->', {signal, data});
-                if(this.signal === "notification") {
-                  dispatch(addScriptNotification(data));
-                }
-              }));
-            }
-          };
           listener.subscribe();
-          listeners.pop();
-          listeners.push(listener);
+          const isListener = listeners.some(
+            item => item.channel === channel
+          );
+          if(!isListener) {
+            listeners.push(listener);
+          }
           break;
         }
         case CLOSE_SCRIPT_NOTIFICATION: {
-          const listener = listeners.find(listener => listener.signal === signal && listener.type === item.type && listener.channel === channel);
-          if(listener) listener.unsubscribe();
+          const listenerIdx = listeners.findIndex(
+            item => item.channel === channel
+          );
+          if(listenerIdx > -1) {
+            listeners = listeners.splice(listenerIdx, 1);
+            listener.unsubscribe();
+          }
           break;
         }
         case FLUSH_SCRIPT_NOTIFICATION: {
