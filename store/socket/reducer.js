@@ -2,10 +2,6 @@ const initialState = {};
 import {
   SUBSCRIBE_CHANNEL,
   UNSUBSCRIBE_CHANNEL,
-  ADD_LISTENER,
-  EMIT_MESSAGE,
-  REMOVE_ALL_LISTENERS,
-  REMOVE_LISTENER,
 } from './types';
 
 export const reducer = (state = initialState, action) => {

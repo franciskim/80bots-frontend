@@ -24,12 +24,18 @@ import {
   updateRunningBot,
   downloadInstancePemFile,
   botInstanceUpdated,
-  syncBotInstances
+  syncBotInstances,
 } from "/store/bot/actions";
 import { addListener, removeAllListeners } from "/store/socket/actions";
 import { Paginator, Loader80bots, Button } from "/components/default";
 import { download } from "/lib/helpers";
 import UpTime from "/components/default/UpTime";
+import { subscribe, unsubscribe } from "/store/socket/actions";
+import {
+  openScriptNotification,
+  closeScriptNotification,
+  flushScriptNotification
+} from "/store/scriptNotification/actions";
 
 const Container = styled(Card)`
   background: #333;
@@ -43,10 +49,6 @@ const Td = styled.td`
   width: calc(100% - 40px);
 `;
 
-const NwTd = styled.td`
-  white-space: nowrap;
-`;
-
 const Tr = styled.tr`
   position: relative;
   background-color: ${props =>
@@ -58,6 +60,20 @@ const Ip = styled.span`
   cursor: pointer;
   &:hover {
     border-bottom: 1px solid ${props => props.theme.colors.cyan};
+  }
+`;
+
+const Notify = styled.span`
+  color: #63CA00;
+  &:hover {
+    color: #7CFC00;
+  }
+`;
+
+const NotifyErr = styled.span`
+  color: #CC0000;
+  &:hover {
+    color: #FF0000;
   }
 `;
 
@@ -133,7 +149,13 @@ const RunningBots = ({
    removeAllListeners,
    botInstanceUpdated,
    syncBotInstances,
-   syncLoading
+   syncLoading,
+   wsSubscribe,
+   wsUnsubscribe,
+   openScriptNotification,
+   closeScriptNotification,
+   flushScriptNotification,
+   settings_channel
 }) => {
   const [list, setFilterList] = useState("all");
   const [limit, setLimit] = useState(10);
@@ -179,6 +201,32 @@ const RunningBots = ({
       removeAllListeners();
     };
   }, []);
+
+  useEffect( () => {
+    botInstances.map(async (botInstance) => {
+      const { notification_channel, status } = botInstance;
+      const subscribe = settings_channel.some((item) => item.channel === botInstance.notification_channel);
+      if((status === "running") && !subscribe) {
+        await wsSubscribe(notification_channel, true);
+        await openScriptNotification({signal: "notification", channel: notification_channel});
+      } else if (status === "pending" && subscribe) {
+        await closeScriptNotification({channel: notification_channel});
+        await wsUnsubscribe(notification_channel);
+      }
+    });
+  },[botInstances]);
+
+  useEffect( () => {
+    return () => {
+      botInstances.map((botInstance) => {
+        const {notification_channel, status } = botInstance;
+        if (status === "running") {
+          wsUnsubscribe(notification_channel);
+        }
+      });
+      flushScriptNotification();
+    };
+  },[]);
 
   const choiceRestoreBot = instance => {
     restoreBot(instance.id)
@@ -283,7 +331,6 @@ const RunningBots = ({
   );
 
   const renderRow = (botInstance, idx) => {
-
     return (
       <Tr
         key={idx}
@@ -343,6 +390,11 @@ const RunningBots = ({
           </div>
         </td>
         <td>{botInstance.bot_name}</td>
+        <td>
+          {botInstance.notification_error === null ?
+            <Notify>{botInstance.notification}</Notify> :
+            <NotifyErr>{botInstance.notification_error}</NotifyErr>}
+        </td>
         <td>{botInstance.launched_at}</td>
         <UpTime
           uptime={botInstance.uptime}
@@ -452,6 +504,7 @@ const RunningBots = ({
                   <OrderTh field={"status"}>Status</OrderTh>
                   <th>Actions</th>
                   <OrderTh field={"bot_name"}>Bot</OrderTh>
+                  <OrderTh field={"script_notification"}>Notification</OrderTh>
                   <OrderTh field={"launched_at"}>Deployed At</OrderTh>
                   <OrderTh field={"uptime"}>Uptime</OrderTh>
                   <OrderTh field={"ip"}>IP</OrderTh>
@@ -501,14 +554,21 @@ RunningBots.propTypes = {
   user: PropTypes.object,
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
-  }).isRequired
+  }).isRequired,
+  wsSubscribe: PropTypes.func.isRequired,
+  wsUnsubscribe: PropTypes.func.isRequired,
+  openScriptNotification: PropTypes.func.isRequired,
+  closeScriptNotification: PropTypes.func.isRequired,
+  flushScriptNotification: PropTypes.func.isRequired,
+  settings_channel: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
   botInstances: state.bot.botInstances,
   total: state.bot.total,
   user: state.auth.user,
-  syncLoading: state.bot.syncLoading
+  syncLoading: state.bot.syncLoading,
+  settings_channel: state.scriptNotification.settings_channel
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -523,7 +583,12 @@ const mapDispatchToProps = dispatch => ({
       dispatch(addListener(room, eventName, handler)),
   removeAllListeners: () => dispatch(removeAllListeners()),
   botInstanceUpdated: botInstance => dispatch(botInstanceUpdated(botInstance)),
-  syncBotInstances: () => dispatch(syncBotInstances())
+  syncBotInstances: () => dispatch(syncBotInstances()),
+  wsSubscribe: (channel, isPrivate) => dispatch(subscribe(channel, isPrivate)),
+  wsUnsubscribe: channel => dispatch(unsubscribe(channel)),
+  openScriptNotification: (item) => dispatch(openScriptNotification(item)),
+  closeScriptNotification: (item) => dispatch(closeScriptNotification(item)),
+  flushScriptNotification: () => dispatch(flushScriptNotification()),
 });
 
 export default connect(
