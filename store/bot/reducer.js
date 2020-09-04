@@ -24,7 +24,6 @@ import {
   UPDATE_REGION,
   LIMIT_CHANGE,
   ADD_SCRIPT_NOTIFICATION,
-  ADD_SCRIPT_SUBSCRIBE,
 } from "./types";
 
 const initialState = {
@@ -196,29 +195,13 @@ export const reducer = (state = initialState, action) => {
       };
 
     case ADD_SCRIPT_NOTIFICATION: {
-      const {notification, instanceId } = action.data.item;
+      const {notification, instanceId, error } = action.data.item;
       const scriptIdx = state.botInstances.findIndex(
         item => item.instance_id === instanceId
       );
-
-      if (scriptIdx || scriptIdx === 0) {
+      if (scriptIdx > -1) {
         state.botInstances[scriptIdx].notification = notification;
-      }
-      return {
-        ...state,
-        botInstances: [...state.botInstances],
-        loading: false
-      };
-    }
-
-    case ADD_SCRIPT_SUBSCRIBE: {
-      const {channel, type} = action.data.item;
-      const scriptIdx = state.botInstances.findIndex(
-        item => item.notification_channel === channel
-      );
-
-      if (scriptIdx || scriptIdx === 0) {
-        state.botInstances[scriptIdx].subscribe_channel = type;
+        state.botInstances[scriptIdx].notification_error = error;
       }
       return {
         ...state,

@@ -37,7 +37,6 @@ export default function scriptNotificationMiddleware() {
         ...item,
         unsubscribe: () => {
           console.debug('SOCKET: STOP LISTEN ', signal);
-          listeners.pop();
           return dispatch(stopListeningForWhisper(channel, signal));
         },
         subscribe: () => {
@@ -73,8 +72,8 @@ export default function scriptNotificationMiddleware() {
           break;
         }
         case FLUSH_SCRIPT_NOTIFICATION: {
-          listeners.forEach(listener => {
-            listener.unsubscribe();
+          listeners.forEach(item => {
+            item.unsubscribe();
           });
           listeners = [];
         }

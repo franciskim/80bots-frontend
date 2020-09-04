@@ -341,12 +341,3 @@ export const addScriptNotification = (item) => {
     }
   };
 };
-
-export const addSubscribe = (item) => {
-  return {
-    type: ADD_SCRIPT_SUBSCRIBE,
-    data: {
-      item
-    }
-  };
-};
