@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FileSystem from "/components/default/FileSystem";
 import { flush, open, close } from "/store/fileSystem/actions";
+import { Loader80bots } from "/components/default";
 const rootFolder = "output/images";
 const defaultLimit = 20;
 
@@ -15,9 +16,13 @@ const ImagesType = ({
   closeItem,
   openedFolder,
   previous,
-  setCustomBack
+  setCustomBack,
+  loading,
+  items
 }) => {
-  const [limit, setLimit] = useState(defaultLimit);
+  const limit = defaultLimit;
+  const isReportMode = false;
+  const [reportItems, setReportItems] = useState([]);
 
   const router = useRouter();
   useEffect(() => {
@@ -40,9 +45,25 @@ const ImagesType = ({
     }
   }, [openedFolder, previous]);
 
+  useEffect(() => {
+    !isReportMode && setReportItems([]);
+  }, [isReportMode]);
+
+
   return (
     <>
-      <FileSystem />
+      {loading || !items.length ? (
+        <Loader80bots
+          data={"light"}
+          styled={{
+            width: "200px"
+          }}
+        />
+      ) : (
+        <FileSystem
+          selectedItems={reportItems}
+        />
+      )}
     </>
   );
 };
@@ -54,13 +75,17 @@ ImagesType.propTypes = {
   closeItem: PropTypes.func.isRequired,
   openedFolder: PropTypes.object,
   previous: PropTypes.object,
-  setCustomBack: PropTypes.func.isRequired
+  setCustomBack: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
+  items: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
   channel: state.bot.botInstance?.storage_channel,
   openedFolder: state.fileSystem.openedFolder,
-  previous: state.fileSystem.history.slice(-1)?.[0]?.openedFolder
+  previous: state.fileSystem.history.slice(-1)?.[0]?.openedFolder,
+  loading: state.fileSystem.loading,
+  items: state.fileSystem.items
 });
 
 const mapDispatchToProps = dispatch => ({
