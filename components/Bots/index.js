@@ -182,7 +182,6 @@ const Bots = ({
   const convertBotData = botData => ({
     name: botData.botName,
     description: botData.description,
-    platform: botData.platform,
     aws_custom_script: botData.botScript,
     aws_custom_package_json: botData.botPackageJSON,
     tags: botData.botTags,
@@ -255,7 +254,6 @@ const Bots = ({
 
   const renderRow = (bot, idx) => (
     <tr key={idx}>
-      <td>{bot.platform}</td>
       <td>{bot.name}</td>
       <td>
         <BotType type={bot.type === "public" ? "info" : "danger"} pill>
@@ -386,7 +384,6 @@ const Bots = ({
           <Table responsive>
             <Thead>
               <tr>
-                <OrderTh field={"platform"}>Platform</OrderTh>
                 <OrderTh field={"name"}>Bot Name</OrderTh>
                 <OrderTh field={"type"}>Bot Type</OrderTh>
                 <OrderTh field={"description"}>Description</OrderTh>

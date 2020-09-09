@@ -41,7 +41,6 @@ const initialState = {
     storage_channel: undefined,
     notification_channel: undefined
   },
-  platforms: [],
   botSettings: {},
   totalRegions: 0,
   total: 0,
