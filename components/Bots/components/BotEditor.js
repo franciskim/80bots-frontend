@@ -7,7 +7,6 @@ import { css } from "@emotion/core";
 import { connect } from "react-redux";
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-import { getPlatforms } from "/store/platform/actions";
 import { getTags } from "/store/bot/actions";
 import { getUsers } from "/store/user/actions";
 import { Button } from "/components/default";
@@ -109,9 +108,7 @@ const inputStyles = {
 };
 
 const BotEditor = ({
-  getPlatforms,
   getTags,
-  platforms,
   tags,
   onSubmit,
   onClose,
@@ -120,8 +117,6 @@ const BotEditor = ({
   bot
 }) => {
   const [tagName, setTagName] = useState("");
-  const [platformName, setPlatformName] = useState("");
-  const [platform, setPlatform] = useState(null);
   const [botTags, setTags] = useState([]);
   const [botName, setBotName] = useState(bot ? bot.name : "");
   const [botScript, setBotScript] = useState(bot ? bot.aws_custom_script : "");
@@ -147,16 +142,12 @@ const BotEditor = ({
   };
 
   useEffect(() => {
-    getPlatforms({ page: 1, limit: 50 });
     getTags({ page: 1, limit: 50 });
     getUsers({ page: 1, limit: 25 });
   }, []);
 
   useEffect(() => {
     if (bot) {
-      setPlatform(
-        toOptions(platforms.find(item => item.name === bot.platform))
-      );
       setTags(
         tags.filter(item => bot.tags.indexOf(item.name) > -1).map(toOptions)
       );
@@ -168,16 +159,12 @@ const BotEditor = ({
         );
       }
     }
-  }, [tags, users, platforms]);
+  }, [tags, users]);
 
   const onUsersSearch = (value, callback) => {
     getUsers({ page: 1, limit: 25, search: value }).then(action =>
       callback(action.data.data.map(toOptions))
     );
-  };
-
-  const onPlatformInputChange = newValue => {
-    setPlatformName(newValue);
   };
 
   const onTagInputChange = newValue => {
@@ -195,19 +182,8 @@ const BotEditor = ({
     return options;
   };
 
-  const getPlatformOptions = () => {
-    let options = platforms.map(toOptions);
-    if (
-      platformName &&
-      !options.find(item => item.label.match(new RegExp(platformName, "ig")))
-    ) {
-      options = [{ value: platformName, label: platformName }].concat(options);
-    }
-    return options;
-  };
-
   const submit = () => {
-    if (!platform || !botName) {
+    if (!botName) {
       setError("You must fill in required fields marked by '*'");
     } else {
       setError(null);
@@ -219,7 +195,6 @@ const BotEditor = ({
         botPackageJSON,
         description,
         botTags: botTags.map(item => item.value),
-        platform: platform.value,
         status: bot.status,
         ...users
       });
@@ -230,16 +205,6 @@ const BotEditor = ({
     <>
       <FormContainer>
         <Row>
-          <InputWrap>
-            <Label>Platform *</Label>
-            <Select
-              onChange={option => setPlatform(option)}
-              styles={selectStyles}
-              value={platform}
-              onInputChange={onPlatformInputChange}
-              options={getPlatformOptions()}
-            />
-          </InputWrap>
           <Input
             type={"text"}
             label={"Bot Name *"}
@@ -330,10 +295,8 @@ const BotEditor = ({
 
 BotEditor.propTypes = {
   bot: PropTypes.object,
-  platforms: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired,
   users: PropTypes.array.isRequired,
-  getPlatforms: PropTypes.func.isRequired,
   getTags: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
@@ -341,14 +304,11 @@ BotEditor.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  platforms: state.platform.platforms,
-  types: state.platform.types,
   tags: state.bot.tags,
   users: state.user.users
 });
 
 const mapDispatchToProps = dispatch => ({
-  getPlatforms: query => dispatch(getPlatforms(query)),
   getTags: query => dispatch(getTags(query)),
   getUsers: query => dispatch(getUsers(query))
 });
