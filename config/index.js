@@ -158,5 +158,14 @@ export const globalStyles = css`
   tr.terminated, tr.terminated div[class*='singleValue'] {
     color: #777;
   } 
+  
+  body .nav-tabs .nav-link.active {
+    background-color: #333;
+    color: #7dffff; 
+  }
+  
+  body .nav-tabs .nav-link:hover {
+    color: #7dffff; 
+  }
 
 `;
