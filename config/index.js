@@ -1,13 +1,13 @@
 import { css } from "@emotion/core";
 
 export const ROUTES = [
-    { name: "Users", href: "/users" },
-    { name: "Workforce", href: "/bots/running" },
-    { name: "Deploy Bots", href: "/bots" },
-    { name: "Add Bot", href: "/bots/add" },
-    { name: "Scheduler", href: "/scheduler" },
-    { name: "Scheduler Log", href: "/scheduler/log" },
-    { name: "AWS AMI Settings", href: "/bots/settings" },
+  { name: "Users", href: "/users" },
+  { name: "Workforce", href: "/bots/running" },
+  { name: "Deploy Bots", href: "/bots" },
+  { name: "Add Bot", href: "/bot" },
+  { name: "Scheduler", href: "/scheduler" },
+  { name: "Scheduler Log", href: "/scheduler/log" },
+  { name: "AWS AMI Settings", href: "/bots/settings" },
 ];
 
 export const theme = {
@@ -44,6 +44,7 @@ export const theme = {
     }
   }
 };
+
 export const WEEKDAYS = [
   "Sunday",
   "Monday",
@@ -53,7 +54,6 @@ export const WEEKDAYS = [
   "Friday",
   "Saturday"
 ];
-
 
 export const NOTIFICATION_TYPES = {
   HELP: "help",

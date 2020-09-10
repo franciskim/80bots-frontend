@@ -2,6 +2,7 @@ export const BOT_SETTINGS = "BOT_SETTINGS";
 export const UPDATE_BOT_SETTINGS = "UPDATE_BOT_SETTINGS";
 
 export const GET_BOTS = "GET_BOTS";
+export const GET_INSTANCE = "GET_INSTANCE";
 export const UPDATE_BOT = "UPDATE_BOT";
 export const UPDATE_STATUS = "UPDATE_STATUS";
 export const ADD_BOT = "ADD_BOT";
@@ -19,6 +20,7 @@ export const POST_LAUNCH_INSTANCE = "POST_LAUNCH_INSTANCE";
 export const GET_BOT = "GET_BOT";
 
 export const CLEAR_BOT = "CLEAR_BOT";
+export const CLEAR_INSTANCE = "CLEAR_INSTANCE";
 export const BOT_REPORT = "BOT_REPORT";
 
 export const LIMIT_CHANGE = "LIMIT_CHANGE";

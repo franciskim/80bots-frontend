@@ -9,10 +9,14 @@ import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import { getTags } from "/store/bot/actions";
 import { getUsers } from "/store/user/actions";
+import { addNotification } from "/store/notification/actions";
 import { Button } from "/components/default";
 import { Textarea, Input, CodeEditor } from "/components/default/inputs";
+import { NOTIFICATION_TYPES } from "/config";
+import { getBot, clearBot, updateBot } from "/store/bot/actions";
+import Router, {useRouter} from "next/router";
 
-const FormContainer = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin: 20px 0 10px 0;
@@ -46,6 +50,7 @@ const Row = styled.div`
 const Label = styled.label`
   font-size: 16px;
   margin-bottom: 5px;
+  color: #fff;
 `;
 
 const Buttons = styled.div`
@@ -98,33 +103,36 @@ const selectStyles = {
 
 const inputStyles = {
   container: css`
-    &:first-of-type {
-      margin-right: 10px;
-    }
-    &:last-of-type {
-      margin-left: 10px;
-    }
-  `
-};
+  color: #fff;
+  font-size: 16px;
+  &:first-of-type {
+    margin-right: 10px;
+  }
+  &:last-of-type {
+    margin-left: 10px;
+  }
+`};
 
-const BotEditor = ({
-  getTags,
-  tags,
-  onSubmit,
-  onClose,
-  getUsers,
-  users,
-  bot
+const Index = ({
+ getTags,
+ tags,
+ getUsers,
+ users,
+ aboutBot,
+ notify,
+ getBot,
+ clearBot,
+ updateBot,
 }) => {
+  const router = useRouter().query.id;
   const [tagName, setTagName] = useState("");
   const [botTags, setTags] = useState([]);
-  const [botName, setBotName] = useState(bot ? bot.name : "");
-  const [botScript, setBotScript] = useState(bot ? bot.aws_custom_script : "");
-  const [botPackageJSON, setBotPackageJSON,] = useState( bot ? bot.aws_custom_package_json : "");
-  const [description, setDescription] = useState(bot ? bot.description : "");
-  const [isPrivate, setPrivate] = useState(
-    bot ? bot.type === "private" : false
-  );
+  const [botName, setBotName] = useState("");
+  const [botScript, setBotScript] = useState("");
+  const [botPackageJSON, setBotPackageJSON] = useState( "");
+  const [status, setStatus] = useState( "");
+  const [description, setDescription] = useState( "");
+  const [isPrivate, setPrivate] = useState( false);
   const [trustedUsers, setUsers] = useState([]);
   const [error, setError] = useState(null);
 
@@ -135,31 +143,50 @@ const BotEditor = ({
       label:
         typeof item === "object"
           ? item.email
-            ? item.email + " | " + item.name
-            : item.name
+          ? item.email + " | " + item.name
+          : item.name
           : item
     };
   };
 
+  function isEmpty(obj) {
+    for(let key in obj) {
+      return true;
+    }
+    return false;
+  }
+
   useEffect(() => {
-    getTags({ page: 1, limit: 50 });
-    getUsers({ page: 1, limit: 25 });
+    getBot(router);
+    return () => {
+      clearBot();
+    };
   }, []);
 
   useEffect(() => {
-    if (bot) {
-      setTags(
-        tags.filter(item => bot.tags.indexOf(item.name) > -1).map(toOptions)
-      );
-      if (bot.users) {
+    getTags({ page: 1, limit: 50 });
+    getUsers({ page: 1, limit: 25 });
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    if (isEmpty(aboutBot)) {
+      setBotName(aboutBot.name);
+      setBotScript(aboutBot.aws_custom_script);
+      setBotPackageJSON(aboutBot.aws_custom_package_json);
+      setDescription(aboutBot.description);
+      setStatus(aboutBot.status);
+      setPrivate(aboutBot ? aboutBot.type === "private" : false);
+      setTags(aboutBot.tags.map(toOptions));
+      if (aboutBot.users) {
         setUsers(
           users
-            .filter(item => bot.users.find(user => user.id === item.id))
+            .filter(item => aboutBot.users.find(user => user.id === item.id))
             .map(toOptions)
         );
       }
     }
-  }, [tags, users]);
+  }, [tags, users, aboutBot]);
 
   const onUsersSearch = (value, callback) => {
     getUsers({ page: 1, limit: 25, search: value }).then(action =>
@@ -182,28 +209,47 @@ const BotEditor = ({
     return options;
   };
 
+  const convertBotData = botData => ({
+    name: botData.botName,
+    description: botData.description,
+    aws_custom_script: botData.botScript,
+    aws_custom_package_json: botData.botPackageJSON,
+    tags: botData.botTags,
+    users: botData.users.map(user => user.id),
+    type: botData.isPrivate ? "private" : "public",
+    status:status,
+  });
+
   const submit = () => {
     if (!botName) {
       setError("You must fill in required fields marked by '*'");
     } else {
       setError(null);
       const users = isPrivate ? { users: trustedUsers } : { users: [] };
-      onSubmit({
+      const botData = {
         botName,
         isPrivate,
         botScript,
         botPackageJSON,
         description,
         botTags: botTags.map(item => item.value),
-        status: bot.status,
         ...users
-      });
+      };
+
+      updateBot(aboutBot.id, convertBotData(botData))
+        .then(() => {
+          notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Bot updated!" });
+          Router.push("/bots");
+        })
+        .catch(() =>
+          notify({ type: NOTIFICATION_TYPES.ERROR, message: "Update failed!" })
+        );
     }
   };
 
   return (
     <>
-      <FormContainer>
+      <Container>
         <Row>
           <Input
             type={"text"}
@@ -218,17 +264,17 @@ const BotEditor = ({
         </Row>
         <Row>
           <InputWrap>
-            <Tabs defaultActiveKey="script" id="tabs-script">
+            <Tabs defaultActiveKey="script">
               <Tab eventKey="script" title="index.js">
                 <CodeEditor
-                    value={botScript}
-                    onChange={code => setBotScript(code)}
+                  value={botScript}
+                  onChange={code => setBotScript(code)}
                 />
               </Tab>
               <Tab eventKey="json" title="package.json">
                 <CodeEditor
-                    value={botPackageJSON}
-                    onChange={code => setBotPackageJSON(code)}
+                  value={botPackageJSON}
+                  onChange={code => setBotPackageJSON(code)}
                 />
               </Tab>
             </Tabs>
@@ -239,6 +285,7 @@ const BotEditor = ({
             label={"Description"}
             rows={5}
             value={description}
+            styles={inputStyles}
             onChange={e => setDescription(e.target.value)}
           />
         </Row>
@@ -280,37 +327,41 @@ const BotEditor = ({
           </Row>
         )}
         {error && <Error>{error}</Error>}
-      </FormContainer>
+      </Container>
       <Buttons>
-        <Button type={"danger"} onClick={onClose}>
-          Cancel
-        </Button>
         <Button type={"primary"} onClick={submit}>
-         Update
+          Update
         </Button>
       </Buttons>
     </>
   );
 };
 
-BotEditor.propTypes = {
-  bot: PropTypes.object,
+Index.propTypes = {
+  aboutBot: PropTypes.object.isRequired,
   tags: PropTypes.array.isRequired,
   users: PropTypes.array.isRequired,
+  getBot: PropTypes.func.isRequired,
+  clearBot: PropTypes.func.isRequired,
   getTags: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired
+  updateBot: PropTypes.func.isRequired,
+  notify: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   tags: state.bot.tags,
-  users: state.user.users
+  users: state.user.users,
+  aboutBot: state.bot.aboutBot,
 });
 
 const mapDispatchToProps = dispatch => ({
+  getBot: id => dispatch(getBot(id)),
+  clearBot: () => dispatch(clearBot()),
   getTags: query => dispatch(getTags(query)),
-  getUsers: query => dispatch(getUsers(query))
+  getUsers: query => dispatch(getUsers(query)),
+  updateBot: (id, data) => dispatch(updateBot(id, data)),
+  notify: payload => dispatch(addNotification(payload)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BotEditor);
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

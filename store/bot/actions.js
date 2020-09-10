@@ -13,7 +13,9 @@ import {
   GET_RUNNING_BOTS,
   UPDATE_RUNNING_BOT,
   POST_LAUNCH_INSTANCE,
+  GET_INSTANCE,
   GET_BOT,
+  CLEAR_INSTANCE,
   COPY_INSTANCE,
   RESTORE_INSTANCE,
   DOWNLOAD_INSTANCE_PEM_FILE,
@@ -24,7 +26,6 @@ import {
   BOT_REPORT,
   LIMIT_CHANGE,
   ADD_SCRIPT_NOTIFICATION,
-  ADD_SCRIPT_SUBSCRIBE
 } from "./types";
 import { success } from "redux-saga-requests";
 
@@ -222,11 +223,26 @@ export const botInstanceUpdated = botInstance => ({
   data: botInstance
 });
 
+export const getInstance = id => ({
+  type: GET_INSTANCE,
+  request: {
+    method: "GET",
+    url: `/instances/${id}`
+  },
+  meta: {
+    thunk: true,
+  }
+});
+
+export const clearInstance = () => ({
+  type: CLEAR_INSTANCE
+});
+
 export const getBot = id => ({
   type: GET_BOT,
   request: {
     method: "GET",
-    url: `/instances/${id}`
+    url: `/bots/${id}`
   },
   meta: {
     thunk: true,

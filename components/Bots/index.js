@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import styled from "@emotion/styled";
-import BotEditor from "./components/BotEditor";
 import Icon from "/components/default/icons";
 import Router from "next/router";
 import LaunchEditor from "./components/LaunchEditor";
@@ -21,7 +20,6 @@ import {
 import { connect } from "react-redux";
 import {
   getBots,
-  updateBot,
   updateStatusBot,
   launchInstance,
   getBotSettings,
@@ -98,23 +96,8 @@ const Buttons = styled.div`
   justify-content: space-between;
 `;
 
-const modalContainerStyles = css`
-  margin-top: 0;
-`;
-
-const modalStyles = css`
-  min-width: 800px;
-  max-width: 800px;
-  overflow-y: visible;
-  @media (max-height: 900px) {
-    max-height: 700px;
-    overflow-y: scroll;
-  }
-`;
-
 const Bots = ({
   getBots,
-  updateBot,
   updateStatusBot,
   launchInstance,
   bots,
@@ -128,7 +111,6 @@ const Bots = ({
   user,
   limit,
   setLimit,
-  ...props
 }) => {
   const [clickedBot, setClickedBot] = useState(null);
   const [page, setPage] = useState(1);
@@ -136,7 +118,6 @@ const Bots = ({
   const [search, setSearch] = useState(null);
 
   const modal = useRef(null);
-  const editModal = useRef(null);
   const deleteModal = useRef(null);
 
   useEffect(() => {
@@ -177,28 +158,6 @@ const Bots = ({
           delay: 1500
         });
       });
-  };
-
-  const convertBotData = botData => ({
-    name: botData.botName,
-    description: botData.description,
-    aws_custom_script: botData.botScript,
-    aws_custom_package_json: botData.botPackageJSON,
-    tags: botData.botTags,
-    users: botData.users.map(user => user.id),
-    type: botData.isPrivate ? "private" : "public",
-    status: botData.status
-  });
-
-  const getUpdateBot = botData => {
-    updateBot(clickedBot.id, convertBotData(botData))
-      .then(() => {
-        notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "Bot updated!" });
-        editModal.current.close();
-      })
-      .catch(() =>
-        notify({ type: NOTIFICATION_TYPES.ERROR, message: "Update failed!" })
-      );
   };
 
   const changeBotStatus = bot => {
@@ -293,8 +252,7 @@ const Bots = ({
             title={"Edit Bot"}
             type={"primary"}
             onClick={() => {
-              setClickedBot(bot);
-              editModal.current.open();
+              Router.push(`/bot/${bot.id}`);
             }}
           >
             <Icon name={"edit"} color={theme.colors.white} />
@@ -428,21 +386,6 @@ const Bots = ({
           bot={clickedBot}
         />
       </Modal>
-
-      <Modal
-        ref={editModal}
-        title={"Edit Bot"}
-        contentStyles={modalStyles}
-        containerStyles={modalContainerStyles}
-      >
-        <BotEditor
-          type={"edit"}
-          bot={clickedBot}
-          onSubmit={getUpdateBot}
-          onClose={() => editModal.current.close()}
-        />
-      </Modal>
-
       <Modal
         ref={deleteModal}
         title={"Delete Bot"}
@@ -476,7 +419,6 @@ Bots.propTypes = {
   syncLoading: PropTypes.bool.isRequired,
   user: PropTypes.object,
   getBots: PropTypes.func.isRequired,
-  updateBot: PropTypes.func.isRequired,
   updateStatusBot: PropTypes.func.isRequired,
   launchInstance: PropTypes.func.isRequired,
   deleteBot: PropTypes.func.isRequired,
@@ -502,7 +444,6 @@ const mapDispatchToProps = dispatch => ({
   notify: payload => dispatch(addNotification(payload)),
   launchInstance: (id, params) =>
     dispatch(launchInstance(id, params)),
-  updateBot: (id, data) => dispatch(updateBot(id, data)),
   updateStatusBot: (id, data) => dispatch(updateStatusBot(id, data)),
   deleteBot: id => dispatch(deleteBot(id)),
   getBotSettings: () => dispatch(getBotSettings()),

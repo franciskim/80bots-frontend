@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import { withTheme } from "emotion-theming";
 import { theme } from "/config";
 import { Card, CardBody, CardHeader } from "/components/default/Card";
-import { getBot, clearBot } from "/store/bot/actions";
+import { getInstance, clearInstance } from "/store/bot/actions";
 import { subscribe, unsubscribe } from "/store/socket/actions";
 import { Badge, Button, Loader80bots } from "/components/default";
 
@@ -133,8 +133,8 @@ const ConnectionStatus = ({ status, color }) => (
 
 const BotView = ({
   botInstance,
-  clearBot,
-  getBot,
+  clearInstance,
+  getInstance,
   wsSubscribe,
   wsUnsubscribe
 }) => {
@@ -155,9 +155,9 @@ const BotView = ({
   }, [botInstance]);
 
   useEffect(() => {
-    getBot(router.query.id);
+    getInstance(router.query.id);
     return () => {
-      clearBot();
+      clearInstance();
     };
   }, []);
 
@@ -224,8 +224,8 @@ const BotView = ({
 };
 
 BotView.propTypes = {
-  getBot: PropTypes.func.isRequired,
-  clearBot: PropTypes.func.isRequired,
+  getInstance: PropTypes.func.isRequired,
+  clearInstance: PropTypes.func.isRequired,
   wsSubscribe: PropTypes.func.isRequired,
   wsUnsubscribe: PropTypes.func.isRequired,
   botInstance: PropTypes.object.isRequired,
@@ -242,8 +242,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  clearBot: () => dispatch(clearBot()),
-  getBot: id => dispatch(getBot(id)),
+  clearInstance: () => dispatch(clearInstance()),
+  getInstance: id => dispatch(getInstance(id)),
   wsSubscribe: (channel, isPrivate) => dispatch(subscribe(channel, isPrivate)),
   wsUnsubscribe: channel => dispatch(unsubscribe(channel))
 });

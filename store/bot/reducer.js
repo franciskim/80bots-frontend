@@ -19,7 +19,9 @@ import {
   SYNC_BOT_INSTANCES,
   SYNC_BOTS,
   GET_BOT,
+  GET_INSTANCE,
   CLEAR_BOT,
+  CLEAR_INSTANCE,
   REGIONS,
   UPDATE_REGION,
   LIMIT_CHANGE,
@@ -41,6 +43,7 @@ const initialState = {
     storage_channel: undefined,
     notification_channel: undefined
   },
+  aboutBot:{},
   botSettings: {},
   totalRegions: 0,
   total: 0,
@@ -60,6 +63,7 @@ export const reducer = (state = initialState, action) => {
     case GET_BOTS:
     case GET_RUNNING_BOTS:
     case GET_BOT:
+    case GET_INSTANCE:
     case COPY_INSTANCE:
     case RESTORE_INSTANCE:
     case POST_LAUNCH_INSTANCE:
@@ -74,16 +78,22 @@ export const reducer = (state = initialState, action) => {
     case SYNC_BOTS:
       return { ...state, syncLoading: true };
 
-    case CLEAR_BOT:
+    case CLEAR_INSTANCE:
       return { ...state, botInstance: {} };
+
+    case CLEAR_BOT:
+      return { ...state, aboutBot: {} };
 
     case LIMIT_CHANGE: {
       localStorage.setItem("bot.limit", action.data);
       return { ...state, limit: action.data };
     }
 
-    case success(GET_BOT):
+    case success(GET_INSTANCE):
       return { ...state, botInstance: { ...action.data }, loading: false };
+
+    case success(GET_BOT):
+      return { ...state, aboutBot: { ...action.data }, loading: false };
 
     case success(GET_FOLDERS):
       return {
@@ -215,6 +225,7 @@ export const reducer = (state = initialState, action) => {
     case error(GET_LOGS):
     case error(GET_OUTPUT_JSON):
     case error(GET_BOT):
+    case error(GET_INSTANCE):
     case error(GET_BOTS):
     case error(GET_RUNNING_BOTS):
     case error(COPY_INSTANCE):
