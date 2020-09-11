@@ -149,12 +149,12 @@ const Index = ({
     };
   };
 
-  function isEmpty(obj) {
+  const isEmpty = obj => {
     for(let key in obj) {
       return true;
     }
     return false;
-  }
+  };
 
   useEffect(() => {
     getBot(router);

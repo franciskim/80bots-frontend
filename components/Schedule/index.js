@@ -180,6 +180,8 @@ const BotsSchedule = ({
     label: bot.instance_id + "|" + bot.name
   });
 
+  const toFilters = bot => (bot.status !== "terminated");
+
   const changeScheduleStatus = schedule => {
     const statusName =
       schedule.status === "active" ? "deactivated" : "activated";
@@ -452,7 +454,7 @@ const BotsSchedule = ({
           <AsyncSelect
             onChange={onBotChange}
             loadOptions={searchBots}
-            defaultOptions={runningBots.map(toOptions)}
+            defaultOptions={runningBots.filter(toFilters).map(toOptions)}
             styles={selectStyles}
           />
         </SelectWrap>
