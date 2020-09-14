@@ -52,7 +52,8 @@ export const WEEKDAYS = [
   "Wednesday",
   "Thursday",
   "Friday",
-  "Saturday"
+  "Saturday",
+  "Everyday",
 ];
 
 export const NOTIFICATION_TYPES = {

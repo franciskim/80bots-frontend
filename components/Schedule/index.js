@@ -93,7 +93,7 @@ const Ul = styled.ul`
 `;
 
 const modalStyles = css`
-  min-width: 500px;
+  min-width: 1200px;
   overflow-y: visible;
   min-height: 500px;
 `;
@@ -146,8 +146,7 @@ const BotsSchedule = ({
   schedules,
   total,
   runningBots,
-  user,
-  ...props
+  user
 }) => {
   const [clickedSchedule, setClickedSchedule] = useState(null);
   const [list, setFilterList] = useState("all");
