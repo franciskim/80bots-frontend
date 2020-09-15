@@ -304,7 +304,7 @@ const Bots = ({
   return (
     <>
       <AddButtonWrap style={{ marginBottom: "17px" }}>
-        <Button type={"success"} onClick={() => Router.push("/bots/add")}>
+        <Button type={"success"} onClick={() => Router.push("/bot/add")}>
           Add Bot
         </Button>
         <Button
