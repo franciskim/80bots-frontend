@@ -36,6 +36,7 @@ import {
   closeScriptNotification,
   flushScriptNotification
 } from "/store/scriptNotification/actions";
+import {formatTimezone} from "../../lib/helpers";
 
 const Container = styled(Card)`
   background: #333;
@@ -331,6 +332,7 @@ const RunningBots = ({
   );
 
   const renderRow = (botInstance, idx) => {
+    console.log("notification" in botInstance);
     return (
       <Tr
         key={idx}
@@ -392,7 +394,7 @@ const RunningBots = ({
         <td>{botInstance.bot_name}</td>
         <td>
           {botInstance.notification_error === null ?
-            <Notify>{botInstance.notification}</Notify> :
+            <Notify>{formatTimezone(user.timezone) + botInstance.notification}</Notify> :
             <NotifyErr>{botInstance.notification_error}</NotifyErr>}
         </td>
         <td>{botInstance.launched_at}</td>
