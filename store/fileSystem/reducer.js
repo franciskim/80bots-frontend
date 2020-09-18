@@ -51,7 +51,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         total: state.total + 1,
-        items: state.items.length >= state.query.limit ? [...state.items] : [action.data.item, ...state.items]
+        items: state.items.length >= state.query.limit ? [...state.items] : [...state.items, action.data.item]
       };
     case FLUSH:
       return { ...initialState };
