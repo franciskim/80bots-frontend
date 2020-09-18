@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import PropTypes from "prop-types";
 import styled from "@emotion/styled";
 import Item from "./Item";
 import { CardBody } from "../Card";
 import { Paginator } from "../Paginator";
+import {Button} from "../Button";
 
 const Row = styled.div`
   display: flex;
@@ -36,6 +37,16 @@ const PaginatorRow = styled(Row)`
   justify-content: flex-end;
 `;
 
+const FilterButton = styled(Button)`
+  padding: 0 5px;
+`;
+
+const WrapperButton = styled.div`
+  margin-left: 20px;
+  display: flex;
+  padding-bottom: 1.25rem;
+`;
+
 const List = ({
   items,
   total,
@@ -45,15 +56,39 @@ const List = ({
   onItemClick,
   className
 }) => {
+  const [newItems, setNewItems] = useState(items);
+  const [filter, setFilter] = useState(false);
+
+  const filterScreenshot = () => {
+    if (!filter) {
+      const noBlackScreenshot = newItems.filter(item => item.name.split(' ')[0] !== "black_screenshot");
+      setNewItems(noBlackScreenshot);
+      setFilter(true);
+    } else {
+      setNewItems(items);
+      setFilter(false);
+    }
+  };
+
   return (
     <Col className={className}>
       <Row>
         <Content>
-          <ListWrapper>
-            {items.map((item, i) => (
-              <Item item={item} key={i} onClick={onItemClick} />
-            ))}
-          </ListWrapper>
+          <Col>
+            {items[0].type === "file" ?
+              <WrapperButton>
+                <FilterButton type={"primary"} onClick={filterScreenshot}>
+                  Filter
+                </FilterButton>
+              </WrapperButton>
+              : null
+            }
+            <ListWrapper>
+              {newItems.map((item, i) => (
+                <Item item={item} key={i} onClick={onItemClick} />
+              ))}
+            </ListWrapper>
+          </Col>
         </Content>
       </Row>
 

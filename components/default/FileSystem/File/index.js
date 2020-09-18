@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import styled from "@emotion/styled";
 import CardWithPreview from "../../CardWithPreview";
 import { css, keyframes } from "@emotion/core";
+import {formatScreenshot, formatTimezone} from "../../../../lib/helpers";
+import {connect} from "react-redux";
+import {withTheme} from "emotion-theming";
 
 const Fade = keyframes`
   from { opacity: 0 }
@@ -23,22 +26,47 @@ const Wrapper = styled(CardWithPreview)`
     `}
 `;
 
+const TemplateList = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+`;
+
+const Date = styled.span`
+  color: rgb(125, 255, 255);
+`;
+
 export const TYPE = "file";
 
-const File = ({ item, onClick }) => {
+const File = ({ item, onClick, user }) => {
+
+  const formatName = formatScreenshot(item.name);
+  const formatDate = formatTimezone(user.timezone, formatName);
+
   return (
-    <Wrapper
-      selected={item.selected}
-      src={item.url}
-      caption={item.name}
-      onClick={() => onClick(item)}
-    />
+    <TemplateList>
+      <Wrapper
+        selected={item.selected}
+        src={item.url}
+        caption={item.name}
+        onClick={() => onClick(item)}
+      />
+      <Date>{formatDate}</Date>
+    </TemplateList>
   );
 };
 
 File.propTypes = {
   item: PropTypes.object.isRequired,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  user: PropTypes.object,
 };
 
-export default File;
+const mapStateToProps = state => ({
+  user: state.auth.user,
+});
+
+export default connect(
+  mapStateToProps
+)(withTheme(File));

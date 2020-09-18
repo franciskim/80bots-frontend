@@ -332,7 +332,6 @@ const RunningBots = ({
   );
 
   const renderRow = (botInstance, idx) => {
-    console.log("notification" in botInstance);
     return (
       <Tr
         key={idx}
@@ -394,7 +393,7 @@ const RunningBots = ({
         <td>{botInstance.bot_name}</td>
         <td>
           {botInstance.notification_error === null ?
-            <Notify>{formatTimezone(user.timezone) + botInstance.notification}</Notify> :
+            <Notify>{formatTimezone(user.timezone, new Date()) + ": " + botInstance.notification}</Notify> :
             <NotifyErr>{botInstance.notification_error}</NotifyErr>}
         </td>
         <td>{botInstance.launched_at}</td>
