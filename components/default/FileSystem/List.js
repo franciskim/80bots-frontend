@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import styled from "@emotion/styled";
 import Item from "./Item";
@@ -54,21 +54,11 @@ const List = ({
   page,
   onPageChange,
   onItemClick,
-  className
+  className,
+  filterItems,
+  filter
 }) => {
-  const [newItems, setNewItems] = useState(items);
-  const [filter, setFilter] = useState(false);
-
-  const filterScreenshot = () => {
-    if (!filter) {
-      const noBlackScreenshot = newItems.filter(item => item.name.split(' ')[0] !== "black_screenshot");
-      setNewItems(noBlackScreenshot);
-      setFilter(true);
-    } else {
-      setNewItems(items);
-      setFilter(false);
-    }
-  };
+ let getFiles = filter ? items.filter(item => item.name.split(' ')[0] !== "black_screenshot") : items;
 
   return (
     <Col className={className}>
@@ -77,14 +67,14 @@ const List = ({
           <Col>
             {items[0].type === "file" ?
               <WrapperButton>
-                <FilterButton type={"primary"} onClick={filterScreenshot}>
+                <FilterButton type={"primary"} onClick={filterItems}>
                   Filter
                 </FilterButton>
               </WrapperButton>
               : null
             }
             <ListWrapper>
-              {newItems.map((item, i) => (
+              {getFiles.map((item, i) => (
                 <Item item={item} key={i} onClick={onItemClick} />
               ))}
             </ListWrapper>
@@ -108,13 +98,15 @@ const List = ({
 
 List.propTypes = {
   items: PropTypes.array.isRequired,
+  filterItems: PropTypes.array.isRequired,
   total: PropTypes.number,
   limit: PropTypes.number,
   page: PropTypes.number,
   onLimitChange: PropTypes.func,
   onPageChange: PropTypes.func,
   onItemClick: PropTypes.func,
-  className: PropTypes.string
+  className: PropTypes.string,
+  filter: PropTypes.bool,
 };
 
 export default List;

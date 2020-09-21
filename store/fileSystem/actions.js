@@ -4,11 +4,18 @@ import {
   OPEN_ITEM,
   CLOSE_ITEM,
   ADD_ITEM,
+  FILTER_ITEMS,
 } from './types';
 
 export const flush = () => {
   return {
     type: FLUSH
+  };
+};
+
+export const filterItems = () => {
+  return {
+    type: FILTER_ITEMS
   };
 };
 
