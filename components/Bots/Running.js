@@ -144,6 +144,7 @@ const RunningBots = ({
    downloadInstancePemFile,
    updateRunningBot,
    botInstances,
+   botNotifications,
    total,
    user,
    addListener,
@@ -321,6 +322,27 @@ const RunningBots = ({
     );
   };
 
+  const hasBotNotification = botInstanceStatus => {
+      return botNotifications.length > 0 && botInstanceStatus === 'running';
+  };
+
+  const getBotNotification = botInstanceId => {
+      const date = botNotifications.filter((item) => item.instanceId === botInstanceId);
+      if (date.length <= 0) {
+          return '';
+      }
+      return formatTimezone(user.timezone, date[0].date) + ' : ' + date[0].notification || '';
+  };
+
+  const getBotNotificationError = botInstanceId => {
+      const error = botNotifications.filter((item) => item.instanceId === botInstanceId);
+      return error[0] !== undefined && error[0].error !== null;
+  };
+
+  const getBotNotificationErrorString = botInstanceId => {
+      return (botNotifications.filter((item) => item.instanceId === botInstanceId)[0].error) || '';
+  };
+
   const Loading = (
     <Loader80bots
       data={"dark"}
@@ -392,9 +414,13 @@ const RunningBots = ({
         </td>
         <td>{botInstance.bot_name}</td>
         <td>
-          {botInstance.notification_error === null ?
-            <Notify>{formatTimezone(user.timezone, new Date()) + ": " + botInstance.notification}</Notify> :
-            <NotifyErr>{botInstance.notification_error}</NotifyErr>}
+          {hasBotNotification(botInstance.status)
+              ?
+              !getBotNotificationError(botInstance.instance_id) ?
+                <Notify>{getBotNotification(botInstance.instance_id)}</Notify> :
+                <NotifyErr>{getBotNotificationErrorString(botInstance.instance_id)}</NotifyErr>
+              : <></>
+          }
         </td>
         <td>{botInstance.launched_at}</td>
         <UpTime
@@ -550,6 +576,7 @@ RunningBots.propTypes = {
   botInstanceUpdated: PropTypes.func.isRequired,
   syncBotInstances: PropTypes.func.isRequired,
   botInstances: PropTypes.array.isRequired,
+  botNotifications: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
   syncLoading: PropTypes.bool.isRequired,
   user: PropTypes.object,
@@ -566,6 +593,7 @@ RunningBots.propTypes = {
 
 const mapStateToProps = state => ({
   botInstances: state.bot.botInstances,
+  botNotifications: state.bot.botNotifications,
   total: state.bot.total,
   user: state.auth.user,
   syncLoading: state.bot.syncLoading,
