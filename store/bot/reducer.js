@@ -39,6 +39,7 @@ const initialState = {
   amis: [],
   regions: [],
   botInstances: [],
+  botNotifications: [],
   botInstance: {
     storage_channel: undefined,
     notification_channel: undefined
@@ -205,16 +206,18 @@ export const reducer = (state = initialState, action) => {
 
     case ADD_SCRIPT_NOTIFICATION: {
       const {notification, instanceId, error } = action.data.item;
-      const scriptIdx = state.botInstances.findIndex(
-        item => item.instance_id === instanceId
+      const scriptIdx = state.botNotifications.findIndex(
+        item => item.instanceId === instanceId
       );
       if (scriptIdx > -1) {
-        state.botInstances[scriptIdx].notification = notification;
-        state.botInstances[scriptIdx].notification_error = error;
+        state.botNotifications[scriptIdx].notification = notification;
+        state.botNotifications[scriptIdx].error = error;
+      } else {
+        state.botNotifications.push(action.data.item);
       }
       return {
         ...state,
-        botInstances: [...state.botInstances],
+        botNotifications: [...state.botNotifications],
         loading: false
       };
     }

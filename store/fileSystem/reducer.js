@@ -4,11 +4,14 @@ import {
   GET_FILES,
   OPEN_ITEM,
   CLOSE_ITEM,
-  SET_ITEMS, FLUSH,
+  SET_ITEMS,
+  FLUSH,
+  FILTER_ITEMS,
 } from './types';
 
 const initialState = {
   items: [],
+  filter: false,
   total: 0,
   query: {},
   openedFolder: null,
@@ -51,11 +54,15 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         total: state.total + 1,
-        items: state.items.length >= state.query.limit ? [...state.items] : [...state.items, action.data.item]
+        items: state.items.length >= state.query.limit ? [...state.items] : [action.data.item, ...state.items]
       };
     case FLUSH:
       return { ...initialState };
-
+    case FILTER_ITEMS:
+      return {
+        ...state,
+        filter: !state.filter
+      };
     case SET_ITEMS:
       return { ...state, items: action.data.items || [] };
     case error(GET_FILES):

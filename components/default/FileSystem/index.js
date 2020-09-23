@@ -7,7 +7,8 @@ import {
   close,
   flush,
   getItems,
-  open
+  open,
+  filterItems
 } from "../../../store/fileSystem/actions";
 import { connect } from "react-redux";
 import { withTheme } from "emotion-theming";
@@ -30,7 +31,9 @@ const FileSystem = ({
   hideNavigator,
   onFileOpen,
   onFolderOpen,
-  selectedItems
+  selectedItems,
+  filterItems,
+  filter,
 }) => {
   const handleItemClick = item => {
     if (item.type === "file") {
@@ -61,6 +64,8 @@ const FileSystem = ({
           page={page}
           total={total}
           limit={limit}
+          filterItems={filterItems}
+          filter={filter}
         />
       ) : null}
     </Container>
@@ -81,7 +86,9 @@ FileSystem.propTypes = {
   hideNavigator: PropTypes.bool,
   onFileOpen: PropTypes.func,
   onFolderOpen: PropTypes.func,
-  selectedItems: PropTypes.array
+  selectedItems: PropTypes.array,
+  filterItems: PropTypes.func.isRequired,
+  filter: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
@@ -91,14 +98,16 @@ const mapStateToProps = state => ({
   items: state.fileSystem.items,
   total: state.fileSystem.total,
   limit: state.fileSystem.query?.limit,
-  page: state.fileSystem.query?.page
+  page: state.fileSystem.query?.page,
+  filter: state.fileSystem.filter,
 });
 
 const mapDispatchToProps = dispatch => ({
   getItems: query => dispatch(getItems(query)),
   flush: () => dispatch(flush()),
   openItem: item => dispatch(open(item)),
-  closeItem: item => dispatch(close(item))
+  closeItem: item => dispatch(close(item)),
+  filterItems: () => dispatch(filterItems()),
 });
 
 export default connect(
