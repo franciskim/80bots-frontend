@@ -309,6 +309,14 @@ const RunningBots = ({
         );
   };
 
+  const startAllBots = () => {
+      botInstances.map(function (botInstance) {
+          if (botInstance.status === 'stopped') {
+              changeBotInstanceStatus({value: "running", label: "Running"}, botInstance.id);
+          }
+      });
+  };
+
   const copyToClipboard = bot => {
     const text =
         process.env.NODE_ENV === "development"
@@ -481,12 +489,20 @@ const RunningBots = ({
         <AddButtonWrap>
           <Button
               type={"primary"}
+              onClick={startAllBots}
+              loaderWidth={"30px"}
+              loaderHeight={"20px"}
+          >
+              Launch Workforce
+          </Button>
+          <Button
+              type={"primary"}
               onClick={syncWithAWS}
               loading={`${syncLoading}`}
               loaderWidth={"30px"}
               loaderHeight={"20px"}
           >
-            Sync Bot Instances
+              Sync Bot Instances
           </Button>
         </AddButtonWrap>
         <Container>
@@ -579,6 +595,7 @@ RunningBots.propTypes = {
   botNotifications: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
   syncLoading: PropTypes.bool.isRequired,
+  startWorkforceLoading: PropTypes.bool.isRequired,
   user: PropTypes.object,
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
