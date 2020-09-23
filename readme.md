@@ -1,6 +1,6 @@
 ![80bots frontend](public/images/80bots-logo.svg)
 
-## 80bots frontend part
+## 80bots - the frontend
 
 Next.js application
 
