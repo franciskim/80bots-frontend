@@ -74,6 +74,17 @@ const btnPrimary = css`
   }
 `;
 
+const btnSecondary = css`
+  color: #7dffff;
+  border-color: #7dffff;
+  background-color: transparent;
+  font-weight: bold;
+  &:hover {
+    color: #fff;
+    border-color: #fff;
+  }
+`;
+
 const btnDanger = css`
   color: ${theme.colors.white};
   background-color: ${theme.colors.darkishPink};
@@ -107,6 +118,7 @@ export const Button = ({
     ${rounded && btnRound};
     ${type === "success" && btnSuccess};
     ${type === "primary" && btnPrimary};
+    ${type === "secondary" && btnSecondary};
     ${type === "danger" && btnDanger};
     ${type === "dark" && btnDark};
   `;
@@ -129,7 +141,7 @@ export const Button = ({
 };
 
 Button.propTypes = {
-  type: PropTypes.oneOf(["success", "primary", "danger", "dark"]).isRequired,
+  type: PropTypes.oneOf(["success", "primary", "secondary", "danger", "dark"]).isRequired,
   rounded: PropTypes.bool,
   children: PropTypes.any.isRequired,
   loading: PropTypes.oneOf(["true", "false"]),

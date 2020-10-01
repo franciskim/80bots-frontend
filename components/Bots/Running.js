@@ -37,6 +37,7 @@ import {
   flushScriptNotification
 } from "/store/scriptNotification/actions";
 import {formatTimezone} from "../../lib/helpers";
+import {Line} from 'react-chartjs-2';
 
 const Container = styled(Card)`
   background: #333;
@@ -48,6 +49,10 @@ const Td = styled.td`
   position: absolute;
   left: 20px;
   width: calc(100% - 40px);
+`;
+
+const NotificationTd = styled.td`
+    min-width: 200px;
 `;
 
 const Tr = styled.tr`
@@ -81,7 +86,7 @@ const NotifyErr = styled.span`
 const AddButtonWrap = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   button {
     &:last-child {
       margin-left: 20px;
@@ -361,6 +366,55 @@ const RunningBots = ({
     />
   );
 
+  const getData = (botInstance) => {
+      return {
+          labels: botInstance.difference,
+          datasets: [
+              {
+                  label: [],
+                  lineTension: 0,
+                  backgroundColor: "rgba(125,255,255,0.2)",
+                  borderColor: "rgba(125,255,255,1)",
+                  borderWidth: 0.5,
+                  data: botInstance.difference,
+              },
+          ],
+      };
+  };
+
+  const legendOpt = {
+      display: false
+  };
+
+  const chartOptions = {
+    scales: {
+        xAxes: [{
+            ticks: {
+                display: false
+            },
+            gridLines: {
+                display: false
+            }
+        }],
+        yAxes: [{
+            ticks: {
+                display: false
+            },
+            gridLines: {
+                display: false
+            }
+        }]
+    },
+    elements: {
+        point:{
+            radius: 0
+        }
+    },
+    tooltips: {
+        enabled: false
+    }
+  };
+
   const renderRow = (botInstance, idx) => {
     return (
       <Tr
@@ -421,7 +475,7 @@ const RunningBots = ({
           </div>
         </td>
         <td>{botInstance.bot_name}</td>
-        <td>
+        <NotificationTd>
           {hasBotNotification(botInstance.status)
               ?
               !getBotNotificationError(botInstance.instance_id) ?
@@ -429,6 +483,9 @@ const RunningBots = ({
                 <NotifyErr>{getBotNotificationErrorString(botInstance.instance_id)}</NotifyErr>
               : <></>
           }
+        </NotificationTd>
+        <td>
+            <Line data={getData(botInstance)} legend={legendOpt} options={chartOptions} width={400} height={75}/>
         </td>
         <td>{botInstance.launched_at}</td>
         <UpTime
@@ -487,23 +544,23 @@ const RunningBots = ({
   return (
       <>
         <AddButtonWrap>
-          <Button
-              type={"primary"}
-              onClick={startAllBots}
-              loaderWidth={"30px"}
-              loaderHeight={"20px"}
-          >
-              Launch Workforce
-          </Button>
-          <Button
+            <Button
               type={"primary"}
               onClick={syncWithAWS}
               loading={`${syncLoading}`}
               loaderWidth={"30px"}
               loaderHeight={"20px"}
-          >
+            >
               Sync Bot Instances
-          </Button>
+            </Button>
+            <Button
+                type={"secondary"}
+                onClick={startAllBots}
+                loaderWidth={"30px"}
+                loaderHeight={"20px"}
+            >
+                Launch Workforce
+            </Button>
         </AddButtonWrap>
         <Container>
           <CardBody>
@@ -547,7 +604,8 @@ const RunningBots = ({
                   <OrderTh field={"status"}>Status</OrderTh>
                   <th>Actions</th>
                   <OrderTh field={"bot_name"}>Bot</OrderTh>
-                  <OrderTh field={"script_notification"}>Notification</OrderTh>
+                  <OrderTh field={"script_notification"}>Last Notification</OrderTh>
+                  <OrderTh field={"bot_statistic"}>24h Visual Activity</OrderTh>
                   <OrderTh field={"launched_at"}>Deployed At</OrderTh>
                   <OrderTh field={"uptime"}>Uptime</OrderTh>
                   <OrderTh field={"ip"}>IP</OrderTh>
@@ -595,7 +653,6 @@ RunningBots.propTypes = {
   botNotifications: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
   syncLoading: PropTypes.bool.isRequired,
-  startWorkforceLoading: PropTypes.bool.isRequired,
   user: PropTypes.object,
   theme: PropTypes.shape({
     colors: PropTypes.object.isRequired
