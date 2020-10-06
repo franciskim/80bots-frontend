@@ -25,7 +25,7 @@ import {
   REGIONS,
   UPDATE_REGION,
   LIMIT_CHANGE,
-  ADD_SCRIPT_NOTIFICATION,
+  ADD_SCRIPT_NOTIFICATION, UPDATE_LAST_NOTIFICATION,
 } from "./types";
 
 const initialState = {
@@ -238,6 +238,7 @@ export const reducer = (state = initialState, action) => {
     case error(UPDATE_BOT):
     case error(DOWNLOAD_INSTANCE_PEM_FILE):
     case error(UPDATE_REGION):
+    case error(UPDATE_LAST_NOTIFICATION):
     case error(UPDATE_STATUS):
       return { ...state, loading: false, error: action.error };
 

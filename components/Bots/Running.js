@@ -52,7 +52,7 @@ const Td = styled.td`
 `;
 
 const NotificationTd = styled.td`
-    min-width: 200px;
+    min-width: 400px;
 `;
 
 const Tr = styled.tr`
@@ -335,8 +335,8 @@ const RunningBots = ({
     );
   };
 
-  const hasBotNotification = botInstanceStatus => {
-      return botNotifications.length > 0 && botInstanceStatus === 'running';
+  const hasBotNotification = botInstance => {
+      return botNotifications.length[botInstance.instance_id] > 0;
   };
 
   const getBotNotification = botInstanceId => {
@@ -476,12 +476,12 @@ const RunningBots = ({
         </td>
         <td>{botInstance.bot_name}</td>
         <NotificationTd>
-          {hasBotNotification(botInstance.status)
+          {hasBotNotification(botInstance)
               ?
               !getBotNotificationError(botInstance.instance_id) ?
                 <Notify>{getBotNotification(botInstance.instance_id)}</Notify> :
                 <NotifyErr>{getBotNotificationErrorString(botInstance.instance_id)}</NotifyErr>
-              : <></>
+              : <Notify>{botInstance.last_notification}</Notify>
           }
         </NotificationTd>
         <td>

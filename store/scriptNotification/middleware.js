@@ -8,7 +8,7 @@ import {
   stopListeningForWhisper,
 } from "../socket/actions";
 import {
-  addScriptNotification,
+  addScriptNotification, updateLastNotification,
 } from "../bot/actions";
 
 export default function scriptNotificationMiddleware() {
@@ -45,6 +45,7 @@ export default function scriptNotificationMiddleware() {
             console.log({signal, data});
             if(signal === "notification") {
               dispatch(addScriptNotification(data));
+              dispatch(updateLastNotification(data.instanceId, data.date + ' : ' + data.notification));
             }
           }));
         }

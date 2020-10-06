@@ -26,6 +26,7 @@ import {
   BOT_REPORT,
   LIMIT_CHANGE,
   ADD_SCRIPT_NOTIFICATION,
+  UPDATE_LAST_NOTIFICATION
 } from "./types";
 import { success } from "redux-saga-requests";
 
@@ -346,6 +347,15 @@ export const updateRegion = (id, data) => ({
   },
   meta: {
     thunk: true
+  }
+});
+
+export const updateLastNotification = (aws_instance_id, notification) => ({
+  type: UPDATE_LAST_NOTIFICATION,
+  request: {
+    method: "POST",
+    url: `/instances/update`,
+    data: { aws_instance_id: aws_instance_id, notification: notification }
   }
 });
 
