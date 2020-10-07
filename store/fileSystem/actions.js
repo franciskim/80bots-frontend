@@ -13,10 +13,13 @@ export const flush = () => {
   };
 };
 
-export const filterItems = () => {
-  return {
+export const filterItems = (query) => (dispatch) => {
+  console.log('----------query------------');
+  console.log(query);
+  dispatch(getItems({ ...query }));
+  return dispatch({
     type: FILTER_ITEMS
-  };
+  });
 };
 
 export const open = (item, query) => (dispatch) => {

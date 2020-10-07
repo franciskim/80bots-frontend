@@ -58,7 +58,7 @@ const List = ({
   filterItems,
   filter
 }) => {
- let getFiles = filter ? items.filter(item => item.name.split(' ')[0] !== "black_screenshot") : items;
+ let getFiles = filter ? items.filter(item => (item.name.split(' ')[0] !== "black_screenshot" && item.name.split(' ')[0] !== "blank_screenshot")) : items;
 
   return (
     <Col className={className}>

@@ -161,7 +161,7 @@ export const getFolders = (query = { page: 1, limit: 1 }) => {
   };
 };
 
-export const getScreenshots = (query = { page: 1, limit: 1 }) => {
+export const getScreenshots = (query = { page: 1, limit: 1, isFiltered: false }) => {
   Object.keys(query).forEach(key => query[key] === "" && delete query[key]);
   return {
     type: GET_SCREENSHOTS,

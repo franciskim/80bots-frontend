@@ -59,12 +59,12 @@ const FileSystem = ({
         <List
           items={getSelectedItems()}
           onItemClick={handleItemClick}
-          onLimitChange={limit => getItems({ limit })}
-          onPageChange={page => getItems({ page })}
+          onLimitChange={limit => getItems({ limit, isFiltered: filter })}
+          onPageChange={page => getItems({ page, isFiltered: filter })}
           page={page}
           total={total}
           limit={limit}
-          filterItems={filterItems}
+          filterItems={f => filterItems({ limit: 15, page: 1, isFiltered: !filter })}
           filter={filter}
         />
       ) : null}
@@ -100,6 +100,7 @@ const mapStateToProps = state => ({
   limit: state.fileSystem.query?.limit,
   page: state.fileSystem.query?.page,
   filter: state.fileSystem.filter,
+  isFiltered: state.fileSystem.isFiltered
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -107,7 +108,7 @@ const mapDispatchToProps = dispatch => ({
   flush: () => dispatch(flush()),
   openItem: item => dispatch(open(item)),
   closeItem: item => dispatch(close(item)),
-  filterItems: () => dispatch(filterItems()),
+  filterItems: (query) => dispatch(filterItems(query)),
 });
 
 export default connect(

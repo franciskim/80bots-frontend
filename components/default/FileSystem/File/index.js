@@ -52,7 +52,7 @@ const File = ({ item, onClick, user }) => {
         caption={item.name}
         onClick={() => onClick(item)}
       />
-      <Date>{formatDate}</Date>
+      {/*<Date>{formatDate}</Date>*/}
     </TemplateList>
   );
 };

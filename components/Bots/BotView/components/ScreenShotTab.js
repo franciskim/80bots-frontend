@@ -12,7 +12,7 @@ import Modal from "/components/default/Modal";
 import ReportEditor from "./ReportIssue";
 
 const rootFolder = "screenshots";
-const defaultLimit = 16;
+const defaultLimit = 15;
 
 const Fade = keyframes`
   from { opacity: 0 }
