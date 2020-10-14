@@ -25,7 +25,8 @@ import {
   REGIONS,
   UPDATE_REGION,
   LIMIT_CHANGE,
-  ADD_SCRIPT_NOTIFICATION, UPDATE_LAST_NOTIFICATION,
+  ADD_SCRIPT_NOTIFICATION,
+  UPDATE_LAST_NOTIFICATION,
 } from "./types";
 
 const initialState = {
@@ -205,19 +206,11 @@ export const reducer = (state = initialState, action) => {
       };
 
     case ADD_SCRIPT_NOTIFICATION: {
-      const {notification, instanceId, error } = action.data.item;
-      const scriptIdx = state.botNotifications.findIndex(
-        item => item.instanceId === instanceId
-      );
-      if (scriptIdx > -1) {
-        state.botNotifications[scriptIdx].notification = notification;
-        state.botNotifications[scriptIdx].error = error;
-      } else {
-        state.botNotifications.push(action.data.item);
-      }
+      const notification = {...state.botNotifications};
+      notification[action.data.item.instanceId] = {...action.data.item};
       return {
         ...state,
-        botNotifications: [...state.botNotifications],
+        botNotifications: notification,
         loading: false
       };
     }

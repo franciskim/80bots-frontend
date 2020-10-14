@@ -55,6 +55,11 @@ const NotificationTd = styled.td`
     min-width: 400px;
 `;
 
+
+const IdTd = styled.td`
+    white-space: nowrap;
+`;
+
 const Tr = styled.tr`
   position: relative;
   background-color: ${props =>
@@ -70,9 +75,9 @@ const Ip = styled.span`
 `;
 
 const Notify = styled.span`
-  color: #63CA00;
+  color: #7dffff;
   &:hover {
-    color: #7CFC00;
+    color: #00ffff;
   }
 `;
 
@@ -335,25 +340,42 @@ const RunningBots = ({
     );
   };
 
-  const hasBotNotification = botInstance => {
-      return botNotifications.length[botInstance.instance_id] > 0;
+  const hasBotNotification = botInstanceId => {
+      return !!botNotifications[botInstanceId];
   };
 
-  const getBotNotification = botInstanceId => {
-      const date = botNotifications.filter((item) => item.instanceId === botInstanceId);
-      if (date.length <= 0) {
-          return '';
-      }
-      return formatTimezone(user.timezone, date[0].date) + ' : ' + date[0].notification || '';
+  const getBotNotificationMessage = botInstanceId => {
+      return botNotifications[botInstanceId].notification;
+  };
+
+  const getServerTime = botInstanceId => {
+      return formatTimezone(user.timezone, botNotifications[botInstanceId].date);
   };
 
   const getBotNotificationError = botInstanceId => {
-      const error = botNotifications.filter((item) => item.instanceId === botInstanceId);
-      return error[0] !== undefined && error[0].error !== null;
+      return !!botNotifications[botInstanceId].error;
   };
 
   const getBotNotificationErrorString = botInstanceId => {
-      return (botNotifications.filter((item) => item.instanceId === botInstanceId)[0].error) || '';
+      return botNotifications[botInstanceId].error || '';
+  };
+
+  const getBotLastNotificationTime = botInstanceId => {
+      const bot = botInstances.filter(
+          bot => bot.instance_id === botInstanceId
+      );
+      if(!bot[0].last_notification)
+          return '';
+      return bot[0].last_notification.split("(/break/)")[0];
+  };
+
+  const getBotLastNotificationString = botInstanceId => {
+      const bot = botInstances.filter(
+          bot => bot.instance_id === botInstanceId
+      );
+      if(!bot[0].last_notification)
+          return '';
+      return bot[0].last_notification.split("(/break/)")[1];
   };
 
   const Loading = (
@@ -476,12 +498,19 @@ const RunningBots = ({
         </td>
         <td>{botInstance.bot_name}</td>
         <NotificationTd>
-          {hasBotNotification(botInstance)
-              ?
-              !getBotNotificationError(botInstance.instance_id) ?
-                <Notify>{getBotNotification(botInstance.instance_id)}</Notify> :
-                <NotifyErr>{getBotNotificationErrorString(botInstance.instance_id)}</NotifyErr>
-              : <Notify>{botInstance.last_notification}</Notify>
+          {hasBotNotification(botInstance.instance_id)
+              ? !getBotNotificationError(botInstance.instance_id)
+                  ? <Notify>
+                      {getBotNotificationMessage(botInstance.instance_id)}
+                        <br />
+                      {getServerTime(botInstance.instance_id)}
+                    </Notify>
+                  : <NotifyErr>{getBotNotificationErrorString(botInstance.instance_id)}</NotifyErr>
+              : <Notify>
+                  {getBotLastNotificationTime(botInstance.instance_id)}
+                  <br/>
+                  {getBotLastNotificationString(botInstance.instance_id)}
+              </Notify>
           }
         </NotificationTd>
         <td>
@@ -496,7 +525,7 @@ const RunningBots = ({
           <Ip onClick={() => copyToClipboard(botInstance)}>{botInstance.ip}</Ip>
         </td>
         <td>{botInstance.name}</td>
-        <td>{botInstance.instance_id}</td>
+        <IdTd>{botInstance.instance_id}</IdTd>
         <td>{botInstance.launched_by}</td>
         <td>{botInstance.region}</td>
         {botInstance.status === "pending" && <Td colSpan={"9"}>{Loading}</Td>}

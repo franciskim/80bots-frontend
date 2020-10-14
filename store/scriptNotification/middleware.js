@@ -45,7 +45,7 @@ export default function scriptNotificationMiddleware() {
             console.log({signal, data});
             if(signal === "notification") {
               dispatch(addScriptNotification(data));
-              dispatch(updateLastNotification(data.instanceId, data.date + ' : ' + data.notification));
+              dispatch(updateLastNotification(data.instanceId, data.date + '(/break/)' + data.notification));
             }
           }));
         }

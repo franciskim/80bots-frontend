@@ -165,7 +165,7 @@ const Register = ({ addNotification, register }) => {
         <SignUpWrap>
           <h5 className="text-white mb-0">
             Already a member?&nbsp;
-            <Link href={"/login"}>
+            <Link href={"/backoffice80"}>
               <a href="#" className="text-white font-weight-bold">
                 Sign In
               </a>
