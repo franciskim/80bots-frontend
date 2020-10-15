@@ -501,9 +501,9 @@ const RunningBots = ({
           {hasBotNotification(botInstance.instance_id)
               ? !getBotNotificationError(botInstance.instance_id)
                   ? <Notify>
-                      {getBotNotificationMessage(botInstance.instance_id)}
-                        <br />
                       {getServerTime(botInstance.instance_id)}
+                      <br />
+                      {getBotNotificationMessage(botInstance.instance_id)}
                     </Notify>
                   : <NotifyErr>{getBotNotificationErrorString(botInstance.instance_id)}</NotifyErr>
               : <Notify>
