@@ -5,6 +5,7 @@ import JsonType from "./components/JsonType";
 import { keyframes } from "@emotion/core";
 import { CardBody } from "/components/default/Card";
 import { Button, Loader80bots } from "/components/default";
+import FilesType from "./components/FileType";
 
 const OUTPUT_TYPES = {
   JSON: {
@@ -14,6 +15,10 @@ const OUTPUT_TYPES = {
   IMAGES: {
     value: "images",
     label: "Images"
+  },
+  FILES: {
+    value: "files",
+    label: "Files"
   }
 };
 
@@ -56,6 +61,8 @@ const OutputTab = ({ setCustomBack }) => {
         return <ImagesType setCustomBack={setCustomBack} />;
       case OUTPUT_TYPES.JSON.value:
         return <JsonType setCustomBack={setCustomBack} />;
+      case OUTPUT_TYPES.FILES.value:
+        return <FilesType setCustomBack={setCustomBack} />;
       default:
         return (
           <Loader80bots
