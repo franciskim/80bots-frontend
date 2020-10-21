@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from 'emotion-theming';
 import { theme, globalStyles } from '../config';
 import { Global } from '@emotion/core';
+import '../public/styles.css';
 
 class MyApp extends App {
   render () {

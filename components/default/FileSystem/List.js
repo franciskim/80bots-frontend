@@ -5,6 +5,7 @@ import Item from "./Item";
 import { CardBody } from "../Card";
 import { Paginator } from "../Paginator";
 import {Button} from "../Button";
+import Toggle from 'react-toggle';
 
 const Row = styled.div`
   display: flex;
@@ -67,9 +68,17 @@ const List = ({
           <Col>
             {items[0].type === "file" ?
               <WrapperButton>
-                <FilterButton type={"primary"} onClick={filterItems}>
-                  Filter
-                </FilterButton>
+                <Toggle
+                    defaultChecked={filter}
+                    className='custom-classname'
+                    onChange={filterItems}
+                    icons={{
+                      checked: 'I',
+                      unchecked: "O",
+                    }} />
+                <span>
+                  Filter Blank
+                </span>
               </WrapperButton>
               : null
             }
