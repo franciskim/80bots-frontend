@@ -398,7 +398,7 @@ const RunningBots = ({
                 const current = Date.parse(data.created_at);
                 const diffSeconds = (current - prev)/1000 ;
                 if(diffSeconds> 300){
-                    const startTime = Date.parse(prevTime);
+                    let startTime = Date.parse(prevTime);
                     const endTime = Date.parse(data.created_at);
                     while(startTime < endTime){
                         difference.push(0)
