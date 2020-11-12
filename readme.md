@@ -1,4 +1,4 @@
-![80bots frontend](public/images/80bots-logo.svg)
+![80bots frontend](public/images/80bots-beam-animated-3x.gif)
 
 ## 80bots - the frontend
 
