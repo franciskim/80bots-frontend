@@ -389,20 +389,42 @@ const RunningBots = ({
   );
 
   const getData = (botInstance) => {
-      return {
-          labels: botInstance.difference,
-          datasets: [
-              {
-                  label: [],
-                  lineTension: 0,
-                  backgroundColor: "rgba(125,255,255,0.2)",
-                  borderColor: "rgba(125,255,255,1)",
-                  borderWidth: 0.5,
-                  data: botInstance.difference,
-              },
-          ],
-      };
-  };
+    if(botInstance.difference && botInstance.difference.length > 2) {
+      let difference = [];
+      let prevTime = null;
+      botInstance.difference.forEach((data, index)=>{
+          if(prevTime  ){
+              const prev = Date.parse(prevTime);
+              const current = Date.parse(data.created_at);
+              const diffSeconds = (current - prev)/1000 ;
+              if(diffSeconds> 300){
+                  let startTime = Date.parse(prevTime);
+                  const endTime = Date.parse(data.created_at);
+                  while(startTime < endTime){
+                      difference.push(0)
+                      startTime = startTime+ 60000;
+                  }
+              }
+              difference.push(data.difference);
+          }
+          prevTime = data.created_at;
+      });
+      botInstance.difference  = difference;
+    }
+    return {
+        labels: botInstance.difference,
+        datasets: [
+            {
+                label: [],
+                lineTension: 0,
+                backgroundColor: "rgba(125,255,255,0.2)",
+                borderColor: "rgba(125,255,255,1)",
+                borderWidth: 0.5,
+                data: botInstance.difference,
+            },
+        ],
+    };
+};
 
   const legendOpt = {
       display: false
