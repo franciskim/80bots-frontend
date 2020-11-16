@@ -220,7 +220,7 @@ const Bots = ({
         </BotType>
       </td>
       <td>{bot.description}</td>
-      <td>
+      {/* <td>
         {bot.tags && bot.tags.length > 0
           ? bot.tags.map((tag, idx) => (
               <Tag key={idx} pill type={"info"}>
@@ -228,7 +228,7 @@ const Bots = ({
               </Tag>
             ))
           : "-"}
-      </td>
+      </td> */}
       <td>
         <StatusButton
           type={bot.status === "active" ? "success" : "danger"}
@@ -345,7 +345,7 @@ const Bots = ({
                 <OrderTh field={"name"}>Bot Name</OrderTh>
                 <OrderTh field={"type"}>Bot Type</OrderTh>
                 <OrderTh field={"description"}>Description</OrderTh>
-                <th>Bot Tags</th>
+                {/* <th>Bot Tags</th> */}
                 <OrderTh field={"status"}>Status</OrderTh>
                 <th>Action</th>
               </tr>
