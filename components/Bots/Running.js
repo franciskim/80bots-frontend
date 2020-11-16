@@ -393,7 +393,7 @@ const RunningBots = ({
       let difference = [];
       let prevTime = null;
       botInstance.difference.forEach((data, index)=>{
-          if(prevTime  ){
+          if(prevTime){
               const prev = Date.parse(prevTime);
               const current = Date.parse(data.created_at);
               const diffSeconds = (current - prev)/1000 ;
@@ -536,7 +536,10 @@ const RunningBots = ({
           }
         </NotificationTd>
         <td>
+            {(botInstance.difference && botInstance.difference.length > 2)?
             <Line data={getData(botInstance)} legend={legendOpt} options={chartOptions} width={400} height={75}/>
+            : 'No Data Available'}
+            
         </td>
         <td>{botInstance.launched_at}</td>
         <UpTime
