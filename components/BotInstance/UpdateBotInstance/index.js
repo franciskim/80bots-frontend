@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import PropTypes from "prop-types";
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
@@ -11,6 +11,8 @@ import { Button } from "/components/default";
 import { CodeEditor } from "/components/default/inputs";
 import { getBotInstance, updateBotInstance} from "/store/botinstance/actions";
 import {useRouter} from "next/router";
+import RestartEditor from "../components/RestartEditor";
+import Modal from "/components/default/Modal";
 
 const Container = styled.div`
   display: flex;
@@ -118,7 +120,7 @@ const Index = ({
   const [botScript, setBotScript] = useState("");
   const [botPackageJSON, setBotPackageJSON] = useState( "");
   const [error, setError] = useState(null);
-
+  const modal = useRef(null);
   const isEmpty = obj => {
     for(let key in obj) {
       return true;
@@ -150,34 +152,24 @@ const Index = ({
         botScript,
         botPackageJSON,
       };
-      //const convertedData = convertBotData(botData);
-      //console.log("convertedData "+JSON.stringify(convertedData));
       updateBotInstance(aboutBot.id, convertBotData(botData))
         .then(() => {
           notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "BotInstance updated!" });
-          Router.push("/bots");
+          modal.current.open();
         })
         .catch(() =>
           notify({ type: NOTIFICATION_TYPES.ERROR, message: "Update failed!" })
         );
   };
 
-
+  const restartInstance = params => {
+    console.log("params ",params);
+    modal.current.close();
+  };
 
   return (
     <>
       <Container>
-        {/* <Row>
-          <Input
-            type={"text"}
-            label={"Bot Name *"}
-            value={botName}
-            styles={inputStyles}
-            disabled={true}
-            onChange={e => setBotName(e.target.value)}
-          />
-          <Label>Bot Script</Label>
-        </Row> */}
         <Row>
           <InputWrap>
             <Tabs defaultActiveKey="script">
@@ -196,54 +188,23 @@ const Index = ({
             </Tabs>
           </InputWrap>
         </Row>
-        {/* <Row>
-          <Textarea
-            label={"Description"}
-            rows={5}
-            value={description}
-            styles={inputStyles}
-            onChange={e => setDescription(e.target.value)}
-          />
-        </Row> */}
-        {/* <Row>
-          <InputWrap>
-            <Label>Tags</Label>
-            <Select
-              isMulti
-              options={getTagOptions()}
-              styles={selectStyles}
-              onInputChange={onTagInputChange}
-              onChange={options => setTags(options)}
-              value={botTags}
-            />
-          </InputWrap>
-          <InputWrap>
-            <Label>Access *</Label>
-            <StatusButton
-              type={isPrivate ? "danger" : "primary"}
-              onClick={() => setPrivate(!isPrivate)}
-            >
-              {isPrivate ? "Private" : "Public"}
-            </StatusButton>
-          </InputWrap>
-        </Row> */}
-        {/* {isPrivate && (
-          <Row>
-            <TextareaWrap>
-              <Label>Trusted Users</Label>
-              <AsyncSelect
-                isMulti
-                defaultOptions={users.map(toOptions)}
-                value={trustedUsers}
-                styles={selectStyles}
-                onChange={options => setUsers(options)}
-                loadOptions={onUsersSearch}
-              />
-            </TextareaWrap>
-          </Row>
-        )} */}
         {error && <Error>{error}</Error>}
       </Container>
+      <Modal
+        ref={modal}
+        title={"Restart bot instance"}
+        contentStyles={css`
+          overflow-x: visible;
+          overflow-y: hidden;
+        `}
+        disableSideClosing
+      >
+        <RestartEditor
+          onSubmit={restartInstance}
+          onClose={() => modal.current.close()}
+          botInstance={aboutBot}
+        />
+      </Modal>
       <Buttons>
         <Button type={"primary"} onClick={submit}>
           Update
