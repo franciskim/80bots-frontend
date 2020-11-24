@@ -1,6 +1,7 @@
 import {
   GET_BOT_INSTANCE,
   UPDATE_BOT_INSTANCE,
+  POST_RESTART_INSTANCE,
 } from "./types";
 export const getBotInstance = id => ({
   type: GET_BOT_INSTANCE,
@@ -23,6 +24,19 @@ export const updateBotInstance = (id, updateData) => {
     },
     meta: {
       thunk: true,
+    }
+  };
+};
+export const restartInstance = (id, params) => {
+  return {
+    type: POST_RESTART_INSTANCE,
+    request: {
+      method: "POST",
+      url: "/botinstances/restart",
+      data: { id: id, params }
+    },
+    meta: {
+      thunk: true
     }
   };
 };

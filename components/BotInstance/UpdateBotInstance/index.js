@@ -9,7 +9,7 @@ import { addNotification } from "/store/notification/actions";
 import { NOTIFICATION_TYPES } from "/config";
 import { Button } from "/components/default";
 import { CodeEditor } from "/components/default/inputs";
-import { getBotInstance, updateBotInstance} from "/store/botinstance/actions";
+import { getBotInstance, updateBotInstance, restartInstance} from "/store/botinstance/actions";
 import {useRouter} from "next/router";
 import RestartEditor from "../components/RestartEditor";
 import Modal from "/components/default/Modal";
@@ -114,6 +114,7 @@ const Index = ({
  aboutBot,
  getBotInstance,
  updateBotInstance,
+ restartInstance,
  notify,
 }) => {
   const router = useRouter().query.id;
@@ -162,9 +163,16 @@ const Index = ({
         );
   };
 
-  const restartInstance = params => {
+  const restartSubmit = params => {
     console.log("params ",params);
     modal.current.close();
+    restartInstance(aboutBot.id, params)
+    .then(() => {
+      notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "BotInstance restarted!" });
+    })
+    .catch(() =>
+      notify({ type: NOTIFICATION_TYPES.ERROR, message: "Restart failed!" })
+    );
   };
 
   return (
@@ -200,7 +208,7 @@ const Index = ({
         disableSideClosing
       >
         <RestartEditor
-          onSubmit={restartInstance}
+          onSubmit={restartSubmit}
           onClose={() => modal.current.close()}
           botInstance={aboutBot}
         />
@@ -218,6 +226,7 @@ Index.propTypes = {
   aboutBot: PropTypes.object.isRequired,
   getBotInstance: PropTypes.func.isRequired,
   updateBotInstance: PropTypes.func.isRequired,
+  restartInstance: PropTypes.func.isRequired,
   notify: PropTypes.func.isRequired,
 };
 
@@ -228,6 +237,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getBotInstance: id => dispatch(getBotInstance(id)),
   updateBotInstance: (id, data) => dispatch(updateBotInstance(id, data)),
+  restartInstance: (id, params) => dispatch(restartInstance(id, params)),
   notify: payload => dispatch(addNotification(payload)),
 });
 
