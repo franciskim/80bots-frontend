@@ -15,6 +15,7 @@ import auth from './auth/reducer';
 import notification from './notification/reducer';
 import user from './user/reducer';
 import bot from './bot/reducer';
+import botInstance from './botinstance/reducer'
 import schedule from './schedule/reducer';
 import instanceSession from './instanceSession/reducer';
 import fileSystem from './fileSystem/reducer';
@@ -28,7 +29,7 @@ const fileSystemMiddleware = createFileSystemMiddleware();
 const scriptMiddleware = scriptNotificationMiddleware();
 
 const rootReducer = combineReducers({
-  auth, fileSystem, notification, user, bot, schedule, instanceSession, scriptNotification
+  auth, fileSystem, notification, user, bot,botInstance, schedule, instanceSession, scriptNotification
 });
 
 export function initializeStore(initialState = undefined) {

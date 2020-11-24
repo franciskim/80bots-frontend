@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import Select from "react-select";
 import Link from "next/link";
+import Router from "next/router";
 import { withTheme } from "emotion-theming";
 import { connect } from "react-redux";
 import { Card, CardBody } from "/components/default/Card";
@@ -501,6 +502,16 @@ const RunningBots = ({
               onClick={() => choiceRestoreBot(botInstance)}
             >
               <A>&gt;&nbsp;Restore</A>
+            </div>
+          ) : null}
+          {(botInstance.status === "running" || botInstance.status === "stopped" )? (
+            <div
+              title={"Restart Bot"}
+              onClick={() => {
+                Router.push(`/botinstance/${botInstance.id}`);
+              }}
+            >
+              <A>&gt;&nbsp;Restart</A>
             </div>
           ) : null}
           <div

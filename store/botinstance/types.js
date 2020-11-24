@@ -1,0 +1,5 @@
+
+
+export const GET_BOT_INSTANCE = "GET_BOT_INSTANCE";
+
+export const UPDATE_BOT_INSTANCE = "UPDATE_BOT_INSTANCE";
