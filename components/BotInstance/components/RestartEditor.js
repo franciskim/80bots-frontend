@@ -92,32 +92,38 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
         return !err.length;
     };
 
-    const valuesToResult = val => {
+    const valuesToResult = values => {
+
         let result = {};
-        //let combined = [];
-        botInstance.parameters.forEach(({ name, type }) => {
-            switch (type) {
-                case "multiselect": {
-                    result[name] = val[name].options.map(item => item.value);
-                    break;
+        let combined = [];
+        values.forEach(val => {
+            botInstance.parameters.forEach(({ name, type }) => {
+                switch (type) {
+                    case "multiselect": {
+                        result[name] = val[name].options.map(item => item.value);
+                        break;
+                    }
+                    case "enum": {
+                        result[name] = val[name].value;
+                        break;
+                    }
+                    default: {
+                        result[name] = val[name];
+                        break;
+                    }
                 }
-                case "enum": {
-                    result[name] = val[name].value;
-                    break;
-                }
-                default: {
-                    result[name] = val[name];
-                    break;
-                }
-            }
+            });
+            combined.push(result);
         });
-        //combined.push(result);
-        return result;
+        return combined;
     };
     const submit = () => {
         console.log('values ', values);
         if (validateValues()) {
-            onSubmit(valuesToResult(values));
+            let result = [];
+            result[0] = values;
+            console.log('result -----------'+ JSON.stringify(result));
+            onSubmit(valuesToResult(result));
         }
             
     };
