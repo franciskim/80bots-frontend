@@ -11,6 +11,7 @@ import { Button } from "/components/default";
 import { CodeEditor } from "/components/default/inputs";
 import { getBotInstance, updateBotInstance, restartInstance} from "/store/botinstance/actions";
 import {useRouter} from "next/router";
+import Router from "next/router";
 import RestartEditor from "../components/RestartEditor";
 import Modal from "/components/default/Modal";
 
@@ -169,6 +170,7 @@ const Index = ({
     restartInstance(aboutBot.id, params)
     .then(() => {
       notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "BotInstance restarted!" });
+      Router.push("/bots/running");
     })
     .catch(() =>
       notify({ type: NOTIFICATION_TYPES.ERROR, message: "Restart failed!" })
@@ -215,7 +217,7 @@ const Index = ({
       </Modal>
       <Buttons>
         <Button type={"primary"} onClick={submit}>
-          Update
+          Update & Restart
         </Button>
       </Buttons>
     </>
