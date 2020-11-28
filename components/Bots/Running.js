@@ -504,7 +504,7 @@ const RunningBots = ({
               <A>&gt;&nbsp;Restore</A>
             </div>
           ) : null}
-          {(botInstance.status === "running" || botInstance.status === "stopped" )? (
+          {(botInstance.status === "running")? (
             <div
               title={"Restart Bot"}
               onClick={() => {
