@@ -506,12 +506,12 @@ const RunningBots = ({
           ) : null}
           {(botInstance.status === "running")? (
             <div
-              title={"Restart Bot"}
+              title={"New Script"}
               onClick={() => {
                 Router.push(`/botinstance/${botInstance.id}`);
               }}
             >
-              <A>&gt;&nbsp;Restart</A>
+              <A>&gt;&nbsp;New Script</A>
             </div>
           ) : null}
           <div
@@ -667,7 +667,7 @@ const RunningBots = ({
               <Thead>
                 <tr>
                   <OrderTh field={"status"}>Status</OrderTh>
-                  <th>Actions</th>
+                  <th>Actions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                   <OrderTh field={"bot_name"}>Bot</OrderTh>
                   <OrderTh field={"script_notification"}>Last Notification</OrderTh>
                   <OrderTh field={"bot_statistic"}>24h Visual Activity</OrderTh>
