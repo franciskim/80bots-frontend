@@ -216,8 +216,10 @@ const RunningBots = ({
   }, []);
 
   useEffect( () => {
+    console.log('botInstances ****** '+JSON.stringify(botInstances));
     botInstances.map(async (botInstance) => {
       const { notification_channel, status } = botInstance;
+      console.log("settings_channel ******", settings_channel);
       const subscribe = settings_channel.some((item) => item.channel === botInstance.notification_channel);
       if((status === "running") && !subscribe) {
         await wsSubscribe(notification_channel, true);
@@ -390,28 +392,28 @@ const RunningBots = ({
   );
 
   const getData = (botInstance) => {
-    if(botInstance.difference && botInstance.difference.length > 2) {
-      let difference = [];
-      let prevTime = null;
-      botInstance.difference.forEach((data, index)=>{
-          if(prevTime){
-              const prev = Date.parse(prevTime);
-              const current = Date.parse(data.created_at);
-              const diffSeconds = (current - prev)/1000 ;
-              if(diffSeconds> 300){
-                  let startTime = Date.parse(prevTime);
-                  const endTime = Date.parse(data.created_at);
-                  while(startTime < endTime){
-                      difference.push(0)
-                      startTime = startTime+ 60000;
-                  }
-              }
-              difference.push(data.difference);
-          }
-          prevTime = data.created_at;
-      });
-      botInstance.difference  = difference;
-    }
+    // if(botInstance.difference && botInstance.difference.length > 2) {
+    //   let difference = [];
+    //   let prevTime = null;
+    //   botInstance.difference.forEach((data, index)=>{
+    //       if(prevTime){
+    //           const prev = Date.parse(prevTime);
+    //           const current = Date.parse(data.created_at);
+    //           const diffSeconds = (current - prev)/1000 ;
+    //           if(diffSeconds> 300){
+    //               let startTime = Date.parse(prevTime);
+    //               const endTime = Date.parse(data.created_at);
+    //               while(startTime < endTime){
+    //                   difference.push(0)
+    //                   startTime = startTime+ 60000;
+    //               }
+    //           }
+    //           difference.push(data.difference);
+    //       }
+    //       prevTime = data.created_at;
+    //   });
+    //   botInstance.difference  = difference;
+    // }
     return {
         labels: botInstance.difference,
         datasets: [
