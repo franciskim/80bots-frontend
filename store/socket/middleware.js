@@ -33,7 +33,8 @@ export default function createWebSocketMiddleware() {
           headers: {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
           }
-        }
+        },
+        transports: ['websocket', 'polling', 'flashsocket']
       });
     };
     return next => action => {
