@@ -350,21 +350,14 @@ export const updateRegion = (id, data) => ({
   }
 });
 
-// export const updateLastNotification = (aws_instance_id, notification) => ({
-//   type: UPDATE_LAST_NOTIFICATION,
-//   request: {
-//     method: "POST",
-//     url: `/instances/update`,
-//     data: { aws_instance_id: aws_instance_id, notification: notification }
-//   }
-// });
-
-export const updateLastNotification = (aws_instance_id, notification) => {
-  return {
-    type: UPDATE_LAST_NOTIFICATION,
+export const updateLastNotification = (aws_instance_id, notification) => ({
+  type: UPDATE_LAST_NOTIFICATION,
+  request: {
+    method: "POST",
+    url: `/instances/update`,
     data: { aws_instance_id: aws_instance_id, notification: notification }
-    }
-};
+  }
+});
 
 export const addScriptNotification = (item) => {
   return {
