@@ -369,7 +369,7 @@ const RunningBots = ({
       );
       if(!bot[0].last_notification)
           return '';
-      return bot[0].last_notification.split("(/break/)")[0];
+      return formatTimezone(user.timezone, bot[0].last_notification.split("(/break/)")[0]);
   };
 
   const getBotLastNotificationString = botInstanceId => {
@@ -552,7 +552,7 @@ const RunningBots = ({
             {(botInstance.difference && botInstance.difference.length > 2)?
             <Line data={getData(botInstance)} legend={legendOpt} options={chartOptions} width={400} height={75}/>
             : 'No Data Available'}
-            
+
         </td>
         <td>{botInstance.launched_at}</td>
         <UpTime
