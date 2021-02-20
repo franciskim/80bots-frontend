@@ -19,7 +19,7 @@ const Head = props => (
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="user-avatar" content={props.userAvatar} />
     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="icon" href="data:," />
+    <link rel="icon" href="https://80bots.com/images/80bots-logo.svg" />
     <meta name="msapplication-TileColor" content="#FFFFFF" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
     <meta property="og:url" content={props.url || defaultOGURL} />
