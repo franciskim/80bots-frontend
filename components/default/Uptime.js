@@ -7,7 +7,7 @@ const NwTd = styled.td`
   white-space: nowrap;
 `;
 
-const UpTime = ({uptime, status}) => {
+const Uptime = ({uptime, status}) => {
   const [time, setTime] = useState(null);
   let current = uptime;
 
@@ -27,10 +27,10 @@ const UpTime = ({uptime, status}) => {
   );
 };
 
-UpTime.propTypes = {
+Uptime.propTypes = {
   uptime: PropTypes.number,
   status: PropTypes.string
 };
 
-export default UpTime;
+export default Uptime;
 

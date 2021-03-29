@@ -30,7 +30,7 @@ import {
 import { addListener, removeAllListeners } from "/store/socket/actions";
 import { Paginator, Loader80bots, Button } from "/components/default";
 import { download } from "/lib/helpers";
-import UpTime from "/components/default/UpTime";
+import Uptime from "/components/default/Uptime";
 import { subscribe, unsubscribe } from "/store/socket/actions";
 import {
   openScriptNotification,
@@ -555,7 +555,7 @@ const RunningBots = ({
 
         </td>
         <td>{botInstance.launched_at}</td>
-        <UpTime
+        <Uptime
           uptime={botInstance.uptime}
           status={botInstance.status}
         />
