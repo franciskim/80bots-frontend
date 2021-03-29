@@ -13,7 +13,7 @@
     "@sentry/browser": "^5.6.3",
     "@zeit/next-css": "^1.0.1",
     "ace-builds": "^1.4.11",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.9.3",
     "dayjs": "^1.8.16",
@@ -26,7 +26,7 @@
     "lodash": "^4.17.15",
     "mime-types": "^2.1.24",
     "moment-timezone": "^0.5.31",
-    "next": "^9.0.7",
+    "next": "^10.0.9",
     "prop-types": "^15.7.2",
     "react": "^16.10.1",
     "react-ace": "^9.0.0",
@@ -46,7 +46,8 @@
     "redux-saga-requests-axios": "^0.7.7",
     "redux-saga-thunk": "^0.7.3",
     "redux-thunk": "^2.3.0",
-    "socket.io-client": "^2.3.0"
+    "socket.io-client": "^2.3.0",
+    "ssri": "^8.0.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
