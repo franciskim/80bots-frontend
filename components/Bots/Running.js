@@ -356,7 +356,7 @@ const RunningBots = ({
         return botNotifications[botInstanceId].notification;
     };
 
-    const getServerTime = botInstanceId => {
+    const getUserTime = botInstanceId => {
         return formatTimezone(user.timezone, botNotifications[botInstanceId].date);
     };
 
@@ -541,7 +541,7 @@ const RunningBots = ({
                     {hasBotNotification(botInstance.instance_id)
                         ? !getBotNotificationError(botInstance.instance_id)
                             ? <Notify>
-                                {getServerTime(botInstance.instance_id)}
+                                {getUserTime(botInstance.instance_id)}
                                 <br/>
                                 {getBotNotificationMessage(botInstance.instance_id)}
                             </Notify>
@@ -560,7 +560,7 @@ const RunningBots = ({
                         : 'No Data Available'}
 
                 </td>
-                <td>{formatTimezone(botInstance.launched_at)}</td>
+                <td>{getUserTime(botInstance.launched_at)}</td>
                 <Uptime
                     uptime={botInstance.uptime}
                     status={botInstance.status}
