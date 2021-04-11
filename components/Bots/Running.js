@@ -384,7 +384,7 @@ const RunningBots = ({
         );
         if (!bot[0].last_notification)
             return '';
-        return bot[0].last_notification.split("(/break/)")[1];
+        return bot[0].last_notification.split('(/break/)').map((str, i) => <div key={i}>{str}</div>).shift();
     };
 
     const Loading = (
