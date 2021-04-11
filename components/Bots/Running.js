@@ -354,7 +354,7 @@ const RunningBots = ({
 
     const getBotNotificationMessage = botInstanceId => {
         const text = botNotifications[botInstanceId].notification;
-        return text.split('(/break/)').map((str, i) => <p key={i}>{str}</p>);
+        return text.split('(/break/)').map((str, i) => <div key={i}>{str}</div>);
     };
 
     const getServerTime = botInstanceId => {
