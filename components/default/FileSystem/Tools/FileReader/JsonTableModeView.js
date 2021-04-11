@@ -51,7 +51,7 @@ const JsonTableModeView = ({output}) => {
 
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(output.length);
-    const [limit, setLimit] = useState(10);
+    const [limit, setLimit] = useState(100);
 
     const viewNestedData = data => {
         setDeepViewing(true);
