@@ -176,7 +176,7 @@ const RunningBots = ({
                          settings_channel
                      }) => {
     const [list, setFilterList] = useState("all");
-    const [limit, setLimit] = useState(10);
+    const [limit, setLimit] = useState(20);
     const [order, setOrder] = useState({value: "", field: ""});
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState(null);
