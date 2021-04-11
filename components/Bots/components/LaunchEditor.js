@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import PropTypes from "prop-types";
 import styled from "@emotion/styled";
-import { css } from "@emotion/core";
+import {css} from "@emotion/core";
 import {
     Input,
     Label,
@@ -10,7 +10,7 @@ import {
     Select,
     Range
 } from "/components/default/inputs";
-import { Button, Steps } from "/components/default";
+import {Button, Steps} from "/components/default";
 
 const Buttons = styled.div`
   display: flex;
@@ -33,24 +33,24 @@ const InputWrap = styled.div`
 
 const inputStyle = {
     container: css`
-    margin-top: 10px;
-  `
+      margin-top: 10px;
+    `
 };
 
 const selectStyles = {
     container: css`
-    margin-top: 10px;
-    max-width: 400px;
-  `
+      margin-top: 10px;
+      max-width: 400px;
+    `
 };
 
-const LaunchEditor = ({ bot, onSubmit, onClose }) => {
+const LaunchEditor = ({bot, onSubmit, onClose}) => {
     const [values, setValues] = useState({});
     const [combinedResult, setCombinedResult] = useState([]);
     const [errors, setErrors] = useState([]);
     const [step, setStep] = useState(1);
     const [amount, setAmount] = useState(1);
-    const [isAmountSet, amountSet] = useState(false);
+    const [isAmountSet, amountSet] = useState(true);
 
     useEffect(() => {
         initializeValues();
@@ -73,7 +73,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             )
                 botParams[param.name] = "";
             if (param.type === "multiselect")
-                botParams[param.name] = { term: "", options: [] };
+                botParams[param.name] = {term: "", options: []};
         });
         setValues(botParams);
     };
@@ -101,7 +101,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
         let result = {};
         let combined = [];
         values.forEach(val => {
-            bot.parameters.forEach(({ name, type }) => {
+            bot.parameters.forEach(({name, type}) => {
                 switch (type) {
                     case "multiselect": {
                         result[name] = val[name].options.map(item => item.value);
@@ -145,7 +145,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
     };
 
     const changeValue = (field, value, option) => {
-        let valuesCopy = { ...values };
+        let valuesCopy = {...values};
         valuesCopy[field] = option || value;
         setValues(valuesCopy);
     };
@@ -190,19 +190,19 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             options &&
             !options.find(item => item.label.match(new RegExp(term, "ig")))
         ) {
-            options = [{ value: term, label: term }].concat(options);
+            options = [{value: term, label: term}].concat(options);
         }
         return options;
     };
 
     const changeMultiSelectValue = (field, options) => {
-        let valuesCopy = { ...values };
+        let valuesCopy = {...values};
         valuesCopy[field].options = options;
         setValues(valuesCopy);
     };
 
     const onMultiSelectChange = (field, newValue) => {
-        let valuesCopy = { ...values };
+        let valuesCopy = {...values};
         valuesCopy[field].term = newValue;
         setValues(valuesCopy);
     };
@@ -347,7 +347,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
         </>
     ) : (
         <>
-            {amount > 1 && <Steps amount={amount} step={step} />}
+            {amount > 1 && <Steps amount={amount} step={step}/>}
             {bot && bot.parameters.map(renderParams)}
             <Buttons>
                 <Button
