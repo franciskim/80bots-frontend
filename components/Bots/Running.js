@@ -353,7 +353,7 @@ const RunningBots = ({
     };
 
     const getBotNotificationMessage = botInstanceId => {
-        return botNotifications[botInstanceId].notification;
+        return botNotifications[botInstanceId].notification.replaceAll('(/break/)', '<br/>');
     };
 
     const getServerTime = botInstanceId => {
@@ -553,13 +553,6 @@ const RunningBots = ({
                         </Notify>
                     }
                 </NotificationTd>
-                <td>
-                    {(botInstance.difference && botInstance.difference.length > 2) ?
-                        <Line data={getData(botInstance)} legend={legendOpt} options={chartOptions} width={400}
-                              height={75}/>
-                        : 'No Data Available'}
-
-                </td>
                 <td>{formatTimezone(user.timezone, botInstance.launched_at)}</td>
                 <Uptime
                     uptime={botInstance.uptime}
@@ -678,7 +671,6 @@ const RunningBots = ({
                                 <th>Actions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                 <OrderTh field={"bot_name"}>Bot</OrderTh>
                                 <OrderTh field={"script_notification"}>Last Notification</OrderTh>
-                                <OrderTh field={"bot_statistic"}>24h Visual Activity</OrderTh>
                                 <OrderTh field={"launched_at"}>Deployed At</OrderTh>
                                 <OrderTh field={"uptime"}>Uptime</OrderTh>
                                 <OrderTh field={"ip"}>IP</OrderTh>
