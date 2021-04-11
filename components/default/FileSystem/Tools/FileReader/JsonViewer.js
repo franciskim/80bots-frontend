@@ -137,7 +137,7 @@ const TextViewer = ({ item }) => {
               renderByMode(item)
             ) : (
               <div>
-                Could not parse json file. Click{" "}
+                Could not parse JSON file. Click{" "}
                 <a
                   href={getLink(item, jsonRaw)}
                   download={`${item.name}.json`}
