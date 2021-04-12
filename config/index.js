@@ -1,72 +1,72 @@
-import { css } from "@emotion/core";
+import {css} from "@emotion/core";
 
 export const ROUTES = [
-  { name: "Users", href: "/users" },
-  { name: "Workforce", href: "/bots/running" },
-  { name: "Deploy Bots", href: "/bots" },
-  { name: "Add Bot", href: "/bot" },
-  { name: "Scheduler", href: "/scheduler" },
-  { name: "Scheduler Log", href: "/scheduler/log" },
-  { name: "AWS AMI Settings", href: "/bots/settings" },
+    {name: "Working Bots", href: "/bots/running"},
+    {name: "Available Bots", href: "/bots"},
+    {name: "Add New Bot", href: "/bot"},
+    {name: "Scheduler", href: "/scheduler"},
+    {name: "Scheduler Log", href: "/scheduler/log"},
+    {name: "AWS AMI Settings", href: "/bots/settings"},
+    {name: "Users", href: "/users"}
 ];
 
 export const theme = {
-  colors: {
-    cyan: "#7dffff",
-    pink: "#ff7d7d",
-    blue: "#007bff",
-    darkBlue: "#3490dc",
-    primary: "#7dffff",
-    clearBlue: "#27a2ff",
-    clearBlueTwo: "#5cb3f5",
-    mediumGreen: "#35ad45",
-    clearGreen: "#19ad7a",
-    darkishPink: "#e54d93",
-    darkishPink2: "#dc1c74",
-    blueGrey: "#7f8fa4",
-    darkGreyBlue: "#354052",
-    grey: "#dddddd",
-    darkGrey: "#6c757d",
-    paleGrey: "#f8f9fb",
-    darkerGrey: "#333333",
-    slate: "#475364",
-    silver: "#ced0da",
-    orange: "#eab550",
-    black: "#0a0a0a",
-    white: "#ffffff",
-    whiteGrey: "#eeeeee",
-    purple: "#6f42c1",
-    table: {
-      color: "#fff",
-      border: "none",
-      headerColor: "#7dffff",
-      headerBackground: "#333"
+    colors: {
+        cyan: "#7dffff",
+        pink: "#ff7d7d",
+        blue: "#007bff",
+        darkBlue: "#3490dc",
+        primary: "#7dffff",
+        clearBlue: "#27a2ff",
+        clearBlueTwo: "#5cb3f5",
+        mediumGreen: "#35ad45",
+        clearGreen: "#19ad7a",
+        darkishPink: "#e54d93",
+        darkishPink2: "#dc1c74",
+        blueGrey: "#7f8fa4",
+        darkGreyBlue: "#354052",
+        grey: "#dddddd",
+        darkGrey: "#6c757d",
+        paleGrey: "#f8f9fb",
+        darkerGrey: "#333333",
+        slate: "#475364",
+        silver: "#ced0da",
+        orange: "#eab550",
+        black: "#0a0a0a",
+        white: "#ffffff",
+        whiteGrey: "#eeeeee",
+        purple: "#6f42c1",
+        table: {
+            color: "#fff",
+            border: "none",
+            headerColor: "#7dffff",
+            headerBackground: "#333"
+        }
     }
-  }
 };
 
 export const WEEKDAYS = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Everyday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Everyday",
 ];
 
 export const NOTIFICATION_TYPES = {
-  HELP: "help",
-  SUCCESS: "success",
-  ERROR: "error",
-  INFO: "info"
+    HELP: "help",
+    SUCCESS: "success",
+    ERROR: "error",
+    INFO: "info"
 };
 
 export const NOTIFICATION_TIMINGS = {
-  DURATION: 200,
-  INFO_HIDE_DELAY: 2000,
-  HELP_HIDE_DELAY: 5000
+    DURATION: 200,
+    INFO_HIDE_DELAY: 2000,
+    HELP_HIDE_DELAY: 5000
 };
 
 export const SIDEBAR_ANIMATION_TIME = 250;
@@ -84,24 +84,29 @@ export const globalStyles = css`
     min-height: 100vh;
     overflow-x: hidden;
     line-height: 1.6;
+
     &::-webkit-scrollbar {
       width: 5px;
       height: 5px;
       border-radius: 10px;
       background: transparent;
     }
+
     &::-webkit-scrollbar-track {
       background-color: transparent;
     }
+
     &::-webkit-scrollbar-thumb {
       border-radius: 5px;
       background: ${theme.colors.primary};
     }
+
     &::-webkit-scrollbar-thumb:horizontal {
       border-radius: 5px;
       background-color: ${theme.colors.primary};
     }
   }
+
   #__next {
     display: flex;
     flex-direction: column;
@@ -112,13 +117,14 @@ export const globalStyles = css`
     background-color: #7dffff;
     border-color: #7dffff;
     color: #333;
+
     &:hover {
       background-color: #7dffff;
       border-color: #7dffff;
       color: #000;
     }
   }
-  
+
   .btn:active, .btn-primary:not(:disabled):not(.disabled).active,
   .btn-primary:not(:disabled):not(.disabled):active,
   .show > .btn-primary.dropdown-toggle,
@@ -133,16 +139,17 @@ export const globalStyles = css`
     box-shadow: transparent;
     transition: all 0.2s ease;
   }
+
   .DraftEditor-editorContainer,
   .DraftEditor-root,
   .public-DraftEditor-content {
     height: auto;
   }
-  
+
   a {
     color: #7dffff;
   }
-  
+
   a:hover {
     #ff7d7d;
     text-decoration: underline;
@@ -151,22 +158,22 @@ export const globalStyles = css`
   tr.running div[class*='singleValue'] {
     color: #ff7d7d;
   }
-    
+
   tr.not-running, tr.not-running div[class*='singleValue'] {
     color: #bbb;
   }
-  
+
   tr.terminated, tr.terminated div[class*='singleValue'] {
     color: #777;
-  } 
-  
+  }
+
   body .nav-tabs .nav-link.active {
     background-color: #333;
-    color: #7dffff; 
+    color: #7dffff;
   }
-  
+
   body .nav-tabs .nav-link:hover {
-    color: #7dffff; 
+    color: #7dffff;
   }
 
 `;
