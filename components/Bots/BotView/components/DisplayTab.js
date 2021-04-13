@@ -37,7 +37,7 @@ const DisplayTab = ({ botInstance }) => {
   return (
     <Content>
       <Link
-        href={`http://${botInstance.ip}:6080?autoconnect=1`}
+        href={`http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`}
         target="_blank"
       >
         View bot in real-time
@@ -51,7 +51,7 @@ const DisplayTab = ({ botInstance }) => {
           `
         }
         id={"display"}
-        src={`http://${botInstance.ip}:6080?autoconnect=1`}
+        src={`http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`}
       />
       {status && (
         <Loader80bots
