@@ -2,7 +2,7 @@ import {css} from "@emotion/core";
 
 export const ROUTES = [
     {name: "Working Bots", href: "/bots/running"},
-    {name: "Available Bots", href: "/bots"},
+    {name: "Deploy & Update Bots", href: "/bots"},
     {name: "Add New Bot", href: "/bot"},
     {name: "Scheduler", href: "/scheduler"},
     {name: "Scheduler Log", href: "/scheduler/log"},
