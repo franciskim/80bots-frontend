@@ -27,12 +27,6 @@ const routes = [
         miniName: "D",
         layout: "/admin",
       },
-      {
-        path: "/alternative",
-        name: "Alternative",
-        miniName: "A",
-        layout: "/admin",
-      },
     ],
   },
   {
@@ -41,12 +35,6 @@ const routes = [
     icon: "ni ni-ungroup text-orange",
     state: "examplesCollapse",
     views: [
-      {
-        path: "/pricing",
-        name: "Pricing",
-        miniName: "P",
-        layout: "/auth",
-      },
       {
         path: "/login",
         name: "Login",
@@ -60,13 +48,13 @@ const routes = [
         layout: "/auth",
       },
       {
-        path: "/lock",
-        name: "Lock",
-        miniName: "L",
-        layout: "/auth",
+        path: "/timeline",
+        name: "Timeline",
+        miniName: "T",
+        layout: "/admin",
       },
       {
-        path: "/timeline",
+        path: "/bots/running",
         name: "Timeline",
         miniName: "T",
         layout: "/admin",
@@ -203,27 +191,7 @@ const routes = [
         layout: "/admin",
       },
     ],
-  },
-  {
-    collapse: true,
-    name: "Maps",
-    icon: "ni ni-map-big text-primary",
-    state: "mapsCollapse",
-    views: [
-      {
-        path: "/google",
-        name: "Google",
-        miniName: "G",
-        layout: "/admin",
-      },
-      {
-        path: "/vector",
-        name: "Vector",
-        miniName: "V",
-        layout: "/admin",
-      },
-    ],
-  },
+  }, 
   {
     path: "/widgets",
     name: "Widgets",

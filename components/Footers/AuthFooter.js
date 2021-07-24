@@ -44,7 +44,7 @@ function AuthFooter() {
                     href="https://www.creative-tim.com?ref=adpr-auth-footer"
                     target="_blank"
                   >
-                    Creative Tim
+                    80Bots
                   </NavLink>
                 </NavItem>
                 <NavItem>
@@ -53,22 +53,6 @@ function AuthFooter() {
                     target="_blank"
                   >
                     About Us
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    href="http://blog.creative-tim.com?ref=adpr-auth-footer"
-                    target="_blank"
-                  >
-                    Blog
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    href="https://www.creative-tim.com/license?ref=adpr-auth-footer"
-                    target="_blank"
-                  >
-                    License
                   </NavLink>
                 </NavItem>
               </Nav>

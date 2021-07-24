@@ -2,6 +2,8 @@ import React, { useState } from "react";
 // nodejs library that concatenates classes
 import classnames from "classnames";
 import { useDispatch } from "react-redux";
+import Router from "next/router";
+
 // reactstrap components
 import {
   Button,
@@ -27,20 +29,22 @@ import { NOTIFICATION_TYPES } from "../../config";
 import { login } from '../../store/auth/actions'
 import { addNotification } from '../../store/notification/actions'
 
-function Login() {
+const Login = () => {
   const dispatch = useDispatch();
   const [focusedEmail, setfocusedEmail] = React.useState(false);
   const [focusedPassword, setfocusedPassword] = React.useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // console.error(notifyRef.current, '>>>')
-
   const submitForm = (e) => {
     e.preventDefault();
     dispatch(login(email, password))
-      .then(() => Router.push("/bots/running"))
-      .catch(({ error: { response } }) => {
+      .then(() => {
+        console.error('>>> OK')
+        Router.push("/bots/running");
+      })
+      .catch(error => {
+        const { response } = error;
         if (response) {
           const { message } = response.data;
           addNotification({ type: NOTIFICATION_TYPES.ERROR, message });

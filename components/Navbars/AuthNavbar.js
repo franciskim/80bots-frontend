@@ -99,13 +99,7 @@ function AdminNavbar() {
                   </NavLink>
                 </Link>
               </NavItem>
-              <NavItem>
-                <Link href="/auth/pricing">
-                  <NavLink href="#pablo">
-                    <span className="nav-link-inner--text">Pricing</span>
-                  </NavLink>
-                </Link>
-              </NavItem>
+
               <NavItem>
                 <Link href="/auth/login">
                   <NavLink href="#pablo">
@@ -117,13 +111,6 @@ function AdminNavbar() {
                 <Link href="/auth/register">
                   <NavLink href="#pablo">
                     <span className="nav-link-inner--text">Register</span>
-                  </NavLink>
-                </Link>
-              </NavItem>
-              <NavItem>
-                <Link href="/auth/lock">
-                  <NavLink href="#pablo">
-                    <span className="nav-link-inner--text">Lock</span>
                   </NavLink>
                 </Link>
               </NavItem>
