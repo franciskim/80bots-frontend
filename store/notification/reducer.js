@@ -1,3 +1,4 @@
+import { createRef } from 'react'
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION, HIDE_NOTIFICATION } from './types';
 
 /**
@@ -8,7 +9,8 @@ import { ADD_NOTIFICATION, REMOVE_NOTIFICATION, HIDE_NOTIFICATION } from './type
 
 const initialState = {
   queue: [],
-  current: null
+  current: null,
+  ref: createRef()
 };
 
 export const reducer = (state = initialState, action) => {

@@ -1,4 +1,5 @@
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION, HIDE_NOTIFICATION } from './types';
+import store from '../index';
 
 /**
  *
