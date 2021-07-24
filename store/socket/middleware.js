@@ -17,6 +17,7 @@ import {
   LOGIN,
   REGISTER
 } from '../auth/types';
+
 export default function createWebSocketMiddleware() {
   return (store) => {
     const { dispatch } = store;

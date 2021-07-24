@@ -25,6 +25,7 @@ export const reducer = (state = initialState, action) => {
     case success(REGISTER):
     case success(RESET_PASSWORD): {
       localStorage.setItem('token', action.data.token);
+      console.error({ ...state, user: action.data.user, loading: false, isAuthorized: true }, 'State changes')
       return { ...state, user: action.data.user, loading: false, isAuthorized: true };
     }
 

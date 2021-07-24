@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // nodejs library that concatenates classes
 import classnames from "classnames";
-import { useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import Router from "next/router";
 
 // reactstrap components
@@ -26,11 +26,12 @@ import Auth from "layouts/Auth.js";
 import AuthHeader from "components/Headers/AuthHeader.js";
 import { NOTIFICATION_TYPES } from "../../config";
 
-import { login } from '../../store/auth/actions'
-import { addNotification } from '../../store/notification/actions'
+// import { login } from '../../store/auth/actions'
+// import { addNotification } from '../../store/notification/actions'
+import { login, reset } from "store/auth/actions";
+import { addNotification } from "store/notification/actions";
 
-const Login = () => {
-  const dispatch = useDispatch();
+const Login = ({ login, addNotification }) => {
   const [focusedEmail, setfocusedEmail] = React.useState(false);
   const [focusedPassword, setfocusedPassword] = React.useState(false);
   const [email, setEmail] = useState("");
@@ -38,10 +39,11 @@ const Login = () => {
 
   const submitForm = (e) => {
     e.preventDefault();
-    dispatch(login(email, password))
+
+    login(email, password)
       .then(() => {
-        console.error('>>> OK')
-        Router.push("/bots/running");
+        console.error('fuck')
+        // Router.push("/bots/running");
       })
       .catch(error => {
         const { response } = error;
@@ -161,4 +163,10 @@ const Login = () => {
 
 Login.layout = Auth;
 
-export default Login;
+const mapDispatchToProps = dispatch => ({
+  login: (email, password) => dispatch(login(email, password)),
+  reset: email => dispatch(reset(email)),
+  addNotification: payload => dispatch(addNotification(payload))
+});
+
+export default connect(null, mapDispatchToProps)(Login);

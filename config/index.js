@@ -1,4 +1,3 @@
-// import {css} from "@emotion/core";
 
 export const ROUTES = [
     {name: "Working Bots", href: "/bots/running"},
@@ -9,41 +8,6 @@ export const ROUTES = [
     {name: "AWS AMI Settings", href: "/bots/settings"},
     {name: "Users", href: "/users"}
 ];
-
-// export const theme = {
-//     colors: {
-//         cyan: "#7dffff",
-//         pink: "#ff7d7d",
-//         blue: "#007bff",
-//         darkBlue: "#3490dc",
-//         primary: "#7dffff",
-//         clearBlue: "#27a2ff",
-//         clearBlueTwo: "#5cb3f5",
-//         mediumGreen: "#35ad45",
-//         clearGreen: "#19ad7a",
-//         darkishPink: "#e54d93",
-//         darkishPink2: "#dc1c74",
-//         blueGrey: "#7f8fa4",
-//         darkGreyBlue: "#354052",
-//         grey: "#dddddd",
-//         darkGrey: "#6c757d",
-//         paleGrey: "#f8f9fb",
-//         darkerGrey: "#333333",
-//         slate: "#475364",
-//         silver: "#ced0da",
-//         orange: "#eab550",
-//         black: "#0a0a0a",
-//         white: "#ffffff",
-//         whiteGrey: "#eeeeee",
-//         purple: "#6f42c1",
-//         table: {
-//             color: "#fff",
-//             border: "none",
-//             headerColor: "#7dffff",
-//             headerBackground: "#333"
-//         }
-//     }
-// };
 
 export const WEEKDAYS = [
     "Sunday",

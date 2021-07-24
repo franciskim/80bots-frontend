@@ -30,6 +30,48 @@ const routes = [
     ],
   },
   {
+    path: "/bots/running",
+    name: "Working Bots",
+    icon: "fa fa-robot text-blue",
+    layout: "/admin",
+  },
+  {
+    path: "/bots",
+    name: "Deploy & Update Bots",
+    icon: "ni ni-archive-2",
+    layout: "/admin",
+  },
+  {
+    path: "/bot",
+    name: "Add New Bot",
+    icon: "fa fa-plus",
+    layout: "/admin",
+  },
+  {
+    path: "/scheduler",
+    name: "Scheduler",
+    icon: "fa fa-calendar-alt",
+    layout: "/admin",
+  },
+  {
+    path: "/scheduler/log",
+    name: "Scheduler Log",
+    icon: "fa fa-history",
+    layout: "/admin",
+  },
+  {
+    path: "/bots/settings",
+    name: "AWS AMI Settings",
+    icon: "fa fa-cog",
+    layout: "/admin",
+  },
+  {
+    path: "/users",
+    name: "Users",
+    icon: "fa fa-users",
+    layout: "/admin",
+  },
+  {
     collapse: true,
     name: "Examples",
     icon: "ni ni-ungroup text-orange",

@@ -1,15 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { connect } from "react-redux"
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
 import { Provider } from 'react-redux';
 import withReduxStore from '../lib/connectRedux';
-import NotificationAlert from 'react-notification-alert';
 
 import PageChange from "components/PageChange/PageChange.js";
-import Notification from 'components/Notification/Notification.js';
 
 // plugins styles from node_modules
 import "react-notification-alert/dist/animate.css";
@@ -73,7 +70,6 @@ class MyApp extends App {
   }
   render() {
     const { Component, pageProps, reduxStore } = this.props;
-    const notifyRef = reduxStore.getState().notification.ref
     const Layout = Component.layout || (({ children }) => <>{children}</>);
 
     return (
@@ -87,17 +83,11 @@ class MyApp extends App {
             <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
           </Head>
           <Layout>
-            <Notification/>
-            <NotificationAlert ref={notifyRef} zIndex={9999} onClick={() => console.log("hey")} />
             <Component {...pageProps} />
           </Layout>
       </Provider>
     );
   }
 }
-
-// const mapStateToProps = (state) => ({ 
-//   notifyRef: state.notification.ref
-// })
 
 export default withReduxStore(MyApp)
