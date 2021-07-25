@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { Button } from 'reactstrap'
 import { Table } from 'reactstrap'
 
@@ -88,9 +88,9 @@ const JsonType = ({ output, setCustomBack }) => {
       <Modal
         title={'Choose export options'}
         ref={exportModal}
-        contentStyles={css`
-          overflow: visible;
-        `}
+        // contentStyles={css`
+        //   overflow: visible;
+        // `}
       ></Modal>
     </Table>
   )

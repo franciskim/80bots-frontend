@@ -55,8 +55,8 @@ const Users = () => {
 
   const OrderTh = (props) => <Th {...props} onClick={onOrderChange} />
 
-  const renderRow = (user, idx) => (
-    <tr key={idx}>
+  const renderRow = (user) => (
+    <tr key={user.id}>
       <td>{user.name}</td>
       <td>{user.email}</td>
       <td>{dayjs(user.created_at).format('YYYY-MM-DD HH:mm:ss')}</td>

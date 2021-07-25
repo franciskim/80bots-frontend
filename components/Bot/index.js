@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import Select from 'react-select'
 import AsyncSelect from 'react-select/async'
 import { useDispatch, useSelector } from 'react-redux'

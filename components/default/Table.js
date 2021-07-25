@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
 import Icon from './icons'
@@ -47,11 +47,9 @@ import { Label } from 'reactstrap'
 
 export const Th = ({ order, field, children, onClick, ...props }) => {
   const Th = styled.th`
-    ${props};
     font-weight: 300;
     border: none;
     cursor: pointer;
-
     svg {
       transform: ${(props) =>
         props.order === 'asc' ? 'rotate(-90deg);' : 'rotate(90deg);'};

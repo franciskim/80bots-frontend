@@ -26,8 +26,8 @@ const SchedulerLog = () => {
   const sessions = useSelector((state) => state.instanceSession.sessions)
   const total = useSelector((state) => state.instanceSession.total)
 
-  const renderRow = (session, idx) => (
-    <tr key={idx}>
+  const renderRow = (session) => (
+    <tr key={session.id}>
       <td>{session.user}</td>
       <td>{session.instance_id}</td>
       <td>{session.type}</td>
@@ -81,14 +81,14 @@ const SchedulerLog = () => {
           </div>
           <Table>
             <thead>
-              <th>
+              <tr>
                 <OrderTh field={'user'}>User</OrderTh>
                 <OrderTh field={'instance_id'}>Instance Id</OrderTh>
                 <OrderTh field={'type'}>Type</OrderTh>
                 <OrderTh field={'date'}>Date & Time</OrderTh>
                 <OrderTh field={'timezone'}>Time Zone</OrderTh>
                 <OrderTh field={'status'}>Status</OrderTh>
-              </th>
+              </tr>
             </thead>
             <tbody>{sessions.map(renderRow)}</tbody>
           </Table>

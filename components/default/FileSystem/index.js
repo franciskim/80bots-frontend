@@ -1,21 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styled from 'styled-components';
-import List from "./List";
-import FileReaderComponent from "./Tools/FileReader";
+import React from 'react'
+import PropTypes from 'prop-types'
+import styled from '@emotion/styled'
+import List from './List'
+import FileReaderComponent from './Tools/FileReader'
 import {
   close,
   flush,
   getItems,
   open,
-  filterItems
-} from "../../../store/fileSystem/actions";
-import { connect } from "react-redux";
+  filterItems,
+} from '../../../store/fileSystem/actions'
+import { connect } from 'react-redux'
 
 const Container = styled.div`
   position: relative;
   flex: 1;
-`;
+`
 
 const FileSystem = ({
   items,
@@ -34,20 +34,20 @@ const FileSystem = ({
   filterItems,
   filter,
 }) => {
-  const handleItemClick = item => {
-    if (item.type === "file") {
-      return onFileOpen ? onFileOpen(item) : openItem(item);
+  const handleItemClick = (item) => {
+    if (item.type === 'file') {
+      return onFileOpen ? onFileOpen(item) : openItem(item)
     } else {
-      return onFolderOpen ? onFolderOpen(item) : openItem(item);
+      return onFolderOpen ? onFolderOpen(item) : openItem(item)
     }
-  };
+  }
 
   const getSelectedItems = () => {
-    return items.map(item => {
-      item.selected = !!selectedItems.find(i => i.id === item.id);
-      return item;
-    });
-  };
+    return items.map((item) => {
+      item.selected = !!selectedItems.find((i) => i.id === item.id)
+      return item
+    })
+  }
 
   return (
     <Container>
@@ -58,18 +58,20 @@ const FileSystem = ({
         <List
           items={getSelectedItems()}
           onItemClick={handleItemClick}
-          onLimitChange={limit => getItems({ limit, isFiltered: filter })}
-          onPageChange={page => getItems({ page, isFiltered: filter })}
+          onLimitChange={(limit) => getItems({ limit, isFiltered: filter })}
+          onPageChange={(page) => getItems({ page, isFiltered: filter })}
           page={page}
           total={total}
           limit={limit}
-          filterItems={f => filterItems({ limit: 15, page: 1, isFiltered: !filter })}
+          filterItems={(f) =>
+            filterItems({ limit: 15, page: 1, isFiltered: !filter })
+          }
           filter={filter}
         />
       ) : null}
     </Container>
-  );
-};
+  )
+}
 
 FileSystem.propTypes = {
   items: PropTypes.array,
@@ -88,9 +90,9 @@ FileSystem.propTypes = {
   selectedItems: PropTypes.array,
   filterItems: PropTypes.func.isRequired,
   filter: PropTypes.bool,
-};
+}
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   channel: state.bot.botInstance?.storage?.channel,
   openedFolder: state.fileSystem.openedFolder,
   openedFile: state.fileSystem.openedFile,
@@ -99,18 +101,15 @@ const mapStateToProps = state => ({
   limit: state.fileSystem.query?.limit,
   page: state.fileSystem.query?.page,
   filter: state.fileSystem.filter,
-  isFiltered: state.fileSystem.isFiltered
-});
+  isFiltered: state.fileSystem.isFiltered,
+})
 
-const mapDispatchToProps = dispatch => ({
-  getItems: query => dispatch(getItems(query)),
+const mapDispatchToProps = (dispatch) => ({
+  getItems: (query) => dispatch(getItems(query)),
   flush: () => dispatch(flush()),
-  openItem: item => dispatch(open(item)),
-  closeItem: item => dispatch(close(item)),
+  openItem: (item) => dispatch(open(item)),
+  closeItem: (item) => dispatch(close(item)),
   filterItems: (query) => dispatch(filterItems(query)),
-});
+})
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FileSystem);
+export default connect(mapStateToProps, mapDispatchToProps)(FileSystem)

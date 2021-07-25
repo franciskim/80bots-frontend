@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import SettingsEditor from './SettingsEditor'
 import Icon from 'components/default/icons'
 import { Modal } from 'reactstrap'
@@ -158,7 +158,6 @@ const Settings = ({
   const OrderTh = (props) => (
     <Th
       {...props}
-      // eslint-disable-next-line react/prop-types
       order={
         props.field === order.field || props.children === order.field
           ? order.value
@@ -179,8 +178,8 @@ const Settings = ({
     })
   }
 
-  const renderRow = (region, idx) => (
-    <tr key={idx}>
+  const renderRow = (region) => (
+    <tr key={idx.id}>
       <td>{region.name}</td>
       <td>{region.code}</td>
       <td>{region.limit}</td>

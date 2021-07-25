@@ -463,10 +463,10 @@ const RunningBots = () => {
     },
   }
 
-  const renderRow = (botInstance, idx) => {
+  const renderRow = (botInstance) => {
     return (
       <Tr
-        key={idx}
+        key={botInstance.id}
         disabled={botInstance.status === 'pending'}
         className={
           botInstance.status === 'running'
@@ -583,7 +583,6 @@ const RunningBots = () => {
   const OrderTh = (props) => (
     <th
       {...props}
-      // eslint-disable-next-line react/prop-types
       order={
         props.field === order.field || props.children === order.field
           ? order.value

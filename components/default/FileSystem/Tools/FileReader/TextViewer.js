@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useReducer, useRef } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { Textarea as BaseTextarea } from 'reactstrap'
 import { parseUrl } from 'lib/helpers'
 import { lookup } from 'mime-types'

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 // import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 // import Icon from 'components/default/icons'
 // import Router from 'next/router'
 import LaunchEditor from './LaunchEditor'
@@ -203,8 +203,8 @@ const Bots = () => {
       )
   }
 
-  const renderRow = (bot, idx) => (
-    <tr key={idx}>
+  const renderRow = (bot) => (
+    <tr key={bot.id}>
       <td>{bot.name}</td>
       <td>
         <Badge type={bot.type === 'public' ? 'info' : 'danger'} pill>
@@ -276,7 +276,6 @@ const Bots = () => {
   const OrderTh = (props) => (
     <Th
       {...props}
-      // eslint-disable-next-line react/prop-types
       order={
         props.field === order.field || props.children === order.field
           ? order.value

@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import ScreenShot from "../../ScreenShot";
-import styled from 'styled-components';
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
+import ScreenShot from '../../ScreenShot'
+import styled from '@emotion/styled'
 
 const Images = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
   align-items: center;
-  ${props => props.styles};
-`;
+  ${(props) => props.styles};
+`
 
 const Image = styled(ScreenShot)`
   margin-bottom: 20px;
   margin-right: 20px;
   animation: ${Fade} 200ms ease-in-out;
-  ${props => props.styles};
-`;
+  ${(props) => props.styles};
+`
 
 const ImageViewer = styled.div`
   top: 0;
@@ -32,25 +32,25 @@ const ImageViewer = styled.div`
     width: calc(100vw - 400px);
     height: calc(100vh - 200px);
   }
-`;
+`
 
 const Old_ImagesType = ({ output }) => {
-  const [currentImage, setCurrentImage] = useState(null);
+  const [currentImage, setCurrentImage] = useState(null)
 
-  const toFile = item => {
-    const blob = new Blob([item.thumbnail || item.data], { type: "image/jpg" });
-    return new File([blob], item.name, { type: "image/jpg" });
-  };
+  const toFile = (item) => {
+    const blob = new Blob([item.thumbnail || item.data], { type: 'image/jpg' })
+    return new File([blob], item.name, { type: 'image/jpg' })
+  }
 
-  const toImage = item => ({
+  const toImage = (item) => ({
     src: URL.createObjectURL(toFile(item)),
     caption: item.name,
-    ...item
-  });
+    ...item,
+  })
 
   const renderImage = (item, idx) => {
     if (item.data) {
-      item = toImage(item);
+      item = toImage(item)
       return (
         <Image
           key={idx}
@@ -58,9 +58,9 @@ const Old_ImagesType = ({ output }) => {
           caption={item.caption}
           onClick={() => setCurrentImage(item)}
         />
-      );
+      )
     }
-  };
+  }
 
   return (
     <>
@@ -68,18 +68,18 @@ const Old_ImagesType = ({ output }) => {
       {currentImage && (
         <ImageViewer onClick={() => setCurrentImage(null)}>
           <img
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             alt={currentImage.caption}
             src={currentImage.src}
           />
         </ImageViewer>
       )}
     </>
-  );
-};
+  )
+}
 
 Old_ImagesType.propTypes = {
-  output: PropTypes.array.isRequired
-};
+  output: PropTypes.array.isRequired,
+}
 
-export default Old_ImagesType;
+export default Old_ImagesType

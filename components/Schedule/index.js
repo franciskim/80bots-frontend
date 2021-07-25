@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { Container, CardBody, ButtonGroup, Label } from 'reactstrap'
 import {
   LimitFilter,
@@ -20,7 +20,6 @@ import {
   deleteSchedule,
 } from 'store/schedule/actions'
 import { getRunningBots } from 'store/bot/actions'
-
 import ScheduleEditor from './ScheduleEditor'
 import AsyncSelect from 'react-select/async'
 
@@ -62,11 +61,11 @@ const Tag = styled(Badge)`
   }
 `
 
-const AddButtonWrap = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 5px;
-`
+// const AddButtonWrap = styled.div`
+//   display: flex;
+//   justify-content: flex-end;
+//   margin-bottom: 5px;
+// `
 
 const SelectWrap = styled.div`
   display: flex;
@@ -287,11 +286,9 @@ const BotsSchedule = () => {
     dispatch(getSchedules({ page, limit, sort: field, order: value, search }))
   }
 
-  // eslint-disable-next-line react/prop-types
   const OrderTh = (props) => (
     <Th
       {...props}
-      // eslint-disable-next-line react/prop-types
       order={
         props.field === order.field || props.children === order.field
           ? order.value
@@ -314,8 +311,8 @@ const BotsSchedule = () => {
     )
   }
 
-  const renderRow = (schedule, idx) => (
-    <tr key={idx}>
+  const renderRow = (schedule) => (
+    <tr key={schedule.id}>
       <td>{schedule.user}</td>
       <td>{schedule.instance_id}</td>
       <td>{schedule.bot_name}</td>
@@ -366,11 +363,11 @@ const BotsSchedule = () => {
           background: #000;
         }
       `}</style>
-      <AddButtonWrap>
+      <ButtonGroup>
         <Button color="primary" onClick={toggleAddModal}>
           Add schedule list
         </Button>
-      </AddButtonWrap>
+      </ButtonGroup>
       <Container>
         <CardBody>
           <div>

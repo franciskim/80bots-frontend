@@ -1,6 +1,6 @@
-import React from "react";
-import styled from 'styled-components';
-import PropTypes from "prop-types";
+import React from 'react'
+import styled from '@emotion/styled'
+import PropTypes from 'prop-types'
 
 // const hamburgerBaseStyle = css`
 //   content: "";
@@ -36,7 +36,7 @@ const Button = styled.span`
     width: 14px;
     position: absolute;
   }
-`;
+`
 
 const openedStyles = css`
   span::before,
@@ -52,7 +52,7 @@ const openedStyles = css`
     transform: rotateZ(45deg);
     bottom: -4px;
   }
-`;
+`
 
 const closedStyles = css`
   span::before,
@@ -68,7 +68,7 @@ const closedStyles = css`
     transform: rotateZ(-45deg);
     bottom: -4px;
   }
-`;
+`
 
 const Container = styled.span`
   position: relative;
@@ -78,21 +78,21 @@ const Container = styled.span`
   height: 26px;
   &:hover {
     cursor: pointer;
-    ${props => (props.opened ? openedStyles : closedStyles)};
+    ${(props) => (props.opened ? openedStyles : closedStyles)};
   }
-`;
+`
 
 const HamburgerButton = ({ opened, ...props }) => {
   return (
     <Container opened={opened} {...props}>
-      {" "}
-      <Button />{" "}
+      {' '}
+      <Button />{' '}
     </Container>
-  );
-};
+  )
+}
 
 HamburgerButton.propTypes = {
-  opened: PropTypes.bool
-};
+  opened: PropTypes.bool,
+}
 
-export default HamburgerButton;
+export default HamburgerButton

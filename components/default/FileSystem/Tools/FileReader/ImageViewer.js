@@ -1,5 +1,5 @@
-import React from "react";
-import styled from 'styled-components';
+import React from 'react'
+import styled from '@emotion/styled'
 
 const BaseImageViewer = styled.div`
   top: 0;
@@ -15,19 +15,19 @@ const BaseImageViewer = styled.div`
   img {
     width: calc(100vw - 400px);
   }
-`;
+`
 
 const ImageViewer = ({ item, onClose }) => {
   return (
     <BaseImageViewer onClick={() => onClose(item)}>
       <img
         width={100}
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
         alt={item.name}
         src={item.url}
       />
     </BaseImageViewer>
-  );
-};
+  )
+}
 
-export default ImageViewer;
+export default ImageViewer

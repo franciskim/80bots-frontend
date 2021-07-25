@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import { connect } from 'react-redux'
 import Tabs from 'react-bootstrap/Tabs'
@@ -209,10 +209,10 @@ const Index = ({
       <Modal
         ref={modal}
         title={'Restart bot instance'}
-        contentStyles={css`
-          overflow-x: visible;
-          overflow-y: hidden;
-        `}
+        // contentStyles={css`
+        //   overflow-x: visible;
+        //   overflow-y: hidden;
+        // `}
         disableSideClosing
       >
         <RestartEditor

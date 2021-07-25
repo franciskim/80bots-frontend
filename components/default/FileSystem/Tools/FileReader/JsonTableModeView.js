@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { LimitFilter } from 'components/default/Table'
 import { Paginator } from 'components/default/Paginator'
 import { Table } from 'reactstrap'
@@ -138,7 +138,7 @@ const JsonTableModeView = ({ output }) => {
         <Table>
           {slicedChunk[0] && (
             <thead>
-              <th>{getHeader(slicedChunk[0])}</th>
+              <tr>{getHeader(slicedChunk[0])}</tr>
             </thead>
           )}
           <tbody>{slicedChunk.map(renderRow)}</tbody>
