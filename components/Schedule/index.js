@@ -365,6 +365,8 @@ const BotsSchedule = ({
         <CardBody>
           <Filters>
             <LimitFilter
+              id="limitfilter"
+              instanceId="limitfilter"
               onChange={({ value }) => {
                 setLimit(value)
                 getSchedules({
@@ -378,6 +380,8 @@ const BotsSchedule = ({
               }}
             />
             <ListFilter
+              id="listfilter1"
+              instanceId="listfilter1"
               options={FILTERS_LIST_OPTIONS}
               onChange={({ value }) => {
                 setFilterList(value)

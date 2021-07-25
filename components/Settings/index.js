@@ -219,6 +219,8 @@ const Settings = ({
         <CardBody>
           <Filters>
             <LimitFilter
+              id="limitfilter"
+              instanceId="limitfilter"
               onChange={({ value }) => {
                 setLimit(value)
                 getRegions({

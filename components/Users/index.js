@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
 import dayjs from 'dayjs'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Paginator } from '../default'
-import { Card, CardBody, Button } from 'reactstrap'
+import { CardBody, Button } from 'reactstrap'
 import {
   Table,
   Thead,
@@ -18,50 +16,48 @@ import { addNotification } from 'store/notification/actions'
 import { updateStatus } from 'store/user/actions'
 import { getUsers } from 'store/user/actions'
 
-const Container = styled(Card)`
-  background: #333;
-  border: none;
-  color: #fff;
-`
-
-// const StatusButton = styled(Button)`
-//   padding: 2px 10px;
-//   font-size: 13px;
-//   text-transform: uppercase;
-// `;
-
-const Users = ({ addNotification, getUsers, updateStatus, users, total }) => {
+const Users = () => {
+  const dispatch = useDispatch()
   const [limit, setLimit] = useState(10)
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
 
   useEffect(() => {
-    getUsers({ page, limit })
+    dispatch(getUsers({ page, limit }))
   }, [])
 
+  const users = useSelector((state) => state.user.users)
+  const total = useSelector((state) => state.user.total)
+
   const changeUserStatus = (user) => {
-    updateStatus(user.id, {
-      status: user.status === 'active' ? 'inactive' : 'active',
-    }).then(() => {
-      const status = user.status === 'active' ? 'deactivated' : 'activated'
-      addNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: `User was successfully ${status}`,
+    dispatch(
+      updateStatus(user.id, {
+        status: user.status === 'active' ? 'inactive' : 'active',
       })
+    ).then(() => {
+      const status = user.status === 'active' ? 'deactivated' : 'activated'
+      dispatch(
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `User was successfully ${status}`,
+        })
+      )
     })
   }
 
   const searchUsers = (value) => {
     setSearch(value)
-    getUsers({
-      page,
-      limit,
-      search: value,
-    })
+    dispatch(
+      getUsers({
+        page,
+        limit,
+        search: value,
+      })
+    )
   }
 
   const onOrderChange = () => {
-    getUsers({ page, limit, search })
+    dispatch(getUsers({ page, limit, search }))
   }
 
   const OrderTh = (props) => <Th {...props} onClick={onOrderChange} />
@@ -84,74 +80,56 @@ const Users = ({ addNotification, getUsers, updateStatus, users, total }) => {
 
   return (
     <>
-      <Container>
-        <CardBody>
-          <Filters>
-            <LimitFilter
-              onChange={({ value }) => {
-                setLimit(value)
+      <CardBody>
+        <Filters>
+          <LimitFilter
+            id="limitfilter"
+            instanceId="limitfilter"
+            onChange={({ value }) => {
+              setLimit(value)
+              dispatch(
                 getUsers({
                   page,
                   limit: value,
                   search,
                 })
-              }}
-            />
-            <SearchFilter
-              onChange={(value) => {
-                searchUsers(value)
-              }}
-            />
-          </Filters>
-          <Table>
-            <Thead>
-              <tr>
-                <OrderTh field={'name'}>Name</OrderTh>
-                <OrderTh field={'email'}>Email</OrderTh>
-                <OrderTh field={'date'}>Register Date</OrderTh>
-                <OrderTh field={'status'}>Status</OrderTh>
-              </tr>
-            </Thead>
-            <tbody>{users.map(renderRow)}</tbody>
-          </Table>
-          <Paginator
-            total={total}
-            pageSize={limit}
-            onChangePage={(page) => {
-              setPage(page)
+              )
+            }}
+          />
+          <SearchFilter
+            onChange={(value) => {
+              searchUsers(value)
+            }}
+          />
+        </Filters>
+        <Table>
+          <Thead>
+            <tr>
+              <OrderTh field={'name'}>Name</OrderTh>
+              <OrderTh field={'email'}>Email</OrderTh>
+              <OrderTh field={'date'}>Register Date</OrderTh>
+              <OrderTh field={'status'}>Status</OrderTh>
+            </tr>
+          </Thead>
+          <tbody>{users.map(renderRow)}</tbody>
+        </Table>
+        <Paginator
+          total={total}
+          pageSize={limit}
+          onChangePage={(page) => {
+            setPage(page)
+            dispatch(
               getUsers({
                 page,
                 limit,
                 search,
               })
-            }}
-          />
-        </CardBody>
-      </Container>
+            )
+          }}
+        />
+      </CardBody>
     </>
   )
 }
 
-Users.propTypes = {
-  theme: PropTypes.shape({
-    colors: PropTypes.object.isRequired,
-  }).isRequired,
-  addNotification: PropTypes.func.isRequired,
-  updateStatus: PropTypes.func.isRequired,
-  getUsers: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
-}
-
-const mapStateToProps = (state) => ({
-  users: state.user.users,
-  total: state.user.total,
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  addNotification: (payload) => dispatch(addNotification(payload)),
-  getUsers: (query) => dispatch(getUsers(query)),
-  updateStatus: (id, updateData) => dispatch(updateStatus(id, updateData)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Users)
+export default Users
