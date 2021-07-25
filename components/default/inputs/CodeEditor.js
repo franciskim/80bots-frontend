@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-// import AceEditor from 'react-ace'
 import beautify from 'js-beautify'
+// import AceEditor from 'react-ace'
 // import 'ace-builds/src-noconflict/ace'
 // import 'ace-builds/src-noconflict/mode-javascript'
 // import 'ace-builds/src-noconflict/theme-tomorrow_night_eighties'

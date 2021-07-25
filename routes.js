@@ -21,18 +21,11 @@ import SchedulersPage from 'pages/admin/scheduler'
 
 const routes = [
   {
-    collapse: true,
     name: 'Dashboards',
     icon: 'ni ni-shop text-primary',
-    state: 'dashboardsCollapse',
-    views: [
-      {
-        path: '/dashboard',
-        name: 'Dashboard',
-        miniName: 'D',
-        layout: '/admin',
-      },
-    ],
+    path: '/dashboard',
+    miniName: 'D',
+    layout: '/admin',
   },
   {
     path: '/bots/running',

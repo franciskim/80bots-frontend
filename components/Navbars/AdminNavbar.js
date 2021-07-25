@@ -46,7 +46,7 @@ import {
 } from 'reactstrap'
 import { logout } from 'store/auth/actions'
 
-function AdminNavbar({ theme, sidenavOpen, toggleSidenav }) {
+const AdminNavbar = ({ theme, sidenavOpen, toggleSidenav }) => {
   const dispatch = useDispatch()
   // function that on mobile devices makes the search open
   const openSearch = () => {
@@ -76,7 +76,7 @@ function AdminNavbar({ theme, sidenavOpen, toggleSidenav }) {
   }
 
   const onLogoutClick = (e) => {
-    e.preventDefault()
+    // e.preventDefault()
     dispatch(logout())
     Router.push('/')
   }
@@ -467,6 +467,7 @@ AdminNavbar.defaultProps = {
   sidenavOpen: false,
   theme: 'dark',
 }
+
 AdminNavbar.propTypes = {
   toggleSidenav: PropTypes.func,
   sidenavOpen: PropTypes.bool,
