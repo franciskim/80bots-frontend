@@ -44,7 +44,7 @@ function AdminFooter() {
                     href="https://www.creative-tim.com?ref=adpr-admin-footer"
                     target="_blank"
                   >
-                    80Bots
+                    Creative Tim
                   </NavLink>
                 </NavItem>
                 <NavItem>
@@ -53,6 +53,22 @@ function AdminFooter() {
                     target="_blank"
                   >
                     About Us
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    href="http://blog.creative-tim.com?ref=adpr-admin-footer"
+                    target="_blank"
+                  >
+                    Blog
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    href="https://www.creative-tim.com/license?ref=adpr-admin-footer"
+                    target="_blank"
+                  >
+                    License
                   </NavLink>
                 </NavItem>
               </Nav>

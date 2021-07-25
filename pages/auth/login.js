@@ -1,9 +1,22 @@
-import React, { useState } from "react";
+/*!
+
+=========================================================
+* NextJS Argon Dashboard PRO - v1.1.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/nextjs-argon-dashboard-pro
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
+import React from "react";
 // nodejs library that concatenates classes
 import classnames from "classnames";
-import { connect } from "react-redux";
-import Router from "next/router";
-
 // reactstrap components
 import {
   Button,
@@ -24,41 +37,10 @@ import {
 import Auth from "layouts/Auth.js";
 // core components
 import AuthHeader from "components/Headers/AuthHeader.js";
-import { NOTIFICATION_TYPES } from "../../config";
 
-// import { login } from '../../store/auth/actions'
-// import { addNotification } from '../../store/notification/actions'
-import { login, reset } from "store/auth/actions";
-import { addNotification } from "store/notification/actions";
-
-const Login = ({ login, addNotification }) => {
+function Login() {
   const [focusedEmail, setfocusedEmail] = React.useState(false);
   const [focusedPassword, setfocusedPassword] = React.useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const submitForm = (e) => {
-    e.preventDefault();
-
-    login(email, password)
-      .then(() => {
-        console.error('fuck')
-        // Router.push("/bots/running");
-      })
-      .catch(error => {
-        const { response } = error;
-        if (response) {
-          const { message } = response.data;
-          addNotification({ type: NOTIFICATION_TYPES.ERROR, message });
-        }
-      });
-  }
-
-  const handleTest = () => {
-    addNotification({ type: NOTIFICATION_TYPES.ERROR, message: "Test message" });
-  }
-
-
   return (
     <>
       <AuthHeader
@@ -69,7 +51,8 @@ const Login = ({ login, addNotification }) => {
         <Row className="justify-content-center">
           <Col lg="5" md="7">
             <Card className="bg-secondary border-0 mb-0">
-              <CardHeader className="bg-transparent pb-5">Sign in with</CardHeader>
+              <CardHeader className="bg-transparent pb-5">
+                  Sign in</CardHeader>
               <CardBody className="px-lg-5 py-lg-5">
                 <Form role="form">
                   <FormGroup
@@ -88,7 +71,6 @@ const Login = ({ login, addNotification }) => {
                         type="email"
                         onFocus={() => setfocusedEmail(true)}
                         onBlur={() => setfocusedEmail(true)}
-                        onChange={e => setEmail(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
@@ -108,7 +90,6 @@ const Login = ({ login, addNotification }) => {
                         type="password"
                         onFocus={() => setfocusedPassword(true)}
                         onBlur={() => setfocusedPassword(true)}
-                        onChange={e => setPassword(e.target.value)}
                       />
                     </InputGroup>
                   </FormGroup>
@@ -126,11 +107,10 @@ const Login = ({ login, addNotification }) => {
                     </label>
                   </div>
                   <div className="text-center">
-                    <Button className="my-4" color="info" type="button" onClick={submitForm}>
+                    <Button className="my-4" color="info" type="button">
                       Sign in
                     </Button>
                   </div>
-                  <Button onClick={handleTest} >TEST Notification</Button>
                 </Form>
               </CardBody>
             </Card>
@@ -163,10 +143,4 @@ const Login = ({ login, addNotification }) => {
 
 Login.layout = Auth;
 
-const mapDispatchToProps = dispatch => ({
-  login: (email, password) => dispatch(login(email, password)),
-  reset: email => dispatch(reset(email)),
-  addNotification: payload => dispatch(addNotification(payload))
-});
-
-export default connect(null, mapDispatchToProps)(Login);
+export default Login;

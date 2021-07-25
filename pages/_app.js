@@ -3,8 +3,6 @@ import ReactDOM from "react-dom";
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
-import { Provider } from 'react-redux';
-import withReduxStore from '../lib/connectRedux';
 
 import PageChange from "components/PageChange/PageChange.js";
 
@@ -39,7 +37,7 @@ Router.events.on("routeChangeError", () => {
   document.body.classList.remove("body-page-transition");
 });
 
-class MyApp extends App {
+export default class MyApp extends App {
   componentDidMount() {
     let comment = document.createComment(`
 
@@ -69,25 +67,23 @@ class MyApp extends App {
     return { pageProps };
   }
   render() {
-    const { Component, pageProps, reduxStore } = this.props;
+    const { Component, pageProps } = this.props;
+
     const Layout = Component.layout || (({ children }) => <>{children}</>);
 
     return (
-      <Provider store={reduxStore}>
-          <Head>
-            <meta
-              name="viewport"
-              content="width=device-width, initial-scale=1, shrink-to-fit=no"
-            />
-            <title>NextJS Argon Dashboard by Creative Tim</title>
-            <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
-          </Head>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-      </Provider>
+      <React.Fragment>
+        <Head>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+          />
+          <title>80bots.com</title>
+        </Head>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </React.Fragment>
     );
   }
 }
-
-export default withReduxStore(MyApp)

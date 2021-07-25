@@ -1,24 +1,28 @@
-import React, { useEffect, useState,useRef } from "react";
-import PropTypes from "prop-types";
-import styled from 'styled-components';
+import React, { useEffect, useState, useRef } from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
-import { connect } from "react-redux";
-import Tabs from 'react-bootstrap/Tabs';
-import Tab from 'react-bootstrap/Tab';
-import { addNotification } from "store/notification/actions";
-import { NOTIFICATION_TYPES } from "config"
-import { Button, Modal } from "reactstrap";
-import { CodeEditor } from "components/default/inputs";
-import { getBotInstance, updateBotInstance, restartInstance} from "store/botinstance/actions";
-import {useRouter} from "next/router";
-import Router from "next/router";
-import RestartEditor from "../components/RestartEditor";
+import { connect } from 'react-redux'
+import Tabs from 'react-bootstrap/Tabs'
+import Tab from 'react-bootstrap/Tab'
+import { addNotification } from 'store/notification/actions'
+import { NOTIFICATION_TYPES } from 'config'
+import { Button, Modal } from 'reactstrap'
+import { CodeEditor } from 'components/default/inputs'
+import {
+  getBotInstance,
+  updateBotInstance,
+  restartInstance,
+} from 'store/botinstance/actions'
+import { useRouter } from 'next/router'
+import Router from 'next/router'
+import RestartEditor from '../components/RestartEditor'
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin: 20px 0 10px 0;
-`;
+`
 
 const InputWrap = styled.div`
   display: flex;
@@ -30,150 +34,154 @@ const InputWrap = styled.div`
   &:last-of-type {
     margin-left: 10px;
   }
-`;
+`
 
 const TextareaWrap = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-`;
+`
 
 const Row = styled.div`
   display: flex;
   flex: 1;
   flex-direction: row;
   margin-bottom: 10px;
-`;
+`
 const Label = styled.label`
   font-size: 16px;
   margin-bottom: 5px;
   color: #fff;
-`;
+`
 
 const Buttons = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-`;
+`
 
 const StatusButton = styled(Button)`
   text-transform: uppercase;
   min-height: 38px;
-`;
+`
 
 const Error = styled.span`
   font-size: 15px;
   text-align: center;
-`;
+`
 
 const selectStyles = {
   control: (provided, state) => ({
     ...provided,
-    border: "solid 1px hsl(0,0%,80%)",
-    borderRadius: "4px",
-    color: "#fff",
-    backgroundColor: "transparent",
-    "&:hover": {
-      borderColor: "#7dffff"
-    }
+    border: 'solid 1px hsl(0,0%,80%)',
+    borderRadius: '4px',
+    color: '#fff',
+    backgroundColor: 'transparent',
+    '&:hover': {
+      borderColor: '#7dffff',
+    },
   }),
   singleValue: (provided, state) => ({
     ...provided,
-    color: "#fff"
+    color: '#fff',
   }),
   menu: (provided, state) => ({
     ...provided,
-    border: "solid 1px hsl(0,0%,80%)",
-    borderRadius: "4px",
-    zIndex: "7",
+    border: 'solid 1px hsl(0,0%,80%)',
+    borderRadius: '4px',
+    zIndex: '7',
   }),
   menuList: (provided, state) => ({
     ...provided,
-    backgroundColor: "#333",
+    backgroundColor: '#333',
   }),
   option: (provided, state) => ({
     ...provided,
-    color: state.isFocused ? "black" : "#fff",
+    color: state.isFocused ? 'black' : '#fff',
   }),
-};
+}
 
 const inputStyles = {
   container: css`
-  color: #fff;
-  font-size: 16px;
-  &:first-of-type {
-    margin-right: 10px;
-  }
-  &:last-of-type {
-    margin-left: 10px;
-  }
-`};
+    color: #fff;
+    font-size: 16px;
+    &:first-of-type {
+      margin-right: 10px;
+    }
+    &:last-of-type {
+      margin-left: 10px;
+    }
+  `,
+}
 
 const Index = ({
- aboutBot,
- getBotInstance,
- updateBotInstance,
- restartInstance,
- notify,
+  aboutBot,
+  getBotInstance,
+  updateBotInstance,
+  restartInstance,
+  notify,
 }) => {
-  const router = useRouter().query.id;
-  const [botScript, setBotScript] = useState("");
-  const [botPackageJSON, setBotPackageJSON] = useState( "");
-  const [error, setError] = useState(null);
-  const modal = useRef(null);
-  const isEmpty = obj => {
-    for(let key in obj) {
-      return true;
+  const router = useRouter().query.id
+  const [botScript, setBotScript] = useState('')
+  const [botPackageJSON, setBotPackageJSON] = useState('')
+  const [error, setError] = useState(null)
+  const modal = useRef(null)
+  const isEmpty = (obj) => {
+    for (let key in obj) {
+      return true
     }
-    return false;
-  };
+    return false
+  }
 
   useEffect(() => {
-    getBotInstance(router);
-    return () => {};
-  }, []);
+    getBotInstance(router)
+    return () => {}
+  }, [])
 
   useEffect(() => {
     if (isEmpty(aboutBot)) {
-      setBotScript(aboutBot.aws_custom_script);
-      setBotPackageJSON(aboutBot.aws_custom_package_json);
+      setBotScript(aboutBot.aws_custom_script)
+      setBotPackageJSON(aboutBot.aws_custom_package_json)
     }
-  }, [aboutBot]);
+  }, [aboutBot])
 
-  
-
-  const convertBotData = botData => ({
+  const convertBotData = (botData) => ({
     aws_custom_script: botData.botScript,
     aws_custom_package_json: botData.botPackageJSON,
-  });
+  })
   const submit = () => {
-      setError(null);
-      const botData = {
-        botScript,
-        botPackageJSON,
-      };
-      updateBotInstance(aboutBot.id, convertBotData(botData))
-        .then(() => {
-          notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "BotInstance updated!" });
-          modal.current.open();
+    setError(null)
+    const botData = {
+      botScript,
+      botPackageJSON,
+    }
+    updateBotInstance(aboutBot.id, convertBotData(botData))
+      .then(() => {
+        notify({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'BotInstance updated!',
         })
-        .catch(() =>
-          notify({ type: NOTIFICATION_TYPES.ERROR, message: "Update failed!" })
-        );
-  };
+        modal.current.open()
+      })
+      .catch(() =>
+        notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Update failed!' })
+      )
+  }
 
-  const restartSubmit = params => {
-    console.log("params ",params);
-    modal.current.close();
+  const restartSubmit = (params) => {
+    modal.current.close()
     restartInstance(aboutBot.id, params)
-    .then(() => {
-      notify({ type: NOTIFICATION_TYPES.SUCCESS, message: "BotInstance restarted!" });
-      Router.push("/bots/running");
-    })
-    .catch(() =>
-      notify({ type: NOTIFICATION_TYPES.ERROR, message: "Restart failed!" })
-    );
-  };
+      .then(() => {
+        notify({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'BotInstance restarted!',
+        })
+        Router.push('/bots/running')
+      })
+      .catch(() =>
+        notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Restart failed!' })
+      )
+  }
 
   return (
     <>
@@ -184,13 +192,13 @@ const Index = ({
               <Tab eventKey="script" title="index.js">
                 <CodeEditor
                   value={botScript}
-                  onChange={code => setBotScript(code)}
+                  onChange={(code) => setBotScript(code)}
                 />
               </Tab>
               <Tab eventKey="json" title="package.json">
                 <CodeEditor
                   value={botPackageJSON}
-                  onChange={code => setBotPackageJSON(code)}
+                  onChange={(code) => setBotPackageJSON(code)}
                 />
               </Tab>
             </Tabs>
@@ -200,7 +208,7 @@ const Index = ({
       </Container>
       <Modal
         ref={modal}
-        title={"Restart bot instance"}
+        title={'Restart bot instance'}
         contentStyles={css`
           overflow-x: visible;
           overflow-y: hidden;
@@ -214,13 +222,13 @@ const Index = ({
         />
       </Modal>
       <Buttons>
-        <Button type={"primary"} onClick={submit}>
+        <Button type={'primary'} onClick={submit}>
           Update & Restart
         </Button>
       </Buttons>
     </>
-  );
-};
+  )
+}
 
 Index.propTypes = {
   aboutBot: PropTypes.object.isRequired,
@@ -228,17 +236,17 @@ Index.propTypes = {
   updateBotInstance: PropTypes.func.isRequired,
   restartInstance: PropTypes.func.isRequired,
   notify: PropTypes.func.isRequired,
-};
+}
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   aboutBot: state.botInstance.aboutBot,
-});
+})
 
-const mapDispatchToProps = dispatch => ({
-  getBotInstance: id => dispatch(getBotInstance(id)),
+const mapDispatchToProps = (dispatch) => ({
+  getBotInstance: (id) => dispatch(getBotInstance(id)),
   updateBotInstance: (id, data) => dispatch(updateBotInstance(id, data)),
   restartInstance: (id, params) => dispatch(restartInstance(id, params)),
-  notify: payload => dispatch(addNotification(payload)),
-});
+  notify: (payload) => dispatch(addNotification(payload)),
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Index);
+export default connect(mapStateToProps, mapDispatchToProps)(Index)

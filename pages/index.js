@@ -346,6 +346,16 @@ function Index() {
                   your next project. Build a new web app or give an old
                   Bootstrap project a new look!
                 </p>
+                <div className="btn-wrapper">
+                  <Button
+                    className="btn-neutral mb-3 mb-sm-0"
+                    color="default"
+                    href="https://www.creative-tim.com/product/nextjs-argon-dashboard?ref=njsadp-index-page"
+                    target="_blank"
+                  >
+                    <span className="btn-inner--text">Get FREE version</span>
+                  </Button>
+                </div>
                 <div className="text-center">
                   <h4 className="display-4 mb-5 mt-5">
                     Available on these technologies

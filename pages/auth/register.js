@@ -39,10 +39,9 @@ import Auth from "layouts/Auth.js";
 import AuthHeader from "components/Headers/AuthHeader.js";
 
 function Register() {
+  const [focusedName, setfocusedName] = React.useState(false);
   const [focusedEmail, setfocusedEmail] = React.useState(false);
   const [focusedPassword, setfocusedPassword] = React.useState(false);
-  const [focusedConfirmPassword, setfocusedConfirmPassword] = React.useState(false);
-
   return (
     <>
       <AuthHeader
@@ -53,9 +52,28 @@ function Register() {
         <Row className="justify-content-center">
           <Col lg="6" md="8">
             <Card className="bg-secondary border-0">
-              <CardHeader>Sign up</CardHeader>
+              <CardHeader className="bg-transparent pb-5">Sign up</CardHeader>
               <CardBody className="px-lg-5 py-lg-5">
                 <Form role="form">
+                  <FormGroup
+                    className={classnames({
+                      focused: focusedName,
+                    })}
+                  >
+                    <InputGroup className="input-group-merge input-group-alternative mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="ni ni-hat-3" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Name"
+                        type="text"
+                        onFocus={() => setfocusedName(true)}
+                        onBlur={() => setfocusedName(false)}
+                      />
+                    </InputGroup>
+                  </FormGroup>
                   <FormGroup
                     className={classnames({
                       focused: focusedEmail,
@@ -91,25 +109,6 @@ function Register() {
                         type="password"
                         onFocus={() => setfocusedPassword(true)}
                         onBlur={() => setfocusedPassword(false)}
-                      />
-                    </InputGroup>
-                  </FormGroup>
-                  <FormGroup
-                    className={classnames({
-                      focused: focusedConfirmPassword,
-                    })}
-                  >
-                    <InputGroup className="input-group-merge input-group-alternative">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="ni ni-lock-circle-open" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        placeholder="Confirm Password"
-                        type="password"
-                        onFocus={() => setfocusedConfirmPassword(true)}
-                        onBlur={() => setfocusedConfirmPassword(false)}
                       />
                     </InputGroup>
                   </FormGroup>

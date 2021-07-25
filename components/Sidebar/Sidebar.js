@@ -211,7 +211,7 @@ function Sidebar({
       <div className="navbar-inner">
         <Collapse navbar isOpen={true}>
           <Nav navbar>{createLinks(routes)}</Nav>
-        </Collapse>
+</Collapse>
       </div>
     </div>
   );
