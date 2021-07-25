@@ -27,12 +27,6 @@ const routes = [
         miniName: 'D',
         layout: '/admin',
       },
-      {
-        path: '/alternative',
-        name: 'Alternative',
-        miniName: 'A',
-        layout: '/admin',
-      },
     ],
   },
   {
