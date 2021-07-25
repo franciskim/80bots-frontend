@@ -1,5 +1,5 @@
 import React from 'react'
-import Bots from 'components/Bots/index'
+import Bots from 'components/Bots'
 import { Container } from 'reactstrap'
 import SimpleHeader from 'components/Headers/SimpleHeader'
 import Admin from 'layouts/Admin'

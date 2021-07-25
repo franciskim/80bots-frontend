@@ -2,15 +2,8 @@ import React, { useState, useEffect } from 'react'
 import dayjs from 'dayjs'
 import { useSelector, useDispatch } from 'react-redux'
 import { Paginator } from '../default'
-import { CardBody, Button } from 'reactstrap'
-import {
-  Table,
-  Thead,
-  Filters,
-  SearchFilter,
-  LimitFilter,
-  Th,
-} from '../default/Table'
+import { CardBody, Button, Table } from 'reactstrap'
+import { SearchFilter, LimitFilter, Th } from '../default/Table'
 import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'store/notification/actions'
 import { updateStatus } from 'store/user/actions'
@@ -81,7 +74,7 @@ const Users = () => {
   return (
     <>
       <CardBody>
-        <Filters>
+        <div>
           <LimitFilter
             id="limitfilter"
             instanceId="limitfilter"
@@ -101,16 +94,16 @@ const Users = () => {
               searchUsers(value)
             }}
           />
-        </Filters>
+        </div>
         <Table>
-          <Thead>
+          <thead>
             <tr>
               <OrderTh field={'name'}>Name</OrderTh>
               <OrderTh field={'email'}>Email</OrderTh>
               <OrderTh field={'date'}>Register Date</OrderTh>
               <OrderTh field={'status'}>Status</OrderTh>
             </tr>
-          </Thead>
+          </thead>
           <tbody>{users.map(renderRow)}</tbody>
         </Table>
         <Paginator

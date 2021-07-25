@@ -1,20 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import PropTypes from 'prop-types'
 // import Select from "react-select";
 // import Link from "next/link";
 // import Router from "next/router";
 import { useDispatch, useSelector } from 'react-redux'
-import { Card, CardBody, Button, ButtonGroup, Container } from 'reactstrap'
-import {
-  Table,
-  Thead,
-  Th,
-  Filters,
-  LimitFilter,
-  ListFilter,
-  SearchFilter,
-} from 'components/default/Table'
+import { CardBody, Button, ButtonGroup, Container, Table } from 'reactstrap'
+import { LimitFilter, ListFilter, SearchFilter } from 'components/default/Table'
 import { addNotification } from 'store/notification/actions'
 import { NOTIFICATION_TYPES } from 'config'
 import {
@@ -87,17 +77,17 @@ import {
 //   }
 // `;
 
-const AddButtonWrap = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 15px;
+// const AddButtonWrap = styled.div`
+//   display: flex;
+//   justify-content: flex-end;
+//   margin-bottom: 15px;
 
-  button {
-    &:last-child {
-      margin-left: 20px;
-    }
-  }
-`
+//   button {
+//     &:last-child {
+//       margin-left: 20px;
+//     }
+//   }
+// `
 
 // const A = styled.a`
 //   cursor: pointer;
@@ -147,28 +137,7 @@ const FILTERS_LIST_OPTIONS = [
   { value: 'my', label: 'My Instances' },
 ]
 
-const RunningBots = ({
-  notify,
-  getRunningBots,
-  copyInstance,
-  restoreBot,
-  downloadInstancePemFile,
-  updateRunningBot,
-  // botInstances,
-  // botNotifications,
-  // total,
-  addListener,
-  removeAllListeners,
-  botInstanceUpdated,
-  syncBotInstances,
-  // syncLoading,
-  // wsSubscribe,
-  // wsUnsubscribe,
-  // openScriptNotification,
-  // closeScriptNotification,
-  flushScriptNotification,
-  // settings_channel,
-}) => {
+const RunningBots = () => {
   const dispatch = useDispatch()
   const [list, setFilterList] = useState('all')
   const [limit, setLimit] = useState(20)
@@ -612,7 +581,7 @@ const RunningBots = ({
   }
 
   const OrderTh = (props) => (
-    <Th
+    <th
       {...props}
       // eslint-disable-next-line react/prop-types
       order={
@@ -652,20 +621,22 @@ const RunningBots = ({
       </ButtonGroup>
       <Container>
         <CardBody>
-          <Filters>
+          <div>
             <LimitFilter
               id="limitfilter"
               instanceId="limitfilter"
               onChange={({ value }) => {
                 setLimit(value)
-                getRunningBots({
-                  page,
-                  limit: value,
-                  list,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
+                dispatch(
+                  getRunningBots({
+                    page,
+                    limit: value,
+                    list,
+                    sort: order.field,
+                    order: order.value,
+                    search,
+                  })
+                )
               }}
             />
             <ListFilter
@@ -674,14 +645,16 @@ const RunningBots = ({
               options={FILTERS_LIST_OPTIONS}
               onChange={({ value }) => {
                 setFilterList(value)
-                getRunningBots({
-                  page,
-                  limit,
-                  list: value,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
+                dispatch(
+                  getRunningBots({
+                    page,
+                    limit,
+                    list: value,
+                    sort: order.field,
+                    order: order.value,
+                    search,
+                  })
+                )
               }}
             />
             <SearchFilter
@@ -689,12 +662,12 @@ const RunningBots = ({
                 searchRunningBots(value)
               }}
             />
-          </Filters>
+          </div>
           <Table>
-            <Thead>
+            <thead>
               <tr>
                 <OrderTh field={'status'}>Status</OrderTh>
-                <th>Actions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                <th>Actions</th>
                 <OrderTh field={'bot_name'}>Bot</OrderTh>
                 <OrderTh field={'script_notification'}>
                   Last Notification
@@ -707,7 +680,7 @@ const RunningBots = ({
                 <OrderTh field={'launched_by'}>Deployed By</OrderTh>
                 <OrderTh field={'region'}>Region</OrderTh>
               </tr>
-            </Thead>
+            </thead>
             <tbody>{botInstances.map(renderRow)}</tbody>
           </Table>
           <Paginator
@@ -715,14 +688,16 @@ const RunningBots = ({
             pageSize={limit}
             onChangePage={(page) => {
               setPage(page)
-              getRunningBots({
-                page,
-                limit,
-                list,
-                sort: order.field,
-                order: order.value,
-                search,
-              })
+              dispatch(
+                getRunningBots({
+                  page,
+                  limit,
+                  list,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              )
             }}
           />
         </CardBody>
@@ -730,49 +705,5 @@ const RunningBots = ({
     </>
   )
 }
-
-RunningBots.propTypes = {
-  // notify: PropTypes.func.isRequired,
-  // copyInstance: PropTypes.func.isRequired,
-  // restoreBot: PropTypes.func.isRequired,
-  // getRunningBots: PropTypes.func.isRequired,
-  // downloadInstancePemFile: PropTypes.func.isRequired,
-  // updateRunningBot: PropTypes.func.isRequired,
-  // addListener: PropTypes.func.isRequired,
-  // removeAllListeners: PropTypes.func.isRequired,
-  // botInstanceUpdated: PropTypes.func.isRequired,
-  // syncBotInstances: PropTypes.func.isRequired,
-  // botInstances: PropTypes.array.isRequired,
-  // botNotifications: PropTypes.array.isRequired,
-  // total: PropTypes.number.isRequired,
-  // syncLoading: PropTypes.bool.isRequired,
-  // user: PropTypes.object,
-  // wsSubscribe: PropTypes.func.isRequired,
-  // wsUnsubscribe: PropTypes.func.isRequired,
-  // openScriptNotification: PropTypes.func.isRequired,
-  // closeScriptNotification: PropTypes.func.isRequired,
-  // flushScriptNotification: PropTypes.func.isRequired,
-  // settings_channel: PropTypes.array.isRequired,
-}
-
-// const mapDispatchToProps = (dispatch) => ({
-//   // notify: (payload) => dispatch(addNotification(payload)),
-//   copyInstance: (id) => dispatch(copyInstance(id)),
-//   restoreBot: (id) => dispatch(restoreBot(id)),
-//   getRunningBots: (query) => dispatch(getRunningBots(query)),
-//   downloadInstancePemFile: (id) => dispatch(downloadInstancePemFile(id)),
-//   updateRunningBot: (id, data) => dispatch(updateRunningBot(id, data)),
-//   addListener: (room, eventName, handler) =>
-//     dispatch(addListener(room, eventName, handler)),
-//   removeAllListeners: () => dispatch(removeAllListeners()),
-//   botInstanceUpdated: (botInstance) =>
-//     dispatch(botInstanceUpdated(botInstance)),
-//   syncBotInstances: () => dispatch(syncBotInstances()),
-//   wsSubscribe: (channel, isPrivate) => dispatch(subscribe(channel, isPrivate)),
-//   wsUnsubscribe: (channel) => dispatch(unsubscribe(channel)),
-//   openScriptNotification: (item) => dispatch(openScriptNotification(item)),
-//   closeScriptNotification: (item) => dispatch(closeScriptNotification(item)),
-//   flushScriptNotification: () => dispatch(flushScriptNotification()),
-// })
 
 export default RunningBots

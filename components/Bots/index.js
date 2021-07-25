@@ -14,14 +14,7 @@ import {
   Container,
 } from 'reactstrap'
 import { Paginator } from 'components/default'
-import {
-  Table,
-  Thead,
-  Filters,
-  LimitFilter,
-  SearchFilter,
-  Th,
-} from 'components/default/Table'
+import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   syncLocalBots,
@@ -33,6 +26,7 @@ import {
   deleteBot,
   setBotLimit,
 } from 'store/bot/actions'
+import { Table } from 'reactstrap'
 
 // import { addNotification } from 'store/notification/actions'
 import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config'
@@ -315,7 +309,7 @@ const Bots = () => {
       </AddButtonWrap>
       <Container>
         <CardBody>
-          <Filters>
+          <div>
             <LimitFilter
               id="limitfilter"
               instanceId="limitfilter"
@@ -336,9 +330,9 @@ const Bots = () => {
                 searchBots(value)
               }}
             />
-          </Filters>
+          </div>
           <Table responsive>
-            <Thead>
+            <thead>
               <tr>
                 <OrderTh field={'name'}>Bot Name</OrderTh>
                 <OrderTh field={'type'}>Bot Type</OrderTh>
@@ -346,7 +340,7 @@ const Bots = () => {
                 <OrderTh field={'status'}>Status</OrderTh>
                 <th>Action</th>
               </tr>
-            </Thead>
+            </thead>
             <tbody>{bots.map(renderRow)}</tbody>
           </Table>
           <Paginator

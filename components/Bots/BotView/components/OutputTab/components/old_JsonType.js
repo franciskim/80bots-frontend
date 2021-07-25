@@ -1,64 +1,64 @@
-import React, { useEffect, useState, useRef } from "react";
-import PropTypes from "prop-types";
-import styled from 'styled-components';
-import { Table, Thead } from "components/default/Table";
-import { Button } from "reactstrap";
+import React, { useEffect, useState, useRef } from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
+import { Button } from 'reactstrap'
+import { Table } from 'reactstrap'
 
-import Modal from "../../../../../default/Modal";
+import Modal from '../../../../../default/Modal'
 
 const LinkTd = styled.td`
   cursor: pointer;
-`;
+`
 
 const Back = styled(Button)`
   padding: 0 5px;
   margin-right: 10px;
-`;
+`
 
 const JsonType = ({ output, setCustomBack }) => {
-  const [data, setData] = useState(output || []);
-  const exportModal = useRef(null);
+  const [data, setData] = useState(output || [])
+  const exportModal = useRef(null)
 
   const BackButton = (
     <Back
-      type={"danger"}
+      type={'danger'}
       onClick={() => {
-        setData(output);
-        setCustomBack(null);
+        setData(output)
+        setCustomBack(null)
       }}
     >
       Back
     </Back>
-  );
+  )
 
   useEffect(() => {
     if (output) {
-      setData(output);
+      setData(output)
     }
-  }, [output]);
+  }, [output])
 
-  const viewNestedData = data => {
-    setData(data);
-    setCustomBack(BackButton);
-  };
+  const viewNestedData = (data) => {
+    setData(data)
+    setCustomBack(BackButton)
+  }
 
-  const getHeader = row => {
-    let columns = [];
+  const getHeader = (row) => {
+    let columns = []
     for (let key in row) {
       if (row.hasOwnProperty(key)) {
-        columns.push(<th key={key}>{key}</th>);
+        columns.push(<th key={key}>{key}</th>)
       }
     }
-    return columns;
-  };
+    return columns
+  }
 
   const renderRow = (row, idx) => {
-    let rowData = [];
-    let rowIdx = 0;
+    let rowData = []
+    let rowIdx = 0
     for (let key in row) {
       if (row.hasOwnProperty(key)) {
-        if (typeof row[key] !== "object") {
-          rowData.push(<td key={rowIdx}>{row[key]}</td>);
+        if (typeof row[key] !== 'object') {
+          rowData.push(<td key={rowIdx}>{row[key]}</td>)
         } else {
           if (row[key] && row[key].length) {
             rowData.push(
@@ -66,39 +66,38 @@ const JsonType = ({ output, setCustomBack }) => {
                 onClick={() => viewNestedData(row[key])}
                 key={rowIdx}
               >{`See ${key}`}</LinkTd>
-            );
+            )
           } else {
-            rowData.push(<td key={rowIdx}>{`No ${key}`}</td>);
+            rowData.push(<td key={rowIdx}>{`No ${key}`}</td>)
           }
         }
       }
-      rowIdx++;
+      rowIdx++
     }
-    return <tr key={idx}>{rowData}</tr>;
-  };
+    return <tr key={idx}>{rowData}</tr>
+  }
 
   return (
     <Table>
       {data[0] && (
-        <Thead>
+        <thead>
           <tr>{getHeader(data[0])}</tr>
-        </Thead>
+        </thead>
       )}
       <tbody>{data.map(renderRow)}</tbody>
       <Modal
-        title={"Choose export options"}
+        title={'Choose export options'}
         ref={exportModal}
         contentStyles={css`
           overflow: visible;
         `}
-      >
-      </Modal>
+      ></Modal>
     </Table>
-  );
-};
+  )
+}
 
 JsonType.propTypes = {
   output: PropTypes.array.isRequired,
-  setCustomBack: PropTypes.func.isRequired
-};
-export default JsonType;
+  setCustomBack: PropTypes.func.isRequired,
+}
+export default JsonType

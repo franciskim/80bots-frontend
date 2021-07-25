@@ -5,45 +5,45 @@ import Select from 'react-select'
 import Icon from './icons'
 import { Label } from 'reactstrap'
 
-export const Table = styled.table`
-  font-size: 12px;
-  width: 100%;
-  background: #333;
-  border-collapse: collapse;
-  vertical-align: middle;
+// export const Table = styled.table`
+//   font-size: 12px;
+//   width: 100%;
+//   background: #333;
+//   border-collapse: collapse;
+//   vertical-align: middle;
 
-  td,
-  th {
-    text-align: start;
-    padding: 0.75rem;
-  }
+//   td,
+//   th {
+//     text-align: start;
+//     padding: 0.75rem;
+//   }
 
-  td.td-controls {
-    white-space: nowrap;
+//   td.td-controls {
+//     white-space: nowrap;
 
-    svg {
-      max-width: 100%;
-      height: auto;
-    }
-  }
+//     svg {
+//       max-width: 100%;
+//       height: auto;
+//     }
+//   }
 
-  @media (min-width: 1400px) {
-    font-size: 14px;
-  }
-`
+//   @media (min-width: 1400px) {
+//     font-size: 14px;
+//   }
+// `
 
-export const Thead = styled.thead`
-  tr {
-    text-transform: uppercase;
-    border: none;
-    white-space: nowrap;
+// export const Thead = styled.thead`
+//   tr {
+//     text-transform: uppercase;
+//     border: none;
+//     white-space: nowrap;
 
-    th {
-      font-weight: 300;
-      border: none;
-    }
-  }
-`
+//     th {
+//       font-weight: 300;
+//       border: none;
+//     }
+//   }
+// `
 
 export const Th = ({ order, field, children, onClick, ...props }) => {
   const Th = styled.th`
@@ -72,12 +72,12 @@ export const Th = ({ order, field, children, onClick, ...props }) => {
   )
 }
 
-export const Filters = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-bottom: 10px;
-`
+// export const Filters = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   margin-bottom: 10px;
+// `
 
 // const FilterBox = styled.div`
 //   display: flex;
@@ -214,9 +214,9 @@ ListFilter.propTypes = {
   label: PropTypes.string,
 }
 
-Table.propTypes = {
-  responsive: PropTypes.bool,
-}
+// Table.propTypes = {
+//   responsive: PropTypes.bool,
+// }
 
 LimitFilter.propTypes = {
   onChange: PropTypes.func.isRequired,

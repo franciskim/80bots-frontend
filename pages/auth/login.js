@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 // nodejs library that concatenates classes
 import classnames from 'classnames'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import Router from 'next/router'
 
 // reactstrap components
@@ -24,14 +24,13 @@ import {
 import Auth from 'layouts/Auth.js'
 // core components
 import AuthHeader from 'components/Headers/AuthHeader.js'
-import { NOTIFICATION_TYPES } from '../../config'
+import { NOTIFICATION_TYPES } from 'config'
 
-// import { login } from '../../store/auth/actions'
-// import { addNotification } from '../../store/notification/actions'
-import { login, reset } from 'store/auth/actions'
+import { login } from 'store/auth/actions'
 import { addNotification } from 'store/notification/actions'
 
-const Login = ({ login, addNotification }) => {
+const Login = () => {
+  const dispatch = useDispatch()
   const [focusedEmail, setfocusedEmail] = React.useState(false)
   const [focusedPassword, setfocusedPassword] = React.useState(false)
   const [email, setEmail] = useState('')
@@ -40,22 +39,26 @@ const Login = ({ login, addNotification }) => {
   const submitForm = (e) => {
     e.preventDefault()
 
-    login(email, password)
+    dispatch(login(email, password))
       .then(() => {
-        // console.error('fuck')
         Router.push('/admin/bots/running')
       })
       .catch((error) => {
         const { response } = error
         if (response) {
           const { message } = response.data
-          addNotification({ type: NOTIFICATION_TYPES.ERROR, message })
+          dispatch(addNotification({ type: NOTIFICATION_TYPES.ERROR, message }))
         }
       })
   }
 
   const handleTest = () => {
-    addNotification({ type: NOTIFICATION_TYPES.ERROR, message: 'Test message' })
+    dispatch(
+      addNotification({
+        type: NOTIFICATION_TYPES.ERROR,
+        message: 'Test message',
+      })
+    )
   }
 
   return (
@@ -169,10 +172,4 @@ const Login = ({ login, addNotification }) => {
 
 Login.layout = Auth
 
-const mapDispatchToProps = (dispatch) => ({
-  login: (email, password) => dispatch(login(email, password)),
-  reset: (email) => dispatch(reset(email)),
-  addNotification: (payload) => dispatch(addNotification(payload)),
-})
-
-export default connect(null, mapDispatchToProps)(Login)
+export default Login

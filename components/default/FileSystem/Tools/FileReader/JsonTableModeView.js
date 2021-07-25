@@ -1,17 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import {
-  Table as BaseTable,
-  Thead,
-  LimitFilter,
-} from 'components/default/Table'
+import { LimitFilter } from 'components/default/Table'
 import { Paginator } from 'components/default/Paginator'
+import { Table } from 'reactstrap'
 
-const Table = styled(BaseTable)`
-  min-width: 100%;
-  max-height: 100%;
-`
+// const Table = styled(BaseTable)`
+//   min-width: 100%;
+//   max-height: 100%;
+// `
 
 const Wrapper = styled.div`
   display: flex;
@@ -140,9 +137,9 @@ const JsonTableModeView = ({ output }) => {
       <Content>
         <Table>
           {slicedChunk[0] && (
-            <Thead>
-              <tr>{getHeader(slicedChunk[0])}</tr>
-            </Thead>
+            <thead>
+              <th>{getHeader(slicedChunk[0])}</th>
+            </thead>
           )}
           <tbody>{slicedChunk.map(renderRow)}</tbody>
         </Table>

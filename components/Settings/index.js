@@ -5,15 +5,8 @@ import SettingsEditor from './SettingsEditor'
 import Icon from 'components/default/icons'
 import { Modal } from 'reactstrap'
 import { connect } from 'react-redux'
-import {
-  Filters,
-  LimitFilter,
-  SearchFilter,
-  Table,
-  Th,
-  Thead,
-} from 'components/default/Table'
-import { Card, CardBody, Button } from 'reactstrap'
+import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
+import { Card, CardBody, Button, Table } from 'reactstrap'
 import { getRegions, updateRegion } from 'store/bot/actions'
 import { Paginator } from 'components/default'
 import { Select } from 'components/default/inputs'
@@ -217,7 +210,7 @@ const Settings = ({
       </ButtonWrap>
       <Container>
         <CardBody>
-          <Filters>
+          <div>
             <LimitFilter
               id="limitfilter"
               instanceId="limitfilter"
@@ -237,9 +230,9 @@ const Settings = ({
                 searchRegions(value)
               }}
             />
-          </Filters>
+          </div>
           <Table responsive>
-            <Thead>
+            <thead>
               <tr>
                 <OrderTh field={'name'}>Name</OrderTh>
                 <OrderTh field={'code'}>Code</OrderTh>
@@ -248,7 +241,7 @@ const Settings = ({
                 <th>Default AMI</th>
                 <th>Actions</th>
               </tr>
-            </Thead>
+            </thead>
             <tbody>{regions.map(renderRow)}</tbody>
           </Table>
           <Paginator

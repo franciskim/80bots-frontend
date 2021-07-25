@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { useSelector, useDispatch } from 'react-redux'
-import { Container, CardBody } from 'reactstrap'
-import {
-  Table,
-  Thead,
-  Filters,
-  LimitFilter,
-  SearchFilter,
-  Th,
-} from '../default/Table'
+import { Container, CardBody, Table } from 'reactstrap'
+import { LimitFilter, SearchFilter, Th } from '../default/Table'
 // import { addNotification } from 'store/notification/actions'
 import { getSessions } from 'store/instanceSession/actions'
 import { Paginator } from 'components/default'
@@ -65,7 +58,7 @@ const SchedulerLog = () => {
     <>
       <Container>
         <CardBody>
-          <Filters>
+          <div>
             <LimitFilter
               id="limitfilter"
               instanceId="limitfilter"
@@ -85,18 +78,18 @@ const SchedulerLog = () => {
                 searchSession(value)
               }}
             />
-          </Filters>
+          </div>
           <Table>
-            <Thead>
-              <tr>
+            <thead>
+              <th>
                 <OrderTh field={'user'}>User</OrderTh>
                 <OrderTh field={'instance_id'}>Instance Id</OrderTh>
                 <OrderTh field={'type'}>Type</OrderTh>
                 <OrderTh field={'date'}>Date & Time</OrderTh>
                 <OrderTh field={'timezone'}>Time Zone</OrderTh>
                 <OrderTh field={'status'}>Status</OrderTh>
-              </tr>
-            </Thead>
+              </th>
+            </thead>
             <tbody>{sessions.map(renderRow)}</tbody>
           </Table>
           <Paginator

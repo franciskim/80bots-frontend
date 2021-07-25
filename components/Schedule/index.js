@@ -2,15 +2,12 @@ import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Container, CardBody, ButtonGroup, Label } from 'reactstrap'
 import {
-  Filters,
   LimitFilter,
   ListFilter,
   SearchFilter,
-  Table,
   Th,
-  Thead,
 } from 'components/default/Table'
-import { Button, Badge, Modal } from 'reactstrap'
+import { Button, Badge, Modal, Table } from 'reactstrap'
 import Icon from 'components/default/icons'
 import { addNotification } from 'store/notification/actions'
 import { useDispatch, useSelector } from 'react-redux'
@@ -376,7 +373,7 @@ const BotsSchedule = () => {
       </AddButtonWrap>
       <Container>
         <CardBody>
-          <Filters>
+          <div>
             <LimitFilter
               id="limitfilter"
               instanceId="limitfilter"
@@ -417,18 +414,18 @@ const BotsSchedule = () => {
                 searchSchedules(value)
               }}
             />
-          </Filters>
+          </div>
           <Table>
-            <Thead>
+            <thead>
               <tr>
                 <OrderTh field={'user'}>User</OrderTh>
                 <OrderTh field={'instance_id'}>Instance Id</OrderTh>
                 <OrderTh field={'bot_name'}>Bot Name</OrderTh>
                 <OrderTh field={'status'}>Status</OrderTh>
-                <th>Details</th>
-                <th>Actions</th>
+                <OrderTh>Details</OrderTh>
+                <OrderTh>Actions</OrderTh>
               </tr>
-            </Thead>
+            </thead>
             <tbody>{schedules.map(renderRow)}</tbody>
           </Table>
           <Paginator
