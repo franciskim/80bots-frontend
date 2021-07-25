@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { Label, Wrap, LabelWrap, Description } from './Input'
+// import { Wrap } from './Input'
 
 // const thumbStyles = css`
 //   appearance: none;
@@ -49,50 +49,49 @@ const RangeContainer = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
-  ${(props) => props.styles};
 `
 
 export const Range = ({
-  styles,
-  onChange,
-  min,
-  label,
-  value,
-  description,
+  // styles,
+  // onChange,
+  // min,
+  // label,
+  // value,
+  // description,
   ...props
 }) => {
-  const [val, setVal] = useState(value || min || 0)
+  // const [val, setVal] = useState(value || min || 0)
 
-  useEffect(() => {
-    onChange(val)
-  }, [])
+  // useEffect(() => {
+  //   onChange(val)
+  // }, [])
 
-  useEffect(() => {
-    if (value) setVal(value)
-  }, [value])
+  // useEffect(() => {
+  //   if (value) setVal(value)
+  // }, [value])
 
-  const changeValue = (e) => {
-    onChange(Number(e.target.value))
-    setVal(Number(e.target.value))
-  }
+  // const changeValue = (e) => {
+  //   onChange(Number(e.target.value))
+  //   setVal(Number(e.target.value))
+  // }
 
   return (
-    <Wrap styles={styles && styles.container}>
-      <LabelWrap>
-        {label && <Label styles={styles && styles.label}>{label}</Label>}
-        {description && <Description text={description} />}
-      </LabelWrap>
-      <RangeContainer>
-        <DefaultRange
-          {...props}
-          min={min}
-          type={'range'}
-          value={val}
-          onChange={changeValue}
-        />
-        <RangeValue>{val}</RangeValue>
-      </RangeContainer>
-    </Wrap>
+    // <Wrap styles={styles && styles.container}>
+    //   <LabelWrap>
+    //     {label && <Label styles={styles && styles.label}>{label}</Label>}
+    //     {description && <Description text={description} />}
+    //   </LabelWrap>
+    <RangeContainer>
+      <DefaultRange
+        {...props}
+        min={min}
+        type={'range'}
+        value={val}
+        onChange={changeValue}
+      />
+      <RangeValue>{val}</RangeValue>
+    </RangeContainer>
+    // </Wrap>
   )
 }
 
@@ -102,11 +101,11 @@ Range.propTypes = {
   min: PropTypes.number,
   value: PropTypes.number,
   onChange: PropTypes.func.isRequired,
-  styles: PropTypes.shape({
-    container: PropTypes.object,
-    label: PropTypes.object,
-    input: PropTypes.input,
-  }),
+  // styles: PropTypes.shape({
+  //   container: PropTypes.object,
+  //   label: PropTypes.object,
+  //   input: PropTypes.input,
+  // }),
 }
 
 export default Range

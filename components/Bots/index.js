@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 // import PropTypes from 'prop-types'
 import styled from 'styled-components'
 // import Icon from 'components/default/icons'
 // import Router from 'next/router'
-// import LaunchEditor from 'components/LaunchEditor'
+import LaunchEditor from './LaunchEditor'
 import { Badge, Button, ButtonGroup, Card, CardBody, Modal } from 'reactstrap'
 // import { Paginator } from 'components/default'
 // import {
@@ -14,7 +14,7 @@ import { Badge, Button, ButtonGroup, Card, CardBody, Modal } from 'reactstrap'
 //   SearchFilter,
 //   Th,
 // } from 'components/default/Table'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 // import {
 //   getBots,
 //   updateStatusBot,
@@ -25,7 +25,16 @@ import { useSelector } from 'react-redux'
 //   syncLocalBots,
 //   setBotLimit,
 // } from 'store/bot/actions'
-import { syncLocalBots } from 'store/bot/actions'
+import {
+  syncLocalBots,
+  launchInstance,
+  getBots,
+  updateStatusBot,
+  getBotSettings,
+  updateBotSettings,
+  deleteBot,
+  setBotLimit,
+} from 'store/bot/actions'
 
 // import { addNotification } from 'store/notification/actions'
 import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config'
@@ -117,13 +126,14 @@ const Bots = (
     // setLimit,
   }
 ) => {
+  const dispatch = useDispatch()
   const [clickedBot, setClickedBot] = useState(null)
   // const [page, setPage] = useState(1)
   // const [order, setOrder] = useState({ value: '', field: '' })
   // const [search, setSearch] = useState(null)
 
-  // const modal = useRef(null)
-  // const deleteModal = useRef(null)
+  const modal = useRef(null)
+  const deleteModal = useRef(null)
 
   const syncLoading = useSelector((state) => state.bot.syncLoading)
 
@@ -144,23 +154,23 @@ const Bots = (
   // }, [])
 
   const launchBot = (params) => {
-    // modal.current.close()
-    // launchInstance(clickedBot.id, params)
-    //   .then(() => {
-    //     notify({
-    //       type: NOTIFICATION_TYPES.INFO,
-    //       message: 'New bot instance is deploying',
-    //     })
-    //   })
-    //   .catch((action) => {
-    //     notify({
-    //       type: NOTIFICATION_TYPES.ERROR,
-    //       message:
-    //         action.error?.response?.data?.message ||
-    //         'Error occurred during new instance launch',
-    //       delay: 1500,
-    //     })
-    //   })
+    modal.current.close()
+    dispatch(launchInstance(clickedBot.id, params))
+      .then(() => {
+        notify({
+          type: NOTIFICATION_TYPES.INFO,
+          message: 'New bot instance is deploying',
+        })
+      })
+      .catch((action) => {
+        notify({
+          type: NOTIFICATION_TYPES.ERROR,
+          message:
+            action.error?.response?.data?.message ||
+            'Error occurred during new instance launch',
+          delay: 1500,
+        })
+      })
   }
 
   // const changeBotStatus = (bot) => {
@@ -202,7 +212,7 @@ const Bots = (
   }
 
   const sync = () => {
-    syncLocalBots()
+    dispatch(syncLocalBots())
       .then(() =>
         notify({ type: NOTIFICATION_TYPES.INFO, message: 'Sync started' })
       )
