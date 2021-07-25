@@ -1,45 +1,45 @@
-import React, { useState, useEffect } from "react";
-import styled from 'styled-components';
-import PropTypes from "prop-types";
-import Icon from "../icons";
-import Tooltip from "../Tooltip";
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import PropTypes from 'prop-types'
+import Icon from '../icons'
+import { Tooltip } from 'reactstrap'
 
-const ERROR_ANIMATION_DURATION = 200;
+const ERROR_ANIMATION_DURATION = 200
 
 export const Wrap = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  ${props => props.styles};
-`;
+  ${(props) => props.styles};
+`
 
 export const Label = styled.label`
   font-size: 16px;
   margin-bottom: 5px;
-  ${props => props.styles};
-`;
+  ${(props) => props.styles};
+`
 
 export const LabelWrap = styled.div`
   display: flex;
-`;
+`
 
 export const Description = ({ text, position, ...props }) => {
   const Component = styled(Icon)`
     margin-left: 3px;
-  `;
+  `
   return (
     <Tooltip text={text} position={position}>
-      <Component {...props} name={"help"} />
+      <Component {...props} name={'help'} />
     </Tooltip>
-  );
-};
+  )
+}
 
 const ErrorSpan = styled.span`
   font-size: 12px;
-  animation: ${props => props.animation} ${ERROR_ANIMATION_DURATION}ms,
+  animation: ${(props) => props.animation} ${ERROR_ANIMATION_DURATION}ms,
     fade-in-out;
-  ${props => props.styles};
-`;
+  ${(props) => props.styles};
+`
 
 export const DefaultInput = styled.input`
   display: block;
@@ -60,53 +60,53 @@ export const DefaultInput = styled.input`
     border-color: #80bdff;
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    ${props => props.isInputError && errorFocusStyles};
+    ${(props) => props.isInputError && errorFocusStyles};
   }
-  ${props => props.styles};
-  ${props => props.isInputError && errorStyles};
-`;
+  ${(props) => props.styles};
+  ${(props) => props.isInputError && errorStyles};
+`
 
 export const Error = ({ children }) => {
-  const [state, setState] = useState("closed");
-  const [error, setError] = useState(children);
-  const [timer, setTimer] = useState(undefined);
+  const [state, setState] = useState('closed')
+  const [error, setError] = useState(children)
+  const [timer, setTimer] = useState(undefined)
 
   useEffect(() => {
-    let id;
-    if (children && state !== "in") {
-      clearTimeout(timer);
-      setError(children);
-      setState("in");
+    let id
+    if (children && state !== 'in') {
+      clearTimeout(timer)
+      setError(children)
+      setState('in')
     }
-    if (!children && state === "in") {
-      setState("out");
+    if (!children && state === 'in') {
+      setState('out')
       id = setTimeout(() => {
-        setState("closed");
-        setError(null);
-      }, ERROR_ANIMATION_DURATION);
-      setTimer(id);
+        setState('closed')
+        setError(null)
+      }, ERROR_ANIMATION_DURATION)
+      setTimer(id)
     }
     return () => {
-      clearTimeout(id);
-    };
-  }, [children]);
+      clearTimeout(id)
+    }
+  }, [children])
 
   useEffect(() => {
     return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+      clearTimeout(timer)
+    }
+  }, [])
 
   return (
-    state !== "closed" && (
+    state !== 'closed' && (
       <ErrorSpan
-        animation={state === "out" ? errorAnimationOut : errorAnimationIn}
+        animation={state === 'out' ? errorAnimationOut : errorAnimationIn}
       >
         {error}
       </ErrorSpan>
     )
-  );
-};
+  )
+}
 
 export const Input = ({
   styles,
@@ -116,9 +116,8 @@ export const Input = ({
   error,
   ...props
 }) => {
-
   return (
-      <Wrap styles={styles && styles.container}>
+    <Wrap styles={styles && styles.container}>
       <LabelWrap>
         {label && <Label styles={styles && styles.label}>{label}</Label>}
         {description && (
@@ -132,29 +131,29 @@ export const Input = ({
       />
       <Error styles={styles && styles.error}>{error}</Error>
     </Wrap>
-  );
-};
+  )
+}
 
 Input.propTypes = {
   description: PropTypes.string,
-  descriptionPosition: PropTypes.oneOf(["top", "bottom"]),
+  descriptionPosition: PropTypes.oneOf(['top', 'bottom']),
   label: PropTypes.string,
   error: PropTypes.string,
   styles: PropTypes.shape({
     container: PropTypes.object,
     label: PropTypes.object,
     error: PropTypes.object,
-    input: PropTypes.input
-  })
-};
+    input: PropTypes.input,
+  }),
+}
 
 Error.propTypes = {
-  children: PropTypes.string
-};
+  children: PropTypes.string,
+}
 
 Description.propTypes = {
   text: PropTypes.string.isRequired,
-  position: PropTypes.string
-};
+  position: PropTypes.string,
+}
 
-export default Input;
+export default Input

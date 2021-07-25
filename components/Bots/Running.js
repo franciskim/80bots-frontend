@@ -616,7 +616,7 @@ const RunningBots = ({
       <div>haha</div>
       {/* <AddButtonWrap>
         <Button
-          type={'primary'}
+          color="primary"
           onClick={syncWithAWS}
           loading={`${syncLoading}`}
         >
@@ -702,7 +702,7 @@ const RunningBots = ({
 }
 
 RunningBots.propTypes = {
-  notify: PropTypes.func.isRequired,
+  // notify: PropTypes.func.isRequired,
   copyInstance: PropTypes.func.isRequired,
   restoreBot: PropTypes.func.isRequired,
   getRunningBots: PropTypes.func.isRequired,
@@ -735,7 +735,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  notify: (payload) => dispatch(addNotification(payload)),
+  // notify: (payload) => dispatch(addNotification(payload)),
   copyInstance: (id) => dispatch(copyInstance(id)),
   restoreBot: (id) => dispatch(restoreBot(id)),
   getRunningBots: (query) => dispatch(getRunningBots(query)),

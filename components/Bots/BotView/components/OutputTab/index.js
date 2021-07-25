@@ -1,31 +1,31 @@
-import React, { useState } from "react";
-import styled from 'styled-components';
-import ImagesType from "./components/ImagesType";
-import JsonType from "./components/JsonType";
-import { CardBody } from "bootstrap";
-import { Button, Loader80bots } from "components/default";
-import FilesType from "./components/FileType";
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import ImagesType from 'components/ImagesType'
+import JsonType from 'components/JsonType'
+import { CardBody } from 'bootstrap'
+import { Button, Loader80bots } from 'components/default'
+import FilesType from 'components/FileType'
 
 const OUTPUT_TYPES = {
   JSON: {
-    value: "json",
-    label: "JSON"
+    value: 'json',
+    label: 'JSON',
   },
   IMAGES: {
-    value: "images",
-    label: "Images"
+    value: 'images',
+    label: 'Images',
   },
   FILES: {
-    value: "files",
-    label: "Files"
-  }
-};
+    value: 'files',
+    label: 'Files',
+  },
+}
 
 const Content = styled(CardBody)`
   display: flex;
   flex-flow: column;
-  ${props => props.styles};
-`;
+  ${(props) => props.styles};
+`
 
 const TypesNavigation = styled.div`
   display: flex;
@@ -33,41 +33,41 @@ const TypesNavigation = styled.div`
   align-items: center;
   margin-top: 8px;
   margin-bottom: 23px;
-`;
+`
 
 const Type = styled(Button)`
   padding: 0 5px;
   animation: ${Fade} 200ms ease-in;
-`;
+`
 
 const Hint = styled.span`
   font-size: 14px;
   color: #fff;
-`;
+`
 
 // eslint-disable-next-line react/prop-types
 const OutputTab = ({ setCustomBack }) => {
-  const [currentType, setCurrentType] = useState(OUTPUT_TYPES.JSON);
+  const [currentType, setCurrentType] = useState(OUTPUT_TYPES.JSON)
 
   const renderCurrentType = () => {
     switch (currentType.value) {
       case OUTPUT_TYPES.IMAGES.value:
-        return <ImagesType setCustomBack={setCustomBack} />;
+        return <ImagesType setCustomBack={setCustomBack} />
       case OUTPUT_TYPES.JSON.value:
-        return <JsonType setCustomBack={setCustomBack} />;
+        return <JsonType setCustomBack={setCustomBack} />
       case OUTPUT_TYPES.FILES.value:
-        return <FilesType setCustomBack={setCustomBack} />;
+        return <FilesType setCustomBack={setCustomBack} />
       default:
         return (
           <Loader80bots
-            data={"light"}
+            data={'light'}
             styled={{
-              width: "200px"
+              width: '200px',
             }}
           />
-        );
+        )
     }
-  };
+  }
 
   return (
     <>
@@ -75,7 +75,7 @@ const OutputTab = ({ setCustomBack }) => {
         <TypesNavigation>
           {Object.values(OUTPUT_TYPES).map((item, i, all) => {
             const variant =
-              item.value === currentType.value ? "success" : "primary";
+              item.value === currentType.value ? 'success' : 'primary'
             return (
               <>
                 <Type
@@ -87,13 +87,13 @@ const OutputTab = ({ setCustomBack }) => {
                 </Type>
                 {all.length - 1 > i && <Hint>&nbsp;|&nbsp;</Hint>}
               </>
-            );
+            )
           })}
         </TypesNavigation>
         {renderCurrentType()}
       </Content>
     </>
-  );
-};
+  )
+}
 
-export default OutputTab;
+export default OutputTab

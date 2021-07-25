@@ -16,7 +16,7 @@ import {
 } from 'store/botinstance/actions'
 import { useRouter } from 'next/router'
 import Router from 'next/router'
-import RestartEditor from '../components/RestartEditor'
+import RestartEditor from 'components/RestartEditor'
 
 const Container = styled.div`
   display: flex;
@@ -222,7 +222,7 @@ const Index = ({
         />
       </Modal>
       <Buttons>
-        <Button type={'primary'} onClick={submit}>
+        <Button color="primary" onClick={submit}>
           Update & Restart
         </Button>
       </Buttons>

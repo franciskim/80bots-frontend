@@ -1,7 +1,25 @@
-import React from 'react';
-import Bots from '../../../components/Bots';
-import AppLayout from '../../../components/default/layout';
+import React from 'react'
+import { Container } from 'reactstrap'
+import Bots from 'components/Bots/index'
+import SimpleHeader from 'components/Headers/SimpleHeader'
+import Admin from 'layouts/Admin'
 
-const BotsPage = () => <AppLayout title={'Available Bots'} hideBanner> <Bots /> </AppLayout>;
+const BotsPage = () => {
+  //   <AppLayout title={'Available Bots'} hideBanner>
+  //     {' '}
+  //     <Bots />{' '}
+  //   </AppLayout>
 
-export default BotsPage;
+  return (
+    <>
+      <SimpleHeader name="Buttons" parentName="Components" />
+      <Container className="mt--6" fluid>
+        <Bots />
+      </Container>
+    </>
+  )
+}
+
+BotsPage.layout = Admin
+
+export default BotsPage
