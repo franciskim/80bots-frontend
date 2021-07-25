@@ -14,6 +14,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+import RunningBotsPage from 'pages/admin/bots/running/index'
+
 const routes = [
   {
     collapse: true,
@@ -28,6 +30,49 @@ const routes = [
         layout: '/admin',
       },
     ],
+  },
+  {
+    path: '/bots/running',
+    name: 'Working Bots',
+    icon: 'fa fa-robot text-blue',
+    layout: '/admin',
+    component: RunningBotsPage,
+  },
+  {
+    path: '/bots',
+    name: 'Deploy & Update Bots',
+    icon: 'ni ni-archive-2',
+    layout: '/admin',
+  },
+  {
+    path: '/bot',
+    name: 'Add New Bot',
+    icon: 'fa fa-plus',
+    layout: '/admin',
+  },
+  {
+    path: '/scheduler',
+    name: 'Scheduler',
+    icon: 'fa fa-calendar-alt',
+    layout: '/admin',
+  },
+  {
+    path: '/scheduler/log',
+    name: 'Scheduler Log',
+    icon: 'fa fa-history',
+    layout: '/admin',
+  },
+  {
+    path: '/bots/settings',
+    name: 'AWS AMI Settings',
+    icon: 'fa fa-cog',
+    layout: '/admin',
+  },
+  {
+    path: '/users',
+    name: 'Users',
+    icon: 'fa fa-users',
+    layout: '/admin',
   },
   {
     collapse: true,
