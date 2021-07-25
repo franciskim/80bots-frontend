@@ -14,10 +14,10 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
-import Link from "next/link";
+import React from 'react'
+import Link from 'next/link'
 // reactstrap components
-import { Button, Card, CardBody, Container, Row, Col } from "reactstrap";
+import { Button, Card, CardBody, Container, Row, Col } from 'reactstrap'
 
 function IndexHeader() {
   return (
@@ -40,13 +40,6 @@ function IndexHeader() {
                     a modern styling and beautiful markup throughout each HTML
                     template in the pack.
                   </p>
-                  <div className="mt-5">
-                    <Link href="/admin/dashboard">
-                      <Button className="btn-neutral my-2" color="default">
-                        Explore Dashboard
-                      </Button>
-                    </Link>
-                  </div>
                 </div>
               </Col>
               <Col lg="6">
@@ -116,7 +109,7 @@ function IndexHeader() {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default IndexHeader;
+export default IndexHeader

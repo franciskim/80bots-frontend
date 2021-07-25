@@ -14,8 +14,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
-import Link from "next/link";
+import React from 'react'
+import Link from 'next/link'
 // reactstrap components
 import {
   UncontrolledCollapse,
@@ -29,7 +29,7 @@ import {
   Col,
   UncontrolledTooltip,
   Button,
-} from "reactstrap";
+} from 'reactstrap'
 
 function AdminNavbar() {
   return (
@@ -45,7 +45,7 @@ function AdminNavbar() {
               <NavbarBrand href="#pablo">
                 <img
                   alt="..."
-                  src={require("assets/img/brand/nextjs_argon_white.png")}
+                  src={require('assets/img/brand/nextjs_argon_white.png')}
                 />
               </NavbarBrand>
             </span>
@@ -71,7 +71,7 @@ function AdminNavbar() {
               <Row>
                 <Col className="collapse-brand" xs="6">
                   <Link href="/admin/dashboard">
-                    <img alt="..." src={require("assets/img/brand/blue.png")} />
+                    <img alt="..." src={require('assets/img/brand/blue.png')} />
                   </Link>
                 </Col>
                 <Col className="collapse-close" xs="6">
@@ -126,7 +126,7 @@ function AdminNavbar() {
         </Container>
       </Navbar>
     </>
-  );
+  )
 }
 
-export default AdminNavbar;
+export default AdminNavbar

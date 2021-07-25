@@ -14,10 +14,10 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React from 'react'
 
 // reactstrap components
-import { NavItem, NavLink, Nav, Container, Row, Col } from "reactstrap";
+import { NavItem, NavLink, Nav, Container, Row, Col } from 'reactstrap'
 
 function AuthFooter() {
   return (
@@ -27,13 +27,13 @@ function AuthFooter() {
           <Row className="align-items-center justify-content-xl-between">
             <Col xl="6">
               <div className="copyright text-center text-xl-left text-muted">
-                © {new Date().getFullYear()}{" "}
+                © {new Date().getFullYear()}{' '}
                 <a
                   className="font-weight-bold ml-1"
                   href="https://www.creative-tim.com?ref=adpr-auth-footer"
                   target="_blank"
                 >
-                  Creative Tim
+                  80bots.com
                 </a>
               </div>
             </Col>
@@ -77,7 +77,7 @@ function AuthFooter() {
         </Container>
       </footer>
     </>
-  );
+  )
 }
 
-export default AuthFooter;
+export default AuthFooter
