@@ -1,19 +1,27 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 // import PropTypes from 'prop-types'
 import styled from 'styled-components'
 // import Icon from 'components/default/icons'
 // import Router from 'next/router'
 import LaunchEditor from './LaunchEditor'
-import { Badge, Button, ButtonGroup, Card, CardBody, Modal } from 'reactstrap'
-// import { Paginator } from 'components/default'
-// import {
-//   Table,
-//   Thead,
-//   Filters,
-//   LimitFilter,
-//   SearchFilter,
-//   Th,
-// } from 'components/default/Table'
+import {
+  Badge,
+  Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  Modal,
+  Container,
+} from 'reactstrap'
+import { Paginator } from 'components/default'
+import {
+  Table,
+  Thead,
+  Filters,
+  LimitFilter,
+  SearchFilter,
+  Th,
+} from 'components/default/Table'
 import { useDispatch, useSelector } from 'react-redux'
 // import {
 //   getBots,
@@ -38,7 +46,7 @@ import {
 
 // import { addNotification } from 'store/notification/actions'
 import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config'
-// import { addListener } from 'store/socket/actions'
+import { addListener } from 'store/socket/actions'
 
 // const Container = styled(Card)`
 //   background: #333;
@@ -128,30 +136,35 @@ const Bots = (
 ) => {
   const dispatch = useDispatch()
   const [clickedBot, setClickedBot] = useState(null)
-  // const [page, setPage] = useState(1)
-  // const [order, setOrder] = useState({ value: '', field: '' })
-  // const [search, setSearch] = useState(null)
+  const [page, setPage] = useState(1)
+  const [order, setOrder] = useState({ value: '', field: '' })
+  const [search, setSearch] = useState(null)
 
   const modal = useRef(null)
   const deleteModal = useRef(null)
 
   const syncLoading = useSelector((state) => state.bot.syncLoading)
-
-  // useEffect(() => {
-  //   getBots({ page, limit })
-  //   addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
-  //     notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' })
-  //     getBots({
-  //       page,
-  //       limit,
-  //       sort: order.field,
-  //       order: order.value,
-  //       search,
-  //     })
-  //     setPage(1)
-  //   })
-  //   return setPage(1)
-  // }, [])
+  const bots = useSelector((state) => state.bot.bots)
+  const total = useSelector((state) => state.bot.total)
+  const user = useSelector((state) => state.auth.user)
+  const limit = useSelector((state) => state.bot.limit)
+  console.error(bots, '>>>')
+  useEffect(() => {
+    console.error('browsing...')
+    dispatch(getBots({ page, limit }))
+    // addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
+    //   notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' })
+    //   getBots({
+    //     page,
+    //     limit,
+    //     sort: order.field,
+    //     order: order.value,
+    //     search,
+    //   })
+    //   setPage(1)
+    // })
+    // return setPage(1)
+  }, [page, limit])
 
   const launchBot = (params) => {
     modal.current.close()
@@ -224,84 +237,88 @@ const Bots = (
       )
   }
 
-  // const renderRow = (bot, idx) => (
-  //   <tr key={idx}>
-  //     <td>{bot.name}</td>
-  //     <td>
-  //       <BotType type={bot.type === 'public' ? 'info' : 'danger'} pill>
-  //         {bot.type}
-  //       </BotType>
-  //     </td>
-  //     <td>{bot.description}</td>
-  //     {/* <td>
-  //       {bot.tags && bot.tags.length > 0
-  //         ? bot.tags.map((tag, idx) => (
-  //             <Tag key={idx} pill type={"info"}>
-  //               {tag.name}
-  //             </Tag>
-  //           ))
-  //         : "-"}
-  //     </td> */}
-  //     <td>
-  //       <StatusButton
-  //         type={bot.status === 'active' ? 'success' : 'danger'}
-  //         onClick={() => changeBotStatus(bot)}
-  //       >
-  //         {bot.status}
-  //       </StatusButton>
-  //     </td>
-  //     <td>
-  //       <Buttons>
-  //         <Deploy
-  //           color="primary"
-  //           onClick={() => {
-  //             setClickedBot(bot)
-  //             modal.current.open()
-  //           }}
-  //         >
-  //           Deploy
-  //         </Deploy>
-  //         <IconButton
-  //           title={'Edit Bot'}
-  //           color="primary"
-  //           onClick={() => {
-  //             Router.push(`/bot/${bot.id}`)
-  //           }}
-  //         >
-  //           {/* <Icon name={'edit'} /> */}
-  //         </IconButton>
-  //         <IconButton
-  //           title={'Delete Bot'}
-  //           type={'danger'}
-  //           onClick={() => {
-  //             setClickedBot(bot)
-  //             deleteModal.current.open()
-  //           }}
-  //         >
-  //           {/* <Icon name={'garbage'} /> */}
-  //         </IconButton>
-  //       </Buttons>
-  //     </td>
-  //   </tr>
-  // )
+  const renderRow = (bot, idx) => (
+    <tr key={idx}>
+      <td>{bot.name}</td>
+      <td>
+        <Badge type={bot.type === 'public' ? 'info' : 'danger'} pill>
+          {bot.type}
+        </Badge>
+      </td>
+      <td>{bot.description}</td>
+      {/* <td>
+        {bot.tags && bot.tags.length > 0
+          ? bot.tags.map((tag, idx) => (
+              <Tag key={idx} pill type={"info"}>
+                {tag.name}
+              </Tag>
+            ))
+          : "-"}
+      </td> */}
+      <td>
+        <Button
+          color={bot.status === 'active' ? 'success' : 'danger'}
+          onClick={() => changeBotStatus(bot)}
+        >
+          {bot.status}
+        </Button>
+      </td>
+      <td>
+        <ButtonGroup>
+          <Button
+            color="primary"
+            className="btn-neutral btn-round btn-icon"
+            size="sm"
+            onClick={() => {
+              setClickedBot(bot)
+              modal.current.open()
+            }}
+          >
+            Deploy
+          </Button>
+          <Button
+            className="btn-neutral btn-round btn-icon"
+            title={'Edit Bot'}
+            size="sm"
+            color="primary"
+            onClick={() => {
+              Router.push(`/bot/${bot.id}`)
+            }}
+          >
+            {/* <Icon name={'edit'} /> */}
+          </Button>
+          <Button
+            title={'Delete Bot'}
+            type={'danger'}
+            onClick={() => {
+              setClickedBot(bot)
+              deleteModal.current.open()
+            }}
+          >
+            {/* <Icon name={'garbage'} /> */}
+          </Button>
+        </ButtonGroup>
+      </td>
+    </tr>
+  )
 
-  // const onOrderChange = (field, value) => {
-  //   setOrder({ field, value })
-  //   getBots({ page, limit, sort: field, order: value, search })
-  // }
+  const onOrderChange = (field, value) => {
+    setOrder({ field, value })
+    getBots({ page, limit, sort: field, order: value, search })
+  }
 
-  // const OrderTh = (props) => (
-  //   <Th
-  //     {...props}
-  //     // eslint-disable-next-line react/prop-types
-  //     order={
-  //       props.field === order.field || props.children === order.field
-  //         ? order.value
-  //         : ''
-  //     }
-  //     onClick={onOrderChange}
-  //   />
-  // )
+  const OrderTh = (props) => (
+    <Th
+      {...props}
+      // eslint-disable-next-line react/prop-types
+      order={
+        props.field === order.field || props.children === order.field
+          ? order.value
+          : ''
+      }
+      onClick={onOrderChange}
+    />
+  )
 
   // const searchBots = (value) => {
   //   setSearch(value)
@@ -324,7 +341,7 @@ const Bots = (
           Sync Bots From Repo
         </Button>
       </AddButtonWrap>
-      {/* <Container>
+      <Container>
         <CardBody>
           <Filters>
             <LimitFilter
@@ -375,7 +392,7 @@ const Bots = (
           />
         </CardBody>
       </Container>
-          */}
+
       {/* <Modal
         ref={modal}
         title={'Deploy selected bot?'}

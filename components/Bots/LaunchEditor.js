@@ -187,144 +187,144 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
     setValues(valuesCopy)
   }
 
-  // const renderParams = (item, idx) => {
-  //   const type = getInputType(item.type)
-  //   const label = getLabel(item)
+  const renderParams = (item, idx) => {
+    const type = getInputType(item.type)
+    const label = getLabel(item)
 
-  //   switch (item.type) {
-  //     case 'enum':
-  //       return (
-  //         <Select
-  //           key={idx}
-  //           options={item.values.map(toOptions)}
-  //           label={label}
-  //           value={values[item.name]}
-  //           menuPlacement={'top'}
-  //           error={
-  //             errors.indexOf(item.name) > -1 ? 'This field is required' : ''
-  //           }
-  //           description={item.description}
-  //           onChange={(option) => changeValue(item.name, option.value, option)}
-  //         />
-  //       )
+    switch (item.type) {
+      case 'enum':
+        return (
+          <Select
+            key={idx}
+            options={item.values.map(toOptions)}
+            label={label}
+            value={values[item.name]}
+            menuPlacement={'top'}
+            error={
+              errors.indexOf(item.name) > -1 ? 'This field is required' : ''
+            }
+            description={item.description}
+            onChange={(option) => changeValue(item.name, option.value, option)}
+          />
+        )
 
-  //     case 'integer':
-  //     case 'Integer':
-  //       return (
-  //         <Input
-  //           key={idx}
-  //           type={type}
-  //           label={label}
-  //           styles={inputStyle}
-  //           value={values[item.name]}
-  //           min={item.range && Number(item.range[0])}
-  //           max={item.range && Number(item.range[1])}
-  //           onChange={(e) => changeValue(item.name, Number(e.target.value))}
-  //           description={item.description}
-  //           error={
-  //             errors.indexOf(item.name) > -1 ? 'This field is required' : ''
-  //           }
-  //           descriptionPosition={idx === 0 ? 'bottom' : 'top'}
-  //         />
-  //       )
+      case 'integer':
+      case 'Integer':
+        return (
+          <Input
+            key={idx}
+            type={type}
+            label={label}
+            styles={inputStyle}
+            value={values[item.name]}
+            min={item.range && Number(item.range[0])}
+            max={item.range && Number(item.range[1])}
+            onChange={(e) => changeValue(item.name, Number(e.target.value))}
+            description={item.description}
+            error={
+              errors.indexOf(item.name) > -1 ? 'This field is required' : ''
+            }
+            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+          />
+        )
 
-  //     case 'bool':
-  //     case 'boolean':
-  //     case 'Boolean':
-  //       return (
-  //         <InputWrap key={idx}>
-  //           <LabelWrap>
-  //             <Label>{label}</Label>
-  //             {item.description && (
-  //               <Description
-  //                 text={item.description}
-  //                 position={idx === 0 ? 'bottom' : 'top'}
-  //               />
-  //             )}
-  //           </LabelWrap>
-  //           <StatusButton
-  //             type={values[item.name] ? 'primary' : 'danger'}
-  //             onClick={() => changeValue(item.name, !values[item.name])}
-  //           >
-  //             {values[item.name] ? 'Yes' : 'No'}
-  //           </StatusButton>
-  //         </InputWrap>
-  //       )
+      case 'bool':
+      case 'boolean':
+      case 'Boolean':
+        return (
+          <InputWrap key={idx}>
+            <LabelWrap>
+              <Label>{label}</Label>
+              {item.description && (
+                <Description
+                  text={item.description}
+                  position={idx === 0 ? 'bottom' : 'top'}
+                />
+              )}
+            </LabelWrap>
+            <StatusButton
+              type={values[item.name] ? 'primary' : 'danger'}
+              onClick={() => changeValue(item.name, !values[item.name])}
+            >
+              {values[item.name] ? 'Yes' : 'No'}
+            </StatusButton>
+          </InputWrap>
+        )
 
-  //     case 'multiselect':
-  //       return (
-  //         <Select
-  //           key={idx}
-  //           label={label}
-  //           isMulti
-  //           error={
-  //             errors.indexOf(item.name) > -1 ? 'This field is required' : ''
-  //           }
-  //           onChange={(options) => changeMultiSelectValue(item.name, options)}
-  //           options={getMultiSelectOptions(item.name)}
-  //           description={item.description}
-  //           onInputChange={(input) => onMultiSelectChange(item.name, input)}
-  //           value={values[item.name].options}
-  //           descriptionPosition={idx === 0 ? 'bottom' : 'top'}
-  //         />
-  //       )
+      case 'multiselect':
+        return (
+          <Select
+            key={idx}
+            label={label}
+            isMulti
+            error={
+              errors.indexOf(item.name) > -1 ? 'This field is required' : ''
+            }
+            onChange={(options) => changeMultiSelectValue(item.name, options)}
+            options={getMultiSelectOptions(item.name)}
+            description={item.description}
+            onInputChange={(input) => onMultiSelectChange(item.name, input)}
+            value={values[item.name].options}
+            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+          />
+        )
 
-  //     case 'String':
-  //     case 'password':
-  //     case 'string':
-  //       return (
-  //         <Input
-  //           key={idx}
-  //           type={type}
-  //           label={label}
-  //           value={values[item.name]}
-  //           onChange={(e) => changeValue(item.name, e.target.value)}
-  //           description={item.description}
-  //           error={
-  //             errors.indexOf(item.name) > -1 ? 'This field is required' : ''
-  //           }
-  //           descriptionPosition={idx === 0 ? 'bottom' : 'top'}
-  //         />
-  //       )
+      case 'String':
+      case 'password':
+      case 'string':
+        return (
+          <Input
+            key={idx}
+            type={type}
+            label={label}
+            value={values[item.name]}
+            onChange={(e) => changeValue(item.name, e.target.value)}
+            description={item.description}
+            error={
+              errors.indexOf(item.name) > -1 ? 'This field is required' : ''
+            }
+            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+          />
+        )
 
-  //     case 'range':
-  //       return (
-  //         <Range
-  //           key={idx}
-  //           label={label}
-  //           styles={inputStyle}
-  //           description={item.description}
-  //           min={item.range && Number(item.range[0])}
-  //           max={item.range && Number(item.range[1])}
-  //           onChange={(value) => changeValue(item.name, value)}
-  //           value={values[item.name]}
-  //           descriptionPosition={idx === 0 ? 'bottom' : 'top'}
-  //         />
-  //       )
-  //   }
-  // }
+      case 'range':
+        return (
+          <Range
+            key={idx}
+            label={label}
+            styles={inputStyle}
+            description={item.description}
+            min={item.range && Number(item.range[0])}
+            max={item.range && Number(item.range[1])}
+            onChange={(value) => changeValue(item.name, value)}
+            value={values[item.name]}
+            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+          />
+        )
+    }
+  }
 
   return !isAmountSet ? (
     <>
-      {/* <Range
+      <Range
         label={'Number of bot instances to launch'}
         styles={inputStyle}
         min={1}
         max={10}
         onChange={(value) => setAmount(value)}
       />
-      <Buttons>
+      <ButtonGroup>
         <Button type={'danger'} onClick={onClose}>
           Cancel
         </Button>
         <Button color="primary" onClick={() => amountSet(true)}>
           Submit
         </Button>
-      </Buttons> */}
+      </ButtonGroup>
     </>
   ) : (
     <>
-      {/* {amount > 1 && <Steps amount={amount} step={step} />}
+      {amount > 1 && <Steps amount={amount} step={step} />}
       {bot && bot.parameters.map(renderParams)}
       <ButtonGroup>
         <Button
@@ -337,7 +337,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
         <Button color="primary" onClick={submit}>
           {step === amount ? 'Launch' : 'Next'}
         </Button>
-      </ButtonGroup> */}
+      </ButtonGroup>
     </>
   )
 }

@@ -30,7 +30,10 @@ import { addListener, removeAllListeners } from 'store/socket/actions'
 // import {Paginator, Loader80bots} from "components/default";
 // import {download} from "lib/helpers";
 // import Uptime from "components/default/Uptime";
-import { subscribe, unsubscribe } from 'store/socket/actions'
+import {
+  subscribe as wsSubscribe,
+  unsubscribe as wsUnsubscribe,
+} from 'store/socket/actions'
 import {
   openScriptNotification,
   closeScriptNotification,
@@ -151,20 +154,20 @@ const RunningBots = ({
   restoreBot,
   downloadInstancePemFile,
   updateRunningBot,
-  botInstances,
-  botNotifications,
-  total,
+  // botInstances,
+  // botNotifications,
+  // total,
   addListener,
   removeAllListeners,
   botInstanceUpdated,
   syncBotInstances,
-  syncLoading,
-  wsSubscribe,
-  wsUnsubscribe,
-  openScriptNotification,
-  closeScriptNotification,
+  // syncLoading,
+  // wsSubscribe,
+  // wsUnsubscribe,
+  // openScriptNotification,
+  // closeScriptNotification,
   flushScriptNotification,
-  settings_channel,
+  // settings_channel,
 }) => {
   const [list, setFilterList] = useState('all')
   const [limit, setLimit] = useState(20)
@@ -172,7 +175,14 @@ const RunningBots = ({
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
 
-  const user = useSelector((state) => state.auth)
+  const user = useSelector((state) => state.auth.user)
+  const botInstances = useSelector((state) => state.bot.botInstances)
+  const botNotifications = useSelector((state) => state.bot.botNotifications)
+  const total = useSelector((state) => state.bot.total)
+  const syncLoading = useSelector((state) => state.bot.syncLoading)
+  const settings_channel = useSelector(
+    (state) => state.scriptNotification.settings_channel
+  )
 
   console.error('running robots', user)
   // useEffect(() => {
@@ -703,55 +713,55 @@ const RunningBots = ({
 
 RunningBots.propTypes = {
   // notify: PropTypes.func.isRequired,
-  copyInstance: PropTypes.func.isRequired,
-  restoreBot: PropTypes.func.isRequired,
-  getRunningBots: PropTypes.func.isRequired,
-  downloadInstancePemFile: PropTypes.func.isRequired,
-  updateRunningBot: PropTypes.func.isRequired,
-  addListener: PropTypes.func.isRequired,
-  removeAllListeners: PropTypes.func.isRequired,
-  botInstanceUpdated: PropTypes.func.isRequired,
-  syncBotInstances: PropTypes.func.isRequired,
-  botInstances: PropTypes.array.isRequired,
-  botNotifications: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
-  syncLoading: PropTypes.bool.isRequired,
-  user: PropTypes.object,
-  wsSubscribe: PropTypes.func.isRequired,
-  wsUnsubscribe: PropTypes.func.isRequired,
-  openScriptNotification: PropTypes.func.isRequired,
-  closeScriptNotification: PropTypes.func.isRequired,
-  flushScriptNotification: PropTypes.func.isRequired,
-  settings_channel: PropTypes.array.isRequired,
+  // copyInstance: PropTypes.func.isRequired,
+  // restoreBot: PropTypes.func.isRequired,
+  // getRunningBots: PropTypes.func.isRequired,
+  // downloadInstancePemFile: PropTypes.func.isRequired,
+  // updateRunningBot: PropTypes.func.isRequired,
+  // addListener: PropTypes.func.isRequired,
+  // removeAllListeners: PropTypes.func.isRequired,
+  // botInstanceUpdated: PropTypes.func.isRequired,
+  // syncBotInstances: PropTypes.func.isRequired,
+  // botInstances: PropTypes.array.isRequired,
+  // botNotifications: PropTypes.array.isRequired,
+  // total: PropTypes.number.isRequired,
+  // syncLoading: PropTypes.bool.isRequired,
+  // user: PropTypes.object,
+  // wsSubscribe: PropTypes.func.isRequired,
+  // wsUnsubscribe: PropTypes.func.isRequired,
+  // openScriptNotification: PropTypes.func.isRequired,
+  // closeScriptNotification: PropTypes.func.isRequired,
+  // flushScriptNotification: PropTypes.func.isRequired,
+  // settings_channel: PropTypes.array.isRequired,
 }
 
-const mapStateToProps = (state) => ({
-  botInstances: state.bot.botInstances,
-  botNotifications: state.bot.botNotifications,
-  total: state.bot.total,
-  user: state.auth.user,
-  syncLoading: state.bot.syncLoading,
-  settings_channel: state.scriptNotification.settings_channel,
-})
+// const mapStateToProps = (state) => ({
+//   botInstances: state.bot.botInstances,
+//   botNotifications: state.bot.botNotifications,
+//   total: state.bot.total,
+//   user: state.auth.user,
+//   syncLoading: state.bot.syncLoading,
+//   settings_channel: state.scriptNotification.settings_channel,
+// })
 
-const mapDispatchToProps = (dispatch) => ({
-  // notify: (payload) => dispatch(addNotification(payload)),
-  copyInstance: (id) => dispatch(copyInstance(id)),
-  restoreBot: (id) => dispatch(restoreBot(id)),
-  getRunningBots: (query) => dispatch(getRunningBots(query)),
-  downloadInstancePemFile: (id) => dispatch(downloadInstancePemFile(id)),
-  updateRunningBot: (id, data) => dispatch(updateRunningBot(id, data)),
-  addListener: (room, eventName, handler) =>
-    dispatch(addListener(room, eventName, handler)),
-  removeAllListeners: () => dispatch(removeAllListeners()),
-  botInstanceUpdated: (botInstance) =>
-    dispatch(botInstanceUpdated(botInstance)),
-  syncBotInstances: () => dispatch(syncBotInstances()),
-  wsSubscribe: (channel, isPrivate) => dispatch(subscribe(channel, isPrivate)),
-  wsUnsubscribe: (channel) => dispatch(unsubscribe(channel)),
-  openScriptNotification: (item) => dispatch(openScriptNotification(item)),
-  closeScriptNotification: (item) => dispatch(closeScriptNotification(item)),
-  flushScriptNotification: () => dispatch(flushScriptNotification()),
-})
+// const mapDispatchToProps = (dispatch) => ({
+//   // notify: (payload) => dispatch(addNotification(payload)),
+//   copyInstance: (id) => dispatch(copyInstance(id)),
+//   restoreBot: (id) => dispatch(restoreBot(id)),
+//   getRunningBots: (query) => dispatch(getRunningBots(query)),
+//   downloadInstancePemFile: (id) => dispatch(downloadInstancePemFile(id)),
+//   updateRunningBot: (id, data) => dispatch(updateRunningBot(id, data)),
+//   addListener: (room, eventName, handler) =>
+//     dispatch(addListener(room, eventName, handler)),
+//   removeAllListeners: () => dispatch(removeAllListeners()),
+//   botInstanceUpdated: (botInstance) =>
+//     dispatch(botInstanceUpdated(botInstance)),
+//   syncBotInstances: () => dispatch(syncBotInstances()),
+//   wsSubscribe: (channel, isPrivate) => dispatch(subscribe(channel, isPrivate)),
+//   wsUnsubscribe: (channel) => dispatch(unsubscribe(channel)),
+//   openScriptNotification: (item) => dispatch(openScriptNotification(item)),
+//   closeScriptNotification: (item) => dispatch(closeScriptNotification(item)),
+//   flushScriptNotification: () => dispatch(flushScriptNotification()),
+// })
 
 export default RunningBots
