@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import SettingsEditor from 'components/SettingsEditor'
+import SettingsEditor from './SettingsEditor'
 import Icon from 'components/default/icons'
 import { Modal } from 'reactstrap'
 import { connect } from 'react-redux'
-
 import {
   Filters,
   LimitFilter,
@@ -14,9 +13,9 @@ import {
   Th,
   Thead,
 } from 'components/default/Table'
-import { Card, CardBody } from 'reactstrap'
+import { Card, CardBody, Button } from 'reactstrap'
 import { getRegions, updateRegion } from 'store/bot/actions'
-import { Button, Paginator } from 'components/default'
+import { Paginator } from 'components/default'
 import { Select } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'store/notification/actions'
@@ -40,10 +39,10 @@ const IconButton = styled(Button)`
   }
 `
 
-const modalStyles = css`
-  min-width: 300px;
-  overflow-y: visible;
-`
+// const modalStyles = css`
+//   min-width: 300px;
+//   overflow-y: visible;
+// `
 
 const ButtonWrap = styled.div`
   display: flex;
@@ -57,18 +56,18 @@ const ButtonWrap = styled.div`
   }
 `
 
-const selectStyles = {
-  container: css`
-    margin: 20px 0;
-  `,
-  select: {
-    valueContainer: (provided) => ({
-      ...provided,
-      padding: '0 8px',
-      borderColor: '#ced4da',
-    }),
-  },
-}
+// const selectStyles = {
+//   container: css`
+//     margin: 20px 0;
+//   `,
+//   select: {
+//     valueContainer: (provided) => ({
+//       ...provided,
+//       padding: '0 8px',
+//       borderColor: '#ced4da',
+//     }),
+//   },
+// }
 
 const Buttons = styled.div`
   display: flex;
@@ -270,13 +269,13 @@ const Settings = ({
       <Modal
         ref={modal}
         title={'Edit Default AMI'}
-        contentStyles={modalStyles}
+        // contentStyles={modalStyles}
         onClose={onModalClose}
       >
         <Select
           label={'AMI'}
           onChange={(option) => setDefaultAmi(option.value)}
-          styles={selectStyles}
+          // styles={selectStyles}
           options={amis.map(toOption)}
           value={getCurrentSelect()}
         />
@@ -294,12 +293,12 @@ const Settings = ({
         ref={editSettingsModal}
         title={'Edit Global Settings'}
         disableSideClosing
-        containerStyles={css`
-          margin-top: 0;
-        `}
-        contentStyles={css`
-          min-width: 600px;
-        `}
+        // containerStyles={css`
+        //   margin-top: 0;
+        // `}
+        // contentStyles={css`
+        //   min-width: 600px;
+        // `}
       >
         <SettingsEditor onClose={() => editSettingsModal.current.close()} />
       </Modal>

@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-
 import { getBotSettings, updateBotSettings } from 'store/bot/actions'
 import { addNotification } from 'store/notification/actions'
 import { NOTIFICATION_TYPES } from 'config'
-import { Button, Input, Textarea } from 'reactstrap'
-// import { Input, Textarea } from "components/default/inputs";
+import { Button, Input } from 'reactstrap'
 
 const VALIDATION = {
   SCRIPT: 'script',
@@ -21,14 +19,14 @@ const Buttons = styled.div`
   justify-content: space-between;
 `
 
-const inputStyles = {
-  container: css`
-    margin-bottom: 30px;
-    &:first-of-type {
-      margin-top: 20px;
-    }
-  `,
-}
+// const inputStyles = {
+//   container: css`
+//     margin-bottom: 30px;
+//     &:first-of-type {
+//       margin-top: 20px;
+//     }
+//   `,
+// }
 
 const SettingsEditor = ({
   getBotSettings,
@@ -86,7 +84,7 @@ const SettingsEditor = ({
     <>
       <Input
         label={'Instance Type'}
-        styles={inputStyles}
+        // styles={inputStyles}
         value={instanceType}
         onChange={(e) => setInstanceType(e.target.value)}
         error={
@@ -96,7 +94,7 @@ const SettingsEditor = ({
       <Input
         label={'Storage GB'}
         type={'number'}
-        styles={inputStyles}
+        // styles={inputStyles}
         value={storage}
         onChange={(e) => setStorage(e.target.value)}
         error={
@@ -105,10 +103,11 @@ const SettingsEditor = ({
             : ''
         }
       />
-      <Textarea
+      <Input
+        type="textarea"
         label={'Startup Script'}
         rows={10}
-        styles={inputStyles}
+        // styles={inputStyles}
         value={script}
         onChange={(e) => setScript(e.target.value)}
         error={

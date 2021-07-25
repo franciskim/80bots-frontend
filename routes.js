@@ -16,6 +16,7 @@
 */
 import RunningBotsPage from 'pages/admin/bots/running'
 import UsersPage from 'pages/admin/users'
+import SettingsPage from 'pages/admin/settings'
 
 const routes = [
   {
@@ -68,6 +69,7 @@ const routes = [
     name: 'AWS AMI Settings',
     icon: 'fa fa-cog',
     layout: '/admin',
+    component: SettingsPage,
   },
   {
     path: '/users',
