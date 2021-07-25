@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 // import Select from "react-select";
 // import Link from "next/link";
 // import Router from "next/router";
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Card, CardBody, Button, ButtonGroup, Container } from 'reactstrap'
 import {
   Table,
@@ -169,6 +169,7 @@ const RunningBots = ({
   flushScriptNotification,
   // settings_channel,
 }) => {
+  const dispatch = useDispatch()
   const [list, setFilterList] = useState('all')
   const [limit, setLimit] = useState(20)
   const [order, setOrder] = useState({ value: '', field: '' })
@@ -184,73 +185,85 @@ const RunningBots = ({
     (state) => state.scriptNotification.settings_channel
   )
 
-  console.error('running robots', user)
-  // useEffect(() => {
-  //     getRunningBots({page, limit, list});
-  //     addListener(`running.${user.id}`, "InstanceLaunched", event => {
-  //         if (event.instance) {
-  //             const status =
-  //                 event.instance.status === "running"
-  //                     ? "launched"
-  //                     : event.instance.status;
-  //             notify({
-  //                 type: NOTIFICATION_TYPES.SUCCESS,
-  //                 message: `Bot ${event.instance.bot_name} successfully ${status}`
-  //             });
-  //             botInstanceUpdated(event.instance);
-  //         }
-  //     });
-  //     addListener(`running.${user.id}`, "InstanceStatusUpdated", () => {
-  //         getRunningBots({
-  //             page: 1,
-  //             limit,
-  //             list,
-  //             sort: order.field,
-  //             order: order.value
-  //         });
-  //     });
-  //     addListener(`bots.${user.id}`, "BotsSyncSucceeded", () => {
-  //         notify({type: NOTIFICATION_TYPES.SUCCESS, message: "Sync completed"});
-  //         getRunningBots({
-  //             page,
-  //             limit,
-  //             list,
-  //             sort: order.field,
-  //             order: order.value
-  //         });
-  //     });
-  //     return () => {
-  //         removeAllListeners();
-  //     };
-  // }, []);
+  useEffect(() => {
+    dispatch(getRunningBots({ page, limit, list }))
+    addListener(`running.${user.id}`, 'InstanceLaunched', (event) => {
+      if (event.instance) {
+        const status =
+          event.instance.status === 'running'
+            ? 'launched'
+            : event.instance.status
+        notify({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `Bot ${event.instance.bot_name} successfully ${status}`,
+        })
+        botInstanceUpdated(event.instance)
+      }
+    })
+    addListener(`running.${user.id}`, 'InstanceStatusUpdated', () => {
+      dispatch(
+        getRunningBots({
+          page: 1,
+          limit,
+          list,
+          sort: order.field,
+          order: order.value,
+        })
+      )
+    })
+    addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
+      notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' })
+      dispatch(
+        getRunningBots({
+          page,
+          limit,
+          list,
+          sort: order.field,
+          order: order.value,
+        })
+      )
+    })
+    return () => {
+      removeAllListeners()
+    }
+  }, [])
 
-  // useEffect(() => {
-  //     console.log('botInstances ****** ' + JSON.stringify(botInstances));
-  //     botInstances.map(async (botInstance) => {
-  //         const {notification_channel, status} = botInstance;
-  //         console.log("settings_channel ******", settings_channel);
-  //         const subscribe = settings_channel.some((item) => item.channel === botInstance.notification_channel);
-  //         if ((status === "running") && !subscribe) {
-  //             await wsSubscribe(notification_channel, true);
-  //             await openScriptNotification({signal: "notification", channel: notification_channel});
-  //         } else if (status === "pending" && subscribe) {
-  //             await closeScriptNotification({channel: notification_channel});
-  //             await wsUnsubscribe(notification_channel);
-  //         }
-  //     });
-  // }, [botInstances]);
+  useEffect(() => {
+    console.log('botInstances ****** ' + JSON.stringify(botInstances))
+    botInstances.map(async (botInstance) => {
+      const { notification_channel, status } = botInstance
+      console.log('settings_channel ******', settings_channel)
+      const subscribe = settings_channel.some(
+        (item) => item.channel === botInstance.notification_channel
+      )
+      if (status === 'running' && !subscribe) {
+        await dispatch(wsSubscribe(notification_channel, true))
+        await dispatch(
+          openScriptNotification({
+            signal: 'notification',
+            channel: notification_channel,
+          })
+        )
+      } else if (status === 'pending' && subscribe) {
+        await dispatch(
+          closeScriptNotification({ channel: notification_channel })
+        )
+        await dispatch(wsUnsubscribe(notification_channel))
+      }
+    })
+  }, [botInstances])
 
-  // useEffect(() => {
-  //     return () => {
-  //         botInstances.map((botInstance) => {
-  //             const {notification_channel, status} = botInstance;
-  //             if (status === "running") {
-  //                 wsUnsubscribe(notification_channel);
-  //             }
-  //         });
-  //         flushScriptNotification();
-  //     };
-  // }, []);
+  useEffect(() => {
+    return () => {
+      botInstances.map((botInstance) => {
+        const { notification_channel, status } = botInstance
+        if (status === 'running') {
+          dispatch(wsUnsubscribe(notification_channel))
+        }
+      })
+      dispatch(flushScriptNotification())
+    }
+  }, [])
 
   // const choiceRestoreBot = instance => {
   //     restoreBot(instance.id)
@@ -741,15 +754,6 @@ RunningBots.propTypes = {
   // flushScriptNotification: PropTypes.func.isRequired,
   // settings_channel: PropTypes.array.isRequired,
 }
-
-// const mapStateToProps = (state) => ({
-//   botInstances: state.bot.botInstances,
-//   botNotifications: state.bot.botNotifications,
-//   total: state.bot.total,
-//   user: state.auth.user,
-//   syncLoading: state.bot.syncLoading,
-//   settings_channel: state.scriptNotification.settings_channel,
-// })
 
 // const mapDispatchToProps = (dispatch) => ({
 //   // notify: (payload) => dispatch(addNotification(payload)),

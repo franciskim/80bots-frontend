@@ -79,10 +79,10 @@ export const Filters = styled.div`
   margin-bottom: 10px;
 `
 
-const FilterBox = styled.div`
-  display: flex;
-  align-items: center;
-`
+// const FilterBox = styled.div`
+//   display: flex;
+//   align-items: center;
+// `
 
 // const Label = styled.label`
 //   display: flex;
@@ -102,7 +102,7 @@ export const SearchFilter = (props) => {
   }
 
   return (
-    <FilterBox>
+    <>
       <Label>Search </Label>
       <input
         type={'text'}
@@ -111,7 +111,7 @@ export const SearchFilter = (props) => {
         onChange={onChange}
         style={{ background: 'rgba(0,0,0,0.2)', border: 'rgba(0,0,0,0.2)' }}
       />
-    </FilterBox>
+    </>
   )
 }
 
@@ -155,7 +155,7 @@ const LIMIT_OPTIONS = [
 // };
 
 export const LimitFilter = ({ defaultValue, onChange, ...props }) => (
-  <FilterBox>
+  <>
     <Label>Show</Label>
     <Select
       id={props.id}
@@ -175,7 +175,7 @@ export const LimitFilter = ({ defaultValue, onChange, ...props }) => (
       // menuPlacement={"bottom"}
     />
     <Label>entries</Label>
-  </FilterBox>
+  </>
 )
 
 export const ListFilter = ({
@@ -186,7 +186,7 @@ export const ListFilter = ({
   defaultValue,
   ...props
 }) => (
-  <FilterBox {...props}>
+  <>
     <Label>{label || 'Show'}&nbsp;</Label>
     <Select
       id={props.id}
@@ -203,7 +203,7 @@ export const ListFilter = ({
       value={value}
       //   styles={selectStyles}
     />
-  </FilterBox>
+  </>
 )
 
 ListFilter.propTypes = {

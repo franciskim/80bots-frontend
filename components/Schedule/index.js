@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
-import PropTypes from 'prop-types'
-import { Card, CardBody } from 'reactstrap'
+import { Container, CardBody, ButtonGroup, Label } from 'reactstrap'
 import {
   Filters,
   LimitFilter,
@@ -14,7 +13,7 @@ import {
 import { Button, Badge, Modal } from 'reactstrap'
 import Icon from 'components/default/icons'
 import { addNotification } from 'store/notification/actions'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { NOTIFICATION_TYPES } from 'config'
 import Paginator from 'components/default/Paginator'
 import {
@@ -24,37 +23,38 @@ import {
   deleteSchedule,
 } from 'store/schedule/actions'
 import { getRunningBots } from 'store/bot/actions'
+
 import ScheduleEditor from './ScheduleEditor'
 import AsyncSelect from 'react-select/async'
 
-const Container = styled(Card)`
-  background: #333;
-  border: none;
-  color: #fff;
-  align-self: flex-start;
-`
+// const Container = styled(Card)`
+//   background: #333;
+//   border: none;
+//   color: #fff;
+//   align-self: flex-start;
+// `
 
-const IconButton = styled(Button)`
-  display: inline-flex;
-  justify-content: flex-start;
-  padding: 2px;
-  margin-right: 5px;
-  width: 30px;
-  height: 30px;
-  &:last-child {
-    margin-right: 0;
-  }
-`
+// const IconButton = styled(Button)`
+//   display: inline-flex;
+//   justify-content: flex-start;
+//   padding: 2px;
+//   margin-right: 5px;
+//   width: 30px;
+//   height: 30px;
+//   &:last-child {
+//     margin-right: 0;
+//   }
+// `
 
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`
+// const Buttons = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+// `
 
-const StatusButton = styled(Button)`
-  text-transform: uppercase;
-`
+// const StatusButton = styled(Button)`
+//   text-transform: uppercase;
+// `
 
 const Tag = styled(Badge)`
   text-transform: capitalize;
@@ -77,16 +77,16 @@ const SelectWrap = styled.div`
   width: 100%;
 `
 
-const Label = styled.label`
-  font-size: 16px;
-  margin-bottom: 5px;
-`
+// const Label = styled.label`
+//   font-size: 16px;
+//   margin-bottom: 5px;
+// `
 
-const Ul = styled.ul`
-  list-style: none;
-  margin: 0;
-  padding: 0;
-`
+// const Ul = styled.ul`
+//   list-style: none;
+//   margin: 0;
+//   padding: 0;
+// `
 
 // const modalStyles = css`
 //   min-width: 1200px;
@@ -131,19 +131,8 @@ const selectStyles = {
   }),
 }
 
-const BotsSchedule = ({
-  theme,
-  addNotification,
-  getSchedules,
-  createSchedule,
-  updateSchedule,
-  deleteSchedule,
-  getRunningBots,
-  schedules,
-  total,
-  runningBots,
-  user,
-}) => {
+const BotsSchedule = () => {
+  const dispatch = useDispatch()
   const [clickedSchedule, setClickedSchedule] = useState(null)
   const [list, setFilterList] = useState('all')
   const [limit, setLimit] = useState(10)
@@ -157,12 +146,17 @@ const BotsSchedule = ({
   const editModal = useRef(null)
 
   useEffect(() => {
-    getSchedules({ page, limit, list })
+    dispatch(getSchedules({ page, limit, list }))
   }, [])
 
+  const schedules = useSelector((state) => state.schedule.schedules)
+  const runningBots = useSelector((state) => state.bot.botInstances)
+  const total = useSelector((state) => state.schedule.total)
+  const user = useSelector((state) => state.auth.user)
+
   const searchBots = (value, callback) => {
-    getRunningBots({ page: 1, limit: 50, search: value }).then((action) =>
-      callback(action.data.data.map(toOptions))
+    dispatch(getRunningBots({ page: 1, limit: 50, search: value })).then(
+      (action) => callback(action.data.data.map(toOptions))
     )
   }
 
@@ -181,18 +175,22 @@ const BotsSchedule = ({
     const statusName =
       schedule.status === 'active' ? 'deactivated' : 'activated'
     const status = schedule.status === 'active' ? 'inactive' : 'active'
-    updateSchedule(schedule.id, { status })
+    dispatch(updateSchedule(schedule.id, { status }))
       .then(() =>
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: `Schedule was successfully ${statusName}!`,
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: `Schedule was successfully ${statusName}!`,
+          })
+        )
       )
       .catch(() =>
-        addNotification({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: 'Status update failed',
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Status update failed',
+          })
+        )
       )
   }
 
@@ -202,7 +200,7 @@ const BotsSchedule = ({
   }
 
   const toggleAddModal = () => {
-    getRunningBots({ page: 1, limit: 50 })
+    dispatch(getRunningBots({ page: 1, limit: 50 }))
     addModal.current.open()
   }
 
@@ -213,70 +211,83 @@ const BotsSchedule = ({
 
   const addSchedule = () => {
     if (instanceId) {
-      createSchedule({ instanceId }).then(() => {
-        getSchedules({
-          page: 1,
-          limit,
-          sort: order.field,
-          order: order.value,
-          search,
-        })
-        addModal.current.close()
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: 'Schedule was successfully added',
-        })
-      })
-    }
-  }
-
-  const updateScheduleInstance = (editedSchedules) => {
-    editModal.current.close()
-    updateSchedule(clickedSchedule.id, { details: editedSchedules })
-      .then(() =>
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: 'Schedule was successfully updated',
-        })
-      )
-      .catch(() =>
-        addNotification({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: 'Update of schedule failed',
-        })
-      )
-      .finally(() => setClickedSchedule(null))
-  }
-
-  const modalDeleteSchedule = () => {
-    modal.current.close()
-    deleteSchedule(clickedSchedule.id)
-      .then(
-        () =>
+      dispatch(createSchedule({ instanceId })).then(() => {
+        dispatch(
           getSchedules({
             page: 1,
             limit,
             sort: order.field,
             order: order.value,
             search,
-          }),
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: 'Schedule was successfully deleted',
-        })
+          })
+        )
+        addModal.current.close()
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: 'Schedule was successfully added',
+          })
+        )
+      })
+    }
+  }
+
+  const updateScheduleInstance = (editedSchedules) => {
+    editModal.current.close()
+    dispatch(updateSchedule(clickedSchedule.id, { details: editedSchedules }))
+      .then(() =>
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: 'Schedule was successfully updated',
+          })
+        )
       )
       .catch(() =>
-        addNotification({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: 'Removal of Schedule failed',
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Update of schedule failed',
+          })
+        )
+      )
+      .finally(() => setClickedSchedule(null))
+  }
+
+  const modalDeleteSchedule = () => {
+    modal.current.close()
+    dispatch(deleteSchedule(clickedSchedule.id))
+      .then(() => {
+        dispatch(
+          getSchedules({
+            page: 1,
+            limit,
+            sort: order.field,
+            order: order.value,
+            search,
+          })
+        )
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: 'Schedule was successfully deleted',
+          })
+        )
+      })
+      .catch(() =>
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Removal of Schedule failed',
+          })
+        )
       )
       .finally(() => setClickedSchedule(null))
   }
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value })
-    getSchedules({ page, limit, sort: field, order: value, search })
+    dispatch(getSchedules({ page, limit, sort: field, order: value, search }))
   }
 
   // eslint-disable-next-line react/prop-types
@@ -295,13 +306,15 @@ const BotsSchedule = ({
 
   const searchSchedules = (value) => {
     setSearch(value)
-    getSchedules({
-      page,
-      limit,
-      sort: order.field,
-      order: order.value,
-      search: value,
-    })
+    dispatch(
+      getSchedules({
+        page,
+        limit,
+        sort: order.field,
+        order: order.value,
+        search: value,
+      })
+    )
   }
 
   const renderRow = (schedule, idx) => (
@@ -319,7 +332,7 @@ const BotsSchedule = ({
       </td>
       <td>
         {schedule.details.length > 0 ? (
-          <Ul>
+          <ul>
             {schedule.details.map((detail, idx) => (
               <li key={idx}>
                 <Tag pill type={'info'}>
@@ -333,18 +346,18 @@ const BotsSchedule = ({
                 </Tag>
               </li>
             ))}
-          </Ul>
+          </ul>
         ) : (
           'No schedules added yet'
         )}
       </td>
       <td>
-        <IconButton color="primary" onClick={() => toggleEditModal(schedule)}>
+        <Button color="primary" onClick={() => toggleEditModal(schedule)}>
           <Icon name={'edit'} color={theme.colors.white} />
-        </IconButton>
-        <IconButton type={'danger'} onClick={() => toggleModal(schedule)}>
+        </Button>
+        <Button type={'danger'} onClick={() => toggleModal(schedule)}>
           <Icon name={'garbage'} color={theme.colors.white} />
-        </IconButton>
+        </Button>
       </td>
     </tr>
   )
@@ -369,14 +382,16 @@ const BotsSchedule = ({
               instanceId="limitfilter"
               onChange={({ value }) => {
                 setLimit(value)
-                getSchedules({
-                  page,
-                  limit: value,
-                  list,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
+                dispatch(
+                  getSchedules({
+                    page,
+                    limit: value,
+                    list,
+                    sort: order.field,
+                    order: order.value,
+                    search,
+                  })
+                )
               }}
             />
             <ListFilter
@@ -385,14 +400,16 @@ const BotsSchedule = ({
               options={FILTERS_LIST_OPTIONS}
               onChange={({ value }) => {
                 setFilterList(value)
-                getSchedules({
-                  page,
-                  limit,
-                  list: value,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
+                dispatch(
+                  getSchedules({
+                    page,
+                    limit,
+                    list: value,
+                    sort: order.field,
+                    order: order.value,
+                    search,
+                  })
+                )
               }}
             />
             <SearchFilter
@@ -419,14 +436,16 @@ const BotsSchedule = ({
             pageSize={limit}
             onChangePage={(page) => {
               setPage(page)
-              getSchedules({
-                page,
-                limit,
-                list,
-                sort: order.field,
-                order: order.value,
-                search,
-              })
+              dispatch(
+                getSchedules({
+                  page,
+                  limit,
+                  list,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              )
             }}
           />
         </CardBody>
@@ -437,14 +456,14 @@ const BotsSchedule = ({
         title={'Delete this schedule?'}
         onClose={() => setClickedSchedule(null)}
       >
-        <Buttons>
+        <ButtonGroup>
           <Button color="primary" onClick={modalDeleteSchedule}>
             Yes
           </Button>
           <Button type={'danger'} onClick={() => modal.current.close()}>
             Cancel
           </Button>
-        </Buttons>
+        </ButtonGroup>
       </Modal>
 
       <Modal
@@ -454,9 +473,7 @@ const BotsSchedule = ({
         onClose={() => setInstanceId(null)}
       >
         <SelectWrap>
-          <Label style={{ margin: '17px 0' }}>
-            Select one of your running bots
-          </Label>
+          <Label>Select one of your running bots</Label>
           <AsyncSelect
             onChange={onBotChange}
             loadOptions={searchBots}
@@ -464,16 +481,15 @@ const BotsSchedule = ({
             styles={selectStyles}
           />
         </SelectWrap>
-        <Buttons>
+        <ButtonGroup>
           <Button type={'danger'} onClick={() => addModal.current.close()}>
             Cancel
           </Button>
           <Button color="primary" onClick={addSchedule}>
             Add
           </Button>
-        </Buttons>
+        </ButtonGroup>
       </Modal>
-
       <Modal
         ref={editModal}
         title={'Schedule Editor'}
@@ -491,36 +507,4 @@ const BotsSchedule = ({
   )
 }
 
-BotsSchedule.propTypes = {
-  theme: PropTypes.shape({
-    colors: PropTypes.object.isRequired,
-  }).isRequired,
-  addNotification: PropTypes.func.isRequired,
-  getSchedules: PropTypes.func.isRequired,
-  createSchedule: PropTypes.func.isRequired,
-  updateSchedule: PropTypes.func.isRequired,
-  deleteSchedule: PropTypes.func.isRequired,
-  getRunningBots: PropTypes.func.isRequired,
-  schedules: PropTypes.array.isRequired,
-  runningBots: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
-  user: PropTypes.object.isRequired,
-}
-
-const mapStateToProps = (state) => ({
-  schedules: state.schedule.schedules,
-  runningBots: state.bot.botInstances,
-  total: state.schedule.total,
-  user: state.auth.user,
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  addNotification: (payload) => dispatch(addNotification(payload)),
-  getSchedules: (query) => dispatch(getSchedules(query)),
-  createSchedule: (data) => dispatch(createSchedule(data)),
-  updateSchedule: (id, data) => dispatch(updateSchedule(id, data)),
-  deleteSchedule: (id) => dispatch(deleteSchedule(id)),
-  getRunningBots: (query) => dispatch(getRunningBots(query)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(BotsSchedule)
+export default BotsSchedule

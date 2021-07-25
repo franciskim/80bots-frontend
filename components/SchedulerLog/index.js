@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
 import dayjs from 'dayjs'
-import { connect } from 'react-redux'
-import { Card, CardBody } from 'reactstrap'
+import { useSelector, useDispatch } from 'react-redux'
+import { Container, CardBody } from 'reactstrap'
 import {
   Table,
   Thead,
@@ -12,24 +10,28 @@ import {
   SearchFilter,
   Th,
 } from '../default/Table'
-import { addNotification } from 'store/notification/actions'
+// import { addNotification } from 'store/notification/actions'
 import { getSessions } from 'store/instanceSession/actions'
 import { Paginator } from 'components/default'
 
-const Container = styled(Card)`
-  background: #333;
-  border: none;
-  color: #fff;
-`
+// const Container = styled(Card)`
+//   background: #333;
+//   border: none;
+//   color: #fff;
+// `
 
-const SchedulerLog = ({ getSessions, sessions, total }) => {
+const SchedulerLog = () => {
+  const dispatch = useDispatch()
   const [limit, setLimit] = useState(10)
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
 
   useEffect(() => {
-    getSessions({ page, limit })
+    dispatch(getSessions({ page, limit }))
   }, [])
+
+  const sessions = useSelector((state) => state.instanceSession.sessions)
+  const total = useSelector((state) => state.instanceSession.total)
 
   const renderRow = (session, idx) => (
     <tr key={idx}>
@@ -44,15 +46,17 @@ const SchedulerLog = ({ getSessions, sessions, total }) => {
 
   const searchSession = (value) => {
     setSearch(value)
-    getSessions({
-      page,
-      limit,
-      search: value,
-    })
+    dispatch(
+      getSessions({
+        page,
+        limit,
+        search: value,
+      })
+    )
   }
 
   const onOrderChange = () => {
-    getSessions({ page, limit, search })
+    dispatch(getSessions({ page, limit, search }))
   }
 
   const OrderTh = (props) => <Th {...props} onClick={onOrderChange} />
@@ -67,11 +71,13 @@ const SchedulerLog = ({ getSessions, sessions, total }) => {
               instanceId="limitfilter"
               onChange={({ value }) => {
                 setLimit(value)
-                getSessions({
-                  page,
-                  limit: value,
-                  search,
-                })
+                dispatch(
+                  getSessions({
+                    page,
+                    limit: value,
+                    search,
+                  })
+                )
               }}
             />
             <SearchFilter
@@ -98,7 +104,7 @@ const SchedulerLog = ({ getSessions, sessions, total }) => {
             pageSize={limit}
             onChangePage={(page) => {
               setPage(page)
-              getSessions({ page, limit, search })
+              dispatch(getSessions({ page, limit, search }))
             }}
           />
         </CardBody>
@@ -107,24 +113,4 @@ const SchedulerLog = ({ getSessions, sessions, total }) => {
   )
 }
 
-SchedulerLog.propTypes = {
-  theme: PropTypes.shape({
-    colors: PropTypes.object.isRequired,
-  }).isRequired,
-  addNotification: PropTypes.func.isRequired,
-  getSessions: PropTypes.func.isRequired,
-  sessions: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
-}
-
-const mapStateToProps = (state) => ({
-  sessions: state.instanceSession.sessions,
-  total: state.instanceSession.total,
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  addNotification: (payload) => dispatch(addNotification(payload)),
-  getSessions: (query) => dispatch(getSessions(query)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(SchedulerLog)
+export default SchedulerLog

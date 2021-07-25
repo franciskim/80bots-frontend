@@ -3,8 +3,19 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Select from 'react-select'
 import AsyncSelect from 'react-select/async'
-import { connect } from 'react-redux'
-import { Nav, NavItem, TabContent, NavLink, TabPane } from 'reactstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  Nav,
+  NavItem,
+  TabContent,
+  NavLink,
+  TabPane,
+  Container,
+  Row,
+  Col,
+  Label,
+  ButtonGroup,
+} from 'reactstrap'
 import { addBot } from 'store/bot/actions'
 import { getUsers } from 'store/user/actions'
 import { addNotification } from 'store/notification/actions'
@@ -13,91 +24,92 @@ import { CodeEditor } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
 import Router from 'next/router'
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 20px 0 10px 0;
-`
+// const Container = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   margin: 20px 0 10px 0;
+// `
 
-const InputWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  &:first-of-type {
-    margin-right: 10px;
-  }
-  &:last-of-type {
-    margin-left: 10px;
-  }
-`
+// const InputWrap = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   flex: 1;
+//   &:first-of-type {
+//     margin-right: 10px;
+//   }
+//   &:last-of-type {
+//     margin-left: 10px;
+//   }
+// `
 
-const TextareaWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`
+// const TextareaWrap = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   flex: 1;
+// `
 
-const Row = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  margin-bottom: 10px;
-`
+// const Row = styled.div`
+//   display: flex;
+//   flex: 1;
+//   flex-direction: row;
+//   margin-bottom: 10px;
+// `
 
-const Label = styled.label`
-  font-size: 16px;
-  margin-bottom: 5px;
-  color: #fff;
-`
+// const Label = styled.label`
+//   font-size: 16px;
+//   margin-bottom: 5px;
+//   color: #fff;
+// `
 
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`
+// const Buttons = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+// `
 
-const StatusButton = styled(Button)`
-  text-transform: uppercase;
-  min-height: 38px;
-`
+// const StatusButton = styled(Button)`
+//   text-transform: uppercase;
+//   min-height: 38px;
+// `
 
 const Error = styled.span`
   font-size: 15px;
   text-align: center;
 `
 
-const selectStyles = {
-  control: (provided, state) => ({
-    ...provided,
-    border: 'solid 1px hsl(0,0%,80%)',
-    borderRadius: '4px',
-    color: '#fff',
-    backgroundColor: 'transparent',
-    '&:hover': {
-      borderColor: '#7dffff',
-    },
-  }),
-  singleValue: (provided, state) => ({
-    ...provided,
-    color: '#fff',
-  }),
-  menu: (provided, state) => ({
-    ...provided,
-    border: 'solid 1px hsl(0,0%,80%)',
-    borderRadius: '4px',
-    zIndex: '7',
-  }),
-  menuList: (provided, state) => ({
-    ...provided,
-    backgroundColor: '#333',
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    color: state.isFocused ? 'black' : '#fff',
-  }),
-}
+// const selectStyles = {
+//   control: (provided, state) => ({
+//     ...provided,
+//     border: 'solid 1px hsl(0,0%,80%)',
+//     borderRadius: '4px',
+//     color: '#fff',
+//     backgroundColor: 'transparent',
+//     '&:hover': {
+//       borderColor: '#7dffff',
+//     },
+//   }),
+//   singleValue: (provided, state) => ({
+//     ...provided,
+//     color: '#fff',
+//   }),
+//   menu: (provided, state) => ({
+//     ...provided,
+//     border: 'solid 1px hsl(0,0%,80%)',
+//     borderRadius: '4px',
+//     zIndex: '7',
+//   }),
+//   menuList: (provided, state) => ({
+//     ...provided,
+//     backgroundColor: '#333',
+//   }),
+//   option: (provided, state) => ({
+//     ...provided,
+//     color: state.isFocused ? 'black' : '#fff',
+//   }),
+// }
 
-const Index = ({ tags, getUsers, users, notify, addBot }) => {
+const Index = () => {
+  const dispatch = useDispatch()
   const [tagName, setTagName] = useState('')
   const [botTags, setTags] = useState([])
   const [botName, setBotName] = useState('')
@@ -109,6 +121,10 @@ const Index = ({ tags, getUsers, users, notify, addBot }) => {
   const [error, setError] = useState(null)
 
   const [activeTab, setActiveTab] = useState('script')
+
+  const tags = useSelector((state) => state.bot.tags)
+  const users = useSelector((state) => state.user.users)
+  const aboutBot = useSelector((state) => state.bot.aboutBot)
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
@@ -128,12 +144,11 @@ const Index = ({ tags, getUsers, users, notify, addBot }) => {
   }
 
   useEffect(() => {
-    getUsers({ page: 1, limit: 25 })
-    return () => {}
+    dispatch(getUsers({ page: 1, limit: 25 }))
   }, [])
 
   const onUsersSearch = (value, callback) => {
-    getUsers({ page: 1, limit: 25, search: value }).then((action) =>
+    dispatch(getUsers({ page: 1, limit: 25, search: value })).then((action) =>
       callback(action.data.data.map(toOptions))
     )
   }
@@ -178,7 +193,7 @@ const Index = ({ tags, getUsers, users, notify, addBot }) => {
         botTags: botTags.map((item) => item.value),
         ...users,
       }
-      addBot(convertBotData(botData))
+      dispatch(addBot(convertBotData(botData)))
         .then(() => {
           notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot added!' })
           Router.push('/bots')
@@ -204,22 +219,7 @@ const Index = ({ tags, getUsers, users, notify, addBot }) => {
           <Label>Bot Script</Label>
         </Row>
         <Row>
-          <InputWrap>
-            {/* <Tabs defaultActiveKey="script" id="tabs-script">
-              <Tab eventKey="script" title="index.js">
-                <CodeEditor
-                  value={botScript}
-                  onChange={(code) => setBotScript(code)}
-                />
-              </Tab>
-              <Tab eventKey="json" title="package.json">
-                <CodeEditor
-                  value={botPackageJSON}
-                  onChange={(code) => setBotPackageJSON(code)}
-                />
-              </Tab>
-            </Tabs> */}
-
+          <Col>
             <Nav tabs>
               <NavItem>
                 <NavLink
@@ -256,7 +256,7 @@ const Index = ({ tags, getUsers, users, notify, addBot }) => {
                 />
               </TabPane>
             </TabContent>
-          </InputWrap>
+          </Col>
         </Row>
         <Row>
           <Input
@@ -268,71 +268,73 @@ const Index = ({ tags, getUsers, users, notify, addBot }) => {
           />
         </Row>
         <Row>
-          <InputWrap>
+          <Col>
             <Label>Tags</Label>
             <Select
+              id="tags-selector"
+              instanceId="tags-selector"
               isMulti
               options={getTagOptions()}
-              styles={selectStyles}
+              // styles={selectStyles}
               onInputChange={onTagInputChange}
               onChange={(options) => setTags(options)}
               value={botTags}
             />
-          </InputWrap>
-          <InputWrap>
+          </Col>
+          <Col>
             <Label>Access *</Label>
-            <StatusButton
+            <Button
               type={isPrivate ? 'danger' : 'primary'}
               onClick={() => setPrivate(!isPrivate)}
             >
               {isPrivate ? 'Private' : 'Public'}
-            </StatusButton>
-          </InputWrap>
+            </Button>
+          </Col>
         </Row>
         {isPrivate && (
           <Row>
-            <TextareaWrap>
+            <div>
               <Label>Trusted Users</Label>
               <AsyncSelect
                 isMulti
                 defaultOptions={users.map(toOptions)}
                 value={trustedUsers}
-                styles={selectStyles}
+                // styles={selectStyles}
                 onChange={(options) => setUsers(options)}
                 loadOptions={onUsersSearch}
               />
-            </TextareaWrap>
+            </div>
           </Row>
         )}
         {error && <Error>{error}</Error>}
       </Container>
-      <Buttons>
+      <ButtonGroup>
         <Button color="primary" onClick={submit}>
           Add
         </Button>
-      </Buttons>
+      </ButtonGroup>
     </>
   )
 }
 
-Index.propTypes = {
-  tags: PropTypes.array.isRequired,
-  users: PropTypes.array.isRequired,
-  getUsers: PropTypes.func.isRequired,
-  addBot: PropTypes.func.isRequired,
-  notify: PropTypes.func.isRequired,
-}
+// Index.propTypes = {
+//   tags: PropTypes.array.isRequired,
+//   users: PropTypes.array.isRequired,
+//   getUsers: PropTypes.func.isRequired,
+//   addBot: PropTypes.func.isRequired,
+//   notify: PropTypes.func.isRequired,
+// }
 
-const mapStateToProps = (state) => ({
-  tags: state.bot.tags,
-  users: state.user.users,
-  aboutBot: state.bot.aboutBot,
-})
+// const mapStateToProps = (state) => ({
+//   tags: state.bot.tags,
+//   users: state.user.users,
+//   aboutBot: state.bot.aboutBot,
+// })
 
-const mapDispatchToProps = (dispatch) => ({
-  getUsers: (query) => dispatch(getUsers(query)),
-  addBot: (data) => dispatch(addBot(data)),
-  notify: (payload) => dispatch(addNotification(payload)),
-})
+// const mapDispatchToProps = (dispatch) => ({
+//   getUsers: (query) => dispatch(getUsers(query)),
+//   addBot: (data) => dispatch(addBot(data)),
+//   notify: (payload) => dispatch(addNotification(payload)),
+// })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Index)
+export default Index
