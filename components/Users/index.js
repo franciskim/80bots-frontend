@@ -17,7 +17,7 @@ const Users = () => {
 
   useEffect(() => {
     dispatch(getUsers({ page, limit }))
-  }, [])
+  }, [page, limit])
 
   const users = useSelector((state) => state.user.users)
   const total = useSelector((state) => state.user.total)

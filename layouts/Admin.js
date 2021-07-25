@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from 'react'
+import React, { useState } from 'react'
 import { withRouter } from 'next/router'
 // core components
 import AdminNavbar from 'components/Navbars/AdminNavbar.js'
@@ -23,7 +23,7 @@ import Sidebar from 'components/Sidebar/Sidebar.js'
 import routes from 'routes.js'
 
 function Admin({ router, children }) {
-  const [sidenavOpen, setSidenavOpen] = React.useState(true)
+  const [sidenavOpen, setSidenavOpen] = useState(true)
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
       if (prop.collapse) {

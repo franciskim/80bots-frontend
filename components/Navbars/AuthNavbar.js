@@ -100,13 +100,6 @@ function AdminNavbar() {
                 </Link>
               </NavItem>
               <NavItem>
-                <Link href="/auth/pricing">
-                  <NavLink href="#pablo">
-                    <span className="nav-link-inner--text">Pricing</span>
-                  </NavLink>
-                </Link>
-              </NavItem>
-              <NavItem>
                 <Link href="/auth/login">
                   <NavLink href="#pablo">
                     <span className="nav-link-inner--text">Login</span>
