@@ -4,6 +4,7 @@ import App from 'next/app'
 import Head from 'next/head'
 import Router from 'next/router'
 import withReduxStore from '../lib/connectRedux'
+import { Provider } from 'react-redux'
 
 import PageChange from 'components/PageChange/PageChange.js'
 
@@ -68,12 +69,12 @@ class MyApp extends App {
     return { pageProps }
   }
   render() {
-    const { Component, pageProps } = this.props
+    const { Component, pageProps, reduxStore } = this.props
 
     const Layout = Component.layout || (({ children }) => <>{children}</>)
 
     return (
-      <React.Fragment>
+      <Provider store={reduxStore}>
         <Head>
           <meta
             name="viewport"
@@ -84,7 +85,7 @@ class MyApp extends App {
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </React.Fragment>
+      </Provider>
     )
   }
 }

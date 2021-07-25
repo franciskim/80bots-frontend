@@ -754,4 +754,4 @@ const mapDispatchToProps = (dispatch) => ({
   flushScriptNotification: () => dispatch(flushScriptNotification()),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(RunningBots)
+export default RunningBots
