@@ -1,14 +1,28 @@
-import { success, error } from 'redux-saga-requests';
+import { success, error } from 'redux-saga-requests'
 import {
-  LOGIN, REGISTER, LOGOUT, AUTH_CHECK, RESET, RESET_PASSWORD, UPDATE_USER_PROFILE
-} from './types';
+  LOGIN,
+  REGISTER,
+  LOGOUT,
+  AUTH_CHECK,
+  RESET,
+  RESET_PASSWORD,
+  UPDATE_USER_PROFILE,
+} from './types'
 
 const initialState = {
-  user: null,
+  // By jacky, need to remove
+
+  user: {
+    id: 1,
+    name: '80bots',
+    email: 'hello@80bots.com',
+    timezone: 'America/Adak',
+    region: '',
+  },
   isAuthorized: false,
   loading: true,
   error: null,
-};
+}
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -19,29 +33,47 @@ export const reducer = (state = initialState, action) => {
     case RESET:
     case RESET_PASSWORD:
     case UPDATE_USER_PROFILE:
-      return { ...state, loading: true, error: null };
+      return { ...state, loading: true, error: null }
 
     case success(LOGIN):
     case success(REGISTER):
     case success(RESET_PASSWORD): {
-      localStorage.setItem('token', action.data.token);
-      console.error({ ...state, user: action.data.user, loading: false, isAuthorized: true }, 'State changes')
-      return { ...state, user: action.data.user, loading: false, isAuthorized: true };
+      localStorage.setItem('token', action.data.token)
+      console.error(
+        {
+          ...state,
+          user: action.data.user,
+          loading: false,
+          isAuthorized: true,
+        },
+        'State changes'
+      )
+      return {
+        ...state,
+        user: action.data.user,
+        loading: false,
+        isAuthorized: true,
+      }
     }
 
     case success(UPDATE_USER_PROFILE):
-      return { ...state, user: action.data.user, loading: false };
+      return { ...state, user: action.data.user, loading: false }
 
     case success(AUTH_CHECK):
-      return { ...state, user: action.data.user, loading: false, isAuthorized: true };
+      return {
+        ...state,
+        user: action.data.user,
+        loading: false,
+        isAuthorized: true,
+      }
 
     case success(LOGOUT): {
-      localStorage.clear();
-      return { ...state, user: null, loading: false, isAuthorized: false };
+      localStorage.clear()
+      return { ...state, user: null, loading: false, isAuthorized: false }
     }
 
     case success(RESET):
-      return { ...state, loading: true, error: null };
+      return { ...state, loading: true, error: null }
 
     case error(LOGIN):
     case error(LOGOUT):
@@ -50,10 +82,16 @@ export const reducer = (state = initialState, action) => {
     case error(RESET):
     case error(RESET_PASSWORD):
     case error(UPDATE_USER_PROFILE):
-      return { ...state, loading: false, error: action.error, isAuthorized: false };
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        isAuthorized: false,
+      }
 
-    default: return state;
+    default:
+      return state
   }
-};
+}
 
-export default reducer;
+export default reducer

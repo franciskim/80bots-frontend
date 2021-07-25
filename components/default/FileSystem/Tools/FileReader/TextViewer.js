@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useReducer, useRef } from "react";
-import styled from 'styled-components';
-import { Textarea as BaseTextarea } from "components/default/inputs";
-import { parseUrl } from "lib/helpers";
-import { lookup } from "mime-types";
-import PropTypes from "prop-types";
+import React, { useEffect, useState, useReducer, useRef } from 'react'
+import styled from 'styled-components'
+import { Textarea as BaseTextarea } from 'reactstrap'
+import { parseUrl } from 'lib/helpers'
+import { lookup } from 'mime-types'
+import PropTypes from 'prop-types'
 
 const Wrapper = styled.div`
   display: flex;
   flex: 1;
   height: 100%;
-`;
+`
 
 const Textarea = styled(BaseTextarea)`
   height: 100%;
@@ -19,61 +19,61 @@ const Textarea = styled(BaseTextarea)`
   color: #7dffff;
   font-size: 10px;
   border: 0;
-`;
+`
 
 const TextViewer = ({ item }) => {
-  const [text, setText] = useState("");
-  const [error, serError] = useState("");
-  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
+  const [text, setText] = useState('')
+  const [error, serError] = useState('')
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true)
   const [currentScroll, setCurrentScroll] = useReducer((current, newVal) => {
-    return newVal;
-  }, 0);
+    return newVal
+  }, 0)
 
-  const input = useRef(null);
+  const input = useRef(null)
 
-  const [placeholder, setPlaceholder] = useState("Receiving data...");
+  const [placeholder, setPlaceholder] = useState('Receiving data...')
 
-  const onLoaded = res => {
-    const enc = new TextDecoder("utf-8");
-    const newText = enc.decode(res);
-    if (!newText) setPlaceholder("File is empty. Waiting for updates...");
-    setText(newText);
+  const onLoaded = (res) => {
+    const enc = new TextDecoder('utf-8')
+    const newText = enc.decode(res)
+    if (!newText) setPlaceholder('File is empty. Waiting for updates...')
+    setText(newText)
     if (input.current) {
       if (shouldAutoScroll) {
-        input.current.scrollTop = input.current.scrollHeight;
+        input.current.scrollTop = input.current.scrollHeight
       } else {
-        input.current.scrollTop = currentScroll;
+        input.current.scrollTop = currentScroll
       }
     }
-  };
+  }
 
-  const onScroll = e => {
+  const onScroll = (e) => {
     const isBottom =
-      e.target.scrollHeight - e.target.scrollTop - e.target.offsetHeight <= 0;
-    setCurrentScroll(e.target.scrollTop);
-    setShouldAutoScroll(isBottom);
-    return null;
-  };
+      e.target.scrollHeight - e.target.scrollTop - e.target.offsetHeight <= 0
+    setCurrentScroll(e.target.scrollTop)
+    setShouldAutoScroll(isBottom)
+    return null
+  }
 
-  const onError = err => {
-    serError(err);
-    return null;
-  };
+  const onError = (err) => {
+    serError(err)
+    return null
+  }
 
   useEffect(() => {
-    const { current = {} } = input;
-    current.onscroll = onScroll;
+    const { current = {} } = input
+    current.onscroll = onScroll
     return () => {
       if (input.current) {
-        input.current.onscroll = null;
+        input.current.onscroll = null
       }
-    };
-  }, [input]);
+    }
+  }, [input])
 
   useEffect(() => {
-    parseUrl(item.url, lookup(item.url), onLoaded, onError);
-    return () => {};
-  }, [item]);
+    parseUrl(item.url, lookup(item.url), onLoaded, onError)
+    return () => {}
+  }, [item])
 
   return (
     <Wrapper>
@@ -86,11 +86,11 @@ const TextViewer = ({ item }) => {
         error={error}
       />
     </Wrapper>
-  );
-};
+  )
+}
 
 TextViewer.propTypes = {
-  item: PropTypes.object
-};
+  item: PropTypes.object,
+}
 
-export default TextViewer;
+export default TextViewer

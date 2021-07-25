@@ -44,7 +44,7 @@ function AuthFooter() {
                     href="https://www.creative-tim.com?ref=adpr-auth-footer"
                     target="_blank"
                   >
-                    Creative Tim
+                    80bots.com
                   </NavLink>
                 </NavItem>
                 <NavItem>
