@@ -14,15 +14,15 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
-import Link from "next/link";
-import { withRouter } from "next/router";
+import React from 'react'
+import Link from 'next/link'
+import { withRouter } from 'next/router'
 // nodejs library that concatenates classes
-import classnames from "classnames";
+import classnames from 'classnames'
 // nodejs library to set properties for components
-import { PropTypes } from "prop-types";
+import { PropTypes } from 'prop-types'
 // react library that creates nice scrollbar on windows devices
-import PerfectScrollbar from "react-perfect-scrollbar";
+import PerfectScrollbar from 'react-perfect-scrollbar'
 // reactstrap components
 import {
   Collapse,
@@ -31,7 +31,7 @@ import {
   NavItem,
   NavLink,
   Nav,
-} from "reactstrap";
+} from 'reactstrap'
 
 function Sidebar({
   toggleSidenav,
@@ -41,76 +41,76 @@ function Sidebar({
   rtlActive,
   router,
 }) {
-  const [state, setState] = React.useState({});
-  const [windowWidth, setWindowWidth] = React.useState(0);
-  const [navigatorPlatform, setNavigatorPlatform] = React.useState("");
+  const [state, setState] = React.useState({})
+  const [windowWidth, setWindowWidth] = React.useState(0)
+  const [navigatorPlatform, setNavigatorPlatform] = React.useState('')
   React.useEffect(() => {
-    setState(getCollapseStates(routes));
-    setWindowWidth(window.innerWidth);
-    setNavigatorPlatform(navigator.platform);
+    setState(getCollapseStates(routes))
+    setWindowWidth(window.innerWidth)
+    setNavigatorPlatform(navigator.platform)
     // eslint-disable-next-line
-  }, []);
+  }, [])
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
-    return router.pathname.indexOf(routeName) > -1 ? "active" : "";
-  };
+    return router.pathname.indexOf(routeName) > -1 ? 'active' : ''
+  }
   // makes the sidenav normal on hover (actually when mouse enters on it)
   const onMouseEnterSidenav = () => {
-    if (!document.body.classList.contains("g-sidenav-pinned")) {
-      document.body.classList.add("g-sidenav-show");
+    if (!document.body.classList.contains('g-sidenav-pinned')) {
+      document.body.classList.add('g-sidenav-show')
     }
-  };
+  }
   // makes the sidenav mini on hover (actually when mouse leaves from it)
   const onMouseLeaveSidenav = () => {
-    if (!document.body.classList.contains("g-sidenav-pinned")) {
-      document.body.classList.remove("g-sidenav-show");
+    if (!document.body.classList.contains('g-sidenav-pinned')) {
+      document.body.classList.remove('g-sidenav-show')
     }
-  };
+  }
   // this creates the intial state of this component based on the collapse routes
   // that it gets through props.routes
   const getCollapseStates = (routes) => {
-    let initialState = {};
+    let initialState = {}
     routes.map((prop, key) => {
       if (prop.collapse) {
         initialState = {
           [prop.state]: getCollapseInitialState(prop.views),
           ...getCollapseStates(prop.views),
           ...initialState,
-        };
+        }
       }
-      return null;
-    });
-    return initialState;
-  };
+      return null
+    })
+    return initialState
+  }
   // this verifies if any of the collapses should be default opened on a rerender of this component
   // for example, on the refresh of the page,
   // while on the src/views/forms/RegularForms.js - route /admin/regular-forms
   const getCollapseInitialState = (routes) => {
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse && getCollapseInitialState(routes[i].views)) {
-        return true;
+        return true
       } else if (router.pathname.indexOf(routes[i].path) !== -1) {
-        return true;
+        return true
       }
     }
-    return false;
-  };
+    return false
+  }
   // this is used on mobile devices, when a user navigates
   // the sidebar will autoclose
   const closeSidenav = () => {
     if (windowWidth < 1200) {
-      toggleSidenav();
+      toggleSidenav()
     }
-  };
+  }
   // this function creates the links and collapses that appear in the sidebar (left menu)
   const createLinks = (routes) => {
     return routes.map((prop, key) => {
       if (prop.redirect) {
-        return null;
+        return null
       }
       if (prop.collapse) {
-        var st = {};
-        st[prop["state"]] = !state[prop.state];
+        var st = {}
+        st[prop['state']] = !state[prop.state]
         return (
           <NavItem key={key}>
             <NavLink
@@ -121,8 +121,8 @@ function Sidebar({
                 active: getCollapseInitialState(prop.views),
               })}
               onClick={(e) => {
-                e.preventDefault();
-                setState(st);
+                e.preventDefault()
+                setState(st)
               }}
             >
               {prop.icon ? (
@@ -143,7 +143,7 @@ function Sidebar({
               </Nav>
             </Collapse>
           </NavItem>
-        );
+        )
       }
       return (
         <NavItem className={activeRoute(prop.layout + prop.path)} key={key}>
@@ -165,9 +165,9 @@ function Sidebar({
             </NavLink>
           </Link>
         </NavItem>
-      );
-    });
-  };
+      )
+    })
+  }
   const scrollBarInner = (
     <div className="scrollbar-inner">
       <div className="sidenav-header d-flex align-items-center">
@@ -195,7 +195,7 @@ function Sidebar({
         ) : null}
         <div className="ml-auto">
           <div
-            className={classnames("sidenav-toggler d-none d-xl-block", {
+            className={classnames('sidenav-toggler d-none d-xl-block', {
               active: sidenavOpen,
             })}
             onClick={toggleSidenav}
@@ -212,68 +212,26 @@ function Sidebar({
         <Collapse navbar isOpen={true}>
           <Nav navbar>{createLinks(routes)}</Nav>
           <hr className="my-3" />
-          <h6 className="navbar-heading p-0 text-muted">
-            <span className="docs-normal">Documentation</span>
-            <span className="docs-mini">D</span>
-          </h6>
-          <Nav className="mb-md-3" navbar>
-            <NavItem>
-              <NavLink
-                href="https://www.creative-tim.com/learning-lab/nextjs/overview/argon-dashboard?ref=njsadp-sidebar"
-                target="_blank"
-              >
-                <i className="ni ni-spaceship" />
-                <span className="nav-link-text">Getting started</span>
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink
-                href="https://www.creative-tim.com/learning-lab/nextjs/colors/argon-dashboard?ref=njsadp-sidebar"
-                target="_blank"
-              >
-                <i className="ni ni-palette" />
-                <span className="nav-link-text">Foundation</span>
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink
-                href="https://www.creative-tim.com/learning-lab/nextjs/alerts/argon-dashboard?ref=njsadp-sidebar"
-                target="_blank"
-              >
-                <i className="ni ni-ui-04" />
-                <span className="nav-link-text">Components</span>
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink
-                href="https://www.creative-tim.com/learning-lab/nextjs/react-chartjs-2/argon-dashboard?ref=njsadp-sidebar"
-                target="_blank"
-              >
-                <i className="ni ni-chart-pie-35" />
-                <span className="nav-link-text">Plugins</span>
-              </NavLink>
-            </NavItem>
-          </Nav>
         </Collapse>
       </div>
     </div>
-  );
+  )
   return (
     <Navbar
       className={
-        "sidenav navbar-vertical navbar-expand-xs navbar-light bg-white " +
-        (rtlActive ? "" : "fixed-left")
+        'sidenav navbar-vertical navbar-expand-xs navbar-light bg-white ' +
+        (rtlActive ? '' : 'fixed-left')
       }
       onMouseEnter={onMouseEnterSidenav}
       onMouseLeave={onMouseLeaveSidenav}
     >
-      {navigatorPlatform && navigatorPlatform.indexOf("Win") > -1 ? (
+      {navigatorPlatform && navigatorPlatform.indexOf('Win') > -1 ? (
         <PerfectScrollbar>{scrollBarInner}</PerfectScrollbar>
       ) : (
         scrollBarInner
       )}
     </Navbar>
-  );
+  )
 }
 
 Sidebar.defaultProps = {
@@ -281,7 +239,7 @@ Sidebar.defaultProps = {
   toggleSidenav: () => {},
   sidenavOpen: false,
   rtlActive: false,
-};
+}
 
 Sidebar.propTypes = {
   // function used to make sidenav mini or normal
@@ -305,6 +263,6 @@ Sidebar.propTypes = {
   }),
   // rtl active, this will make the sidebar to stay on the right side
   rtlActive: PropTypes.bool,
-};
+}
 
-export default withRouter(Sidebar);
+export default withRouter(Sidebar)
