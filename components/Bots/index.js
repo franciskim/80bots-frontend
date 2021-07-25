@@ -23,16 +23,6 @@ import {
   Th,
 } from 'components/default/Table'
 import { useDispatch, useSelector } from 'react-redux'
-// import {
-//   getBots,
-//   updateStatusBot,
-//   launchInstance,
-//   getBotSettings,
-//   updateBotSettings,
-//   deleteBot,
-//   syncLocalBots,
-//   setBotLimit,
-// } from 'store/bot/actions'
 import {
   syncLocalBots,
   launchInstance,
@@ -117,23 +107,7 @@ const AddButtonWrap = styled.div`
 //   justify-content: space-between;
 // `
 
-const Bots = (
-  {
-    // getBots,
-    // updateStatusBot,
-    // launchInstance,
-    // bots,
-    // total,
-    // notify,
-    // deleteBot,
-    // syncLocalBots,
-    // syncLoading,
-    // addListener,
-    // user,
-    // limit,
-    // setLimit,
-  }
-) => {
+const Bots = () => {
   const dispatch = useDispatch()
   const [clickedBot, setClickedBot] = useState(null)
   const [page, setPage] = useState(1)
@@ -148,9 +122,7 @@ const Bots = (
   const total = useSelector((state) => state.bot.total)
   const user = useSelector((state) => state.auth.user)
   const limit = useSelector((state) => state.bot.limit)
-  console.error(bots, '>>>')
   useEffect(() => {
-    console.error('browsing...')
     dispatch(getBots({ page, limit }))
     // addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
     //   notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' })
@@ -186,42 +158,42 @@ const Bots = (
       })
   }
 
-  // const changeBotStatus = (bot) => {
-  //   const statusName = bot.status === 'active' ? 'deactivated' : 'activated'
-  //   const status = bot.status === 'active' ? 'inactive' : 'active'
+  const changeBotStatus = (bot) => {
+    const statusName = bot.status === 'active' ? 'deactivated' : 'activated'
+    const status = bot.status === 'active' ? 'inactive' : 'active'
 
-  //   updateStatusBot(bot.id, { status })
-  //     .then(() =>
-  //       notify({
-  //         type: NOTIFICATION_TYPES.SUCCESS,
-  //         message: `Bot was successfully ${statusName}!`,
-  //       })
-  //     )
-  //     .catch(() =>
-  //       notify({
-  //         type: NOTIFICATION_TYPES.ERROR,
-  //         message: 'Status update failed',
-  //       })
-  //     )
-  // }
+    dispatch(updateStatusBot(bot.id, { status }))
+      .then(() =>
+        notify({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `Bot was successfully ${statusName}!`,
+        })
+      )
+      .catch(() =>
+        notify({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Status update failed',
+        })
+      )
+  }
 
   const getDeleteBot = () => {
-    //   setClickedBot(null)
-    //   deleteBot(clickedBot.id)
-    //     .then(() => {
-    //       notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot removed!' })
-    //       getBots({
-    //         page,
-    //         limit,
-    //         sort: order.field,
-    //         order: order.value,
-    //         search,
-    //       })
-    //       deleteModal.current.close()
-    //     })
-    //     .catch(() =>
-    //       notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Bot delete failed' })
-    //     )
+    setClickedBot(null)
+    dispatch(deleteBot(clickedBot.id))
+      .then(() => {
+        notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot removed!' })
+        getBots({
+          page,
+          limit,
+          sort: order.field,
+          order: order.value,
+          search,
+        })
+        deleteModal.current.close()
+      })
+      .catch(() =>
+        notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Bot delete failed' })
+      )
   }
 
   const sync = () => {
@@ -393,7 +365,7 @@ const Bots = (
         </CardBody>
       </Container>
 
-      {/* <Modal
+      <Modal
         ref={modal}
         title={'Deploy selected bot?'}
         onClose={() => setClickedBot(null)}
@@ -404,8 +376,8 @@ const Bots = (
           onClose={() => modal.current.close()}
           bot={clickedBot}
         />
-      </Modal> */}
-      {/* <Modal ref={deleteModal} title={'Delete Bot'}>
+      </Modal>
+      <Modal ref={deleteModal} title={'Delete Bot'}>
         <ButtonGroup>
           <Button
             color="danger"
@@ -420,34 +392,10 @@ const Bots = (
             Yes
           </Button>
         </ButtonGroup>
-      </Modal> */}
+      </Modal>
     </>
   )
 }
-
-// Bots.propTypes = {
-//   bots: PropTypes.array.isRequired,
-//   total: PropTypes.number.isRequired,
-//   limit: PropTypes.number.isRequired,
-//   syncLoading: PropTypes.bool.isRequired,
-//   user: PropTypes.object,
-//   getBots: PropTypes.func.isRequired,
-//   updateStatusBot: PropTypes.func.isRequired,
-//   launchInstance: PropTypes.func.isRequired,
-//   deleteBot: PropTypes.func.isRequired,
-//   notify: PropTypes.func.isRequired,
-//   setLimit: PropTypes.func.isRequired,
-//   syncLocalBots: PropTypes.func.isRequired,
-//   addListener: PropTypes.func.isRequired,
-// }
-
-// const mapStateToProps = (state) => ({
-//   bots: state.bot.bots,
-//   total: state.bot.total,
-//   syncLoading: state.bot.syncLoading,
-//   user: state.auth.user,
-//   limit: state.bot.limit,
-// })
 
 // const mapDispatchToProps = (dispatch) => ({
 //   getBots: (query) => dispatch(getBots(query)),

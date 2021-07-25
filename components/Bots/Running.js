@@ -4,17 +4,17 @@ import PropTypes from 'prop-types'
 // import Select from "react-select";
 // import Link from "next/link";
 // import Router from "next/router";
-import { connect, useSelector } from 'react-redux'
-import { Card, CardBody, Button } from 'reactstrap'
-// import {
-//     Table,
-//     Thead,
-//     Th,
-//     Filters,
-//     LimitFilter,
-//     ListFilter,
-//     SearchFilter
-// } from "components/default/Table";
+import { useSelector } from 'react-redux'
+import { Card, CardBody, Button, ButtonGroup, Container } from 'reactstrap'
+import {
+  Table,
+  Thead,
+  Th,
+  Filters,
+  LimitFilter,
+  ListFilter,
+  SearchFilter,
+} from 'components/default/Table'
 import { addNotification } from 'store/notification/actions'
 import { NOTIFICATION_TYPES } from 'config'
 import {
@@ -27,7 +27,7 @@ import {
   syncBotInstances,
 } from 'store/bot/actions'
 import { addListener, removeAllListeners } from 'store/socket/actions'
-// import {Paginator, Loader80bots} from "components/default";
+import { Paginator, Loader80bots } from 'components/default'
 // import {download} from "lib/helpers";
 // import Uptime from "components/default/Uptime";
 import {
@@ -142,10 +142,10 @@ const AddButtonWrap = styled.div`
 //     {value: "terminated", label: "Terminated"}
 // ];
 
-// const FILTERS_LIST_OPTIONS = [
-//     {value: "all", label: "All Instances"},
-//     {value: "my", label: "My Instances"}
-// ];
+const FILTERS_LIST_OPTIONS = [
+  { value: 'all', label: 'All Instances' },
+  { value: 'my', label: 'My Instances' },
+]
 
 const RunningBots = ({
   notify,
@@ -481,133 +481,135 @@ const RunningBots = ({
     },
   }
 
-  // const renderRow = (botInstance, idx) => {
-  //     return (
-  //         <Tr
-  //             key={idx}
-  //             disabled={botInstance.status === "pending"}
-  //             className={
-  //                 botInstance.status === "running"
-  //                     ? "running"
-  //                     : botInstance.status === "terminated"
-  //                     ? "terminated"
-  //                     : "not-running"
-  //             }
-  //         >
-  //             <td>
-  //                 <Select
-  //                     options={OPTIONS}
-  //                     value={OPTIONS.find(item => item.value === botInstance.status)}
-  //                     onChange={option => changeBotInstanceStatus(option, botInstance.id)}
-  //                     styles={selectStyles}
-  //                     isOptionDisabled={option => option.readOnly}
-  //                     isDisabled={
-  //                         botInstance.status === "pending" ||
-  //                         botInstance.status === "terminated"
-  //                     }
-  //                     menuPortalTarget={document.body}
-  //                     menuPosition={"absolute"}
-  //                     menuPlacement={"bottom"}
-  //                 />
-  //             </td>
-  //             <td>
-  //                 <Link
-  //                     href={"/bots/running/[id]"}
-  //                     as={`/bots/running/${botInstance.id}`}
-  //                 >
-  //                     <A>&gt;&nbsp;View</A>
-  //                 </Link>
-  //                 {botInstance.status === "terminated" ? (
-  //                     <div
-  //                         title={"Restore Bot"}
-  //                         onClick={() => choiceRestoreBot(botInstance)}
-  //                     >
-  //                         <A>&gt;&nbsp;Restore</A>
-  //                     </div>
-  //                 ) : null}
-  //                 {(botInstance.status === "running") ? (
-  //                     <div
-  //                         title={"New Script"}
-  //                         onClick={() => {
-  //                             Router.push(`/botinstance/${botInstance.id}`);
-  //                         }}
-  //                     >
-  //                         <A>&gt;&nbsp;New Script</A>
-  //                     </div>
-  //                 ) : null}
-  //                 <div
-  //                     title={"Copy Instance"}
-  //                     onClick={() => choiceCopyInstance(botInstance)}
-  //                 >
-  //                     <A>&gt;&nbsp;Clone</A>
-  //                 </div>
-  //                 <div
-  //                     disabled={botInstance.status === "terminated"}
-  //                     title={"Download PEM"}
-  //                     type={"success"}
-  //                     onClick={() => downloadEventHandler(botInstance)}
-  //                 >
-  //                     <A>&gt;&nbsp;Key</A>
-  //                 </div>
-  //             </td>
-  //             <td>{botInstance.bot_name}</td>
-  //             <NotificationTd>
-  //                 {hasBotNotification(botInstance.instance_id)
-  //                     ? !getBotNotificationError(botInstance.instance_id)
-  //                         ? <Notify>
-  //                             {getServerTime(botInstance.instance_id)}
-  //                             <br/>
-  //                             {getBotNotificationMessage(botInstance.instance_id)}
-  //                         </Notify>
-  //                         : <NotifyErr>{getBotNotificationErrorString(botInstance.instance_id)}</NotifyErr>
-  //                     : <Notify>
-  //                         {getBotLastNotificationTime(botInstance.instance_id)}
-  //                         <br/>
-  //                         {getBotLastNotificationString(botInstance.instance_id)}
-  //                     </Notify>
-  //                 }
-  //             </NotificationTd>
-  //             <td>{formatTimezone(user.timezone, botInstance.launched_at)}</td>
-  //             <Uptime
-  //                 uptime={botInstance.uptime}
-  //                 status={botInstance.status}
-  //             />
-  //             <td>
-  //                 {botInstance.ip}
-  //             </td>
-  //             <td>{botInstance.name}</td>
-  //             <IdTd>{botInstance.instance_id}</IdTd>
-  //             <td>{botInstance.launched_by}</td>
-  //             <td>{botInstance.region}</td>
-  //             {/* {botInstance.status === "pending" && <Td colSpan={"9"}>{Loading}</Td>} */}
-  //         </Tr>
-  //     );
-  // };
+  const renderRow = (botInstance, idx) => {
+    return (
+      <Tr
+        key={idx}
+        disabled={botInstance.status === 'pending'}
+        className={
+          botInstance.status === 'running'
+            ? 'running'
+            : botInstance.status === 'terminated'
+            ? 'terminated'
+            : 'not-running'
+        }
+      >
+        <td>
+          <Select
+            options={OPTIONS}
+            value={OPTIONS.find((item) => item.value === botInstance.status)}
+            onChange={(option) =>
+              changeBotInstanceStatus(option, botInstance.id)
+            }
+            styles={selectStyles}
+            isOptionDisabled={(option) => option.readOnly}
+            isDisabled={
+              botInstance.status === 'pending' ||
+              botInstance.status === 'terminated'
+            }
+            menuPortalTarget={document.body}
+            menuPosition={'absolute'}
+            menuPlacement={'bottom'}
+          />
+        </td>
+        <td>
+          <Link
+            href={'/bots/running/[id]'}
+            as={`/bots/running/${botInstance.id}`}
+          >
+            <A>&gt;&nbsp;View</A>
+          </Link>
+          {botInstance.status === 'terminated' ? (
+            <div
+              title={'Restore Bot'}
+              onClick={() => choiceRestoreBot(botInstance)}
+            >
+              <A>&gt;&nbsp;Restore</A>
+            </div>
+          ) : null}
+          {botInstance.status === 'running' ? (
+            <div
+              title={'New Script'}
+              onClick={() => {
+                Router.push(`/botinstance/${botInstance.id}`)
+              }}
+            >
+              <A>&gt;&nbsp;New Script</A>
+            </div>
+          ) : null}
+          <div
+            title={'Copy Instance'}
+            onClick={() => choiceCopyInstance(botInstance)}
+          >
+            <A>&gt;&nbsp;Clone</A>
+          </div>
+          <div
+            disabled={botInstance.status === 'terminated'}
+            title={'Download PEM'}
+            type={'success'}
+            onClick={() => downloadEventHandler(botInstance)}
+          >
+            <A>&gt;&nbsp;Key</A>
+          </div>
+        </td>
+        <td>{botInstance.bot_name}</td>
+        <NotificationTd>
+          {hasBotNotification(botInstance.instance_id) ? (
+            !getBotNotificationError(botInstance.instance_id) ? (
+              <Notify>
+                {getServerTime(botInstance.instance_id)}
+                <br />
+                {getBotNotificationMessage(botInstance.instance_id)}
+              </Notify>
+            ) : (
+              <NotifyErr>
+                {getBotNotificationErrorString(botInstance.instance_id)}
+              </NotifyErr>
+            )
+          ) : (
+            <Notify>
+              {getBotLastNotificationTime(botInstance.instance_id)}
+              <br />
+              {getBotLastNotificationString(botInstance.instance_id)}
+            </Notify>
+          )}
+        </NotificationTd>
+        <td>{formatTimezone(user.timezone, botInstance.launched_at)}</td>
+        <Uptime uptime={botInstance.uptime} status={botInstance.status} />
+        <td>{botInstance.ip}</td>
+        <td>{botInstance.name}</td>
+        <IdTd>{botInstance.instance_id}</IdTd>
+        <td>{botInstance.launched_by}</td>
+        <td>{botInstance.region}</td>
+        {/* {botInstance.status === "pending" && <Td colSpan={"9"}>{Loading}</Td>} */}
+      </Tr>
+    )
+  }
 
-  // const onOrderChange = (field, value) => {
-  //     setOrder({field, value});
-  //     getRunningBots({
-  //         page,
-  //         limit,
-  //         list,
-  //         sort: field,
-  //         order: value,
-  //         search
-  //     });
-  // };
+  const onOrderChange = (field, value) => {
+    setOrder({ field, value })
+    getRunningBots({
+      page,
+      limit,
+      list,
+      sort: field,
+      order: value,
+      search,
+    })
+  }
 
-  // const OrderTh = props => (
-  //     <Th
-  //         {...props}
-  //         // eslint-disable-next-line react/prop-types
-  //         order={
-  //             props.field === order.field || props.children === order.field
-  //                 ? order.value
-  //                 : ""
-  //         }
-  //         onClick={onOrderChange}
-  //     />
-  // );
+  const OrderTh = (props) => (
+    <Th
+      {...props}
+      // eslint-disable-next-line react/prop-types
+      order={
+        props.field === order.field || props.children === order.field
+          ? order.value
+          : ''
+      }
+      onClick={onOrderChange}
+    />
+  )
 
   const searchRunningBots = (value) => {
     setSearch(value)
@@ -623,8 +625,7 @@ const RunningBots = ({
 
   return (
     <>
-      <div>haha</div>
-      {/* <AddButtonWrap>
+      <ButtonGroup>
         <Button
           color="primary"
           onClick={syncWithAWS}
@@ -632,81 +633,83 @@ const RunningBots = ({
         >
           Sync Bot Instances
         </Button>
-        <Button type={'secondary'} onClick={startAllBots}>
+        <Button color="secondary" onClick={startAllBots}>
           Launch Workforce
         </Button>
-      </AddButtonWrap> */}
-      {/* <Container>
-                <CardBody>
-                    <Filters>
-                        <LimitFilter
-                            onChange={({value}) => {
-                                setLimit(value);
-                                getRunningBots({
-                                    page,
-                                    limit: value,
-                                    list,
-                                    sort: order.field,
-                                    order: order.value,
-                                    search
-                                });
-                            }}
-                        />
-                        <ListFilter
-                            options={FILTERS_LIST_OPTIONS}
-                            onChange={({value}) => {
-                                setFilterList(value);
-                                getRunningBots({
-                                    page,
-                                    limit,
-                                    list: value,
-                                    sort: order.field,
-                                    order: order.value,
-                                    search
-                                });
-                            }}
-                        />
-                        <SearchFilter
-                            onChange={value => {
-                                searchRunningBots(value);
-                            }}
-                        />
-                    </Filters>
-                    <Table>
-                        <Thead>
-                            <tr>
-                                <OrderTh field={"status"}>Status</OrderTh>
-                                <th>Actions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                <OrderTh field={"bot_name"}>Bot</OrderTh>
-                                <OrderTh field={"script_notification"}>Last Notification</OrderTh>
-                                <OrderTh field={"launched_at"}>Deployed At</OrderTh>
-                                <OrderTh field={"uptime"}>Uptime</OrderTh>
-                                <OrderTh field={"ip"}>IP</OrderTh>
-                                <OrderTh field={"name"}>Name</OrderTh>
-                                <th>Instance ID</th>
-                                <OrderTh field={"launched_by"}>Deployed By</OrderTh>
-                                <OrderTh field={"region"}>Region</OrderTh>
-                            </tr>
-                        </Thead>
-                        <tbody>{botInstances.map(renderRow)}</tbody>
-                    </Table>
-                    <Paginator
-                        total={total}
-                        pageSize={limit}
-                        onChangePage={page => {
-                            setPage(page);
-                            getRunningBots({
-                                page,
-                                limit,
-                                list,
-                                sort: order.field,
-                                order: order.value,
-                                search
-                            });
-                        }}
-                    />
-                </CardBody>
-            </Container> */}
+      </ButtonGroup>
+      <Container>
+        <CardBody>
+          <Filters>
+            <LimitFilter
+              onChange={({ value }) => {
+                setLimit(value)
+                getRunningBots({
+                  page,
+                  limit: value,
+                  list,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              }}
+            />
+            <ListFilter
+              options={FILTERS_LIST_OPTIONS}
+              onChange={({ value }) => {
+                setFilterList(value)
+                getRunningBots({
+                  page,
+                  limit,
+                  list: value,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              }}
+            />
+            <SearchFilter
+              onChange={(value) => {
+                searchRunningBots(value)
+              }}
+            />
+          </Filters>
+          <Table>
+            <Thead>
+              <tr>
+                <OrderTh field={'status'}>Status</OrderTh>
+                <th>Actions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                <OrderTh field={'bot_name'}>Bot</OrderTh>
+                <OrderTh field={'script_notification'}>
+                  Last Notification
+                </OrderTh>
+                <OrderTh field={'launched_at'}>Deployed At</OrderTh>
+                <OrderTh field={'uptime'}>Uptime</OrderTh>
+                <OrderTh field={'ip'}>IP</OrderTh>
+                <OrderTh field={'name'}>Name</OrderTh>
+                <th>Instance ID</th>
+                <OrderTh field={'launched_by'}>Deployed By</OrderTh>
+                <OrderTh field={'region'}>Region</OrderTh>
+              </tr>
+            </Thead>
+            <tbody>{botInstances.map(renderRow)}</tbody>
+          </Table>
+          <Paginator
+            total={total}
+            pageSize={limit}
+            onChangePage={(page) => {
+              setPage(page)
+              getRunningBots({
+                page,
+                limit,
+                list,
+                sort: order.field,
+                order: order.value,
+                search,
+              })
+            }}
+          />
+        </CardBody>
+      </Container>
     </>
   )
 }

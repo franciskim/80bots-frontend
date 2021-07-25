@@ -5,14 +5,9 @@ import SimpleHeader from 'components/Headers/SimpleHeader'
 import Admin from 'layouts/Admin'
 
 const BotsPage = () => {
-  //   <AppLayout title={'Available Bots'} hideBanner>
-  //     {' '}
-  //     <Bots />{' '}
-  //   </AppLayout>
-
   return (
     <>
-      <SimpleHeader name="Buttons" parentName="Components" />
+      <SimpleHeader name="Available Bots" />
       <Container className="mt--6" fluid>
         <Bots />
       </Container>

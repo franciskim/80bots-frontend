@@ -7,7 +7,7 @@ import Admin from 'layouts/Admin.js'
 const RunningBotsPage = () => {
   return (
     <>
-      <SimpleHeader name="Buttons" parentName="Components" />
+      <SimpleHeader name="Working Bots" />
       <Container className="mt--6" fluid>
         <RunningBots />
       </Container>

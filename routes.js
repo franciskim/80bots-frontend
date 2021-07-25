@@ -14,7 +14,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import RunningBotsPage from 'pages/admin/bots/running/index'
+import RunningBotsPage from 'pages/admin/bots/running'
+import UsersPage from 'pages/admin/users'
 
 const routes = [
   {
@@ -73,6 +74,7 @@ const routes = [
     name: 'Users',
     icon: 'fa fa-users',
     layout: '/admin',
+    component: UsersPage,
   },
   {
     collapse: true,
