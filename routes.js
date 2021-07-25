@@ -210,12 +210,6 @@ const routes = [
     icon: 'ni ni-chart-pie-35 text-info',
     layout: '/admin',
   },
-  {
-    path: '/calendar',
-    name: 'Calendar',
-    icon: 'ni ni-calendar-grid-58 text-red',
-    layout: '/admin',
-  },
 ]
 
 export default routes
