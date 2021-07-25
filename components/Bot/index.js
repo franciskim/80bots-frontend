@@ -4,12 +4,11 @@ import styled from 'styled-components'
 import Select from 'react-select'
 import AsyncSelect from 'react-select/async'
 import { connect } from 'react-redux'
-import Tabs from 'react-bootstrap/Tabs'
-import Tab from 'react-bootstrap/Tab'
+import { Nav, NavItem, TabContent, NavLink, TabPane } from 'reactstrap'
 import { addBot } from 'store/bot/actions'
 import { getUsers } from 'store/user/actions'
 import { addNotification } from 'store/notification/actions'
-import { Textarea, Button, Input } from 'reactstrap'
+import { Button, Input } from 'reactstrap'
 import { CodeEditor } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
 import Router from 'next/router'
@@ -109,6 +108,12 @@ const Index = ({ tags, getUsers, users, notify, addBot }) => {
   const [trustedUsers, setUsers] = useState([])
   const [error, setError] = useState(null)
 
+  const [activeTab, setActiveTab] = useState('script')
+
+  const toggle = (tab) => {
+    if (activeTab !== tab) setActiveTab(tab)
+  }
+
   const toOptions = (item) => {
     return {
       ...item,
@@ -200,7 +205,7 @@ const Index = ({ tags, getUsers, users, notify, addBot }) => {
         </Row>
         <Row>
           <InputWrap>
-            <Tabs defaultActiveKey="script" id="tabs-script">
+            {/* <Tabs defaultActiveKey="script" id="tabs-script">
               <Tab eventKey="script" title="index.js">
                 <CodeEditor
                   value={botScript}
@@ -213,11 +218,49 @@ const Index = ({ tags, getUsers, users, notify, addBot }) => {
                   onChange={(code) => setBotPackageJSON(code)}
                 />
               </Tab>
-            </Tabs>
+            </Tabs> */}
+
+            <Nav tabs>
+              <NavItem>
+                <NavLink
+                  // className={classnames({ active: activeTab === 'script' })}
+                  onClick={() => {
+                    toggle('script')
+                  }}
+                >
+                  index.js
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  // className={classnames({ active: activeTab === 'json' })}
+                  onClick={() => {
+                    toggle('json')
+                  }}
+                >
+                  package.json
+                </NavLink>
+              </NavItem>
+            </Nav>
+            <TabContent activeTab={activeTab}>
+              <TabPane tabId="script">
+                <CodeEditor
+                  value={botScript}
+                  onChange={(code) => setBotScript(code)}
+                />
+              </TabPane>
+              <TabPane tabId="json">
+                <CodeEditor
+                  value={botPackageJSON}
+                  onChange={(code) => setBotPackageJSON(code)}
+                />
+              </TabPane>
+            </TabContent>
           </InputWrap>
         </Row>
         <Row>
-          <Textarea
+          <Input
+            type="textarea"
             label={'Description'}
             rows={5}
             value={description}

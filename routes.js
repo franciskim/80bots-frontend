@@ -17,6 +17,7 @@
 import RunningBotsPage from 'pages/admin/bots/running'
 import UsersPage from 'pages/admin/users'
 import SettingsPage from 'pages/admin/settings'
+import SchedulersPage from 'pages/admin/scheduler'
 
 const routes = [
   {
@@ -57,6 +58,7 @@ const routes = [
     name: 'Scheduler',
     icon: 'fa fa-calendar-alt',
     layout: '/admin',
+    component: SchedulersPage,
   },
   {
     path: '/scheduler/log',

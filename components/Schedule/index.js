@@ -24,8 +24,7 @@ import {
   deleteSchedule,
 } from 'store/schedule/actions'
 import { getRunningBots } from 'store/bot/actions'
-
-import ScheduleEditor from 'components/ScheduleEditor'
+import ScheduleEditor from './ScheduleEditor'
 import AsyncSelect from 'react-select/async'
 
 const Container = styled(Card)`
@@ -89,11 +88,11 @@ const Ul = styled.ul`
   padding: 0;
 `
 
-const modalStyles = css`
-  min-width: 1200px;
-  overflow-y: visible;
-  min-height: 500px;
-`
+// const modalStyles = css`
+//   min-width: 1200px;
+//   overflow-y: visible;
+//   min-height: 500px;
+// `
 
 const FILTERS_LIST_OPTIONS = [
   { value: 'all', label: 'All Schedules' },
@@ -447,7 +446,7 @@ const BotsSchedule = ({
       <Modal
         ref={addModal}
         title={'Add Schedule'}
-        contentStyles={modalStyles}
+        // contentStyles={modalStyles}
         onClose={() => setInstanceId(null)}
       >
         <SelectWrap>
@@ -474,7 +473,7 @@ const BotsSchedule = ({
       <Modal
         ref={editModal}
         title={'Schedule Editor'}
-        contentStyles={modalStyles}
+        // contentStyles={modalStyles}
         onClose={() => setClickedSchedule(null)}
       >
         <ScheduleEditor

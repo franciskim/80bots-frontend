@@ -1,13 +1,13 @@
 import React from 'react'
-import { Container } from 'reactstrap'
 import Bots from 'components/Bots/index'
+import { Container } from 'reactstrap'
 import SimpleHeader from 'components/Headers/SimpleHeader'
 import Admin from 'layouts/Admin'
 
 const BotsPage = () => {
   return (
     <>
-      <SimpleHeader name="Available Bots" />
+      <SimpleHeader name="Deploy & Update Bots" />
       <Container className="mt--6" fluid>
         <Bots />
       </Container>
