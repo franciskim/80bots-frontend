@@ -11,6 +11,7 @@ import {
   Table,
   ModalFooter,
   ModalHeader,
+  CardHeader,
 } from 'reactstrap'
 import {
   LimitFilter,
@@ -339,10 +340,12 @@ const BotsSchedule = () => {
   return (
     <>
       <Card>
-        <CardBody>
+        <CardHeader>
           <Button color="primary" onClick={toggleAddModal}>
             Add schedule list
           </Button>
+        </CardHeader>
+        <CardBody>
           <div>
             <LimitFilter
               id="limitfilter"
@@ -380,8 +383,10 @@ const BotsSchedule = () => {
               }}
             />
             <SearchFilter
-              onChange={(value) => {
-                searchSchedules(value)
+              searchProps={{
+                onSearch: (value) => {
+                  searchSchedules(value)
+                },
               }}
             />
           </div>

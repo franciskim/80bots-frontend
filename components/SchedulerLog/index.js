@@ -68,8 +68,10 @@ const SchedulerLog = () => {
               }}
             />
             <SearchFilter
-              onChange={(value) => {
-                searchSession(value)
+              searchProps={{
+                onSearch: (e) => {
+                  console.error('onSearch', e)
+                },
               }}
             />
           </div>

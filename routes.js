@@ -47,13 +47,13 @@ const routes = [
     icon: 'fa fa-plus',
     layout: '/admin',
   },
-  {
-    path: '/bot/:id',
-    name: 'Edit Bot',
-    icon: 'fa fa-plus',
-    layout: '/admin',
-    component: EditBotPage,
-  },
+  // {
+  //   path: '/bot/:id',
+  //   name: 'Edit Bot',
+  //   icon: 'fa fa-plus',
+  //   layout: '/admin',
+  //   component: EditBotPage,
+  // },
   {
     path: '/scheduler',
     name: 'Scheduler',

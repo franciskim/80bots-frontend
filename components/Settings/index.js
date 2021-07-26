@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
 import SettingsEditor from './SettingsEditor'
-import Icon from 'components/default/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
 import {
-  Container,
   CardBody,
   Button,
   Table,
-  ButtonGroup,
   Card,
   Modal,
+  ModalHeader,
+  ModalFooter,
+  CardHeader,
+  ModalBody,
 } from 'reactstrap'
 import { getRegions, updateRegion } from 'store/bot/actions'
 import { Paginator } from 'components/default'
@@ -48,18 +49,15 @@ import { addListener } from 'store/socket/actions'
 //   }
 // `
 
-// const selectStyles = {
-//   container: css`
-//     margin: 20px 0;
-//   `,
-//   select: {
-//     valueContainer: (provided) => ({
-//       ...provided,
-//       padding: '0 8px',
-//       borderColor: '#ced4da',
-//     }),
-//   },
-// }
+const selectStyles = {
+  select: {
+    valueContainer: (provided) => ({
+      ...provided,
+      padding: '0 8px',
+      borderColor: '#ced4da',
+    }),
+  },
+}
 
 const Settings = () => {
   const dispatch = useDispatch()
@@ -71,8 +69,7 @@ const Settings = () => {
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
 
-  const modal = useRef(null)
-
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditSettingsModalOpened, setIsEditSettingsModalOpened] =
     useState(false)
 
@@ -111,9 +108,7 @@ const Settings = () => {
     setClickedRegion(region)
     setAmis(region.amis)
     setDefaultAmi(region.default_ami)
-    console.error('>>>', modal)
-
-    modal.current.open()
+    setIsModalOpen(true)
   }
 
   const onModalClose = () => {
@@ -140,7 +135,7 @@ const Settings = () => {
             message: `Region ami was successfully ${defaultAmi}`,
           })
         )
-        modal.current.close()
+        setIsModalOpen(false)
       })
       .catch(() =>
         dispatch(
@@ -183,117 +178,114 @@ const Settings = () => {
   }
 
   const renderRow = (region) => (
-    <tr key={idx.id}>
+    <tr key={region.id}>
       <td>{region.name}</td>
       <td>{region.code}</td>
       <td>{region.limit}</td>
       <td>{region.created_instances}</td>
       <td>{region.show_default_ami}</td>
       <td>
-        <Button
-          title={'Edit Region AMI'}
-          color="primary"
+        <a
+          className="table-action"
+          href="#"
+          title="Edit Region AMI"
           onClick={() => openEditModal(region)}
         >
-          <Icon name={'edit'} />
-        </Button>
+          <i className="fas fa-edit" />
+        </a>
       </td>
     </tr>
   )
 
   return (
     <>
-      <ButtonGroup>
-        <Button
-          color="primary"
-          onClick={() => {
-            setIsEditSettingsModalOpened(true)
-          }}
-        >
-          Edit Global Bot Settings
-        </Button>
-      </ButtonGroup>
-      <Container>
-        <Card>
-          <CardBody>
-            <div>
-              <LimitFilter
-                id="limitfilter"
-                instanceId="limitfilter"
-                onChange={({ value }) => {
-                  setLimit(value)
-                  getRegions({
-                    page,
-                    limit: value,
-                    sort: order.field,
-                    order: order.value,
-                    search,
-                  })
-                }}
-              />
-              <SearchFilter
-                onChange={(value) => {
-                  searchRegions(value)
-                }}
-              />
-            </div>
-            <Table responsive>
-              <thead>
-                <tr>
-                  <OrderTh field={'name'}>Name</OrderTh>
-                  <OrderTh field={'code'}>Code</OrderTh>
-                  <OrderTh field={'limit'}>Limit</OrderTh>
-                  <OrderTh field={'used_limit'}>Used Limit</OrderTh>
-                  <th>Default AMI</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>{regions.map(renderRow)}</tbody>
-            </Table>
-            <Paginator
-              total={total}
-              pageSize={limit}
-              onChangePage={(page) => {
-                setPage(page)
-                dispatch(
-                  getRegions({
-                    page,
-                    limit,
-                    sort: order.field,
-                    order: order.value,
-                    search,
-                  })
-                )
+      <Card>
+        <CardHeader>
+          <Button
+            color="primary"
+            onClick={() => {
+              setIsEditSettingsModalOpened(true)
+            }}
+          >
+            Edit Global Bot Settings
+          </Button>
+        </CardHeader>
+        <CardBody>
+          <div>
+            <LimitFilter
+              id="limitfilter"
+              instanceId="limitfilter"
+              onChange={({ value }) => {
+                setLimit(value)
+                getRegions({
+                  page,
+                  limit: value,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
               }}
             />
-          </CardBody>
-        </Card>
-      </Container>
-
-      <Modal
-        ref={modal}
-        title={'Edit Default AMI'}
-        // contentStyles={modalStyles}
-        onClose={onModalClose}
-      >
-        <Select
-          label={'AMI'}
-          onChange={(option) => setDefaultAmi(option.value)}
-          // styles={selectStyles}
-          options={amis.map(toOption)}
-          value={getCurrentSelect()}
-        />
-        <ButtonGroup>
-          <Button type={'danger'} onClick={() => modal.current.close()}>
-            Cancel
-          </Button>
+            <SearchFilter
+              searchProps={{
+                onSearch: (value) => {
+                  searchRegions(value)
+                },
+              }}
+            />
+          </div>
+          <Table responsive>
+            <thead>
+              <tr>
+                <OrderTh field={'name'}>Name</OrderTh>
+                <OrderTh field={'code'}>Code</OrderTh>
+                <OrderTh field={'limit'}>Limit</OrderTh>
+                <OrderTh field={'used_limit'}>Used Limit</OrderTh>
+                <th>Default AMI</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>{regions.map(renderRow)}</tbody>
+          </Table>
+          <Paginator
+            total={total}
+            pageSize={limit}
+            onChangePage={(page) => {
+              setPage(page)
+              dispatch(
+                getRegions({
+                  page,
+                  limit,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              )
+            }}
+          />
+        </CardBody>
+      </Card>
+      <Modal isOpen={isModalOpen} onClose={onModalClose}>
+        <ModalHeader>Edit Default AMI</ModalHeader>
+        <ModalBody>
+          <Select
+            label={'AMI'}
+            onChange={(option) => setDefaultAmi(option.value)}
+            // styles={selectStyles}
+            options={amis.map(toOption)}
+            value={getCurrentSelect()}
+          />
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
           <Button color="primary" onClick={changeRegionAmi}>
             Update
           </Button>
-        </ButtonGroup>
+        </ModalFooter>
       </Modal>
 
-      <Modal isOpen={isEditSettingsModalOpened} title={'Edit Global Settings'}>
+      <Modal isOpen={isEditSettingsModalOpened}>
+        <ModalHeader>Edit Global Settings</ModalHeader>
         <SettingsEditor
           onClose={() => {
             setIsEditSettingsModalOpened(false)
@@ -303,9 +295,5 @@ const Settings = () => {
     </>
   )
 }
-// const mapDispatchToProps = (dispatch) => ({
-//   addListener: (room, eventName, handler) =>
-//     dispatch(addListener(room, eventName, handler)),
-// })
 
 export default Settings

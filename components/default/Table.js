@@ -4,6 +4,9 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import Icon from './icons'
 import { Label } from 'reactstrap'
+import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
+
+const { SearchBar } = Search
 
 // export const Table = styled.table`
 //   font-size: 12px;
@@ -92,25 +95,32 @@ export const Th = ({ order, field, children, onClick, ...props }) => {
 // `
 
 export const SearchFilter = (props) => {
-  const [term, setTerm] = useState('')
-
-  const onChange = (e) => {
-    setTerm(e.target.value)
-    props.onChange(e.target.value)
-  }
+  // const [term, setTerm] = useState('')
+  // const onChange = (e) => {
+  //   setTerm(e.target.value)
+  //   props.onChange(e.target.value)
+  // }
 
   return (
     <>
-      <Label>Search </Label>
-      <input
-        type={'text'}
-        className={'form-control'}
-        value={term}
-        onChange={onChange}
-        style={{ background: 'rgba(0,0,0,0.2)', border: 'rgba(0,0,0,0.2)' }}
-      />
+      <div
+        id="datatable-basic_filter"
+        className="dataTables_filter px-4 pb-1 float-right"
+      >
+        <label>
+          Search:
+          <SearchBar
+            className="form-control-sm"
+            placeholder=""
+            {...props.searchProps}
+          />
+        </label>
+      </div>
     </>
   )
+}
+SearchFilter.propTypes = {
+  searchProps: PropTypes.object.isRequired,
 }
 
 const LIMIT_OPTIONS = [
@@ -153,8 +163,11 @@ const LIMIT_OPTIONS = [
 // };
 
 export const LimitFilter = ({ defaultValue, onChange, ...props }) => (
-  <>
-    <Label>Show</Label>
+  <div
+    id="datatable-basic_filter"
+    className="dataTables_filter px-4 pb-1 float-left"
+  >
+    <Label style={{ display: 'inline-block' }}>Show</Label>
     <Select
       id={props.id}
       instanceId={props.instanceId}
@@ -167,13 +180,26 @@ export const LimitFilter = ({ defaultValue, onChange, ...props }) => (
           : LIMIT_OPTIONS[0]
       }
       onChange={onChange}
-      //   styles={selectStyles}
+      styles={{
+        container: (provided, state) => ({
+          ...provided,
+          width: state.selectProps.width,
+          minWidth: '120px',
+          display: 'inline-block',
+          margin: '0 10px',
+        }),
+        menuPortal: (base) => ({ ...base, zIndex: 5 }),
+        singleValue: (provided, state) => ({
+          ...provided,
+          color: '#fff',
+        }),
+      }}
       // menuPortalTarget={document.body}
       // menuPosition={"absolute"}
       // menuPlacement={"bottom"}
     />
-    <Label>entries</Label>
-  </>
+    entries
+  </div>
 )
 
 export const ListFilter = ({
@@ -184,7 +210,7 @@ export const ListFilter = ({
   defaultValue,
   ...props
 }) => (
-  <>
+  <div id="datatable-basic_filter" className="dataTables_filter px-4 pb-1">
     <Label>{label || 'Show'}&nbsp;</Label>
     <Select
       id={props.id}
@@ -199,9 +225,22 @@ export const ListFilter = ({
       // menuPosition={"absolute"}
       // menuPlacement={"bottom"}
       value={value}
-      //   styles={selectStyles}
+      styles={{
+        container: (provided, state) => ({
+          ...provided,
+          width: state.selectProps.width,
+          minWidth: '120px',
+          display: 'inline-block',
+          margin: '0 10px',
+        }),
+        menuPortal: (base) => ({ ...base, zIndex: 5 }),
+        singleValue: (provided, state) => ({
+          ...provided,
+          color: '#fff',
+        }),
+      }}
     />
-  </>
+  </div>
 )
 
 ListFilter.propTypes = {
@@ -219,10 +258,6 @@ ListFilter.propTypes = {
 LimitFilter.propTypes = {
   onChange: PropTypes.func.isRequired,
   defaultValue: PropTypes.oneOf([10, 25, 50, 100]),
-}
-
-SearchFilter.propTypes = {
-  onChange: PropTypes.func.isRequired,
 }
 
 Th.propTypes = {

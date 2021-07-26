@@ -1,7 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Router from 'next/router'
 import LaunchEditor from './LaunchEditor'
-import { Badge, Button, ButtonGroup, Card, CardBody, Modal } from 'reactstrap'
+import {
+  Badge,
+  Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardHeader,
+  Modal,
+} from 'reactstrap'
 import { Paginator } from 'components/default'
 import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
 import { useDispatch, useSelector } from 'react-redux'
@@ -285,21 +293,23 @@ const Bots = () => {
     />
   )
 
-  // const searchBots = (value) => {
-  //   setSearch(value)
-  //   getBots({
-  //     page,
-  //     limit,
-  //     sort: order.field,
-  //     order: order.value,
-  //     search: value,
-  //   })
-  // }
+  const searchBots = (value) => {
+    setSearch(value)
+    dispatch(
+      getBots({
+        page,
+        limit,
+        sort: order.field,
+        order: order.value,
+        search: value,
+      })
+    )
+  }
 
   return (
     <>
       <Card>
-        <CardBody>
+        <CardHeader>
           <ButtonGroup>
             <Button color="success" onClick={() => Router.push('bot')}>
               Add Bot
@@ -308,6 +318,8 @@ const Bots = () => {
               Sync Bots From Repo
             </Button>
           </ButtonGroup>
+        </CardHeader>
+        <CardBody>
           <div>
             <LimitFilter
               id="limitfilter"
@@ -325,8 +337,10 @@ const Bots = () => {
               }}
             />
             <SearchFilter
-              onChange={(value) => {
-                searchBots(value)
+              searchProps={{
+                onSearch: (value) => {
+                  searchBots(value)
+                },
               }}
             />
           </div>

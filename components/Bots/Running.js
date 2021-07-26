@@ -3,7 +3,14 @@ import React, { useEffect, useState } from 'react'
 // import Link from "next/link";
 // import Router from "next/router";
 import { useDispatch, useSelector } from 'react-redux'
-import { CardBody, Button, ButtonGroup, Card, Table } from 'reactstrap'
+import {
+  CardBody,
+  Button,
+  ButtonGroup,
+  Card,
+  Table,
+  CardHeader,
+} from 'reactstrap'
 import { LimitFilter, ListFilter, SearchFilter } from 'components/default/Table'
 import { addNotification } from 'store/notification/actions'
 import { NOTIFICATION_TYPES } from 'config'
@@ -112,12 +119,12 @@ import {
 //     })
 // };
 
-// const OPTIONS = [
-//     {value: "pending", label: "Pending", readOnly: true},
-//     {value: "running", label: "Running"},
-//     {value: "stopped", label: "Stopped"},
-//     {value: "terminated", label: "Terminated"}
-// ];
+const OPTIONS = [
+  { value: 'pending', label: 'Pending', readOnly: true },
+  { value: 'running', label: 'Running' },
+  { value: 'stopped', label: 'Stopped' },
+  { value: 'terminated', label: 'Terminated' },
+]
 
 const FILTERS_LIST_OPTIONS = [
   { value: 'all', label: 'All Instances' },
@@ -149,11 +156,13 @@ const RunningBots = () => {
           event.instance.status === 'running'
             ? 'launched'
             : event.instance.status
-        notify({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: `Bot ${event.instance.bot_name} successfully ${status}`,
-        })
-        botInstanceUpdated(event.instance)
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: `Bot ${event.instance.bot_name} successfully ${status}`,
+          })
+        )
+        dispatch(botInstanceUpdated(event.instance))
       }
     })
     addListener(`running.${user.id}`, 'InstanceStatusUpdated', () => {
@@ -168,7 +177,12 @@ const RunningBots = () => {
       )
     })
     addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
-      notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' })
+      dispatch(
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Sync completed',
+        })
+      )
       dispatch(
         getRunningBots({
           page,
@@ -180,7 +194,7 @@ const RunningBots = () => {
       )
     })
     return () => {
-      removeAllListeners()
+      dispatch(removeAllListeners())
     }
   }, [])
 
@@ -221,159 +235,191 @@ const RunningBots = () => {
     }
   }, [])
 
-  // const choiceRestoreBot = instance => {
-  //     restoreBot(instance.id)
-  //         .then(() =>
-  //             notify({
-  //                 type: NOTIFICATION_TYPES.INFO,
-  //                 message: "The instance was successfully queued for restoring"
-  //             })
-  //         )
-  //         .catch(() =>
-  //             notify({type: NOTIFICATION_TYPES.ERROR, message: "Restore failed"})
-  //         );
-  // };
+  const choiceRestoreBot = (instance) => {
+    dispatch(restoreBot(instance.id))
+      .then(() =>
+        dispatch(
+          notify({
+            type: NOTIFICATION_TYPES.INFO,
+            message: 'The instance was successfully queued for restoring',
+          })
+        )
+      )
+      .catch(() =>
+        dispatch(
+          notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Restore failed' })
+        )
+      )
+  }
 
-  // const choiceCopyInstance = instance => {
-  //     copyInstance(instance.id)
-  //         .then(() => {
-  //             notify({
-  //                 type: NOTIFICATION_TYPES.INFO,
-  //                 message: "The instance was successfully queued for cloning"
-  //             });
-  //             getRunningBots({page, limit, list});
-  //         })
-  //         .catch(() =>
-  //             notify({type: NOTIFICATION_TYPES.ERROR, message: "Cloning failed"})
-  //         );
-  // };
+  const choiceCopyInstance = (instance) => {
+    dispatch(copyInstance(instance.id))
+      .then(() => {
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.INFO,
+            message: 'The instance was successfully queued for cloning',
+          })
+        )
+        getRunningBots({ page, limit, list })
+      })
+      .catch(() =>
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Cloning failed',
+          })
+        )
+      )
+  }
 
-  // const downloadEventHandler = instance => {
-  //     downloadInstancePemFile(instance.id)
-  //         .then(({data}) => {
-  //             download(data, `${instance.instance_id}.pem`, "application/x-pem-file");
-  //         })
-  //         .catch(({error: {response}}) => {
-  //             if (response && response.data) {
-  //                 notify({
-  //                     type: NOTIFICATION_TYPES.ERROR,
-  //                     message: response.data.message
-  //                 });
-  //             } else {
-  //                 notify({
-  //                     type: NOTIFICATION_TYPES.ERROR,
-  //                     message: "Error occurred while downloading file"
-  //                 });
-  //             }
-  //         });
-  // };
+  const downloadEventHandler = (instance) => {
+    dispatch(downloadInstancePemFile(instance.id))
+      .then(({ data }) => {
+        dispatch(
+          download(
+            data,
+            `${instance.instance_id}.pem`,
+            'application/x-pem-file'
+          )
+        )
+      })
+      .catch(({ error: { response } }) => {
+        if (response && response.data) {
+          dispatch(
+            addNotification({
+              type: NOTIFICATION_TYPES.ERROR,
+              message: response.data.message,
+            })
+          )
+        } else {
+          dispatch(
+            addNotification({
+              type: NOTIFICATION_TYPES.ERROR,
+              message: 'Error occurred while downloading file',
+            })
+          )
+        }
+      })
+  }
 
   const changeBotInstanceStatus = (option, id) => {
     updateRunningBot(id, { status: option.value })
       .then(() =>
-        notify({
-          type: NOTIFICATION_TYPES.INFO,
-          message: `Enqueued status change: ${option.value}`,
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.INFO,
+            message: `Enqueued status change: ${option.value}`,
+          })
+        )
       )
       .catch(() =>
-        notify({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: 'Status update failed',
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Status update failed',
+          })
+        )
       )
   }
 
   const syncWithAWS = () => {
-    syncBotInstances()
+    dispatch(syncBotInstances())
       .then(() =>
-        notify({
-          type: NOTIFICATION_TYPES.INFO,
-          message: 'Sync sequence started',
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.INFO,
+            message: 'Sync sequence started',
+          })
+        )
       )
       .catch(() =>
-        notify({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: "Can't start sync sequence",
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: "Can't start sync sequence",
+          })
+        )
       )
   }
 
   const startAllBots = () => {
-    botInstances.map(function (botInstance) {
+    botInstances.map((botInstance) => {
       if (botInstance.status === 'stopped') {
-        changeBotInstanceStatus(
-          { value: 'running', label: 'Running' },
-          botInstance.id
+        dispatch(
+          changeBotInstanceStatus(
+            { value: 'running', label: 'Running' },
+            botInstance.id
+          )
         )
       }
     })
   }
 
-  // const copyToClipboard = bot => {
-  //     const text =
-  //         process.env.NODE_ENV === "development"
-  //             ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
-  //             : bot.ip;
-  //     navigator.clipboard.writeText(text).then(() =>
-  //         notify({
-  //             type: NOTIFICATION_TYPES.INFO,
-  //             message: "Copied to clipboard"
-  //         })
-  //     );
-  // };
+  const copyToClipboard = (bot) => {
+    const text =
+      process.env.NODE_ENV === 'development'
+        ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
+        : bot.ip
+    navigator.clipboard.writeText(text).then(() =>
+      dispatch(
+        addNotification({
+          type: NOTIFICATION_TYPES.INFO,
+          message: 'Copied to clipboard',
+        })
+      )
+    )
+  }
 
-  // const hasBotNotification = botInstanceId => {
-  //     return !!botNotifications[botInstanceId];
-  // };
+  const hasBotNotification = (botInstanceId) => {
+    return !!botNotifications[botInstanceId]
+  }
 
-  // const getBotNotificationMessage = botInstanceId => {
-  //     const text = botNotifications[botInstanceId].notification;
-  //     return text.split('(/break/)').map((str, i) => <div key={i}>{str}</div>);
-  // };
+  const getBotNotificationMessage = (botInstanceId) => {
+    const text = botNotifications[botInstanceId].notification
+    return text.split('(/break/)').map((str, i) => <div key={i}>{str}</div>)
+  }
 
-  // const getServerTime = botInstanceId => {
-  //     return formatTimezone(user.timezone, botNotifications[botInstanceId].date);
-  // };
+  const getServerTime = (botInstanceId) => {
+    return formatTimezone(user.timezone, botNotifications[botInstanceId].date)
+  }
 
-  // const getBotNotificationError = botInstanceId => {
-  //     return !!botNotifications[botInstanceId].error;
-  // };
+  const getBotNotificationError = (botInstanceId) => {
+    return !!botNotifications[botInstanceId].error
+  }
 
-  // const getBotNotificationErrorString = botInstanceId => {
-  //     return botNotifications[botInstanceId].error || '';
-  // };
+  const getBotNotificationErrorString = (botInstanceId) => {
+    return botNotifications[botInstanceId].error || ''
+  }
 
-  // const getBotLastNotificationTime = botInstanceId => {
-  //     const bot = botInstances.filter(
-  //         bot => bot.instance_id === botInstanceId
-  //     );
-  //     if (!bot[0].last_notification)
-  //         return '';
-  //     return formatTimezone(user.timezone, bot[0].last_notification.split("(/break/)")[0]);
-  // };
+  const getBotLastNotificationTime = (botInstanceId) => {
+    const bot = botInstances.filter((bot) => bot.instance_id === botInstanceId)
+    if (!bot[0].last_notification) return ''
+    return formatTimezone(
+      user.timezone,
+      bot[0].last_notification.split('(/break/)')[0]
+    )
+  }
 
-  // const getBotLastNotificationString = botInstanceId => {
-  //     const bot = botInstances.filter(
-  //         bot => bot.instance_id === botInstanceId
-  //     );
-  //     if (!bot[0].last_notification)
-  //         return '';
-  //     let notification = bot[0].last_notification.split('(/break/)').map((str, i) => <div key={i}>{str}</div>);
-  //     notification.shift();
-  //     return notification;
-  // };
+  const getBotLastNotificationString = (botInstanceId) => {
+    const bot = botInstances.filter((bot) => bot.instance_id === botInstanceId)
+    if (!bot[0].last_notification) return ''
+    let notification = bot[0].last_notification
+      .split('(/break/)')
+      .map((str, i) => <div key={i}>{str}</div>)
+    notification.shift()
+    return notification
+  }
 
-  // const Loading = (
-  //     <Loader80bots
-  //         data={"dark"}
-  //         styled={{
-  //             width: "100px",
-  //             height: "75px"
-  //         }}
-  //     />
-  // );
+  const Loading = (
+    <Loader80bots
+      data={'dark'}
+      styled={{
+        width: '100px',
+        height: '75px',
+      }}
+    />
+  )
 
   const getData = (botInstance) => {
     // if(botInstance.difference && botInstance.difference.length > 2) {
@@ -550,7 +596,7 @@ const RunningBots = () => {
         <IdTd>{botInstance.instance_id}</IdTd>
         <td>{botInstance.launched_by}</td>
         <td>{botInstance.region}</td>
-        {/* {botInstance.status === "pending" && <Td colSpan={"9"}>{Loading}</Td>} */}
+        {botInstance.status === 'pending' && <Td colSpan={'9'}>{Loading}</Td>}
       </Tr>
     )
   }
@@ -581,20 +627,22 @@ const RunningBots = () => {
 
   const searchRunningBots = (value) => {
     setSearch(value)
-    getRunningBots({
-      page,
-      limit,
-      list,
-      sort: order.field,
-      order: order.value,
-      search: value,
-    })
+    dispatch(
+      getRunningBots({
+        page,
+        limit,
+        list,
+        sort: order.field,
+        order: order.value,
+        search: value,
+      })
+    )
   }
 
   return (
     <>
       <Card>
-        <CardBody>
+        <CardHeader>
           <ButtonGroup>
             <Button
               color="primary"
@@ -607,7 +655,8 @@ const RunningBots = () => {
               Launch Workforce
             </Button>
           </ButtonGroup>
-
+        </CardHeader>
+        <CardBody>
           <div>
             <LimitFilter
               id="limitfilter"
@@ -645,8 +694,10 @@ const RunningBots = () => {
               }}
             />
             <SearchFilter
-              onChange={(value) => {
-                searchRunningBots(value)
+              searchProps={{
+                onSearch: (value) => {
+                  searchRunningBots(value)
+                },
               }}
             />
           </div>

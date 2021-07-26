@@ -92,8 +92,10 @@ const Users = () => {
               }}
             />
             <SearchFilter
-              onChange={(value) => {
-                searchUsers(value)
+              searchProps={{
+                onSearch: (value) => {
+                  searchUsers(value)
+                },
               }}
             />
           </div>

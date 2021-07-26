@@ -84,7 +84,6 @@ const SettingsEditor = ({ onClose }) => {
 
   return (
     <>
-      <ModalHeader>Edit Global Settings</ModalHeader>
       <ModalBody>
         <FormGroup>
           <Label className="form-control-label" htmlFor="example-time-input">
