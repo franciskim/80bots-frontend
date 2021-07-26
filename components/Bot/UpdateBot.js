@@ -21,6 +21,7 @@ import {
   NavItem,
   NavLink,
   TabPane,
+  CardFooter,
 } from 'reactstrap'
 import { CodeEditor } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
@@ -306,7 +307,7 @@ const UpdateBot = () => {
             <div>
               <Label>Access *</Label>
               <Button
-                size="sm"
+                className="form-control"
                 color={isPrivate ? 'danger' : 'primary'}
                 onClick={() => setPrivate(!isPrivate)}
               >
@@ -316,24 +317,26 @@ const UpdateBot = () => {
           </Row>
           {isPrivate && (
             <Row>
-              <Label>Trusted Users</Label>
-              <AsyncSelect
-                isMulti
-                defaultOptions={users.map(toOptions)}
-                value={trustedUsers}
-                // styles={selectStyles}
-                onChange={(options) => setUsers(options)}
-                loadOptions={onUsersSearch}
-              />
+              <Col>
+                <Label>Trusted Users</Label>
+                <AsyncSelect
+                  isMulti
+                  defaultOptions={users.map(toOptions)}
+                  value={trustedUsers}
+                  // styles={selectStyles}
+                  onChange={(options) => setUsers(options)}
+                  loadOptions={onUsersSearch}
+                />
+              </Col>
             </Row>
           )}
           {error && <Error>{error}</Error>}
-          <ButtonGroup>
-            <Button color="primary" onClick={submit}>
-              Update
-            </Button>
-          </ButtonGroup>
         </CardBody>
+        <CardFooter>
+          <Button color="primary" onClick={submit}>
+            Update
+          </Button>
+        </CardFooter>
       </Card>
     </>
   )

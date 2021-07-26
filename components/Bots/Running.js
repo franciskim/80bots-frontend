@@ -538,8 +538,8 @@ const RunningBots = () => {
         </td>
         <td>
           <Link
-            href={'/bots/running/[id]'}
-            as={`/bots/running/${botInstance.id}`}
+            href={'bots/running/[id]'}
+            as={`bots/running/${botInstance.id}`}
           >
             <a>&gt;&nbsp;View</a>
           </Link>

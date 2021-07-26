@@ -135,8 +135,10 @@ const Profile = () => {
                 <hr className="my-4" />
                 <div className="pl-lg-4">
                   <Row>
-                    <Col md="12">
+                    <Col md="3">
                       <label>Your current time: </label>
+                    </Col>
+                    <Col md="9">
                       <Clock
                         format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
                         timezone={null}
@@ -146,8 +148,10 @@ const Profile = () => {
                     </Col>
                   </Row>
                   <Row>
-                    <Col>
+                    <Col md="3">
                       <label>Current platform time: </label>
+                    </Col>
+                    <Col md="9">
                       <Clock
                         format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
                         timezone={user.timezone}

@@ -265,7 +265,7 @@ const Bots = () => {
           href="#"
           title="Edit Bot"
           onClick={() => {
-            Router.push(`/bot/${bot.id}`)
+            Router.push(`bot/${bot.id}`)
           }}
         >
           <i className="fas fa-edit" />

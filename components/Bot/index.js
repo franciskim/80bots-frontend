@@ -14,7 +14,8 @@ import {
   Row,
   Col,
   Label,
-  ButtonGroup,
+  CardFooter,
+  FormGroup,
 } from 'reactstrap'
 import { addBot } from 'store/bot/actions'
 import { getUsers } from 'store/user/actions'
@@ -215,117 +216,117 @@ const Index = () => {
   }
 
   return (
-    <>
-      <Card>
-        <CardBody>
-          <Row>
-            <Input
-              type={'text'}
-              label={'Bot Name *'}
-              value={botName}
-              onChange={(e) => setBotName(e.target.value)}
+    <Card>
+      <CardBody>
+        <Row>
+          <Input
+            type={'text'}
+            label={'Bot Name *'}
+            value={botName}
+            onChange={(e) => setBotName(e.target.value)}
+          />
+        </Row>
+        <Row>
+          <Label>Bot Script</Label>
+        </Row>
+        <Row>
+          <Col>
+            <Nav tabs>
+              <NavItem>
+                <NavLink
+                  // className={classnames({ active: activeTab === 'script' })}
+                  onClick={() => {
+                    toggle('script')
+                  }}
+                >
+                  index.js
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  // className={classnames({ active: activeTab === 'json' })}
+                  onClick={() => {
+                    toggle('json')
+                  }}
+                >
+                  package.json
+                </NavLink>
+              </NavItem>
+            </Nav>
+            <TabContent activeTab={activeTab}>
+              <TabPane tabId="script">
+                <CodeEditor
+                  value={botScript}
+                  onChange={(code) => setBotScript(code)}
+                />
+              </TabPane>
+              <TabPane tabId="json">
+                <CodeEditor
+                  value={botPackageJSON}
+                  onChange={(code) => setBotPackageJSON(code)}
+                />
+              </TabPane>
+            </TabContent>
+          </Col>
+        </Row>
+        <Row>
+          <Input
+            type="textarea"
+            label={'Description'}
+            rows={5}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </Row>
+        <Row>
+          <Col md="6">
+            <Label className="form-control-label">Tags</Label>
+            <Select
+              id="tags-selector"
+              instanceId="tags-selector"
+              isMulti
+              options={getTagOptions()}
+              onInputChange={onTagInputChange}
+              onChange={(options) => setTags(options)}
+              value={botTags}
             />
-          </Row>
-          <Row>
-            <Label>Bot Script</Label>
-          </Row>
-          <Row>
-            <Col>
-              <Nav tabs>
-                <NavItem>
-                  <NavLink
-                    // className={classnames({ active: activeTab === 'script' })}
-                    onClick={() => {
-                      toggle('script')
-                    }}
-                  >
-                    index.js
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    // className={classnames({ active: activeTab === 'json' })}
-                    onClick={() => {
-                      toggle('json')
-                    }}
-                  >
-                    package.json
-                  </NavLink>
-                </NavItem>
-              </Nav>
-              <TabContent activeTab={activeTab}>
-                <TabPane tabId="script">
-                  <CodeEditor
-                    value={botScript}
-                    onChange={(code) => setBotScript(code)}
-                  />
-                </TabPane>
-                <TabPane tabId="json">
-                  <CodeEditor
-                    value={botPackageJSON}
-                    onChange={(code) => setBotPackageJSON(code)}
-                  />
-                </TabPane>
-              </TabContent>
-            </Col>
-          </Row>
-          <Row>
-            <Input
-              type="textarea"
-              label={'Description'}
-              rows={5}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </Row>
-          <Row>
-            <Col>
-              <Label>Tags</Label>
-              <Select
-                id="tags-selector"
-                instanceId="tags-selector"
-                isMulti
-                options={getTagOptions()}
-                // styles={selectStyles}
-                onInputChange={onTagInputChange}
-                onChange={(options) => setTags(options)}
-                value={botTags}
-              />
-            </Col>
-            <Col>
-              <Label>Access *</Label>
+          </Col>
+          <Col md="6">
+            <FormGroup>
+              <Label className="form-control-label">Access *</Label>
               <Button
-                type={isPrivate ? 'danger' : 'primary'}
+                className="form-control"
+                color={isPrivate ? 'danger' : 'primary'}
                 onClick={() => setPrivate(!isPrivate)}
               >
                 {isPrivate ? 'Private' : 'Public'}
               </Button>
+            </FormGroup>
+          </Col>
+        </Row>
+        {isPrivate && (
+          <Row>
+            <Col>
+              <Label>Trusted Users</Label>
+              <AsyncSelect
+                isMulti
+                defaultOptions={users.map(toOptions)}
+                value={trustedUsers}
+                // styles={selectStyles}
+                onChange={(options) => setUsers(options)}
+                loadOptions={onUsersSearch}
+              />
             </Col>
           </Row>
-          {isPrivate && (
-            <Row>
-              <div>
-                <Label>Trusted Users</Label>
-                <AsyncSelect
-                  isMulti
-                  defaultOptions={users.map(toOptions)}
-                  value={trustedUsers}
-                  // styles={selectStyles}
-                  onChange={(options) => setUsers(options)}
-                  loadOptions={onUsersSearch}
-                />
-              </div>
-            </Row>
-          )}
-          {error && <Error>{error}</Error>}
-          <ButtonGroup>
-            <Button color="primary" onClick={submit}>
-              Add
-            </Button>
-          </ButtonGroup>
-        </CardBody>
-      </Card>
-    </>
+        )}
+        {error && <Error>{error}</Error>}
+      </CardBody>
+      <CardFooter>
+        <Button color="primary" onClick={submit}>
+          Add
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }
 

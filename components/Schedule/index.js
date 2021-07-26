@@ -62,14 +62,14 @@ import AsyncSelect from 'react-select/async'
 //   text-transform: uppercase;
 // `
 
-const Tag = styled(Badge)`
-  text-transform: capitalize;
-  margin-right: 0.5rem;
-  font-size: 14px;
-  &:last-child {
-    margin-right: 0;
-  }
-`
+// const Tag = styled(Badge)`
+//   text-transform: capitalize;
+//   margin-right: 0.5rem;
+//   font-size: 14px;
+//   &:last-child {
+//     margin-right: 0;
+//   }
+// `
 const FILTERS_LIST_OPTIONS = [
   { value: 'all', label: 'All Schedules' },
   { value: 'my', label: 'My Schedules' },
@@ -310,7 +310,7 @@ const BotsSchedule = () => {
           <ul>
             {schedule.details.map((detail, idx) => (
               <li key={idx}>
-                <Tag pill type={'info'}>
+                <Badge pill color={'info'}>
                   {detail.status +
                     ' at ' +
                     detail.day +
@@ -318,7 +318,7 @@ const BotsSchedule = () => {
                     detail.time +
                     ', ' +
                     detail.timezone}
-                </Tag>
+                </Badge>
               </li>
             ))}
           </ul>
