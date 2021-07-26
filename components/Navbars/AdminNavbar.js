@@ -19,7 +19,7 @@ import React from 'react'
 import classnames from 'classnames'
 // nodejs library to set properties for components
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 // reactstrap components
 import {
   Collapse,
@@ -48,6 +48,9 @@ import { logout } from 'store/auth/actions'
 
 const AdminNavbar = ({ theme, sidenavOpen, toggleSidenav }) => {
   const dispatch = useDispatch()
+
+  const user = useSelector((state) => state.auth.user)
+
   // function that on mobile devices makes the search open
   const openSearch = () => {
     document.body.classList.add('g-navbar-search-showing')
@@ -59,6 +62,7 @@ const AdminNavbar = ({ theme, sidenavOpen, toggleSidenav }) => {
       document.body.classList.add('g-navbar-search-shown')
     }, 300)
   }
+
   // function that on mobile devices makes the search close
   const closeSearch = () => {
     document.body.classList.remove('g-navbar-search-shown')
@@ -400,21 +404,23 @@ const AdminNavbar = ({ theme, sidenavOpen, toggleSidenav }) => {
             </Nav>
             <Nav className="align-items-center ml-auto ml-md-0" navbar>
               <UncontrolledDropdown nav>
-                <DropdownToggle className="nav-link pr-0" color="" tag="a">
-                  <Media className="align-items-center">
-                    <span className="avatar avatar-sm rounded-circle">
-                      <img
-                        alt="..."
-                        src={require('assets/img/theme/team-4.jpg')}
-                      />
-                    </span>
-                    <Media className="ml-2 d-none d-lg-block">
-                      <span className="mb-0 text-sm font-weight-bold">
-                        John Snow
+                {user && (
+                  <DropdownToggle className="nav-link pr-0" color="" tag="a">
+                    <Media className="align-items-center">
+                      <span className="avatar avatar-sm rounded-circle">
+                        <img
+                          alt="..."
+                          src={require('assets/img/theme/team-4.jpg')}
+                        />
                       </span>
+                      <Media className="ml-2 d-none d-lg-block">
+                        <span className="mb-0 text-sm font-weight-bold">
+                          {user.name}
+                        </span>
+                      </Media>
                     </Media>
-                  </Media>
-                </DropdownToggle>
+                  </DropdownToggle>
+                )}
                 <DropdownMenu right>
                   <DropdownItem className="noti-title" header tag="div">
                     <h6 className="text-overflow m-0">Welcome!</h6>

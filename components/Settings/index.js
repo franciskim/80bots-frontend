@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import PropTypes from 'prop-types'
-import styled from '@emotion/styled'
 import SettingsEditor from './SettingsEditor'
 import Icon from 'components/default/icons'
-import { Modal } from 'reactstrap'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
 import {
   Container,
@@ -13,6 +10,7 @@ import {
   Table,
   ButtonGroup,
   Card,
+  Modal,
 } from 'reactstrap'
 import { getRegions, updateRegion } from 'store/bot/actions'
 import { Paginator } from 'components/default'
@@ -21,17 +19,17 @@ import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'store/notification/actions'
 import { addListener } from 'store/socket/actions'
 
-const IconButton = styled(Button)`
-  display: inline-flex;
-  justify-content: center;
-  padding: 2px;
-  margin-right: 5px;
-  width: 30px;
-  height: 30px;
-  &:last-child {
-    margin-right: 0;
-  }
-`
+// const IconButton = styled(Button)`
+//   display: inline-flex;
+//   justify-content: center;
+//   padding: 2px;
+//   margin-right: 5px;
+//   width: 30px;
+//   height: 30px;
+//   &:last-child {
+//     margin-right: 0;
+//   }
+// `
 
 // const modalStyles = css`
 //   min-width: 300px;
@@ -63,21 +61,8 @@ const IconButton = styled(Button)`
 //   },
 // }
 
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`
-
-const Settings = ({
-  addNotification,
-  addListener,
-  user,
-  regions,
-  total,
-  getRegions,
-  updateRegion,
-}) => {
+const Settings = () => {
+  const dispatch = useDispatch()
   const [clickedRegion, setClickedRegion] = useState(null)
   const [amis, setAmis] = useState([])
   const [defaultAmi, setDefaultAmi] = useState(null)
@@ -87,23 +72,33 @@ const Settings = ({
   const [search, setSearch] = useState(null)
 
   const modal = useRef(null)
-  const editSettingsModal = useRef(null)
+
+  const [isEditSettingsModalOpened, setIsEditSettingsModalOpened] =
+    useState(false)
+
+  const user = useSelector((state) => state.auth.user)
+  const regions = useSelector((state) => state.bot.regions)
+  const total = useSelector((state) => state.bot.totalRegions)
 
   useEffect(() => {
-    getRegions({ page, limit })
+    dispatch(getRegions({ page, limit }))
 
     addListener(`regions.${user.id}`, 'RegionsSyncSucceeded', () => {
-      addNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: 'Sync completed',
-      })
-      getRegions({
-        page,
-        limit,
-        sort: order.field,
-        order: order.value,
-        search,
-      })
+      dispatch(
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Sync completed',
+        })
+      )
+      dispatch(
+        getRegions({
+          page,
+          limit,
+          sort: order.field,
+          order: order.value,
+          search,
+        })
+      )
     })
   }, [])
 
@@ -116,6 +111,8 @@ const Settings = ({
     setClickedRegion(region)
     setAmis(region.amis)
     setDefaultAmi(region.default_ami)
+    console.error('>>>', modal)
+
     modal.current.open()
   }
 
@@ -135,25 +132,29 @@ const Settings = ({
   }
 
   const changeRegionAmi = () => {
-    updateRegion(clickedRegion.id, { default_ami: defaultAmi })
+    dispatch(updateRegion(clickedRegion.id, { default_ami: defaultAmi }))
       .then(() => {
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: `Region ami was successfully ${defaultAmi}`,
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: `Region ami was successfully ${defaultAmi}`,
+          })
+        )
         modal.current.close()
       })
       .catch(() =>
-        addNotification({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: 'Ami update failed',
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Ami update failed',
+          })
+        )
       )
   }
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value })
-    getRegions({ page, limit, sort: field, order: value, search })
+    dispatch(getRegions({ page, limit, sort: field, order: value, search }))
   }
 
   const OrderTh = (props) => (
@@ -170,13 +171,15 @@ const Settings = ({
 
   const searchRegions = (value) => {
     setSearch(value)
-    getRegions({
-      page,
-      limit,
-      sort: order.field,
-      order: order.value,
-      search: value,
-    })
+    dispatch(
+      getRegions({
+        page,
+        limit,
+        sort: order.field,
+        order: order.value,
+        search: value,
+      })
+    )
   }
 
   const renderRow = (region) => (
@@ -187,13 +190,13 @@ const Settings = ({
       <td>{region.created_instances}</td>
       <td>{region.show_default_ami}</td>
       <td>
-        <IconButton
+        <Button
           title={'Edit Region AMI'}
           color="primary"
           onClick={() => openEditModal(region)}
         >
           <Icon name={'edit'} />
-        </IconButton>
+        </Button>
       </td>
     </tr>
   )
@@ -203,7 +206,9 @@ const Settings = ({
       <ButtonGroup>
         <Button
           color="primary"
-          onClick={() => editSettingsModal.current.open()}
+          onClick={() => {
+            setIsEditSettingsModalOpened(true)
+          }}
         >
           Edit Global Bot Settings
         </Button>
@@ -250,13 +255,15 @@ const Settings = ({
               pageSize={limit}
               onChangePage={(page) => {
                 setPage(page)
-                getRegions({
-                  page,
-                  limit,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
+                dispatch(
+                  getRegions({
+                    page,
+                    limit,
+                    sort: order.field,
+                    order: order.value,
+                    search,
+                  })
+                )
               }}
             />
           </CardBody>
@@ -276,55 +283,29 @@ const Settings = ({
           options={amis.map(toOption)}
           value={getCurrentSelect()}
         />
-        <Buttons>
+        <ButtonGroup>
           <Button type={'danger'} onClick={() => modal.current.close()}>
             Cancel
           </Button>
           <Button color="primary" onClick={changeRegionAmi}>
             Update
           </Button>
-        </Buttons>
+        </ButtonGroup>
       </Modal>
 
-      <Modal
-        ref={editSettingsModal}
-        title={'Edit Global Settings'}
-        disableSideClosing
-        // containerStyles={css`
-        //   margin-top: 0;
-        // `}
-        // contentStyles={css`
-        //   min-width: 600px;
-        // `}
-      >
-        <SettingsEditor onClose={() => editSettingsModal.current.close()} />
+      <Modal isOpen={isEditSettingsModalOpened} title={'Edit Global Settings'}>
+        <SettingsEditor
+          onClose={() => {
+            setIsEditSettingsModalOpened(false)
+          }}
+        />
       </Modal>
     </>
   )
 }
+// const mapDispatchToProps = (dispatch) => ({
+//   addListener: (room, eventName, handler) =>
+//     dispatch(addListener(room, eventName, handler)),
+// })
 
-Settings.propTypes = {
-  addNotification: PropTypes.func.isRequired,
-  addListener: PropTypes.func.isRequired,
-  user: PropTypes.object,
-  regions: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
-  getRegions: PropTypes.func.isRequired,
-  updateRegion: PropTypes.func.isRequired,
-}
-
-const mapStateToProps = (state) => ({
-  user: state.auth.user,
-  regions: state.bot.regions,
-  total: state.bot.totalRegions,
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  addNotification: (payload) => dispatch(addNotification(payload)),
-  addListener: (room, eventName, handler) =>
-    dispatch(addListener(room, eventName, handler)),
-  getRegions: (...args) => dispatch(getRegions(...args)),
-  updateRegion: (id, data) => dispatch(updateRegion(id, data)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Settings)
+export default Settings

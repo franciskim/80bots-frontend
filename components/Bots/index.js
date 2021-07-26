@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-// import Icon from 'components/default/icons'
-// import Router from 'next/router'
+import Router from 'next/router'
 import LaunchEditor from './LaunchEditor'
 import { Badge, Button, ButtonGroup, Card, CardBody, Modal } from 'reactstrap'
 import { Paginator } from 'components/default'
@@ -18,7 +17,7 @@ import {
 } from 'store/bot/actions'
 import { Table } from 'reactstrap'
 
-// import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'store/notification/actions'
 import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config'
 import { addListener } from 'store/socket/actions'
 
@@ -111,19 +110,23 @@ const Bots = () => {
     modal.current.close()
     dispatch(launchInstance(clickedBot.id, params))
       .then(() => {
-        notify({
-          type: NOTIFICATION_TYPES.INFO,
-          message: 'New bot instance is deploying',
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.INFO,
+            message: 'New bot instance is deploying',
+          })
+        )
       })
       .catch((action) => {
-        notify({
-          type: NOTIFICATION_TYPES.ERROR,
-          message:
-            action.error?.response?.data?.message ||
-            'Error occurred during new instance launch',
-          delay: 1500,
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message:
+              action.error?.response?.data?.message ||
+              'Error occurred during new instance launch',
+            delay: 1500,
+          })
+        )
       })
   }
 
@@ -133,16 +136,20 @@ const Bots = () => {
 
     dispatch(updateStatusBot(bot.id, { status }))
       .then(() =>
-        notify({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: `Bot was successfully ${statusName}!`,
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: `Bot was successfully ${statusName}!`,
+          })
+        )
       )
       .catch(() =>
-        notify({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: 'Status update failed',
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Status update failed',
+          })
+        )
       )
   }
 
@@ -150,31 +157,50 @@ const Bots = () => {
     setClickedBot(null)
     dispatch(deleteBot(clickedBot.id))
       .then(() => {
-        notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot removed!' })
-        getBots({
-          page,
-          limit,
-          sort: order.field,
-          order: order.value,
-          search,
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: 'Bot removed!',
+          })
+        )
+        dispatch(
+          getBots({
+            page,
+            limit,
+            sort: order.field,
+            order: order.value,
+            search,
+          })
+        )
         deleteModal.current.close()
       })
       .catch(() =>
-        notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Bot delete failed' })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Bot delete failed',
+          })
+        )
       )
   }
 
   const sync = () => {
     dispatch(syncLocalBots())
       .then(() =>
-        notify({ type: NOTIFICATION_TYPES.INFO, message: 'Sync started' })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.INFO,
+            message: 'Sync started',
+          })
+        )
       )
       .catch(() =>
-        notify({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: 'Sync cannot be started',
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Sync cannot be started',
+          })
+        )
       )
   }
 
@@ -182,20 +208,20 @@ const Bots = () => {
     <tr key={bot.id}>
       <td>{bot.name}</td>
       <td>
-        <Badge type={bot.type === 'public' ? 'info' : 'danger'} pill>
+        <Badge color={bot.type === 'public' ? 'info' : 'danger'}>
           {bot.type}
         </Badge>
       </td>
       <td>{bot.description}</td>
-      {/* <td>
+      <td>
         {bot.tags && bot.tags.length > 0
           ? bot.tags.map((tag, idx) => (
-              <Tag key={idx} pill type={"info"}>
+              <div key={idx} pill color={'info'}>
                 {tag.name}
-              </Tag>
+              </div>
             ))
-          : "-"}
-      </td> */}
+          : '-'}
+      </td>
       <td>
         <Button
           color={bot.status === 'active' ? 'success' : 'danger'}
@@ -206,40 +232,38 @@ const Bots = () => {
         </Button>
       </td>
       <td>
-        <ButtonGroup>
-          <Button
-            color="primary"
-            className="btn-neutral btn-round btn-icon"
-            size="sm"
-            onClick={() => {
-              setClickedBot(bot)
-              modal.current.open()
-            }}
-          >
-            Deploy
-          </Button>
-          <Button
-            className="btn-neutral btn-round btn-icon"
-            title={'Edit Bot'}
-            size="sm"
-            color="primary"
-            onClick={() => {
-              Router.push(`/bot/${bot.id}`)
-            }}
-          >
-            {/* <Icon name={'edit'} /> */}
-          </Button>
-          <Button
-            title={'Delete Bot'}
-            type={'danger'}
-            onClick={() => {
-              setClickedBot(bot)
-              deleteModal.current.open()
-            }}
-          >
-            {/* <Icon name={'garbage'} /> */}
-          </Button>
-        </ButtonGroup>
+        <Button
+          color="primary"
+          className="btn-neutral btn-round btn-icon"
+          size="sm"
+          onClick={() => {
+            setClickedBot(bot)
+            modal.current.open()
+          }}
+        >
+          Deploy
+        </Button>
+        <a
+          className="table-action"
+          href="#"
+          title="Edit Bot"
+          onClick={() => {
+            Router.push(`/bot/${bot.id}`)
+          }}
+        >
+          <i className="fas fa-edit" />
+        </a>
+        <a
+          className="table-action"
+          href="#"
+          title="Delete Bot"
+          onClick={() => {
+            setClickedBot(bot)
+            deleteModal.current.open()
+          }}
+        >
+          <i className="fas fa-trash" />
+        </a>
       </td>
     </tr>
   )
@@ -277,7 +301,7 @@ const Bots = () => {
       <Card>
         <CardBody>
           <ButtonGroup>
-            <Button color="success" onClick={() => Router.push('/bot')}>
+            <Button color="success" onClick={() => Router.push('bot')}>
               Add Bot
             </Button>
             <Button color="primary" onClick={sync} loading={`${syncLoading}`}>

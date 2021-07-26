@@ -277,24 +277,24 @@ const ScheduleEditor = ({ close, onUpdateClick, user, ...props }) => {
   )
 }
 
-ScheduleEditor.propTypes = {
-  close: PropTypes.func.isRequired,
-  schedules: PropTypes.array.isRequired,
-  onUpdateClick: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-}
+// ScheduleEditor.propTypes = {
+//   close: PropTypes.func.isRequired,
+//   schedules: PropTypes.array.isRequired,
+//   onUpdateClick: PropTypes.func.isRequired,
+//   user: PropTypes.object.isRequired,
+// }
 
-Schedule.propTypes = {
-  status: PropTypes.string,
-  time: PropTypes.string,
-  day: PropTypes.string,
-  idx: PropTypes.number.isRequired,
-  add: PropTypes.func.isRequired,
-  remove: PropTypes.func.isRequired,
-  updateScheduleList: PropTypes.func.isRequired,
-  onClick: PropTypes.func,
-  value: PropTypes.string,
-  timezone: PropTypes.string,
-}
+// Schedule.propTypes = {
+//   status: PropTypes.string,
+//   time: PropTypes.string,
+//   day: PropTypes.string,
+//   idx: PropTypes.number.isRequired,
+//   add: PropTypes.func.isRequired,
+//   remove: PropTypes.func.isRequired,
+//   updateScheduleList: PropTypes.func.isRequired,
+//   onClick: PropTypes.func,
+//   value: PropTypes.string,
+//   timezone: PropTypes.string,
+// }
 
 export default ScheduleEditor

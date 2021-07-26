@@ -1,13 +1,23 @@
 import React, { useRef, useState, useEffect } from 'react'
 import styled from '@emotion/styled'
-import { Card, CardBody, ButtonGroup, Label } from 'reactstrap'
+import {
+  Card,
+  CardBody,
+  ModalBody,
+  Modal,
+  Button,
+  Badge,
+  Label,
+  Table,
+  ModalFooter,
+  ModalHeader,
+} from 'reactstrap'
 import {
   LimitFilter,
   ListFilter,
   SearchFilter,
   Th,
 } from 'components/default/Table'
-import { Button, Badge, Modal, Table } from 'reactstrap'
 import Icon from 'components/default/icons'
 import { addNotification } from 'store/notification/actions'
 import { useDispatch, useSelector } from 'react-redux'
@@ -60,65 +70,42 @@ const Tag = styled(Badge)`
     margin-right: 0;
   }
 `
-const SelectWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`
-
-// const Label = styled.label`
-//   font-size: 16px;
-//   margin-bottom: 5px;
-// `
-
-// const Ul = styled.ul`
-//   list-style: none;
-//   margin: 0;
-//   padding: 0;
-// `
-
-// const modalStyles = css`
-//   min-width: 1200px;
-//   overflow-y: visible;
-//   min-height: 500px;
-// `
-
 const FILTERS_LIST_OPTIONS = [
   { value: 'all', label: 'All Schedules' },
   { value: 'my', label: 'My Schedules' },
 ]
 
-const selectStyles = {
-  control: (provided, { selectProps: { width } }) => ({
-    ...provided,
-    width: width,
-    minWidth: '75px',
-    border: 'solid 1px hsl(0,0%,80%)',
-    borderRadius: '4px',
-    color: '#fff',
-    backgroundColor: 'transparent',
-    '&:hover': {
-      borderColor: '#7dffff',
-    },
-  }),
-  singleValue: (provided, state) => ({
-    ...provided,
-    color: '#fff',
-  }),
-  menu: (provided, state) => ({
-    ...provided,
-    border: 'solid 1px hsl(0,0%,80%)',
-    borderRadius: '4px',
-  }),
-  menuList: (provided, state) => ({
-    ...provided,
-    backgroundColor: '#333',
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    color: state.isFocused ? 'black' : '#fff',
-  }),
-}
+// const selectStyles = {
+//   control: (provided, { selectProps: { width } }) => ({
+//     ...provided,
+//     width: width,
+//     minWidth: '75px',
+//     border: 'solid 1px hsl(0,0%,80%)',
+//     borderRadius: '4px',
+//     color: '#fff',
+//     backgroundColor: 'transparent',
+//     '&:hover': {
+//       borderColor: '#7dffff',
+//     },
+//   }),
+//   singleValue: (provided, state) => ({
+//     ...provided,
+//     color: '#fff',
+//   }),
+//   menu: (provided, state) => ({
+//     ...provided,
+//     border: 'solid 1px hsl(0,0%,80%)',
+//     borderRadius: '4px',
+//   }),
+//   menuList: (provided, state) => ({
+//     ...provided,
+//     backgroundColor: '#333',
+//   }),
+//   option: (provided, state) => ({
+//     ...provided,
+//     color: state.isFocused ? 'black' : '#fff',
+//   }),
+// }
 
 const BotsSchedule = () => {
   const dispatch = useDispatch()
@@ -130,9 +117,9 @@ const BotsSchedule = () => {
   const [instanceId, setInstanceId] = useState(null)
   const [search, setSearch] = useState(null)
 
-  const modal = useRef(null)
-  const addModal = useRef(null)
-  const editModal = useRef(null)
+  const [isModalOpen, setIsModelOpen] = useState(false)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   useEffect(() => {
     dispatch(getSchedules({ page, limit, list }))
@@ -190,12 +177,12 @@ const BotsSchedule = () => {
 
   const toggleAddModal = () => {
     dispatch(getRunningBots({ page: 1, limit: 50 }))
-    addModal.current.open()
+    setIsAddModalOpen(true)
   }
 
   const toggleEditModal = (schedule) => {
     setClickedSchedule(schedule)
-    editModal.current.open()
+    setIsEditModalOpen(true)
   }
 
   const addSchedule = () => {
@@ -210,7 +197,7 @@ const BotsSchedule = () => {
             search,
           })
         )
-        addModal.current.close()
+        setIsAddModalOpen(false)
         dispatch(
           addNotification({
             type: NOTIFICATION_TYPES.SUCCESS,
@@ -222,7 +209,7 @@ const BotsSchedule = () => {
   }
 
   const updateScheduleInstance = (editedSchedules) => {
-    editModal.current.close()
+    setIsEditModalOpen(false)
     dispatch(updateSchedule(clickedSchedule.id, { details: editedSchedules }))
       .then(() =>
         dispatch(
@@ -244,7 +231,7 @@ const BotsSchedule = () => {
   }
 
   const modalDeleteSchedule = () => {
-    modal.current.close()
+    setIsModelOpen(false)
     dispatch(deleteSchedule(clickedSchedule.id))
       .then(() => {
         dispatch(
@@ -353,11 +340,9 @@ const BotsSchedule = () => {
     <>
       <Card>
         <CardBody>
-          <ButtonGroup>
-            <Button color="primary" onClick={toggleAddModal}>
-              Add schedule list
-            </Button>
-          </ButtonGroup>
+          <Button color="primary" onClick={toggleAddModal}>
+            Add schedule list
+          </Button>
           <div>
             <LimitFilter
               id="limitfilter"
@@ -433,50 +418,42 @@ const BotsSchedule = () => {
         </CardBody>
 
         <Modal
-          ref={modal}
+          isOpen={isModalOpen}
           title={'Delete this schedule?'}
           onClose={() => setClickedSchedule(null)}
         >
-          <ButtonGroup>
+          <ModalBody>
             <Button color="primary" onClick={modalDeleteSchedule}>
               Yes
             </Button>
-            <Button type={'danger'} onClick={() => modal.current.close()}>
+            <Button type={'danger'} onClick={() => setIsModelOpen(false)}>
               Cancel
             </Button>
-          </ButtonGroup>
+          </ModalBody>
         </Modal>
 
-        <Modal
-          ref={addModal}
-          title={'Add Schedule'}
-          // contentStyles={modalStyles}
-          onClose={() => setInstanceId(null)}
-        >
-          <SelectWrap>
+        <Modal isOpen={isAddModalOpen} onClose={() => setInstanceId(null)}>
+          <ModalHeader>Add Schedule</ModalHeader>
+          <ModalBody>
             <Label>Select one of your running bots</Label>
             <AsyncSelect
               onChange={onBotChange}
               loadOptions={searchBots}
               defaultOptions={runningBots.filter(toFilters).map(toOptions)}
-              styles={selectStyles}
             />
-          </SelectWrap>
-          <ButtonGroup>
-            <Button type={'danger'} onClick={() => addModal.current.close()}>
-              Cancel
-            </Button>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={() => setIsAddModalOpen(false)}>Cancel</Button>
             <Button color="primary" onClick={addSchedule}>
               Add
             </Button>
-          </ButtonGroup>
+          </ModalFooter>
         </Modal>
         <Modal
-          ref={editModal}
-          title={'Schedule Editor'}
-          // contentStyles={modalStyles}
+          isOpen={isEditModalOpen}
           onClose={() => setClickedSchedule(null)}
         >
+          <ModalHeader>Schedule Editor</ModalHeader>
           <ScheduleEditor
             schedules={clickedSchedule ? clickedSchedule.details : []}
             close={() => editModal.current.close()}
@@ -484,7 +461,7 @@ const BotsSchedule = () => {
             user={user}
           />
         </Modal>
-      </Card>{' '}
+      </Card>
     </>
   )
 }

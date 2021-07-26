@@ -14,9 +14,9 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React from 'react'
 // nodejs library to set properties for components
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 // reactstrap components
 import {
   Breadcrumb,
@@ -25,7 +25,7 @@ import {
   Container,
   Row,
   Col,
-} from "reactstrap";
+} from 'reactstrap'
 
 function SimpleHeader({ name, parentName }) {
   return (
@@ -34,10 +34,10 @@ function SimpleHeader({ name, parentName }) {
         <Container fluid>
           <div className="header-body">
             <Row className="align-items-center py-4">
-              <Col lg="6" xs="7">
+              <Col>
                 <h6 className="fullcalendar-title h2 text-white d-inline-block mb-0">
                   {name}
-                </h6>{" "}
+                </h6>{' '}
                 <Breadcrumb
                   className="d-none d-md-inline-block ml-lg-4"
                   listClassName="breadcrumb-links breadcrumb-dark"
@@ -57,25 +57,17 @@ function SimpleHeader({ name, parentName }) {
                   </BreadcrumbItem>
                 </Breadcrumb>
               </Col>
-              <Col className="mt-3 mt-md-0 text-md-right" lg="6" xs="5">
-                <Button className="btn-neutral" color="default" size="sm">
-                  New
-                </Button>
-                <Button className="btn-neutral" color="default" size="sm">
-                  Filters
-                </Button>
-              </Col>
             </Row>
           </div>
         </Container>
       </div>
     </>
-  );
+  )
 }
 
 SimpleHeader.propTypes = {
   name: PropTypes.string,
   parentName: PropTypes.string,
-};
+}
 
-export default SimpleHeader;
+export default SimpleHeader

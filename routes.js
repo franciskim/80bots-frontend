@@ -18,6 +18,7 @@ import RunningBotsPage from 'pages/admin/bots/running'
 import UsersPage from 'pages/admin/users'
 import SettingsPage from 'pages/admin/settings'
 import SchedulersPage from 'pages/admin/scheduler'
+import EditBotPage from 'pages/admin/bot/[id]'
 
 const routes = [
   {
@@ -45,6 +46,13 @@ const routes = [
     name: 'Add New Bot',
     icon: 'fa fa-plus',
     layout: '/admin',
+  },
+  {
+    path: '/bot/:id',
+    name: 'Edit Bot',
+    icon: 'fa fa-plus',
+    layout: '/admin',
+    component: EditBotPage,
   },
   {
     path: '/scheduler',
