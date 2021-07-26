@@ -1,18 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
-// import PropTypes from 'prop-types'
-import styled from '@emotion/styled'
 // import Icon from 'components/default/icons'
 // import Router from 'next/router'
 import LaunchEditor from './LaunchEditor'
-import {
-  Badge,
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  Modal,
-  Container,
-} from 'reactstrap'
+import { Badge, Button, ButtonGroup, Card, CardBody, Modal } from 'reactstrap'
 import { Paginator } from 'components/default'
 import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
 import { useDispatch, useSelector } from 'react-redux'
@@ -66,21 +56,6 @@ import { addListener } from 'store/socket/actions'
 //   text-transform: capitalize;
 //   margin-right: 0;
 // `
-
-const AddButtonWrap = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 5px;
-
-  button {
-    margin-right: 20px;
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-`
-
 // const BotType = styled(Badge)`
 //   font-size: 14px;
 //   text-transform: uppercase;
@@ -298,16 +273,16 @@ const Bots = () => {
 
   return (
     <>
-      <AddButtonWrap style={{ marginBottom: '17px' }}>
-        <Button color="success" onClick={() => Router.push('/bot')}>
-          Add Bot
-        </Button>
-        <Button color="primary" onClick={sync} loading={`${syncLoading}`}>
-          Sync Bots From Repo
-        </Button>
-      </AddButtonWrap>
-      <Container>
+      <Card>
         <CardBody>
+          <ButtonGroup>
+            <Button color="success" onClick={() => Router.push('/bot')}>
+              Add Bot
+            </Button>
+            <Button color="primary" onClick={sync} loading={`${syncLoading}`}>
+              Sync Bots From Repo
+            </Button>
+          </ButtonGroup>
           <div>
             <LimitFilter
               id="limitfilter"
@@ -357,37 +332,37 @@ const Bots = () => {
               })
             }}
           />
-        </CardBody>
-      </Container>
 
-      <Modal
-        ref={modal}
-        title={'Deploy selected bot?'}
-        onClose={() => setClickedBot(null)}
-        // disableSideClosing
-      >
-        <LaunchEditor
-          onSubmit={launchBot}
-          onClose={() => modal.current.close()}
-          bot={clickedBot}
-        />
-      </Modal>
-      <Modal ref={deleteModal} title={'Delete Bot'}>
-        <ButtonGroup>
-          <Button
-            color="danger"
-            onClick={() => {
-              setClickedBot(null)
-              deleteModal.current.close()
-            }}
+          <Modal
+            ref={modal}
+            title={'Deploy selected bot?'}
+            onClose={() => setClickedBot(null)}
+            // disableSideClosing
           >
-            Cancel
-          </Button>
-          <Button color="primary" onClick={getDeleteBot}>
-            Yes
-          </Button>
-        </ButtonGroup>
-      </Modal>
+            <LaunchEditor
+              onSubmit={launchBot}
+              onClose={() => modal.current.close()}
+              bot={clickedBot}
+            />
+          </Modal>
+          <Modal ref={deleteModal} title={'Delete Bot'}>
+            <ButtonGroup>
+              <Button
+                color="danger"
+                onClick={() => {
+                  setClickedBot(null)
+                  deleteModal.current.close()
+                }}
+              >
+                Cancel
+              </Button>
+              <Button color="primary" onClick={getDeleteBot}>
+                Yes
+              </Button>
+            </ButtonGroup>
+          </Modal>
+        </CardBody>
+      </Card>
     </>
   )
 }

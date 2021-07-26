@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import styled from '@emotion/styled'
-import { Container, CardBody, ButtonGroup, Label } from 'reactstrap'
+import { Card, CardBody, ButtonGroup, Label } from 'reactstrap'
 import {
   LimitFilter,
   ListFilter,
@@ -60,13 +60,6 @@ const Tag = styled(Badge)`
     margin-right: 0;
   }
 `
-
-// const AddButtonWrap = styled.div`
-//   display: flex;
-//   justify-content: flex-end;
-//   margin-bottom: 5px;
-// `
-
 const SelectWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -358,18 +351,13 @@ const BotsSchedule = () => {
 
   return (
     <>
-      <style jsx global>{`
-        div[class*='-menu'] {
-          background: #000;
-        }
-      `}</style>
-      <ButtonGroup>
-        <Button color="primary" onClick={toggleAddModal}>
-          Add schedule list
-        </Button>
-      </ButtonGroup>
-      <Container>
+      <Card>
         <CardBody>
+          <ButtonGroup>
+            <Button color="primary" onClick={toggleAddModal}>
+              Add schedule list
+            </Button>
+          </ButtonGroup>
           <div>
             <LimitFilter
               id="limitfilter"
@@ -443,60 +431,60 @@ const BotsSchedule = () => {
             }}
           />
         </CardBody>
-      </Container>
 
-      <Modal
-        ref={modal}
-        title={'Delete this schedule?'}
-        onClose={() => setClickedSchedule(null)}
-      >
-        <ButtonGroup>
-          <Button color="primary" onClick={modalDeleteSchedule}>
-            Yes
-          </Button>
-          <Button type={'danger'} onClick={() => modal.current.close()}>
-            Cancel
-          </Button>
-        </ButtonGroup>
-      </Modal>
+        <Modal
+          ref={modal}
+          title={'Delete this schedule?'}
+          onClose={() => setClickedSchedule(null)}
+        >
+          <ButtonGroup>
+            <Button color="primary" onClick={modalDeleteSchedule}>
+              Yes
+            </Button>
+            <Button type={'danger'} onClick={() => modal.current.close()}>
+              Cancel
+            </Button>
+          </ButtonGroup>
+        </Modal>
 
-      <Modal
-        ref={addModal}
-        title={'Add Schedule'}
-        // contentStyles={modalStyles}
-        onClose={() => setInstanceId(null)}
-      >
-        <SelectWrap>
-          <Label>Select one of your running bots</Label>
-          <AsyncSelect
-            onChange={onBotChange}
-            loadOptions={searchBots}
-            defaultOptions={runningBots.filter(toFilters).map(toOptions)}
-            styles={selectStyles}
+        <Modal
+          ref={addModal}
+          title={'Add Schedule'}
+          // contentStyles={modalStyles}
+          onClose={() => setInstanceId(null)}
+        >
+          <SelectWrap>
+            <Label>Select one of your running bots</Label>
+            <AsyncSelect
+              onChange={onBotChange}
+              loadOptions={searchBots}
+              defaultOptions={runningBots.filter(toFilters).map(toOptions)}
+              styles={selectStyles}
+            />
+          </SelectWrap>
+          <ButtonGroup>
+            <Button type={'danger'} onClick={() => addModal.current.close()}>
+              Cancel
+            </Button>
+            <Button color="primary" onClick={addSchedule}>
+              Add
+            </Button>
+          </ButtonGroup>
+        </Modal>
+        <Modal
+          ref={editModal}
+          title={'Schedule Editor'}
+          // contentStyles={modalStyles}
+          onClose={() => setClickedSchedule(null)}
+        >
+          <ScheduleEditor
+            schedules={clickedSchedule ? clickedSchedule.details : []}
+            close={() => editModal.current.close()}
+            onUpdateClick={updateScheduleInstance}
+            user={user}
           />
-        </SelectWrap>
-        <ButtonGroup>
-          <Button type={'danger'} onClick={() => addModal.current.close()}>
-            Cancel
-          </Button>
-          <Button color="primary" onClick={addSchedule}>
-            Add
-          </Button>
-        </ButtonGroup>
-      </Modal>
-      <Modal
-        ref={editModal}
-        title={'Schedule Editor'}
-        // contentStyles={modalStyles}
-        onClose={() => setClickedSchedule(null)}
-      >
-        <ScheduleEditor
-          schedules={clickedSchedule ? clickedSchedule.details : []}
-          close={() => editModal.current.close()}
-          onUpdateClick={updateScheduleInstance}
-          user={user}
-        />
-      </Modal>
+        </Modal>
+      </Card>{' '}
     </>
   )
 }

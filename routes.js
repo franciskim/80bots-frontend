@@ -60,7 +60,7 @@ const routes = [
     layout: '/admin',
   },
   {
-    path: '/bots/settings',
+    path: '/settings',
     name: 'AWS AMI Settings',
     icon: 'fa fa-cog',
     layout: '/admin',

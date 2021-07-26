@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import dayjs from 'dayjs'
 import { useSelector, useDispatch } from 'react-redux'
 import { Paginator } from '../default'
-import { CardBody, Button, Table } from 'reactstrap'
+import { CardBody, Button, Table, Card } from 'reactstrap'
 import { SearchFilter, LimitFilter, Th } from '../default/Table'
 import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'store/notification/actions'
@@ -73,54 +73,56 @@ const Users = () => {
 
   return (
     <>
-      <CardBody>
-        <div>
-          <LimitFilter
-            id="limitfilter"
-            instanceId="limitfilter"
-            onChange={({ value }) => {
-              setLimit(value)
+      <Card>
+        <CardBody>
+          <div>
+            <LimitFilter
+              id="limitfilter"
+              instanceId="limitfilter"
+              onChange={({ value }) => {
+                setLimit(value)
+                dispatch(
+                  getUsers({
+                    page,
+                    limit: value,
+                    search,
+                  })
+                )
+              }}
+            />
+            <SearchFilter
+              onChange={(value) => {
+                searchUsers(value)
+              }}
+            />
+          </div>
+          <Table>
+            <thead>
+              <tr>
+                <OrderTh field={'name'}>Name</OrderTh>
+                <OrderTh field={'email'}>Email</OrderTh>
+                <OrderTh field={'date'}>Register Date</OrderTh>
+                <OrderTh field={'status'}>Status</OrderTh>
+              </tr>
+            </thead>
+            <tbody>{users.map(renderRow)}</tbody>
+          </Table>
+          <Paginator
+            total={total}
+            pageSize={limit}
+            onChangePage={(page) => {
+              setPage(page)
               dispatch(
                 getUsers({
                   page,
-                  limit: value,
+                  limit,
                   search,
                 })
               )
             }}
           />
-          <SearchFilter
-            onChange={(value) => {
-              searchUsers(value)
-            }}
-          />
-        </div>
-        <Table>
-          <thead>
-            <tr>
-              <OrderTh field={'name'}>Name</OrderTh>
-              <OrderTh field={'email'}>Email</OrderTh>
-              <OrderTh field={'date'}>Register Date</OrderTh>
-              <OrderTh field={'status'}>Status</OrderTh>
-            </tr>
-          </thead>
-          <tbody>{users.map(renderRow)}</tbody>
-        </Table>
-        <Paginator
-          total={total}
-          pageSize={limit}
-          onChangePage={(page) => {
-            setPage(page)
-            dispatch(
-              getUsers({
-                page,
-                limit,
-                search,
-              })
-            )
-          }}
-        />
-      </CardBody>
+        </CardBody>
+      </Card>
     </>
   )
 }

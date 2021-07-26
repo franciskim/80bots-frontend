@@ -180,6 +180,12 @@ function Sidebar({
                   className="navbar-brand-img"
                   src={logo.imgSrc}
                 />
+                {/* <object
+                  type="image/svg+xml"
+                  data="assets/img/80bots-logo.svg"
+                  className="navbar-brand-img"
+                  style={{ width: 200, height: 200 }}
+                /> */}
               </NavbarBrand>
             </span>
           </Link>

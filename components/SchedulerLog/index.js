@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { useSelector, useDispatch } from 'react-redux'
-import { Container, CardBody, Table } from 'reactstrap'
+import { Card, CardBody, Table } from 'reactstrap'
 import { LimitFilter, SearchFilter, Th } from '../default/Table'
 // import { addNotification } from 'store/notification/actions'
 import { getSessions } from 'store/instanceSession/actions'
 import { Paginator } from 'components/default'
-
-// const Container = styled(Card)`
-//   background: #333;
-//   border: none;
-//   color: #fff;
-// `
 
 const SchedulerLog = () => {
   const dispatch = useDispatch()
@@ -56,7 +50,7 @@ const SchedulerLog = () => {
 
   return (
     <>
-      <Container>
+      <Card>
         <CardBody>
           <div>
             <LimitFilter
@@ -101,7 +95,7 @@ const SchedulerLog = () => {
             }}
           />
         </CardBody>
-      </Container>
+      </Card>
     </>
   )
 }

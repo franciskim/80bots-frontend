@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 // import Link from "next/link";
 // import Router from "next/router";
 import { useDispatch, useSelector } from 'react-redux'
-import { CardBody, Button, ButtonGroup, Container, Table } from 'reactstrap'
+import { CardBody, Button, ButtonGroup, Card, Table } from 'reactstrap'
 import { LimitFilter, ListFilter, SearchFilter } from 'components/default/Table'
 import { addNotification } from 'store/notification/actions'
 import { NOTIFICATION_TYPES } from 'config'
@@ -76,19 +76,6 @@ import {
 //     color: #FF0000;
 //   }
 // `;
-
-// const AddButtonWrap = styled.div`
-//   display: flex;
-//   justify-content: flex-end;
-//   margin-bottom: 15px;
-
-//   button {
-//     &:last-child {
-//       margin-left: 20px;
-//     }
-//   }
-// `
-
 // const A = styled.a`
 //   cursor: pointer;
 //   color: #ff7d7d !important;
@@ -606,20 +593,21 @@ const RunningBots = () => {
 
   return (
     <>
-      <ButtonGroup>
-        <Button
-          color="primary"
-          onClick={syncWithAWS}
-          loading={`${syncLoading}`}
-        >
-          Sync Bot Instances
-        </Button>
-        <Button color="secondary" onClick={startAllBots}>
-          Launch Workforce
-        </Button>
-      </ButtonGroup>
-      <Container>
+      <Card>
         <CardBody>
+          <ButtonGroup>
+            <Button
+              color="primary"
+              onClick={syncWithAWS}
+              loading={`${syncLoading}`}
+            >
+              Sync Bot Instances
+            </Button>
+            <Button color="secondary" onClick={startAllBots}>
+              Launch Workforce
+            </Button>
+          </ButtonGroup>
+
           <div>
             <LimitFilter
               id="limitfilter"
@@ -700,7 +688,7 @@ const RunningBots = () => {
             }}
           />
         </CardBody>
-      </Container>
+      </Card>
     </>
   )
 }

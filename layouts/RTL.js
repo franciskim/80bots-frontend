@@ -79,7 +79,7 @@ function RTL({ router, children }) {
         sidenavOpen={sidenavOpen}
         logo={{
           innerLink: '/',
-          imgSrc: require('assets/img/brand/argon-react.png'),
+          imgSrc: require('assets/img/80bots-logo.svg'),
           imgAlt: '...',
         }}
         rtlActive

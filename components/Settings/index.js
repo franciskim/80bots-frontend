@@ -6,19 +6,20 @@ import Icon from 'components/default/icons'
 import { Modal } from 'reactstrap'
 import { connect } from 'react-redux'
 import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
-import { Card, CardBody, Button, Table } from 'reactstrap'
+import {
+  Container,
+  CardBody,
+  Button,
+  Table,
+  ButtonGroup,
+  Card,
+} from 'reactstrap'
 import { getRegions, updateRegion } from 'store/bot/actions'
 import { Paginator } from 'components/default'
 import { Select } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'store/notification/actions'
 import { addListener } from 'store/socket/actions'
-
-const Container = styled(Card)`
-  background: #333;
-  border: none;
-  color: #fff;
-`
 
 const IconButton = styled(Button)`
   display: inline-flex;
@@ -37,17 +38,17 @@ const IconButton = styled(Button)`
 //   overflow-y: visible;
 // `
 
-const ButtonWrap = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 5px;
-  button {
-    margin-right: 20px;
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-`
+// const ButtonWrap = styled.div`
+//   display: flex;
+//   justify-content: flex-end;
+//   margin-bottom: 5px;
+//   button {
+//     margin-right: 20px;
+//     &:last-child {
+//       margin-right: 0;
+//     }
+//   }
+// `
 
 // const selectStyles = {
 //   container: css`
@@ -199,65 +200,67 @@ const Settings = ({
 
   return (
     <>
-      <ButtonWrap>
+      <ButtonGroup>
         <Button
           color="primary"
           onClick={() => editSettingsModal.current.open()}
         >
           Edit Global Bot Settings
         </Button>
-      </ButtonWrap>
+      </ButtonGroup>
       <Container>
-        <CardBody>
-          <div>
-            <LimitFilter
-              id="limitfilter"
-              instanceId="limitfilter"
-              onChange={({ value }) => {
-                setLimit(value)
+        <Card>
+          <CardBody>
+            <div>
+              <LimitFilter
+                id="limitfilter"
+                instanceId="limitfilter"
+                onChange={({ value }) => {
+                  setLimit(value)
+                  getRegions({
+                    page,
+                    limit: value,
+                    sort: order.field,
+                    order: order.value,
+                    search,
+                  })
+                }}
+              />
+              <SearchFilter
+                onChange={(value) => {
+                  searchRegions(value)
+                }}
+              />
+            </div>
+            <Table responsive>
+              <thead>
+                <tr>
+                  <OrderTh field={'name'}>Name</OrderTh>
+                  <OrderTh field={'code'}>Code</OrderTh>
+                  <OrderTh field={'limit'}>Limit</OrderTh>
+                  <OrderTh field={'used_limit'}>Used Limit</OrderTh>
+                  <th>Default AMI</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>{regions.map(renderRow)}</tbody>
+            </Table>
+            <Paginator
+              total={total}
+              pageSize={limit}
+              onChangePage={(page) => {
+                setPage(page)
                 getRegions({
                   page,
-                  limit: value,
+                  limit,
                   sort: order.field,
                   order: order.value,
                   search,
                 })
               }}
             />
-            <SearchFilter
-              onChange={(value) => {
-                searchRegions(value)
-              }}
-            />
-          </div>
-          <Table responsive>
-            <thead>
-              <tr>
-                <OrderTh field={'name'}>Name</OrderTh>
-                <OrderTh field={'code'}>Code</OrderTh>
-                <OrderTh field={'limit'}>Limit</OrderTh>
-                <OrderTh field={'used_limit'}>Used Limit</OrderTh>
-                <th>Default AMI</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>{regions.map(renderRow)}</tbody>
-          </Table>
-          <Paginator
-            total={total}
-            pageSize={limit}
-            onChangePage={(page) => {
-              setPage(page)
-              getRegions({
-                page,
-                limit,
-                sort: order.field,
-                order: order.value,
-                search,
-              })
-            }}
-          />
-        </CardBody>
+          </CardBody>
+        </Card>
       </Container>
 
       <Modal
