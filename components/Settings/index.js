@@ -80,23 +80,25 @@ const Settings = () => {
   useEffect(() => {
     dispatch(getRegions({ page, limit }))
 
-    addListener(`regions.${user.id}`, 'RegionsSyncSucceeded', () => {
-      dispatch(
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: 'Sync completed',
-        })
-      )
-      dispatch(
-        getRegions({
-          page,
-          limit,
-          sort: order.field,
-          order: order.value,
-          search,
-        })
-      )
-    })
+    dispatch(
+      addListener(`regions.${user.id}`, 'RegionsSyncSucceeded', () => {
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: 'Sync completed',
+          })
+        )
+        dispatch(
+          getRegions({
+            page,
+            limit,
+            sort: order.field,
+            order: order.value,
+            search,
+          })
+        )
+      })
+    )
   }, [])
 
   const toOption = (item) => ({

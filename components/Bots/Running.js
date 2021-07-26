@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-// import Select from "react-select";
-// import Link from "next/link";
-// import Router from "next/router";
+import Select from 'react-select'
+import Link from 'next/link'
+import Router from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   CardBody,
@@ -25,8 +25,8 @@ import {
 } from 'store/bot/actions'
 import { addListener, removeAllListeners } from 'store/socket/actions'
 import { Paginator, Loader80bots } from 'components/default'
-// import {download} from "lib/helpers";
-// import Uptime from "components/default/Uptime";
+import { download } from 'lib/helpers'
+import Uptime from 'components/default/Uptime'
 import {
   subscribe as wsSubscribe,
   unsubscribe as wsUnsubscribe,
@@ -36,7 +36,7 @@ import {
   closeScriptNotification,
   flushScriptNotification,
 } from 'store/scriptNotification/actions'
-// import {formatTimezone} from "../../lib/helpers";
+import { formatTimezone } from 'lib/helpers'
 
 // const Container = styled(Card)`
 //   background: #333;
@@ -150,49 +150,55 @@ const RunningBots = () => {
 
   useEffect(() => {
     dispatch(getRunningBots({ page, limit, list }))
-    addListener(`running.${user.id}`, 'InstanceLaunched', (event) => {
-      if (event.instance) {
-        const status =
-          event.instance.status === 'running'
-            ? 'launched'
-            : event.instance.status
+    dispatch(
+      addListener(`running.${user.id}`, 'InstanceLaunched', (event) => {
+        if (event.instance) {
+          const status =
+            event.instance.status === 'running'
+              ? 'launched'
+              : event.instance.status
+          dispatch(
+            addNotification({
+              type: NOTIFICATION_TYPES.SUCCESS,
+              message: `Bot ${event.instance.bot_name} successfully ${status}`,
+            })
+          )
+          dispatch(botInstanceUpdated(event.instance))
+        }
+      })
+    )
+    dispatch(
+      addListener(`running.${user.id}`, 'InstanceStatusUpdated', () => {
+        dispatch(
+          getRunningBots({
+            page: 1,
+            limit,
+            list,
+            sort: order.field,
+            order: order.value,
+          })
+        )
+      })
+    )
+    dispatch(
+      addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
         dispatch(
           addNotification({
             type: NOTIFICATION_TYPES.SUCCESS,
-            message: `Bot ${event.instance.bot_name} successfully ${status}`,
+            message: 'Sync completed',
           })
         )
-        dispatch(botInstanceUpdated(event.instance))
-      }
-    })
-    addListener(`running.${user.id}`, 'InstanceStatusUpdated', () => {
-      dispatch(
-        getRunningBots({
-          page: 1,
-          limit,
-          list,
-          sort: order.field,
-          order: order.value,
-        })
-      )
-    })
-    addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
-      dispatch(
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: 'Sync completed',
-        })
-      )
-      dispatch(
-        getRunningBots({
-          page,
-          limit,
-          list,
-          sort: order.field,
-          order: order.value,
-        })
-      )
-    })
+        dispatch(
+          getRunningBots({
+            page,
+            limit,
+            list,
+            sort: order.field,
+            order: order.value,
+          })
+        )
+      })
+    )
     return () => {
       dispatch(removeAllListeners())
     }
@@ -239,7 +245,7 @@ const RunningBots = () => {
     dispatch(restoreBot(instance.id))
       .then(() =>
         dispatch(
-          notify({
+          addNotification({
             type: NOTIFICATION_TYPES.INFO,
             message: 'The instance was successfully queued for restoring',
           })
@@ -247,7 +253,10 @@ const RunningBots = () => {
       )
       .catch(() =>
         dispatch(
-          notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Restore failed' })
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Restore failed',
+          })
         )
       )
   }
@@ -261,7 +270,7 @@ const RunningBots = () => {
             message: 'The instance was successfully queued for cloning',
           })
         )
-        getRunningBots({ page, limit, list })
+        dispatch(getRunningBots({ page, limit, list }))
       })
       .catch(() =>
         dispatch(
@@ -498,7 +507,7 @@ const RunningBots = () => {
 
   const renderRow = (botInstance) => {
     return (
-      <Tr
+      <tr
         key={botInstance.id}
         disabled={botInstance.status === 'pending'}
         className={
@@ -516,7 +525,7 @@ const RunningBots = () => {
             onChange={(option) =>
               changeBotInstanceStatus(option, botInstance.id)
             }
-            styles={selectStyles}
+            // styles={selectStyles}
             isOptionDisabled={(option) => option.readOnly}
             isDisabled={
               botInstance.status === 'pending' ||
@@ -532,14 +541,14 @@ const RunningBots = () => {
             href={'/bots/running/[id]'}
             as={`/bots/running/${botInstance.id}`}
           >
-            <A>&gt;&nbsp;View</A>
+            <a>&gt;&nbsp;View</a>
           </Link>
           {botInstance.status === 'terminated' ? (
             <div
               title={'Restore Bot'}
               onClick={() => choiceRestoreBot(botInstance)}
             >
-              <A>&gt;&nbsp;Restore</A>
+              <a>&gt;&nbsp;Restore</a>
             </div>
           ) : null}
           {botInstance.status === 'running' ? (
@@ -549,14 +558,14 @@ const RunningBots = () => {
                 Router.push(`/botinstance/${botInstance.id}`)
               }}
             >
-              <A>&gt;&nbsp;New Script</A>
+              <a>&gt;&nbsp;New Script</a>
             </div>
           ) : null}
           <div
             title={'Copy Instance'}
             onClick={() => choiceCopyInstance(botInstance)}
           >
-            <A>&gt;&nbsp;Clone</A>
+            <a>&gt;&nbsp;Clone</a>
           </div>
           <div
             disabled={botInstance.status === 'terminated'}
@@ -564,40 +573,40 @@ const RunningBots = () => {
             type={'success'}
             onClick={() => downloadEventHandler(botInstance)}
           >
-            <A>&gt;&nbsp;Key</A>
+            <a>&gt;&nbsp;Key</a>
           </div>
         </td>
         <td>{botInstance.bot_name}</td>
-        <NotificationTd>
+        <td>
           {hasBotNotification(botInstance.instance_id) ? (
             !getBotNotificationError(botInstance.instance_id) ? (
-              <Notify>
+              <span>
                 {getServerTime(botInstance.instance_id)}
                 <br />
                 {getBotNotificationMessage(botInstance.instance_id)}
-              </Notify>
+              </span>
             ) : (
-              <NotifyErr>
+              <span color="danger">
                 {getBotNotificationErrorString(botInstance.instance_id)}
-              </NotifyErr>
+              </span>
             )
           ) : (
-            <Notify>
+            <span>
               {getBotLastNotificationTime(botInstance.instance_id)}
               <br />
               {getBotLastNotificationString(botInstance.instance_id)}
-            </Notify>
+            </span>
           )}
-        </NotificationTd>
+        </td>
         <td>{formatTimezone(user.timezone, botInstance.launched_at)}</td>
         <Uptime uptime={botInstance.uptime} status={botInstance.status} />
         <td>{botInstance.ip}</td>
         <td>{botInstance.name}</td>
-        <IdTd>{botInstance.instance_id}</IdTd>
+        <td>{botInstance.instance_id}</td>
         <td>{botInstance.launched_by}</td>
         <td>{botInstance.region}</td>
-        {botInstance.status === 'pending' && <Td colSpan={'9'}>{Loading}</Td>}
-      </Tr>
+        {botInstance.status === 'pending' && <td colSpan={'9'}>{Loading}</td>}
+      </tr>
     )
   }
 

@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
-import { Button, Textarea } from 'reactstrap'
-import { reportBot } from 'store/bot/actions'
+import { Button, Input, Container, ButtonGroup } from 'reactstrap'
+import { reportBot as report } from 'store/bot/actions'
 import { addNotification } from 'store/notification/actions'
 import { NOTIFICATION_TYPES } from 'config'
 
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`
+// const Buttons = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+// `
 
 const ScreenshotsContainer = styled.div`
   display: flex;
@@ -24,34 +24,47 @@ const ScreenshotsContainer = styled.div`
   }
 `
 
-const ReportIssue = ({ bot, screenshots, report, notify, onClose }) => {
+const ReportIssue = ({ bot, screenshots, onClose }) => {
+  const dispatch = useDispatch()
   const [message, setMessage] = useState('')
 
   const submit = () => {
-    notify({ type: NOTIFICATION_TYPES.INFO, message: 'Uploading Report...' })
-    report(bot.id, { message, screenshots: screenshots.map((el) => el.id) })
+    dispatch(
+      addNotification({
+        type: NOTIFICATION_TYPES.INFO,
+        message: 'Uploading Report...',
+      })
+    )
+    dispatch(
+      report(bot.id, { message, screenshots: screenshots.map((el) => el.id) })
+    )
       .then(() => {
-        notify({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: 'Issue report sent',
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: 'Issue report sent',
+          })
+        )
         onClose && onClose()
       })
       .catch((err) =>
-        notify({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: 'Report failed, please try again later',
-        })
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Report failed, please try again later',
+          })
+        )
       )
   }
   return (
     <>
-      <Textarea
-        styles={{
-          container: css`
-            margin-top: 20px;
-          `,
-        }}
+      <Input
+        type="text"
+        // styles={{
+        //   container: css`
+        //     margin-top: 20px;
+        //   `,
+        // }}
         rows={5}
         onChange={(e) => setMessage(e.target.value)}
         value={message}
@@ -64,29 +77,22 @@ const ReportIssue = ({ bot, screenshots, report, notify, onClose }) => {
           })}
         </ScreenshotsContainer>
       )}
-      <Buttons>
+      <ButtonGroup>
         <Button type={'danger'} onClick={onClose}>
           Cancel
         </Button>
         <Button color="primary" disabled={!message} onClick={submit}>
           Submit
         </Button>
-      </Buttons>
+      </ButtonGroup>
     </>
   )
 }
 
 ReportIssue.propTypes = {
-  report: PropTypes.func.isRequired,
-  notify: PropTypes.func.isRequired,
   bot: PropTypes.object,
   onClose: PropTypes.func,
   screenshots: PropTypes.array,
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  notify: (payload) => dispatch(addNotification(payload)),
-  report: (...args) => dispatch(reportBot(...args)),
-})
-
-export default connect(null, mapDispatchToProps)(ReportIssue)
+export default ReportIssue

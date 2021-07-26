@@ -100,18 +100,27 @@ const Bots = () => {
   const limit = useSelector((state) => state.bot.limit)
   useEffect(() => {
     dispatch(getBots({ page, limit }))
-    // addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
-    //   notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Sync completed' })
-    //   getBots({
-    //     page,
-    //     limit,
-    //     sort: order.field,
-    //     order: order.value,
-    //     search,
-    //   })
-    //   setPage(1)
-    // })
-    // return setPage(1)
+    dispatch(
+      addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: 'Sync completed',
+          })
+        )
+        dispatch(
+          getBots({
+            page,
+            limit,
+            sort: order.field,
+            order: order.value,
+            search,
+          })
+        )
+        setPage(1)
+      })
+    )
+    return setPage(1)
   }, [page, limit])
 
   const launchBot = (params) => {
@@ -278,7 +287,7 @@ const Bots = () => {
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value })
-    getBots({ page, limit, sort: field, order: value, search })
+    dispatch(getBots({ page, limit, sort: field, order: value, search }))
   }
 
   const OrderTh = (props) => (
@@ -327,13 +336,15 @@ const Bots = () => {
               defaultValue={limit}
               onChange={({ value }) => {
                 setLimit(value)
-                getBots({
-                  page,
-                  limit: value,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
+                dispatch(
+                  getBots({
+                    page,
+                    limit: value,
+                    sort: order.field,
+                    order: order.value,
+                    search,
+                  })
+                )
               }}
             />
             <SearchFilter
@@ -362,13 +373,15 @@ const Bots = () => {
             initialPage={page}
             onChangePage={(page) => {
               setPage(page)
-              getBots({
-                page,
-                limit,
-                sort: order.field,
-                order: order.value,
-                search,
-              })
+              dispatch(
+                getBots({
+                  page,
+                  limit,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              )
             }}
           />
 
@@ -405,19 +418,5 @@ const Bots = () => {
     </>
   )
 }
-
-// const mapDispatchToProps = (dispatch) => ({
-//   getBots: (query) => dispatch(getBots(query)),
-//   notify: (payload) => dispatch(addNotification(payload)),
-//   launchInstance: (id, params) => dispatch(launchInstance(id, params)),
-//   updateStatusBot: (id, data) => dispatch(updateStatusBot(id, data)),
-//   deleteBot: (id) => dispatch(deleteBot(id)),
-//   getBotSettings: () => dispatch(getBotSettings()),
-//   updateBotSettings: (id, data) => dispatch(updateBotSettings(id, data)),
-//   syncLocalBots: () => dispatch(syncLocalBots()),
-//   addListener: (room, eventName, handler) =>
-//     dispatch(addListener(room, eventName, handler)),
-//   setLimit: (limit) => dispatch(setBotLimit(limit)),
-// })
 
 export default Bots

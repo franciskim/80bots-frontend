@@ -204,11 +204,21 @@ const UpdateBot = () => {
 
       updateBot(aboutBot.id, convertBotData(botData))
         .then(() => {
-          notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot updated!' })
+          dispatch(
+            addNotification({
+              type: NOTIFICATION_TYPES.SUCCESS,
+              message: 'Bot updated!',
+            })
+          )
           Router.push('/bots')
         })
         .catch(() =>
-          notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Update failed!' })
+          dispatch(
+            addNotification({
+              type: NOTIFICATION_TYPES.ERROR,
+              message: 'Update failed!',
+            })
+          )
         )
     }
   }
@@ -328,14 +338,5 @@ const UpdateBot = () => {
     </>
   )
 }
-
-// const mapDispatchToProps = (dispatch) => ({
-//   getBot: (id) => dispatch(getBot(id)),
-//   clearBot: () => dispatch(clearBot()),
-//   getTags: (query) => dispatch(getTags(query)),
-//   getUsers: (query) => dispatch(getUsers(query)),
-//   updateBot: (id, data) => dispatch(updateBot(id, data)),
-//   notify: (payload) => dispatch(addNotification(payload)),
-// })
 
 export default UpdateBot

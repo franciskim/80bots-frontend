@@ -18,10 +18,10 @@ const Buttons = styled.div`
   margin-top: 20px;
 `
 
-const StatusButton = styled(Button)`
-  text-transform: uppercase;
-  min-height: 38px;
-`
+// const StatusButton = styled(Button)`
+//   text-transform: uppercase;
+//   min-height: 38px;
+// `
 
 const InputWrap = styled.div`
   display: flex;

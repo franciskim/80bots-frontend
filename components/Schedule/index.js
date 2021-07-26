@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from '@emotion/styled'
 import {
   Card,
@@ -19,7 +19,6 @@ import {
   SearchFilter,
   Th,
 } from 'components/default/Table'
-import Icon from 'components/default/icons'
 import { addNotification } from 'store/notification/actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { NOTIFICATION_TYPES } from 'config'
@@ -298,12 +297,13 @@ const BotsSchedule = () => {
       <td>{schedule.instance_id}</td>
       <td>{schedule.bot_name}</td>
       <td>
-        <StatusButton
-          type={schedule.status === 'active' ? 'success' : 'danger'}
+        <Button
+          color={schedule.status === 'active' ? 'success' : 'danger'}
           onClick={() => changeScheduleStatus(schedule)}
+          size="sm"
         >
           {schedule.status}
-        </StatusButton>
+        </Button>
       </td>
       <td>
         {schedule.details.length > 0 ? (
@@ -327,12 +327,22 @@ const BotsSchedule = () => {
         )}
       </td>
       <td>
-        <Button color="primary" onClick={() => toggleEditModal(schedule)}>
-          <Icon name={'edit'} color={theme.colors.white} />
-        </Button>
-        <Button type={'danger'} onClick={() => toggleModal(schedule)}>
-          <Icon name={'garbage'} color={theme.colors.white} />
-        </Button>
+        <a
+          className="table-action"
+          href="#"
+          title="Edit"
+          onClick={() => toggleEditModal(schedule)}
+        >
+          <i className="fas fa-edit" />
+        </a>
+        <a
+          className="table-action"
+          href="#"
+          title="Delete"
+          onClick={() => toggleModal(schedule)}
+        >
+          <i className="fas fa-trash" />
+        </a>
       </td>
     </tr>
   )
@@ -461,7 +471,7 @@ const BotsSchedule = () => {
           <ModalHeader>Schedule Editor</ModalHeader>
           <ScheduleEditor
             schedules={clickedSchedule ? clickedSchedule.details : []}
-            close={() => editModal.current.close()}
+            close={() => setIsEditModalOpen(false)}
             onUpdateClick={updateScheduleInstance}
             user={user}
           />

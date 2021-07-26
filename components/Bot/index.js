@@ -124,7 +124,7 @@ const Index = () => {
 
   const tags = useSelector((state) => state.bot.tags)
   const users = useSelector((state) => state.user.users)
-  const aboutBot = useSelector((state) => state.bot.aboutBot)
+  // const aboutBot = useSelector((state) => state.bot.aboutBot)
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
@@ -195,11 +195,21 @@ const Index = () => {
       }
       dispatch(addBot(convertBotData(botData)))
         .then(() => {
-          notify({ type: NOTIFICATION_TYPES.SUCCESS, message: 'Bot added!' })
+          dispatch(
+            addNotification({
+              type: NOTIFICATION_TYPES.SUCCESS,
+              message: 'Bot added!',
+            })
+          )
           Router.push('/bots')
         })
         .catch(() =>
-          notify({ type: NOTIFICATION_TYPES.ERROR, message: 'Add failed!' })
+          dispatch(
+            addNotification({
+              type: NOTIFICATION_TYPES.ERROR,
+              message: 'Add failed!',
+            })
+          )
         )
     }
   }
@@ -318,11 +328,5 @@ const Index = () => {
     </>
   )
 }
-
-// const mapDispatchToProps = (dispatch) => ({
-//   getUsers: (query) => dispatch(getUsers(query)),
-//   addBot: (data) => dispatch(addBot(data)),
-//   notify: (payload) => dispatch(addNotification(payload)),
-// })
 
 export default Index

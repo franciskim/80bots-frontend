@@ -13,9 +13,9 @@ const LoaderContainer = styled.div`
 export const Loader80bots = ({ data, styled, ...props }) => {
   useEffect(() => {
     if (data === 'light') {
-      setIcon('/images/loader/80bots_loader_light.svg')
+      setIcon('/img/loader/80bots_loader_light.svg')
     } else if (data === 'dark') {
-      setIcon('/images/loader/80bots_loader_dark.svg')
+      setIcon('/img/loader/80bots_loader_dark.svg')
     }
   }, [data])
 

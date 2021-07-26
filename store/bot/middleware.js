@@ -1,21 +1,21 @@
-import { setBotLimit } from "./actions";
+import { setBotLimit } from './actions'
 
 export default function createBotMiddleware() {
-  let limitLoaded = false;
+  let limitLoaded = false
   return ({ dispatch }) => {
-    return next => action => {
+    return (next) => (action) => {
       if (!limitLoaded) {
-        limitLoaded = true;
+        limitLoaded = true
         dispatch(
           setBotLimit(
-            localStorage.getItem("bot.limit") !== "null" &&
-              !localStorage.getItem("bot.limit")
-              ? Number(localStorage.getItem("bot.limit"))
+            localStorage.getItem('bot.limit') !== 'null' &&
+              !localStorage.getItem('bot.limit')
+              ? Number(localStorage.getItem('bot.limit'))
               : 10
           )
-        );
+        )
       }
-      next(action);
-    };
-  };
+      next(action)
+    }
+  }
 }
