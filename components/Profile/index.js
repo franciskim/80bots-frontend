@@ -1,30 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
-import PropTypes from 'prop-types'
 import Select from 'react-select'
-// import { Input } from 'components/default/inputs'
 import Clock from 'react-live-clock'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNotification } from 'store/notification/actions'
 import { NOTIFICATION_TYPES } from 'config'
 import { getTimezones, getRegions } from 'store/user/actions'
 import {
+  Label,
   Button,
   Card,
-  CardHeader,
   CardBody,
-  CardImg,
   FormGroup,
   Form,
   Input,
-  ListGroupItem,
-  ListGroup,
-  Progress,
-  Container,
   Row,
   Col,
 } from 'reactstrap'
-import { updateUserProfile } from 'store/auth/actions'
+import { updateUserProfile as updateUser } from 'store/auth/actions'
 
 // const selectStyles = {
 //   control: (provided, state) => ({
@@ -88,45 +80,33 @@ const Profile = () => {
   }, [regions])
 
   const updateTimezone = () => {
-    updateUser({ timezone_id: timezone.value }).then(() => {
-      addNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: `Timezone was successfully set to ${timezone.label}`,
+    dispatch(
+      updateUser({ timezone_id: timezone.value }).then(() => {
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `Timezone was successfully set to ${timezone.label}`,
+        })
       })
-    })
+    )
   }
 
   const updateRegion = () => {
-    updateUser({ region_id: region.value }).then(() => {
-      addNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: `Region was successfully set to ${region.label}`,
+    dispatch(
+      updateUser({ region_id: region.value }).then(() => {
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: `Region was successfully set to ${region.label}`,
+          })
+        )
       })
-    })
+    )
   }
-
   return (
     <>
       <Row>
         <Col className="order-xl-1">
           <Card>
-            <CardHeader>
-              <Row className="align-items-center">
-                <Col xs="8">
-                  <h3 className="mb-0">Edit profile</h3>
-                </Col>
-                <Col className="text-right" xs="4">
-                  <Button
-                    color="primary"
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                    size="sm"
-                  >
-                    Settings
-                  </Button>
-                </Col>
-              </Row>
-            </CardHeader>
             <CardBody>
               <Form>
                 <h6 className="heading-small text-muted mb-4">
@@ -144,33 +124,86 @@ const Profile = () => {
                         </label>
                         <Input
                           id="input-email"
-                          placeholder="jesse@example.com"
                           type="email"
+                          value={user.email}
+                          readOnly
                         />
                       </FormGroup>
                     </Col>
                   </Row>
                 </div>
                 <hr className="my-4" />
-                <h6 className="heading-small text-muted mb-4">
-                  Contact information
-                </h6>
                 <div className="pl-lg-4">
                   <Row>
                     <Col md="12">
-                      <FormGroup>
-                        <label
+                      <label>Your current time: </label>
+                      <Clock
+                        format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
+                        timezone={null}
+                        // style={currClockStyle}
+                        ticking={true}
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <label>Current platform time: </label>
+                      <Clock
+                        format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
+                        timezone={user.timezone}
+                        ticking={true}
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col lg={6}>
+                      <FormGroup className="row">
+                        <Label
                           className="form-control-label"
-                          htmlFor="input-address"
+                          htmlFor="example-text-input"
+                          md="3"
                         >
-                          Address
-                        </label>
-                        <Input
-                          defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
-                          id="input-address"
-                          placeholder="Home Address"
-                          type="text"
-                        />
+                          My Timezone
+                        </Label>
+                        <Col md="9">
+                          <Select
+                            options={timezones.map((item) => ({
+                              value: item.id,
+                              label: item.value,
+                            }))}
+                            onChange={(option) => setTimezone(option)}
+                            value={timezone}
+                          />
+                          <Button color={'primary'} onClick={updateTimezone}>
+                            Update
+                          </Button>
+                        </Col>
+                      </FormGroup>
+                    </Col>
+                    <Col lg={6}>
+                      {' '}
+                      <FormGroup className="row">
+                        <Label
+                          className="form-control-label"
+                          htmlFor="example-text-input"
+                          md="3"
+                        >
+                          Preferred Region
+                        </Label>
+                        <Col md={9}>
+                          <Select
+                            options={regions.map((item) => ({
+                              value: item.id,
+                              label: item.name,
+                            }))}
+                            // styles={selectStyles}
+                            onChange={(option) => setRegion(option)}
+                            value={region}
+                          />
+                          <Button color={'primary'} onClick={updateRegion}>
+                            Update
+                          </Button>
+                        </Col>
                       </FormGroup>
                     </Col>
                   </Row>
@@ -180,106 +213,8 @@ const Profile = () => {
           </Card>
         </Col>
       </Row>
-
-      {/* <Block>
-        <Row>
-          <Label>User Profile</Label>
-        </Row>
-        <Row>
-          <Input type={'text'} label={'Email'} value={user.email} readOnly />
-        </Row>
-      </Block>
-      <br />
-      <Block>
-        <Row>
-          <Label>My Timezone</Label>
-        </Row>
-        <Row>
-          <TextLabel>Your current time: </TextLabel>
-          <Clock
-            format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
-            timezone={null}
-            style={currClockStyle}
-            ticking={true}
-          />
-        </Row>
-        <Row>
-          <TextLabel>Current platform time: </TextLabel>
-          <Clock
-            format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
-            timezone={user.timezone}
-            style={clockStyle}
-            ticking={true}
-          />
-        </Row>
-        <Row>
-          <Container>
-            <Select
-              options={timezones.map((item) => ({
-                value: item.id,
-                label: item.value,
-              }))}
-              styles={selectStyles}
-              onChange={(option) => setTimezone(option)}
-              value={timezone}
-            />
-            <ButtonContainer>
-              <Button type={'primary'} onClick={updateTimezone}>
-                Update
-              </Button>
-            </ButtonContainer>
-          </Container>
-        </Row>
-      </Block>
-      <br />
-      <Block>
-        <Row>
-          <Label>Preferred Region</Label>
-        </Row>
-        <Row>
-          <Container>
-            <Select
-              options={regions.map((item) => ({
-                value: item.id,
-                label: item.name,
-              }))}
-              styles={selectStyles}
-              onChange={(option) => setRegion(option)}
-              value={region}
-            />
-            <ButtonContainer>
-              <Button type={'primary'} onClick={updateRegion}>
-                Update
-              </Button>
-            </ButtonContainer>
-          </Container>
-        </Row>
-      </Block> */}
     </>
   )
 }
-
-// Profile.propTypes = {
-//   user: PropTypes.object.isRequired,
-//   getTimezones: PropTypes.func.isRequired,
-//   updateUser: PropTypes.func.isRequired,
-//   addNotification: PropTypes.func.isRequired,
-//   getRegions: PropTypes.func.isRequired,
-//   timezones: PropTypes.array.isRequired,
-//   regions: PropTypes.array.isRequired,
-// }
-
-// const mapStateToProps = (state) => ({
-//   user: state.auth.user,
-//   timezones: state.user.timezones,
-//   regions: state.user.regions,
-// })
-
-// const mapDispatchToProps = (dispatch) => ({
-//   getTimezones: () => dispatch(getTimezones()),
-//   updateUser: (updateData) => dispatch(updateUserProfile(updateData)),
-//   addNotification: (payload) => dispatch(addNotification(payload)),
-//   getRegions: () => dispatch(getRegions()),
-// })
 
 export default Profile
