@@ -109,12 +109,12 @@ const routes = [
   //       miniName: 'T',
   //       layout: '/admin',
   //     },
-  //     {
-  //       path: '/profile',
-  //       name: 'Profile',
-  //       miniName: 'P',
-  //       layout: '/admin',
-  //     },
+  {
+    path: '/profile',
+    name: 'Profile',
+    miniName: 'P',
+    layout: '/admin',
+  },
   //     {
   //       path: '/rtl-support',
   //       name: 'RTL Support',

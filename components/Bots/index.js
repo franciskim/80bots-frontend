@@ -199,6 +199,7 @@ const Bots = () => {
       <td>
         <Button
           color={bot.status === 'active' ? 'success' : 'danger'}
+          size="sm"
           onClick={() => changeBotStatus(bot)}
         >
           {bot.status}

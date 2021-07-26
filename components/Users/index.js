@@ -63,6 +63,7 @@ const Users = () => {
       <td>
         <Button
           color={user.status === 'active' ? 'success' : 'danger'}
+          size="sm"
           onClick={() => changeUserStatus(user)}
         >
           {user.status}
