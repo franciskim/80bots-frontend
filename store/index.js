@@ -12,7 +12,6 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import saga from './saga'
 
 import auth from './auth/reducer'
-import notification from './notification/reducer'
 import user from './user/reducer'
 import bot from './bot/reducer'
 import botInstance from './botinstance/reducer'
@@ -21,6 +20,7 @@ import instanceSession from './instanceSession/reducer'
 import fileSystem from './fileSystem/reducer'
 import scriptNotification from './scriptNotification/reducer'
 import { reducer as toastrReducer } from 'react-redux-toastr'
+// import { persistStore } from 'redux-persist'
 
 const loggerMiddleware = createLogger()
 const sagaMiddleware = createSagaMiddleware()
@@ -32,7 +32,6 @@ const scriptMiddleware = scriptNotificationMiddleware()
 const rootReducer = combineReducers({
   auth,
   fileSystem,
-  notification,
   user,
   bot,
   botInstance,
@@ -53,6 +52,17 @@ export function initializeStore(initialState = undefined) {
     scriptMiddleware,
   ]
 
+  //If it's on client side, create a store which will persist
+  // const { persistStore, persistReducer } = require('redux-persist')
+  // const storage = require('redux-persist/lib/storage').default
+  // const persistConfig = {
+  //   key: '80bots',
+  //   whitelist: ['auth'], // only counter will be persisted, add other reducers if needed
+  //   storage, // if needed, use a safer storage
+  // }
+
+  // const persistedReducer = persistReducer(persistConfig, rootReducer) // Create a new reducer with our existing reducer
+
   // Disable Logger at server side.
   if (process.browser && process.env.NODE_ENV !== 'production') {
     middlewares.push(loggerMiddleware)
@@ -63,6 +73,7 @@ export function initializeStore(initialState = undefined) {
     initialState,
     composeWithDevTools(applyMiddleware(...middlewares))
   )
+  // store.__PERSISTOR = persistStore(store)
 
   sagaMiddleware.run(() => saga(store.dispatch, store.getState))
 

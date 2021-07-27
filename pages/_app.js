@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom'
 import App from 'next/app'
 import Head from 'next/head'
 import Router from 'next/router'
-import withReduxStore from '../lib/connectRedux'
 import { Provider } from 'react-redux'
 import ReduxToastr from 'react-redux-toastr'
+// import { PersistGate } from 'redux-persist/integration/react'
 
 import PageChange from 'components/PageChange/PageChange.js'
+import withReduxStore from '../lib/connectRedux'
 
 // plugins styles from node_modules
 import 'react-perfect-scrollbar/dist/css/styles.css'
@@ -39,14 +40,6 @@ Router.events.on('routeChangeError', () => {
   ReactDOM.unmountComponentAtNode(document.getElementById('page-transition'))
   document.body.classList.remove('body-page-transition')
 })
-
-// const NotificationIcon = () => {
-//   return (
-//     <div style={{ width: 70, height: 80, backgroundColor: 'red' }}>
-//       <i className="fa fa-edit" />
-//     </div>
-//   )
-// }
 
 class MyApp extends App {
   componentDidMount() {
@@ -84,6 +77,7 @@ class MyApp extends App {
 
     return (
       <Provider store={reduxStore}>
+        {/* <PersistGate persistor={reduxStore.__PERSISTOR} loading={null}> */}
         <Head>
           <meta
             name="viewport"
@@ -116,6 +110,7 @@ class MyApp extends App {
             }
           />
         </Layout>
+        {/* </PersistGate> */}
       </Provider>
     )
   }
