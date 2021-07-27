@@ -3,14 +3,7 @@ import styled from '@emotion/styled'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNotification } from 'lib/helper'
 import { NOTIFICATION_TYPES } from 'config'
-import {
-  Button,
-  ButtonGroup,
-  Modal,
-  ButtonGroup,
-  Row,
-  Container,
-} from 'reactstrap'
+import { Button, ButtonGroup, Modal, Row, Container } from 'reactstrap'
 import { CodeEditor } from 'components/default/inputs'
 import {
   getBotInstance,
@@ -20,41 +13,6 @@ import {
 import { useRouter } from 'next/router'
 import Router from 'next/router'
 import RestartEditor from 'components/RestartEditor'
-
-// const Container = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   margin: 20px 0 10px 0;
-// `
-
-// const InputWrap = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   flex: 1;
-//   &:first-of-type {
-//     margin-right: 10px;
-//   }
-//   &:last-of-type {
-//     margin-left: 10px;
-//   }
-// `
-
-// const TextareaWrap = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   flex: 1;
-// `
-
-// const Buttons = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-// `
-
-// const StatusButton = styled(Button)`
-//   text-transform: uppercase;
-//   min-height: 38px;
-// `
 
 const Error = styled.span`
   font-size: 15px;
@@ -182,7 +140,7 @@ const Index = () => {
     <>
       <Container>
         <Row>
-          <InputWrap>
+          <div>
             <Tabs defaultActiveKey="script">
               <Tab eventKey="script" title="index.js">
                 <CodeEditor
@@ -197,7 +155,7 @@ const Index = () => {
                 />
               </Tab>
             </Tabs>
-          </InputWrap>
+          </div>
         </Row>
         {error && <Error>{error}</Error>}
       </Container>

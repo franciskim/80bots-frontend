@@ -3,8 +3,9 @@ import styled from '@emotion/styled'
 import ImagesType from 'components/ImagesType'
 import JsonType from 'components/JsonType'
 import { CardBody } from 'bootstrap'
-import { Button, Loader80bots } from 'components/default'
+import { Loader80bots } from 'components/default'
 import FilesType from 'components/FileType'
+import { Button } from 'reactstrap'
 
 const OUTPUT_TYPES = {
   JSON: {
@@ -35,10 +36,10 @@ const TypesNavigation = styled.div`
   margin-bottom: 23px;
 `
 
-const Type = styled(Button)`
-  padding: 0 5px;
-  animation: ${Fade} 200ms ease-in;
-`
+// const Type = styled(Button)`
+//   padding: 0 5px;
+//   animation: ${Fade} 200ms ease-in;
+// `
 
 const Hint = styled.span`
   font-size: 14px;
@@ -78,13 +79,13 @@ const OutputTab = ({ setCustomBack }) => {
               item.value === currentType.value ? 'success' : 'primary'
             return (
               <>
-                <Type
+                <Button
                   key={i}
                   type={variant}
                   onClick={() => setCurrentType(item)}
                 >
                   {item.label}
-                </Type>
+                </Button>
                 {all.length - 1 > i && <Hint>&nbsp;|&nbsp;</Hint>}
               </>
             )

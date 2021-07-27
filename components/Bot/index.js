@@ -25,54 +25,6 @@ import { CodeEditor } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
 import Router from 'next/router'
 
-// const Container = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   margin: 20px 0 10px 0;
-// `
-
-// const InputWrap = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   flex: 1;
-//   &:first-of-type {
-//     margin-right: 10px;
-//   }
-//   &:last-of-type {
-//     margin-left: 10px;
-//   }
-// `
-
-// const TextareaWrap = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   flex: 1;
-// `
-
-// const Row = styled.div`
-//   display: flex;
-//   flex: 1;
-//   flex-direction: row;
-//   margin-bottom: 10px;
-// `
-
-// const Label = styled.label`
-//   font-size: 16px;
-//   margin-bottom: 5px;
-//   color: #fff;
-// `
-
-// const Buttons = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-// `
-
-// const StatusButton = styled(Button)`
-//   text-transform: uppercase;
-//   min-height: 38px;
-// `
-
 const Error = styled.span`
   font-size: 15px;
   text-align: center;

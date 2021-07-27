@@ -11,12 +11,12 @@ const Images = styled.div`
   ${(props) => props.styles};
 `
 
-const Image = styled(ScreenShot)`
-  margin-bottom: 20px;
-  margin-right: 20px;
-  animation: ${Fade} 200ms ease-in-out;
-  ${(props) => props.styles};
-`
+// const Image = styled(ScreenShot)`
+//   margin-bottom: 20px;
+//   margin-right: 20px;
+//   animation: ${Fade} 200ms ease-in-out;
+//   ${(props) => props.styles};
+// `
 
 const ImageViewer = styled.div`
   top: 0;
@@ -52,7 +52,7 @@ const Old_ImagesType = ({ output }) => {
     if (item.data) {
       item = toImage(item)
       return (
-        <Image
+        <div
           key={idx}
           src={item.src}
           caption={item.caption}

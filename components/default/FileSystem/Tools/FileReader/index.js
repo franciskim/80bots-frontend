@@ -6,13 +6,13 @@ import JsonViewer from './JsonViewer'
 import { lookup as getMime } from 'mime-types'
 import styled from '@emotion/styled'
 
-const Wrapper = styled.div`
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  position: absolute;
-`
+// const Wrapper = styled.div`
+//   top: 0;
+//   left: 0;
+//   bottom: 0;
+//   right: 0;
+//   position: absolute;
+// `
 const openFile = (item, onClose) => {
   const mime = getMime(item.path)
   switch (mime) {
@@ -36,7 +36,7 @@ const openFile = (item, onClose) => {
 }
 
 const FileReaderComponent = ({ item, onClose, ...props }) => {
-  return <Wrapper>{openFile(item, onClose)}</Wrapper>
+  return <div>{openFile(item, onClose)}</div>
 }
 
 FileReaderComponent.propTypes = {

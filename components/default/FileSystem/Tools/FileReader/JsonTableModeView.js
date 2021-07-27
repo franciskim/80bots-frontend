@@ -5,16 +5,11 @@ import { LimitFilter } from 'components/default/Table'
 import { Paginator } from 'components/default/Paginator'
 import { Table } from 'reactstrap'
 
-// const Table = styled(BaseTable)`
-//   min-width: 100%;
-//   max-height: 100%;
+// const Wrapper = styled.div`
+//   display: flex;
+//   min-height: 100%;
+//   flex-direction: column;
 // `
-
-const Wrapper = styled.div`
-  display: flex;
-  min-height: 100%;
-  flex-direction: column;
-`
 
 const Header = styled.header`
   display: flex;
@@ -125,7 +120,7 @@ const JsonTableModeView = ({ output }) => {
   }
 
   return (
-    <Wrapper>
+    <div>
       <Header>
         <LimitFilter
           id="limitfilter"
@@ -152,7 +147,7 @@ const JsonTableModeView = ({ output }) => {
           onChangePage={(page) => setPage(page)}
         />
       </Footer>
-    </Wrapper>
+    </div>
   )
 }
 

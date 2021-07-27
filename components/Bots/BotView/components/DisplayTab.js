@@ -44,12 +44,6 @@ const DisplayTab = ({ botInstance }) => {
       </Link>
       <Display
         onLoad={() => setStatus(null)}
-        styles={
-          status &&
-          css`
-            display: none;
-          `
-        }
         id={'display'}
         src={`http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`}
       />

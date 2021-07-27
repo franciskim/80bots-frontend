@@ -1,47 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import styled from '@emotion/styled'
+import { Select, Range } from 'components/default/inputs'
+import { Label, Button, Input, ButtonGroup } from 'reactstrap'
 
-import {
-  Label,
-  LabelWrap,
-  Description,
-  Select,
-  Range,
-} from 'components/default/inputs'
-import { Button, Input } from 'reactstrap'
-
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 20px;
-`
-
-// const StatusButton = styled(Button)`
-//   text-transform: uppercase;
-//   min-height: 38px;
-// `
-
-const InputWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  margin-top: 10px;
-`
-
-const inputStyle = {
-  container: css`
-    margin-top: 10px;
-  `,
-}
-
-const selectStyles = {
-  container: css`
-    margin-top: 10px;
-    max-width: 400px;
-  `,
-}
+// const selectStyles = {
+//   container: css`
+//     margin-top: 10px;
+//     max-width: 400px;
+//   `,
+// }
 
 const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
   const [values, setValues] = useState({})
@@ -210,7 +177,7 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
             }
             description={item.description}
             onChange={(option) => changeValue(item.name, option.value, option)}
-            styles={selectStyles}
+            // styles={selectStyles}
           />
         )
 
@@ -238,23 +205,23 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
       case 'boolean':
       case 'Boolean':
         return (
-          <InputWrap key={idx}>
-            <LabelWrap>
+          <div key={idx}>
+            <div>
               <Label>{label}</Label>
               {item.description && (
-                <Description
+                <span
                   text={item.description}
                   position={idx === 0 ? 'bottom' : 'top'}
                 />
               )}
-            </LabelWrap>
-            <StatusButton
-              type={values[item.name] ? 'primary' : 'danger'}
+            </div>
+            <Button
+              color={values[item.name] ? 'primary' : 'danger'}
               onClick={() => changeValue(item.name, !values[item.name])}
             >
               {values[item.name] ? 'Yes' : 'No'}
-            </StatusButton>
-          </InputWrap>
+            </Button>
+          </div>
         )
 
       case 'multiselect':
@@ -267,7 +234,7 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
               errors.indexOf(item.name) > -1 ? 'This field is required' : ''
             }
             onChange={(options) => changeMultiSelectValue(item.name, options)}
-            styles={selectStyles}
+            // styles={selectStyles}
             options={getMultiSelectOptions(item.name)}
             description={item.description}
             onInputChange={(input) => onMultiSelectChange(item.name, input)}
@@ -315,14 +282,14 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
   return (
     <>
       {botInstance && botInstance.parameters.map(renderParams)}
-      <Buttons>
+      <ButtonGroup>
         <Button type={'danger'} onClick={cancel}>
           Cancel
         </Button>
         <Button type={'primary'} onClick={submit}>
           Restart
         </Button>
-      </Buttons>
+      </ButtonGroup>
     </>
   )
 }

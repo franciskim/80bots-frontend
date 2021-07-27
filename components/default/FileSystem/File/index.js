@@ -5,18 +5,18 @@ import CardWithPreview from '../../CardWithPreview'
 import { formatScreenshot, formatTimezone } from '../../../../lib/helpers'
 import { connect } from 'react-redux'
 
-const Fade = keyframes`
-  from { opacity: 0 }
-  to { opacity: 1 }
-`
+// const Fade = keyframes`
+//   from { opacity: 0 }
+//   to { opacity: 1 }
+// `
 
-const Wrapper = styled(CardWithPreview)`
-  position: relative;
-  margin-bottom: 20px;
-  margin-right: 20px;
-  animation: ${Fade} 200ms ease-in-out;
-  ${(props) => props.styles};
-`
+// const Wrapper = styled(CardWithPreview)`
+//   position: relative;
+//   margin-bottom: 20px;
+//   margin-right: 20px;
+//   animation: ${Fade} 200ms ease-in-out;
+//   ${(props) => props.styles};
+// `
 
 const TemplateList = styled.div`
   display: flex;
@@ -37,7 +37,7 @@ const File = ({ item, onClick, user }) => {
 
   return (
     <TemplateList>
-      <Wrapper
+      <div
         selected={item.selected}
         src={item.url}
         caption={item.name}

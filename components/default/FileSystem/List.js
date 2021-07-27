@@ -2,9 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import Item from './Item'
-import { CardBody } from '../Card'
+import { CardBody } from 'reactstrap'
 import { Paginator } from '../Paginator'
-import { Button } from '../Button'
+import { Button } from 'reactstrap'
 import Toggle from 'react-toggle'
 
 const Row = styled.div`

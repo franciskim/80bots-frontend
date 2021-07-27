@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import PropTypes from 'prop-types'
+import { Container } from 'reactstrap'
 
 // const hamburgerBaseStyle = css`
 //   content: "";
@@ -38,49 +39,49 @@ const Button = styled.span`
   }
 `
 
-const openedStyles = css`
-  span::before,
-  span::after {
-    left: -1px;
-    width: 12px;
-  }
-  span::before {
-    transform: rotateZ(-45deg);
-    top: -4px;
-  }
-  span::after {
-    transform: rotateZ(45deg);
-    bottom: -4px;
-  }
-`
+// const openedStyles = css`
+//   span::before,
+//   span::after {
+//     left: -1px;
+//     width: 12px;
+//   }
+//   span::before {
+//     transform: rotateZ(-45deg);
+//     top: -4px;
+//   }
+//   span::after {
+//     transform: rotateZ(45deg);
+//     bottom: -4px;
+//   }
+// `
 
-const closedStyles = css`
-  span::before,
-  span::after {
-    left: 13px;
-    width: 12px;
-  }
-  span::before {
-    transform: rotateZ(45deg);
-    top: -4px;
-  }
-  span::after {
-    transform: rotateZ(-45deg);
-    bottom: -4px;
-  }
-`
+// const closedStyles = css`
+//   span::before,
+//   span::after {
+//     left: 13px;
+//     width: 12px;
+//   }
+//   span::before {
+//     transform: rotateZ(45deg);
+//     top: -4px;
+//   }
+//   span::after {
+//     transform: rotateZ(-45deg);
+//     bottom: -4px;
+//   }
+// `
 
-const Container = styled.span`
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 26px;
-  height: 26px;
-  &:hover {
-    cursor: pointer;
-    ${(props) => (props.opened ? openedStyles : closedStyles)};
-  }
-`
+// const Container = styled.span`
+//   position: relative;
+//   display: flex;
+//   align-items: center;
+//   width: 26px;
+//   height: 26px;
+//   &:hover {
+//     cursor: pointer;
+//     ${(props) => (props.opened ? openedStyles : closedStyles)};
+//   }
+// `
 
 const HamburgerButton = ({ opened, ...props }) => {
   return (

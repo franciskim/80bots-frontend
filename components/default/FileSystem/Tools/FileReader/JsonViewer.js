@@ -5,25 +5,18 @@ import { lookup } from 'mime-types'
 import PropTypes from 'prop-types'
 import dynamic from 'next/dynamic'
 const ReactJson = dynamic(import('react-json-view'), { ssr: false })
-import { Textarea as BaseTextarea } from 'components/default/inputs'
-import BaseButton from 'components/default/Button'
+import { Button, Input } from 'reactstrap'
 import JsonTableModeView from './JsonTableModeView'
 import _ from 'lodash'
 import { Loader80bots } from 'components/default'
 
-const Wrapper = styled.div`
-  display: flex;
-  flex: 1;
-  height: 100%;
-  flex-wrap: nowrap;
-  flex-direction: column;
-`
-
-const Textarea = styled(BaseTextarea)`
-  height: 100%;
-  width: 100%;
-  padding: 15px;
-`
+// const Wrapper = styled.div`
+//   display: flex;
+//   flex: 1;
+//   height: 100%;
+//   flex-wrap: nowrap;
+//   flex-direction: column;
+// `
 
 const Viewer = styled.div`
   display: flex;
@@ -39,10 +32,6 @@ const Controls = styled.div`
   text-align: left;
   margin-bottom: 15px;
   margin-top: 15px;
-`
-
-const Button = styled(BaseButton)`
-  margin-right: 10px;
 `
 
 const ReactJsonWrapper = styled.div`
@@ -80,7 +69,14 @@ const TextViewer = ({ item }) => {
   const renderByMode = () => {
     switch (mode) {
       case MODS.RAW: {
-        return <Textarea disabled value={jsonRaw} onChange={() => null} />
+        return (
+          <Input
+            type="textarea"
+            disabled
+            value={jsonRaw}
+            onChange={() => null}
+          />
+        )
       }
       case MODS.STRUCTURED: {
         return (
@@ -108,7 +104,7 @@ const TextViewer = ({ item }) => {
   }
 
   return (
-    <Wrapper>
+    <div>
       {jsonRaw ? (
         <>
           <Controls>
@@ -158,7 +154,7 @@ const TextViewer = ({ item }) => {
           }}
         />
       )}
-    </Wrapper>
+    </div>
   )
 }
 

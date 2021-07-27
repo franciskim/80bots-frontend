@@ -5,9 +5,10 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import FileSystem from 'components/default/FileSystem'
 import { flush, open, close } from 'store/fileSystem/actions'
-import { Loader80bots, Button } from 'components/default'
+import { Loader80bots } from 'components/default'
 import { Modal } from 'reactstrap'
 import ReportEditor from './ReportIssue'
+import { Button } from 'reactstrap'
 
 const rootFolder = 'screenshots'
 const defaultLimit = 15
@@ -21,10 +22,10 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-const Report = styled(Button)`
-  padding: 0 5px;
-  animation: ${Fade} 200ms ease-in;
-`
+// const Report = styled(Button)`
+//   padding: 0 5px;
+//   animation: ${Fade} 200ms ease-in;
+// `
 
 const FiltersSection = styled.div`
   width: 100%;
@@ -103,21 +104,21 @@ const ScreenShotTab = ({
           <>
             <FiltersSection>
               {isReportMode && <Hint>Select issued screenshots |&nbsp;</Hint>}
-              <Report
+              <Button
                 type={'danger'}
                 onClick={() => setReportMode(!isReportMode)}
               >
                 {isReportMode ? 'Cancel' : 'Report Issue'}
-              </Report>
+              </Button>
               {isReportMode && (
                 <>
                   <Hint>&nbsp;|&nbsp;</Hint>
-                  <Report
+                  <Button
                     type={'success'}
                     onClick={() => setShowReportModal(true)}
                   >
                     Proceed
-                  </Report>
+                  </Button>
                 </>
               )}
             </FiltersSection>
