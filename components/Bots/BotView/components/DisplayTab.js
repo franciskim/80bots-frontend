@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 
 import { connect } from 'react-redux'
-import { CardBody } from 'bootstrap'
+import { CardBody } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 
 const Content = styled(CardBody)`

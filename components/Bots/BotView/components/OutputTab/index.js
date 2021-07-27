@@ -2,10 +2,9 @@ import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import ImagesType from 'components/ImagesType'
 import JsonType from 'components/JsonType'
-import { CardBody } from 'bootstrap'
+import { CardBody, Button } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 import FilesType from 'components/FileType'
-import { Button } from 'reactstrap'
 
 const OUTPUT_TYPES = {
   JSON: {
