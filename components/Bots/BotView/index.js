@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import ScreenShotTab from 'components/ScreenShotTab'
-import LogsTab from 'components/LogsTab'
-import OutputTab from 'components/OutputTab'
-import DisplayTab from 'components/DisplayTab'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
-import { Card, CardBody, CardHeader, Badge, Button } from 'reactstrap'
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Badge,
+  Button,
+  Nav,
+  NavLink,
+  NavItem,
+} from 'reactstrap'
 import { getInstance, clearInstance } from 'store/bot/actions'
 import { subscribe, unsubscribe } from 'store/socket/actions'
 import { Loader80bots } from 'components/default'
+import ScreenShotTab from './ScreenShotTab'
+import LogsTab from './LogsTab'
+import OutputTab from './OutputTab'
+import DisplayTab from './DisplayTab'
 
 const TABS = {
   SCREENSHOTS: {
@@ -122,33 +130,30 @@ const ConnectionStatus = ({ status, color }) => (
   </>
 )
 
-const BotView = ({
-  botInstance,
-  clearInstance,
-  getInstance,
-  wsSubscribe,
-  wsUnsubscribe,
-}) => {
+const BotView = () => {
+  const dispatch = useDispatch()
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS)
   const [status, setStatus] = useState(STATUSES.CONNECTING)
   const [customBack, setCustomBack] = useState(null)
   const router = useRouter()
 
+  const botInstance = useSelector((state) => state.bot.botInstance)
+
   useEffect(() => {
     const { storage_channel } = botInstance
     if (storage_channel) {
-      wsSubscribe(storage_channel, true)
+      dispatch(subscribe(storage_channel, true))
       setStatus(STATUSES.CONNECTED)
     }
     return () => {
-      return wsUnsubscribe(storage_channel)
+      return dispatch(unsubscribe(storage_channel))
     }
   }, [botInstance])
 
   useEffect(() => {
-    getInstance(router.query.id)
+    dispatch(getInstance(router.query.id))
     return () => {
-      clearInstance()
+      dispatch(clearInstance())
     }
   }, [])
 
@@ -197,10 +202,23 @@ const BotView = ({
             />
           )}
         </H6>
-        <Tabs>
-          <ConnectionStatus status={status.label} color={status.color} />
-          {Object.keys(TABS).map(renderTab)}
-        </Tabs>
+        <ConnectionStatus status={status.label} color={status.color} />
+        <Nav tabs>
+          {Object.values(TABS).map((tab) => {
+            return (
+              <NavItem>
+                <NavLink
+                  // className={classnames({ active: activeTab === tab.title })}
+                  onClick={() => {
+                    toggle(tab.title)
+                  }}
+                >
+                  {tab.title}
+                </NavLink>
+              </NavItem>
+            )
+          })}
+        </Nav>
       </Header>
       {status === STATUSES.CONNECTING ? (
         <Content>
@@ -218,29 +236,4 @@ const BotView = ({
   )
 }
 
-BotView.propTypes = {
-  getInstance: PropTypes.func.isRequired,
-  clearInstance: PropTypes.func.isRequired,
-  wsSubscribe: PropTypes.func.isRequired,
-  wsUnsubscribe: PropTypes.func.isRequired,
-  botInstance: PropTypes.object.isRequired,
-}
-
-ConnectionStatus.propTypes = {
-  status: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
-}
-
-const mapStateToProps = (state) => ({
-  botInstance: state.bot.botInstance,
-  user: state.auth.user,
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  clearInstance: () => dispatch(clearInstance()),
-  getInstance: (id) => dispatch(getInstance(id)),
-  wsSubscribe: (channel, isPrivate) => dispatch(subscribe(channel, isPrivate)),
-  wsUnsubscribe: (channel) => dispatch(unsubscribe(channel)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(BotView)
+export default BotView

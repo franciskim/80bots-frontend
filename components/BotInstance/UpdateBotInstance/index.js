@@ -12,7 +12,7 @@ import {
 } from 'store/botinstance/actions'
 import { useRouter } from 'next/router'
 import Router from 'next/router'
-import RestartEditor from 'components/RestartEditor'
+import RestartEditor from '../RestartEditor'
 
 const Error = styled.span`
   font-size: 15px;

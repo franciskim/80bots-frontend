@@ -19,6 +19,7 @@ import UsersPage from 'pages/admin/users'
 import SettingsPage from 'pages/admin/settings'
 import SchedulersPage from 'pages/admin/scheduler'
 import EditBotPage from 'pages/admin/bot/[id]'
+import ViewRunningBotPage from 'pages/admin/bots/running/[id]'
 
 const routes = [
   {
@@ -36,6 +37,14 @@ const routes = [
     component: RunningBotsPage,
   },
   {
+    path: '/bots/running/:id',
+    name: 'View Running Bot',
+    icon: 'fa fa-robot text-blue',
+    layout: '/admin',
+    component: ViewRunningBotPage,
+    redirect: true,
+  },
+  {
     path: '/bots',
     name: 'Deploy & Update Bots',
     icon: 'ni ni-archive-2',
@@ -47,13 +56,14 @@ const routes = [
     icon: 'fa fa-plus',
     layout: '/admin',
   },
-  // {
-  //   path: '/bot/:id',
-  //   name: 'Edit Bot',
-  //   icon: 'fa fa-plus',
-  //   layout: '/admin',
-  //   component: EditBotPage,
-  // },
+  {
+    path: '/bot/:id',
+    name: 'Edit Bot',
+    icon: 'fa fa-plus',
+    layout: '/admin',
+    component: EditBotPage,
+    redirect: true,
+  },
   {
     path: '/scheduler',
     name: 'Scheduler',
@@ -122,6 +132,7 @@ const routes = [
     name: 'Profile',
     miniName: 'P',
     layout: '/admin',
+    redirect: true,
   },
   //     {
   //       path: '/rtl-support',

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import PropTypes from 'prop-types'
+import lightLoaderImage from 'assets/img/loader/80bots_loader_light.svg'
+import darkLoaderImage from 'assets/img/loader/80bots_loader_dark.svg'
 
 const LoaderContainer = styled.div`
   display: flex;
@@ -13,13 +15,13 @@ const LoaderContainer = styled.div`
 export const Loader80bots = ({ data, styled, ...props }) => {
   useEffect(() => {
     if (data === 'light') {
-      setIcon('/img/loader/80bots_loader_light.svg')
+      setIcon(lightLoaderImage)
     } else if (data === 'dark') {
-      setIcon('/img/loader/80bots_loader_dark.svg')
+      setIcon(darkLoaderImage)
     }
   }, [data])
 
-  const [icon, setIcon] = useState('')
+  const [icon, setIcon] = useState(null)
 
   return (
     <LoaderContainer>
