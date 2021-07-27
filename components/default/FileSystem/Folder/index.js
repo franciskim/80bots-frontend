@@ -1,43 +1,42 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styled from 'styled-components';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-const Wrapper = styled.div`
-  position: relative;
-  margin-bottom: 20px;
-  margin-right: 20px;
-  animation: ${Fade} 200ms ease-in-out;
-  cursor: pointer;
-  ${props => props.styles};
-  ${props =>
-    props.selected &&
-`;
+// const Wrapper = styled.div`
+//   position: relative;
+//   margin-bottom: 20px;
+//   margin-right: 20px;
+//   animation: ${Fade} 200ms ease-in-out;
+//   cursor: pointer;
+//   ${props => props.styles};
+//   ${props =>
+//     props.selected &&
+// `;
 
-const Caption = styled.span`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  color: white;
-  font-weight: bold;
-`;
+// const Caption = styled.span`
+//   position: absolute;
+//   top: 50%;
+//   left: 0;
+//   width: 100%;
+//   text-align: center;
+//   color: white;
+//   font-weight: bold;
+// `;
 
-export const TYPE = "folder";
+export const TYPE = 'folder'
 
 const Folder = ({ item, onClick = () => null }) => {
-  const defaultThumbnail = "/images/thumbnails/folder.png";
+  const defaultThumbnail = '/images/thumbnails/folder.png'
   return (
-    <Wrapper onClick={() => onClick(item)}>
+    <div onClick={() => onClick(item)}>
       <img src={item.thumbnail || defaultThumbnail} width="320" alt="" />
-      <Caption>{item.name}</Caption>
-    </Wrapper>
-  );
-};
+      <span>{item.name}</span>
+    </div>
+  )
+}
 
 Folder.propTypes = {
   item: PropTypes.object.isRequired,
-  onClick: PropTypes.func
-};
+  onClick: PropTypes.func,
+}
 
-export default Folder;
+export default Folder

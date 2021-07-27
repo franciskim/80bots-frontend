@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import Select from 'react-select'
-import Icon from 'components/default/icons'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import dayjs from 'dayjs'
 import { WEEKDAYS } from 'config'
-import { Button } from 'reactstrap'
+import { Button, ModalFooter, Label, Container, Col, Row } from 'reactstrap'
 
 // const selectStyles = {
 //   control: (provided, state) => ({
@@ -37,57 +35,47 @@ import { Button } from 'reactstrap'
 //   }),
 // }
 
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`
+// const Buttons = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+// `
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`
+// const SelectContainer = styled(Container)`
+//   flex-direction: row;
+//   justify-content: space-between;
+//   width: 100%;
+//   margin-bottom: 20px;
+//   &:first-of-type {
+//     margin-top: 20px;
+//   }
+// `
 
-const SelectContainer = styled(Container)`
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 20px;
-  &:first-of-type {
-    margin-top: 20px;
-  }
-`
+// const SelectWrap = styled.div`
+//   display: flex;
+//   flex: 3;
+//   flex-direction: column;
+//   width: 100%;
+//   margin-right: 10px;
+//   &:last-of-type {
+//     flex: 1;
+//     align-self: flex-end;
+//     margin: 0 0 4px 0;
+//   }
+// `
 
-const SelectWrap = styled.div`
-  display: flex;
-  flex: 3;
-  flex-direction: column;
-  width: 100%;
-  margin-right: 10px;
-  &:last-of-type {
-    flex: 1;
-    align-self: flex-end;
-    margin: 0 0 4px 0;
-  }
-`
-
-const Label = styled.label`
-  font-size: 13px;
-  margin-bottom: 5px;
-`
-
-const IconButton = styled(Button)`
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2px;
-  margin-right: 5px;
-  width: 30px;
-  height: 30px;
-  &:last-child {
-    margin-right: 0;
-  }
-`
+// const IconButton = styled(Button)`
+//   display: inline-flex;
+//   justify-content: center;
+//   align-items: center;
+//   padding: 2px;
+//   margin-right: 5px;
+//   width: 30px;
+//   height: 30px;
+//   &:last-child {
+//     margin-right: 0;
+//   }
+// `
 
 const Error = styled.span`
   font-size: 15px;
@@ -122,7 +110,6 @@ const Schedule = ({
   remove,
   updateScheduleList,
   timezone,
-  ...props
 }) => {
   const [scheduleStatus, setScheduleStatus] = useState(
     STATUS_OPTIONS.find((item) => item.value === status) || null
@@ -177,9 +164,9 @@ const Schedule = ({
   }
 
   return (
-    <Container {...props}>
-      <SelectContainer>
-        <SelectWrap>
+    <Container>
+      <Row>
+        <Col md="3">
           <Label>Status</Label>
           <Select
             options={STATUS_OPTIONS}
@@ -190,8 +177,8 @@ const Schedule = ({
             }
             // styles={selectStyles}
           />
-        </SelectWrap>
-        <SelectWrap>
+        </Col>
+        <Col md="3">
           <Label>Day</Label>
           <Select
             options={DAY_OPTIONS}
@@ -200,8 +187,8 @@ const Schedule = ({
             value={scheduleDay}
             onChange={(option) => changeSchedule('day', setScheduleDay, option)}
           />
-        </SelectWrap>
-        <SelectWrap>
+        </Col>
+        <Col md="3">
           <Label>Time</Label>
           <Select
             options={TIME_OPTIONS}
@@ -212,20 +199,36 @@ const Schedule = ({
               changeSchedule('time', setScheduleTime, option)
             }
           />
-        </SelectWrap>
-        <SelectWrap>
+        </Col>
+        <Col md="3">
           {idx === 0 ? (
-            <IconButton type={'success'} onClick={addSchedule}>
-              <Icon name={'plus'} color={theme.colors.white} />
-            </IconButton>
+            <Button
+              className="btn-icon"
+              color="success"
+              type="button"
+              onClick={addSchedule}
+              size="sm"
+            >
+              <span className="btn-inner--icon mr-1">
+                <i className="fa fa-plus" />
+              </span>
+            </Button>
           ) : (
-            <IconButton type={'danger'} onClick={remove}>
-              <Icon name={'garbage'} color={theme.colors.white} />
-            </IconButton>
+            <Button
+              className="btn-icon"
+              color="danger"
+              type="button"
+              onClick={remove}
+              size="sm"
+            >
+              <span className="btn-inner--icon mr-1">
+                <i className="fa fa-trash" />
+              </span>
+            </Button>
           )}
-        </SelectWrap>
-      </SelectContainer>
-      {error && <Error>{error}</Error>}
+        </Col>
+        {error && <Error>{error}</Error>}
+      </Row>
     </Container>
   )
 }
@@ -265,36 +268,36 @@ const ScheduleEditor = ({ close, onUpdateClick, user, ...props }) => {
           updateScheduleList={updateScheduleList}
         />
       ))}
-      <Buttons>
-        <Button type={'danger'} onClick={close}>
+      <ModalFooter>
+        <Button color={'danger'} onClick={close}>
           Cancel
         </Button>
-        <Button type={'primary'} onClick={updateSchedule}>
+        <Button color={'primary'} onClick={updateSchedule}>
           Update
         </Button>
-      </Buttons>
+      </ModalFooter>
     </>
   )
 }
 
-ScheduleEditor.propTypes = {
-  close: PropTypes.func.isRequired,
-  schedules: PropTypes.array.isRequired,
-  onUpdateClick: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-}
+// ScheduleEditor.propTypes = {
+//   close: PropTypes.func.isRequired,
+//   schedules: PropTypes.array.isRequired,
+//   onUpdateClick: PropTypes.func.isRequired,
+//   user: PropTypes.object.isRequired,
+// }
 
-Schedule.propTypes = {
-  status: PropTypes.string,
-  time: PropTypes.string,
-  day: PropTypes.string,
-  idx: PropTypes.number.isRequired,
-  add: PropTypes.func.isRequired,
-  remove: PropTypes.func.isRequired,
-  updateScheduleList: PropTypes.func.isRequired,
-  onClick: PropTypes.func,
-  value: PropTypes.string,
-  timezone: PropTypes.string,
-}
+// Schedule.propTypes = {
+//   status: PropTypes.string,
+//   time: PropTypes.string,
+//   day: PropTypes.string,
+//   idx: PropTypes.number.isRequired,
+//   add: PropTypes.func.isRequired,
+//   remove: PropTypes.func.isRequired,
+//   updateScheduleList: PropTypes.func.isRequired,
+//   onClick: PropTypes.func,
+//   value: PropTypes.string,
+//   timezone: PropTypes.string,
+// }
 
 export default ScheduleEditor

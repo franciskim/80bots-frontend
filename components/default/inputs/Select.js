@@ -47,7 +47,7 @@ export const Select = ({ styles, label, error, description, ...props }) => (
   //   </LabelWrap>
   <ReactSelect
     styles={{
-      ...(error ? errorStyles : selectStyles),
+      ...(error ? errorStyles : props.selectStyles),
       ...(styles && styles.select),
     }}
     menuPortalTarget={document.body}

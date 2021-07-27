@@ -1,129 +1,104 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import styled from 'styled-components';
-import dayjs from "dayjs";
-import { connect } from "react-redux";
-import {Card, CardBody} from "reactstrap";
-import {Table, Thead, Filters, LimitFilter, SearchFilter, Th} from "../default/Table";
-import { addNotification } from "store/notification/actions";
-import { getSessions } from "store/instanceSession/actions";
-import { Paginator } from "components/default";
+import React, { useEffect, useState } from 'react'
+import dayjs from 'dayjs'
+import { useSelector, useDispatch } from 'react-redux'
+import { Card, CardBody, Table } from 'reactstrap'
+import { LimitFilter, SearchFilter, Th } from '../default/Table'
+import { getSessions } from 'store/instanceSession/actions'
+import { Paginator } from 'components/default'
 
-const Container = styled(Card)`
-  background: #333;
-  border: none;
-  color: #fff;
-`;
-
-const SchedulerLog = ({ getSessions, sessions, total }) => {
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState(null);
+const SchedulerLog = () => {
+  const dispatch = useDispatch()
+  const [limit, setLimit] = useState(10)
+  const [page, setPage] = useState(1)
+  const [search, setSearch] = useState(null)
 
   useEffect(() => {
-    getSessions({ page, limit });
-  }, []);
+    dispatch(getSessions({ page, limit }))
+  }, [])
 
-  const renderRow = (session, idx) => (
-    <tr key={idx}>
+  const sessions = useSelector((state) => state.instanceSession.sessions)
+  const total = useSelector((state) => state.instanceSession.total)
+
+  const renderRow = (session) => (
+    <tr key={session.id}>
       <td>{session.user}</td>
       <td>{session.instance_id}</td>
       <td>{session.type}</td>
-      <td>{dayjs(session.date).format("YYYY-MM-DD hh:mm A")}</td>
+      <td>{dayjs(session.date).format('YYYY-MM-DD hh:mm A')}</td>
       <td>{session.time_zone}</td>
       <td>{session.status}</td>
     </tr>
-  );
+  )
 
-  const searchSession = value => {
-    setSearch(value);
-    getSessions({
-      page,
-      limit,
-      search: value
-    });
-  };
+  const searchSession = (value) => {
+    setSearch(value)
+    dispatch(
+      getSessions({
+        page,
+        limit,
+        search: value,
+      })
+    )
+  }
 
   const onOrderChange = () => {
-      getSessions({ page, limit, search });
-  };
+    dispatch(getSessions({ page, limit, search }))
+  }
 
-  const OrderTh = props => (
-    <Th
-        {...props}
-        onClick={onOrderChange}
-    />
-  );
+  const OrderTh = (props) => <Th {...props} onClick={onOrderChange} />
 
   return (
     <>
-      <Container>
+      <Card>
         <CardBody>
-          <Filters>
+          <div>
             <LimitFilter
-                onChange={({ value }) => {
-                  setLimit(value);
+              id="limitfilter"
+              instanceId="limitfilter"
+              onChange={({ value }) => {
+                setLimit(value)
+                dispatch(
                   getSessions({
                     page,
                     limit: value,
-                    search
-                  });
-                }}
+                    search,
+                  })
+                )
+              }}
             />
             <SearchFilter
-                onChange={value => {
-                  searchSession(value);
-                }}
+              searchProps={{
+                onSearch: (e) => {
+                  console.error('onSearch', e)
+                },
+              }}
             />
-          </Filters>
+          </div>
           <Table>
-            <Thead>
+            <thead>
               <tr>
-                <OrderTh field={"user"}>User</OrderTh>
-                <OrderTh field={"instance_id"}>Instance Id</OrderTh>
-                <OrderTh field={"type"}>Type</OrderTh>
-                <OrderTh field={"date"}>Date & Time</OrderTh>
-                <OrderTh field={"timezone"}>Time Zone</OrderTh>
-                <OrderTh field={"status"}>Status</OrderTh>
+                <OrderTh field={'user'}>User</OrderTh>
+                <OrderTh field={'instance_id'}>Instance Id</OrderTh>
+                <OrderTh field={'type'}>Type</OrderTh>
+                <OrderTh field={'date'}>Date & Time</OrderTh>
+                <OrderTh field={'timezone'}>Time Zone</OrderTh>
+                <OrderTh field={'status'}>Status</OrderTh>
               </tr>
-            </Thead>
+            </thead>
             <tbody>{sessions.map(renderRow)}</tbody>
           </Table>
           <Paginator
             total={total}
             pageSize={limit}
-            onChangePage={page => {
-              setPage(page);
-              getSessions({ page, limit, search });
+            onChangePage={(page) => {
+              setPage(page)
+              dispatch(getSessions({ page, limit, search }))
             }}
           />
         </CardBody>
-      </Container>
+      </Card>
     </>
-  );
-};
+  )
+}
 
-SchedulerLog.propTypes = {
-  theme: PropTypes.shape({
-    colors: PropTypes.object.isRequired
-  }).isRequired,
-  addNotification: PropTypes.func.isRequired,
-  getSessions: PropTypes.func.isRequired,
-  sessions: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired
-};
-
-const mapStateToProps = state => ({
-  sessions: state.instanceSession.sessions,
-  total: state.instanceSession.total
-});
-
-const mapDispatchToProps = dispatch => ({
-  addNotification: payload => dispatch(addNotification(payload)),
-  getSessions: query => dispatch(getSessions(query))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SchedulerLog);
+export default SchedulerLog

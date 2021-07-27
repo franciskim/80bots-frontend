@@ -1,25 +1,8 @@
 import React, { useEffect, useState, useReducer, useRef } from 'react'
-import styled from 'styled-components'
-import { Textarea as BaseTextarea } from 'reactstrap'
+import { Input } from 'reactstrap'
 import { parseUrl } from 'lib/helpers'
 import { lookup } from 'mime-types'
 import PropTypes from 'prop-types'
-
-const Wrapper = styled.div`
-  display: flex;
-  flex: 1;
-  height: 100%;
-`
-
-const Textarea = styled(BaseTextarea)`
-  height: 100%;
-  width: 100%;
-  padding: 15px;
-  background: #333;
-  color: #7dffff;
-  font-size: 10px;
-  border: 0;
-`
 
 const TextViewer = ({ item }) => {
   const [text, setText] = useState('')
@@ -76,16 +59,15 @@ const TextViewer = ({ item }) => {
   }, [item])
 
   return (
-    <Wrapper>
-      <Textarea
-        ref={input}
-        id="text-viewer"
-        placeholder={placeholder}
-        disabled
-        value={text}
-        error={error}
-      />
-    </Wrapper>
+    <Input
+      type="textarea"
+      ref={input}
+      id="text-viewer"
+      placeholder={placeholder}
+      disabled
+      value={text}
+      error={error}
+    />
   )
 }
 

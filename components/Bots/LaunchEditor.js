@@ -1,28 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
 import { Select } from 'components/default/inputs'
 // import { Steps } from 'components/default'
 import { Button, ButtonGroup } from 'reactstrap'
-
-// const Buttons = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-//   margin-top: 20px;
-// `
-
-const StatusButton = styled(Button)`
-  text-transform: uppercase;
-  min-height: 38px;
-`
-
-const InputWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  margin-top: 10px;
-`
 
 const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   const [values, setValues] = useState({})
@@ -232,23 +212,23 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
       case 'boolean':
       case 'Boolean':
         return (
-          <InputWrap key={idx}>
-            <LabelWrap>
+          <div key={idx}>
+            <div>
               <Label>{label}</Label>
               {item.description && (
-                <Description
+                <span
                   text={item.description}
                   position={idx === 0 ? 'bottom' : 'top'}
                 />
               )}
-            </LabelWrap>
-            <StatusButton
-              type={values[item.name] ? 'primary' : 'danger'}
+            </div>
+            <Button
+              color={values[item.name] ? 'primary' : 'danger'}
               onClick={() => changeValue(item.name, !values[item.name])}
             >
               {values[item.name] ? 'Yes' : 'No'}
-            </StatusButton>
-          </InputWrap>
+            </Button>
+          </div>
         )
 
       case 'multiselect':

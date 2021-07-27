@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import styled from 'styled-components';
-import PropTypes from "prop-types";
-import { Button } from "reactstrap";
+import React, { useState } from 'react'
+import styled from '@emotion/styled'
+import PropTypes from 'prop-types'
+import { Button } from 'reactstrap'
 
 const Container = styled.div`
   position: relative;
-`;
+`
 
 /* Circles which indicates the steps of the form: */
 const BlockCircleSteps = styled.div`
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
-`;
+`
 
 /* Make circles that indicate the steps of the form: */
 const CircleStep = styled.span`
@@ -24,30 +24,30 @@ const CircleStep = styled.span`
   border-radius: 50%;
   display: inline-block;
   opacity: 0.5;
-  ${props =>
+  ${(props) =>
     props.idx < props.step
       ? completedStepStyles
       : props.idx === props.step
       ? activeStepStyles
       : null};
-`;
+`
 
 export const Steps = ({ amount, step, ...props }) => (
   <BlockCircleSteps {...props}>
     {(() => {
-      let arr = [];
+      let arr = []
       for (let i = 1; i <= amount; i++) {
-        arr.push(<CircleStep key={i} idx={i} step={step} />);
+        arr.push(<CircleStep key={i} idx={i} step={step} />)
       }
-      return arr;
+      return arr
     })()}
   </BlockCircleSteps>
-);
+)
 
 Steps.propTypes = {
   amount: PropTypes.number.isRequired,
-  step: PropTypes.number.isRequired
-};
+  step: PropTypes.number.isRequired,
+}
 
 // /* Mark the active step: */
 // const activeStepStyles = css`
@@ -62,22 +62,22 @@ Steps.propTypes = {
 /* Hide all steps by default: */
 const TabStep = styled.div`
   display: block;
-`;
+`
 
 const Buttons = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-top: 20px;
-`;
+`
 
 export const MultiStep = ({ count, children, ...props }) => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(0)
 
-  let listCircleStep = [];
+  let listCircleStep = []
 
   for (let i = 0; i < count; i++) {
-    listCircleStep.push(<CircleStep key={i} idx={i} step={step} />);
+    listCircleStep.push(<CircleStep key={i} idx={i} step={step} />)
   }
 
   return (
@@ -89,7 +89,7 @@ export const MultiStep = ({ count, children, ...props }) => {
       <Buttons>
         <Button
           disabled={step === 0}
-          type={"primary"}
+          type={'primary'}
           onClick={() => setStep(step > 0 ? step - 1 : step)}
         >
           Previous
@@ -97,30 +97,30 @@ export const MultiStep = ({ count, children, ...props }) => {
         {(() => {
           return step === count - 1 ? (
             <Button
-              type={"danger"}
+              type={'danger'}
               onClick={() => {
-                console.log("COMPLETE");
+                console.log('COMPLETE')
               }}
             >
               Complete
             </Button>
           ) : (
             <Button
-              type={"danger"}
+              type={'danger'}
               onClick={() => setStep(step < count ? step + 1 : step)}
             >
               Next
             </Button>
-          );
+          )
         })()}
       </Buttons>
     </Container>
-  );
-};
+  )
+}
 
 MultiStep.propTypes = {
   count: PropTypes.number,
-  children: PropTypes.any
-};
+  children: PropTypes.any,
+}
 
-export default MultiStep;
+export default MultiStep

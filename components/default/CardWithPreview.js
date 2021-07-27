@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import styled from 'styled-components';
-import {Card} from "reactstrap";
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
+import styled from '@emotion/styled'
+import { Card } from 'reactstrap'
 
 const Container = styled(Card)`
   display: flex;
-  background-image: ${props =>
-    props.image ? `url("${props.image}")` : "none"};
+  background-image: ${(props) =>
+    props.image ? `url("${props.image}")` : 'none'};
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -19,7 +19,7 @@ const Container = styled(Card)`
   &:hover {
     transform: scale(1.05);
   }
-`;
+`
 
 const Blur = styled.div`
   display: flex;
@@ -30,10 +30,10 @@ const Blur = styled.div`
   min-width: 100%;
   min-height: 100%;
   background-color: rgba(0, 0, 0, 0.45);
-`;
+`
 
 const CardWithPreview = ({ src, caption, children, ...props }) => {
-  const [blur, setBlur] = useState(true);
+  const [blur, setBlur] = useState(true)
   return (
     <Container
       image={src}
@@ -44,12 +44,12 @@ const CardWithPreview = ({ src, caption, children, ...props }) => {
       {blur && <Blur>{caption}</Blur>}
       {children}
     </Container>
-  );
-};
+  )
+}
 
 CardWithPreview.propTypes = {
   src: PropTypes.string.isRequired,
-  caption: PropTypes.string.isRequired
-};
+  caption: PropTypes.string.isRequired,
+}
 
-export default CardWithPreview;
+export default CardWithPreview

@@ -7,7 +7,7 @@ import Admin from 'layouts/Admin'
 const AddBotPage = () => {
   return (
     <>
-      <SimpleHeader name="Scheduler Log" />
+      <SimpleHeader name="Add Bot" />
       <Container className="mt--6" fluid>
         <Bot />
       </Container>

@@ -1,89 +1,66 @@
 import React, { useState, useEffect, useRef } from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
 import SettingsEditor from './SettingsEditor'
-import Icon from 'components/default/icons'
-import { Modal } from 'reactstrap'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
 import {
-  Filters,
-  LimitFilter,
-  SearchFilter,
+  CardBody,
+  Button,
   Table,
-  Th,
-  Thead,
-} from 'components/default/Table'
-import { Card, CardBody, Button } from 'reactstrap'
+  Card,
+  Modal,
+  ModalHeader,
+  ModalFooter,
+  CardHeader,
+  ModalBody,
+} from 'reactstrap'
 import { getRegions, updateRegion } from 'store/bot/actions'
 import { Paginator } from 'components/default'
 import { Select } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
-import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'lib/helper'
 import { addListener } from 'store/socket/actions'
 
-const Container = styled(Card)`
-  background: #333;
-  border: none;
-  color: #fff;
-`
-
-const IconButton = styled(Button)`
-  display: inline-flex;
-  justify-content: center;
-  padding: 2px;
-  margin-right: 5px;
-  width: 30px;
-  height: 30px;
-  &:last-child {
-    margin-right: 0;
-  }
-`
+// const IconButton = styled(Button)`
+//   display: inline-flex;
+//   justify-content: center;
+//   padding: 2px;
+//   margin-right: 5px;
+//   width: 30px;
+//   height: 30px;
+//   &:last-child {
+//     margin-right: 0;
+//   }
+// `
 
 // const modalStyles = css`
 //   min-width: 300px;
 //   overflow-y: visible;
 // `
 
-const ButtonWrap = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 5px;
-  button {
-    margin-right: 20px;
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-`
+// const ButtonWrap = styled.div`
+//   display: flex;
+//   justify-content: flex-end;
+//   margin-bottom: 5px;
+//   button {
+//     margin-right: 20px;
+//     &:last-child {
+//       margin-right: 0;
+//     }
+//   }
+// `
 
-// const selectStyles = {
-//   container: css`
-//     margin: 20px 0;
-//   `,
-//   select: {
-//     valueContainer: (provided) => ({
-//       ...provided,
-//       padding: '0 8px',
-//       borderColor: '#ced4da',
-//     }),
-//   },
-// }
+const selectStyles = {
+  select: {
+    valueContainer: (provided) => ({
+      ...provided,
+      padding: '0 8px',
+      borderColor: '#ced4da',
+    }),
+  },
+}
 
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`
-
-const Settings = ({
-  addNotification,
-  addListener,
-  user,
-  regions,
-  total,
-  getRegions,
-  updateRegion,
-}) => {
+const Settings = () => {
+  const dispatch = useDispatch()
   const [clickedRegion, setClickedRegion] = useState(null)
   const [amis, setAmis] = useState([])
   const [defaultAmi, setDefaultAmi] = useState(null)
@@ -92,25 +69,35 @@ const Settings = ({
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
 
-  const modal = useRef(null)
-  const editSettingsModal = useRef(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isEditSettingsModalOpened, setIsEditSettingsModalOpened] =
+    useState(false)
+
+  const user = useSelector((state) => state.auth.user)
+  const regions = useSelector((state) => state.bot.regions)
+  const total = useSelector((state) => state.bot.totalRegions)
 
   useEffect(() => {
-    getRegions({ page, limit })
+    dispatch(getRegions({ page, limit }))
 
-    addListener(`regions.${user.id}`, 'RegionsSyncSucceeded', () => {
-      addNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: 'Sync completed',
+    dispatch(
+      addListener(`regions.${user.id}`, 'RegionsSyncSucceeded', () => {
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Sync completed',
+        })
+
+        dispatch(
+          getRegions({
+            page,
+            limit,
+            sort: order.field,
+            order: order.value,
+            search,
+          })
+        )
       })
-      getRegions({
-        page,
-        limit,
-        sort: order.field,
-        order: order.value,
-        search,
-      })
-    })
+    )
   }, [])
 
   const toOption = (item) => ({
@@ -122,7 +109,7 @@ const Settings = ({
     setClickedRegion(region)
     setAmis(region.amis)
     setDefaultAmi(region.default_ami)
-    modal.current.open()
+    setIsModalOpen(true)
   }
 
   const onModalClose = () => {
@@ -141,13 +128,14 @@ const Settings = ({
   }
 
   const changeRegionAmi = () => {
-    updateRegion(clickedRegion.id, { default_ami: defaultAmi })
+    dispatch(updateRegion(clickedRegion.id, { default_ami: defaultAmi }))
       .then(() => {
         addNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
           message: `Region ami was successfully ${defaultAmi}`,
         })
-        modal.current.close()
+
+        setIsModalOpen(false)
       })
       .catch(() =>
         addNotification({
@@ -159,13 +147,12 @@ const Settings = ({
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value })
-    getRegions({ page, limit, sort: field, order: value, search })
+    dispatch(getRegions({ page, limit, sort: field, order: value, search }))
   }
 
   const OrderTh = (props) => (
     <Th
       {...props}
-      // eslint-disable-next-line react/prop-types
       order={
         props.field === order.field || props.children === order.field
           ? order.value
@@ -177,48 +164,55 @@ const Settings = ({
 
   const searchRegions = (value) => {
     setSearch(value)
-    getRegions({
-      page,
-      limit,
-      sort: order.field,
-      order: order.value,
-      search: value,
-    })
+    dispatch(
+      getRegions({
+        page,
+        limit,
+        sort: order.field,
+        order: order.value,
+        search: value,
+      })
+    )
   }
 
-  const renderRow = (region, idx) => (
-    <tr key={idx}>
+  const renderRow = (region) => (
+    <tr key={region.id}>
       <td>{region.name}</td>
       <td>{region.code}</td>
       <td>{region.limit}</td>
       <td>{region.created_instances}</td>
       <td>{region.show_default_ami}</td>
       <td>
-        <IconButton
-          title={'Edit Region AMI'}
-          color="primary"
+        <a
+          className="table-action"
+          href="#"
+          title="Edit Region AMI"
           onClick={() => openEditModal(region)}
         >
-          <Icon name={'edit'} />
-        </IconButton>
+          <i className="fas fa-edit" />
+        </a>
       </td>
     </tr>
   )
 
   return (
     <>
-      <ButtonWrap>
-        <Button
-          color="primary"
-          onClick={() => editSettingsModal.current.open()}
-        >
-          Edit Global Bot Settings
-        </Button>
-      </ButtonWrap>
-      <Container>
+      <Card>
+        <CardHeader>
+          <Button
+            color="primary"
+            onClick={() => {
+              setIsEditSettingsModalOpened(true)
+            }}
+          >
+            Edit Global Bot Settings
+          </Button>
+        </CardHeader>
         <CardBody>
-          <Filters>
+          <div>
             <LimitFilter
+              id="limitfilter"
+              instanceId="limitfilter"
               onChange={({ value }) => {
                 setLimit(value)
                 getRegions({
@@ -231,13 +225,15 @@ const Settings = ({
               }}
             />
             <SearchFilter
-              onChange={(value) => {
-                searchRegions(value)
+              searchProps={{
+                onSearch: (value) => {
+                  searchRegions(value)
+                },
               }}
             />
-          </Filters>
+          </div>
           <Table responsive>
-            <Thead>
+            <thead>
               <tr>
                 <OrderTh field={'name'}>Name</OrderTh>
                 <OrderTh field={'code'}>Code</OrderTh>
@@ -246,7 +242,7 @@ const Settings = ({
                 <th>Default AMI</th>
                 <th>Actions</th>
               </tr>
-            </Thead>
+            </thead>
             <tbody>{regions.map(renderRow)}</tbody>
           </Table>
           <Paginator
@@ -254,80 +250,48 @@ const Settings = ({
             pageSize={limit}
             onChangePage={(page) => {
               setPage(page)
-              getRegions({
-                page,
-                limit,
-                sort: order.field,
-                order: order.value,
-                search,
-              })
+              dispatch(
+                getRegions({
+                  page,
+                  limit,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              )
             }}
           />
         </CardBody>
-      </Container>
-
-      <Modal
-        ref={modal}
-        title={'Edit Default AMI'}
-        // contentStyles={modalStyles}
-        onClose={onModalClose}
-      >
-        <Select
-          label={'AMI'}
-          onChange={(option) => setDefaultAmi(option.value)}
-          // styles={selectStyles}
-          options={amis.map(toOption)}
-          value={getCurrentSelect()}
-        />
-        <Buttons>
-          <Button type={'danger'} onClick={() => modal.current.close()}>
-            Cancel
-          </Button>
+      </Card>
+      <Modal isOpen={isModalOpen} onClose={onModalClose}>
+        <ModalHeader>Edit Default AMI</ModalHeader>
+        <ModalBody>
+          <Select
+            label={'AMI'}
+            onChange={(option) => setDefaultAmi(option.value)}
+            // styles={selectStyles}
+            options={amis.map(toOption)}
+            value={getCurrentSelect()}
+          />
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
           <Button color="primary" onClick={changeRegionAmi}>
             Update
           </Button>
-        </Buttons>
+        </ModalFooter>
       </Modal>
 
-      <Modal
-        ref={editSettingsModal}
-        title={'Edit Global Settings'}
-        disableSideClosing
-        // containerStyles={css`
-        //   margin-top: 0;
-        // `}
-        // contentStyles={css`
-        //   min-width: 600px;
-        // `}
-      >
-        <SettingsEditor onClose={() => editSettingsModal.current.close()} />
+      <Modal isOpen={isEditSettingsModalOpened}>
+        <ModalHeader>Edit Global Settings</ModalHeader>
+        <SettingsEditor
+          onClose={() => {
+            setIsEditSettingsModalOpened(false)
+          }}
+        />
       </Modal>
     </>
   )
 }
 
-Settings.propTypes = {
-  addNotification: PropTypes.func.isRequired,
-  addListener: PropTypes.func.isRequired,
-  user: PropTypes.object,
-  regions: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
-  getRegions: PropTypes.func.isRequired,
-  updateRegion: PropTypes.func.isRequired,
-}
-
-const mapStateToProps = (state) => ({
-  user: state.auth.user,
-  regions: state.bot.regions,
-  total: state.bot.totalRegions,
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  addNotification: (payload) => dispatch(addNotification(payload)),
-  addListener: (room, eventName, handler) =>
-    dispatch(addListener(room, eventName, handler)),
-  getRegions: (...args) => dispatch(getRegions(...args)),
-  updateRegion: (id, data) => dispatch(updateRegion(id, data)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Settings)
+export default Settings

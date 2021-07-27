@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import ScreenShotTab from 'components/ScreenShotTab'
 import LogsTab from 'components/LogsTab'
 import OutputTab from 'components/OutputTab'
 import DisplayTab from 'components/DisplayTab'
 import { connect } from 'react-redux'
 import { useRouter } from 'next/router'
-import { Card, CardBody, CardHeader } from 'reactstrap'
+import { Card, CardBody, CardHeader, Badge, Button } from 'reactstrap'
 import { getInstance, clearInstance } from 'store/bot/actions'
 import { subscribe, unsubscribe } from 'store/socket/actions'
-import { Badge, Button, Loader80bots } from 'components/default'
+import { Loader80bots } from 'components/default'
 
 const TABS = {
   SCREENSHOTS: {

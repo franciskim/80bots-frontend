@@ -19,8 +19,8 @@ import React from 'react'
 import classnames from 'classnames'
 // nodejs library to set properties for components
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
-// reactstrap components
+import { useDispatch, useSelector } from 'react-redux'
+import Router from 'next/router'
 import {
   Collapse,
   DropdownMenu,
@@ -46,8 +46,11 @@ import {
 } from 'reactstrap'
 import { logout } from 'store/auth/actions'
 
-function AdminNavbar({ theme, sidenavOpen, toggleSidenav }) {
+const AdminNavbar = ({ theme, sidenavOpen, toggleSidenav }) => {
   const dispatch = useDispatch()
+
+  const user = useSelector((state) => state.auth.user)
+
   // function that on mobile devices makes the search open
   const openSearch = () => {
     document.body.classList.add('g-navbar-search-showing')
@@ -59,6 +62,7 @@ function AdminNavbar({ theme, sidenavOpen, toggleSidenav }) {
       document.body.classList.add('g-navbar-search-shown')
     }, 300)
   }
+
   // function that on mobile devices makes the search close
   const closeSearch = () => {
     document.body.classList.remove('g-navbar-search-shown')
@@ -76,7 +80,7 @@ function AdminNavbar({ theme, sidenavOpen, toggleSidenav }) {
   }
 
   const onLogoutClick = (e) => {
-    e.preventDefault()
+    // e.preventDefault()
     dispatch(logout())
     Router.push('/')
   }
@@ -400,28 +404,31 @@ function AdminNavbar({ theme, sidenavOpen, toggleSidenav }) {
             </Nav>
             <Nav className="align-items-center ml-auto ml-md-0" navbar>
               <UncontrolledDropdown nav>
-                <DropdownToggle className="nav-link pr-0" color="" tag="a">
-                  <Media className="align-items-center">
-                    <span className="avatar avatar-sm rounded-circle">
-                      <img
-                        alt="..."
-                        src={require('assets/img/theme/team-4.jpg')}
-                      />
-                    </span>
-                    <Media className="ml-2 d-none d-lg-block">
-                      <span className="mb-0 text-sm font-weight-bold">
-                        John Snow
+                {user && (
+                  <DropdownToggle className="nav-link pr-0" color="" tag="a">
+                    <Media className="align-items-center">
+                      <span className="avatar avatar-sm rounded-circle">
+                        <img
+                          alt="..."
+                          src={require('assets/img/theme/team-4.jpg')}
+                        />
                       </span>
+                      <Media className="ml-2 d-none d-lg-block">
+                        <span className="mb-0 text-sm font-weight-bold">
+                          {user.name}
+                        </span>
+                      </Media>
                     </Media>
-                  </Media>
-                </DropdownToggle>
+                  </DropdownToggle>
+                )}
+                {!user && <span>...</span>}
                 <DropdownMenu right>
                   <DropdownItem className="noti-title" header tag="div">
                     <h6 className="text-overflow m-0">Welcome!</h6>
                   </DropdownItem>
                   <DropdownItem
                     href="#pablo"
-                    onClick={(e) => e.preventDefault()}
+                    onClick={() => Router.push('profile')}
                   >
                     <i className="ni ni-single-02" />
                     <span>My profile</span>
@@ -432,20 +439,6 @@ function AdminNavbar({ theme, sidenavOpen, toggleSidenav }) {
                   >
                     <i className="ni ni-settings-gear-65" />
                     <span>Settings</span>
-                  </DropdownItem>
-                  <DropdownItem
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <i className="ni ni-calendar-grid-58" />
-                    <span>Activity</span>
-                  </DropdownItem>
-                  <DropdownItem
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <i className="ni ni-support-16" />
-                    <span>Support</span>
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem href="#pablo" onClick={onLogoutClick}>
@@ -467,6 +460,7 @@ AdminNavbar.defaultProps = {
   sidenavOpen: false,
   theme: 'dark',
 }
+
 AdminNavbar.propTypes = {
   toggleSidenav: PropTypes.func,
   sidenavOpen: PropTypes.bool,

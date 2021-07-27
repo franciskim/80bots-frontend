@@ -10,15 +10,7 @@ import {
 } from './types'
 
 const initialState = {
-  // By jacky, need to remove
-
-  user: {
-    id: 1,
-    name: '80bots',
-    email: 'hello@80bots.com',
-    timezone: 'America/Adak',
-    region: '',
-  },
+  user: null,
   isAuthorized: false,
   loading: true,
   error: null,
@@ -39,15 +31,6 @@ export const reducer = (state = initialState, action) => {
     case success(REGISTER):
     case success(RESET_PASSWORD): {
       localStorage.setItem('token', action.data.token)
-      console.error(
-        {
-          ...state,
-          user: action.data.user,
-          loading: false,
-          isAuthorized: true,
-        },
-        'State changes'
-      )
       return {
         ...state,
         user: action.data.user,

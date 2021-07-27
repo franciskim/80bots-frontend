@@ -1,28 +1,28 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styled from 'styled-components';
-import Item from "./Item";
-import { CardBody } from "../Card";
-import { Paginator } from "../Paginator";
-import {Button} from "../Button";
-import Toggle from 'react-toggle';
+import React from 'react'
+import PropTypes from 'prop-types'
+import styled from '@emotion/styled'
+import Item from './Item'
+import { CardBody } from 'reactstrap'
+import { Paginator } from '../Paginator'
+import { Button } from 'reactstrap'
+import Toggle from 'react-toggle'
 
 const Row = styled.div`
   display: flex;
   flex-flow: row;
-`;
+`
 
 const Col = styled.div`
   display: flex;
   flex-flow: column;
-`;
+`
 
 const Content = styled(CardBody)`
   display: flex;
   flex-flow: column wrap;
   height: 77vh;
-  ${props => props.styles};
-`;
+  ${(props) => props.styles};
+`
 
 const ListWrapper = styled.div`
   display: flex;
@@ -31,22 +31,22 @@ const ListWrapper = styled.div`
   flex-flow: row wrap;
   justify-content: flex-start;
   align-items: center;
-  ${props => props.styles};
-`;
+  ${(props) => props.styles};
+`
 
 const PaginatorRow = styled(Row)`
   justify-content: flex-end;
-`;
+`
 
 const FilterButton = styled(Button)`
   padding: 0 5px;
-`;
+`
 
 const WrapperButton = styled.div`
   margin-left: 20px;
   display: flex;
   padding-bottom: 1.25rem;
-`;
+`
 
 const List = ({
   items,
@@ -57,31 +57,35 @@ const List = ({
   onItemClick,
   className,
   filterItems,
-  filter
+  filter,
 }) => {
- let getFiles = filter ? items.filter(item => (item.name.split(' ')[0] !== "black_screenshot" && item.name.split(' ')[0] !== "blank_screenshot")) : items;
+  let getFiles = filter
+    ? items.filter(
+        (item) =>
+          item.name.split(' ')[0] !== 'black_screenshot' &&
+          item.name.split(' ')[0] !== 'blank_screenshot'
+      )
+    : items
 
   return (
     <Col className={className}>
       <Row>
         <Content>
           <Col>
-            {items[0].type === "file" ?
+            {items[0].type === 'file' ? (
               <WrapperButton>
                 <Toggle
-                    defaultChecked={filter}
-                    className='custom-classname'
-                    onChange={filterItems}
-                    icons={{
-                      checked: 'I',
-                      unchecked: "O",
-                    }} />
-                <span>
-                  Filter Blank
-                </span>
+                  defaultChecked={filter}
+                  className="custom-classname"
+                  onChange={filterItems}
+                  icons={{
+                    checked: 'I',
+                    unchecked: 'O',
+                  }}
+                />
+                <span>Filter Blank</span>
               </WrapperButton>
-              : null
-            }
+            ) : null}
             <ListWrapper>
               {getFiles.map((item, i) => (
                 <Item item={item} key={i} onClick={onItemClick} />
@@ -97,13 +101,13 @@ const List = ({
             initialPage={page}
             total={total}
             pageSize={limit}
-            onChangePage={page => onPageChange(page)}
+            onChangePage={(page) => onPageChange(page)}
           />
         </Col>
       </PaginatorRow>
     </Col>
-  );
-};
+  )
+}
 
 List.propTypes = {
   items: PropTypes.array.isRequired,
@@ -116,6 +120,6 @@ List.propTypes = {
   onItemClick: PropTypes.func,
   className: PropTypes.string,
   filter: PropTypes.bool,
-};
+}
 
-export default List;
+export default List

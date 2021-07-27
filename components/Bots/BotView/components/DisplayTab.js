@@ -1,38 +1,38 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import styled from 'styled-components';
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
+import styled from '@emotion/styled'
 
-import { connect } from "react-redux";
-import { CardBody } from "bootstrap";
-import { Loader80bots } from "components/default";
+import { connect } from 'react-redux'
+import { CardBody } from 'reactstrap'
+import { Loader80bots } from 'components/default'
 
 const Content = styled(CardBody)`
   display: flex;
   height: 85vh;
   flex-flow: row wrap;
   flex-direction: column;
-  ${props => props.styles};
-`;
+  ${(props) => props.styles};
+`
 
 const Display = styled.iframe`
   display: flex;
   flex: 1 1;
   border: none;
-  ${props => props.styles};
-`;
+  ${(props) => props.styles};
+`
 
 const Link = styled.a`
   padding: 20px;
   text-align: right;
   display: block;
-`;
+`
 
 const STATUSES = {
-  LOAD: "Loading Display"
-};
+  LOAD: 'Loading Display',
+}
 
 const DisplayTab = ({ botInstance }) => {
-  const [status, setStatus] = useState(STATUSES.LOAD);
+  const [status, setStatus] = useState(STATUSES.LOAD)
 
   return (
     <Content>
@@ -44,33 +44,27 @@ const DisplayTab = ({ botInstance }) => {
       </Link>
       <Display
         onLoad={() => setStatus(null)}
-        styles={
-          status &&
-          css`
-            display: none;
-          `
-        }
-        id={"display"}
+        id={'display'}
         src={`http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`}
       />
       {status && (
         <Loader80bots
-          data={"light"}
+          data={'light'}
           styled={{
-            width: "200px"
+            width: '200px',
           }}
         />
       )}
     </Content>
-  );
-};
+  )
+}
 
 DisplayTab.propTypes = {
-  botInstance: PropTypes.object.isRequired
-};
+  botInstance: PropTypes.object.isRequired,
+}
 
-const mapStateToProps = state => ({
-  botInstance: state.bot.botInstance
-});
+const mapStateToProps = (state) => ({
+  botInstance: state.bot.botInstance,
+})
 
-export default connect(mapStateToProps, null)(DisplayTab);
+export default connect(mapStateToProps, null)(DisplayTab)
