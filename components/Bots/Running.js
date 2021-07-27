@@ -148,6 +148,7 @@ const RunningBots = () => {
     (state) => state.scriptNotification.settings_channel
   )
 
+  console.error('>>>', user)
   useEffect(() => {
     dispatch(getRunningBots({ page, limit, list }))
     dispatch(

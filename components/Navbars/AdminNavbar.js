@@ -20,7 +20,7 @@ import classnames from 'classnames'
 // nodejs library to set properties for components
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-// reactstrap components
+import Router from 'next/router'
 import {
   Collapse,
   DropdownMenu,
@@ -421,13 +421,14 @@ const AdminNavbar = ({ theme, sidenavOpen, toggleSidenav }) => {
                     </Media>
                   </DropdownToggle>
                 )}
+                {!user && <span>...</span>}
                 <DropdownMenu right>
                   <DropdownItem className="noti-title" header tag="div">
                     <h6 className="text-overflow m-0">Welcome!</h6>
                   </DropdownItem>
                   <DropdownItem
                     href="#pablo"
-                    onClick={(e) => e.preventDefault()}
+                    onClick={() => Router.push('profile')}
                   >
                     <i className="ni ni-single-02" />
                     <span>My profile</span>
