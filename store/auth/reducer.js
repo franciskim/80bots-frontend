@@ -10,7 +10,13 @@ import {
 } from './types'
 
 const initialState = {
-  user: null,
+  user: {
+    id: 1,
+    name: '80bots',
+    email: 'hello@80bots.com',
+    timezone: 'America/Adak',
+    region: '',
+  },
   isAuthorized: false,
   loading: true,
   error: null,

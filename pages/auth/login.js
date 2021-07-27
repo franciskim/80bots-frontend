@@ -54,10 +54,7 @@ const Login = () => {
 
   return (
     <>
-      <AuthHeader
-        title="Welcome!"
-        lead="Use these awesome forms to login or create new account in your project for free."
-      />
+      <AuthHeader />
       <Container className="mt--8 pb-5">
         <Row className="justify-content-center">
           <Col lg="5" md="7">
