@@ -25,7 +25,7 @@ import {
 } from 'store/bot/actions'
 import { Table } from 'reactstrap'
 
-import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'lib/helper'
 import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config'
 import { addListener } from 'store/socket/actions'
 
@@ -102,12 +102,10 @@ const Bots = () => {
     dispatch(getBots({ page, limit }))
     dispatch(
       addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'Sync completed',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Sync completed',
+        })
         dispatch(
           getBots({
             page,
@@ -127,23 +125,19 @@ const Bots = () => {
     modal.current.close()
     dispatch(launchInstance(clickedBot.id, params))
       .then(() => {
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.INFO,
-            message: 'New bot instance is deploying',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.INFO,
+          message: 'New bot instance is deploying',
+        })
       })
       .catch((action) => {
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message:
-              action.error?.response?.data?.message ||
-              'Error occurred during new instance launch',
-            delay: 1500,
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message:
+            action.error?.response?.data?.message ||
+            'Error occurred during new instance launch',
+          delay: 1500,
+        })
       })
   }
 
@@ -153,20 +147,16 @@ const Bots = () => {
 
     dispatch(updateStatusBot(bot.id, { status }))
       .then(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: `Bot was successfully ${statusName}!`,
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `Bot was successfully ${statusName}!`,
+        })
       )
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Status update failed',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Status update failed',
+        })
       )
   }
 
@@ -174,12 +164,10 @@ const Bots = () => {
     setClickedBot(null)
     dispatch(deleteBot(clickedBot.id))
       .then(() => {
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'Bot removed!',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Bot removed!',
+        })
         dispatch(
           getBots({
             page,
@@ -192,32 +180,26 @@ const Bots = () => {
         deleteModal.current.close()
       })
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Bot delete failed',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Bot delete failed',
+        })
       )
   }
 
   const sync = () => {
     dispatch(syncLocalBots())
       .then(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.INFO,
-            message: 'Sync started',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.INFO,
+          message: 'Sync started',
+        })
       )
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Sync cannot be started',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Sync cannot be started',
+        })
       )
   }
 

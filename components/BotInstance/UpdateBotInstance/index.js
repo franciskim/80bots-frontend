@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import styled from '@emotion/styled'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'lib/helper'
 import { NOTIFICATION_TYPES } from 'config'
 import {
   Button,
@@ -146,21 +146,17 @@ const Index = () => {
     }
     dispatch(updateBotInstance(aboutBot.id, convertBotData(botData)))
       .then(() => {
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'BotInstance updated!',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'BotInstance updated!',
+        })
         modal.current.open()
       })
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Update failed!',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Update failed!',
+        })
       )
   }
 
@@ -168,21 +164,17 @@ const Index = () => {
     modal.current.close()
     dispatch(restartInstance(aboutBot.id, params))
       .then(() => {
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'BotInstance restarted!',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'BotInstance restarted!',
+        })
         Router.push('/bots/running')
       })
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Restart failed!',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Restart failed!',
+        })
       )
   }
 

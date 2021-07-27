@@ -3,7 +3,6 @@ import dayjs from 'dayjs'
 import { useSelector, useDispatch } from 'react-redux'
 import { Card, CardBody, Table } from 'reactstrap'
 import { LimitFilter, SearchFilter, Th } from '../default/Table'
-// import { addNotification } from 'store/notification/actions'
 import { getSessions } from 'store/instanceSession/actions'
 import { Paginator } from 'components/default'
 

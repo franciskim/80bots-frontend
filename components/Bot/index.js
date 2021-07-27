@@ -19,7 +19,7 @@ import {
 } from 'reactstrap'
 import { addBot } from 'store/bot/actions'
 import { getUsers } from 'store/user/actions'
-import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'lib/helper'
 import { Button, Input } from 'reactstrap'
 import { CodeEditor } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
@@ -196,21 +196,17 @@ const Index = () => {
       }
       dispatch(addBot(convertBotData(botData)))
         .then(() => {
-          dispatch(
-            addNotification({
-              type: NOTIFICATION_TYPES.SUCCESS,
-              message: 'Bot added!',
-            })
-          )
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: 'Bot added!',
+          })
           Router.push('/bots')
         })
         .catch(() =>
-          dispatch(
-            addNotification({
-              type: NOTIFICATION_TYPES.ERROR,
-              message: 'Add failed!',
-            })
-          )
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Add failed!',
+          })
         )
     }
   }

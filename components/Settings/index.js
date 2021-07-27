@@ -17,7 +17,7 @@ import { getRegions, updateRegion } from 'store/bot/actions'
 import { Paginator } from 'components/default'
 import { Select } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
-import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'lib/helper'
 import { addListener } from 'store/socket/actions'
 
 // const IconButton = styled(Button)`
@@ -82,12 +82,11 @@ const Settings = () => {
 
     dispatch(
       addListener(`regions.${user.id}`, 'RegionsSyncSucceeded', () => {
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'Sync completed',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Sync completed',
+        })
+
         dispatch(
           getRegions({
             page,
@@ -131,21 +130,18 @@ const Settings = () => {
   const changeRegionAmi = () => {
     dispatch(updateRegion(clickedRegion.id, { default_ami: defaultAmi }))
       .then(() => {
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: `Region ami was successfully ${defaultAmi}`,
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `Region ami was successfully ${defaultAmi}`,
+        })
+
         setIsModalOpen(false)
       })
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Ami update failed',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Ami update failed',
+        })
       )
   }
 

@@ -19,7 +19,7 @@ import {
   SearchFilter,
   Th,
 } from 'components/default/Table'
-import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'lib/helper'
 import { useDispatch, useSelector } from 'react-redux'
 import { NOTIFICATION_TYPES } from 'config'
 import Paginator from 'components/default/Paginator'
@@ -153,20 +153,16 @@ const BotsSchedule = () => {
     const status = schedule.status === 'active' ? 'inactive' : 'active'
     dispatch(updateSchedule(schedule.id, { status }))
       .then(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: `Schedule was successfully ${statusName}!`,
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: `Schedule was successfully ${statusName}!`,
+        })
       )
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Status update failed',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Status update failed',
+        })
       )
   }
 
@@ -198,12 +194,10 @@ const BotsSchedule = () => {
           })
         )
         setIsAddModalOpen(false)
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'Schedule was successfully added',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Schedule was successfully added',
+        })
       })
     }
   }
@@ -212,20 +206,16 @@ const BotsSchedule = () => {
     setIsEditModalOpen(false)
     dispatch(updateSchedule(clickedSchedule.id, { details: editedSchedules }))
       .then(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'Schedule was successfully updated',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Schedule was successfully updated',
+        })
       )
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Update of schedule failed',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Update of schedule failed',
+        })
       )
       .finally(() => setClickedSchedule(null))
   }
@@ -243,20 +233,16 @@ const BotsSchedule = () => {
             search,
           })
         )
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'Schedule was successfully deleted',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Schedule was successfully deleted',
+        })
       })
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Removal of Schedule failed',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Removal of Schedule failed',
+        })
       )
       .finally(() => setClickedSchedule(null))
   }

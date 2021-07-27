@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import { Button, Input, Container, ButtonGroup } from 'reactstrap'
 import { reportBot as report } from 'store/bot/actions'
-import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'lib/helper'
 import { NOTIFICATION_TYPES } from 'config'
 
 // const Buttons = styled.div`
@@ -29,31 +29,27 @@ const ReportIssue = ({ bot, screenshots, onClose }) => {
   const [message, setMessage] = useState('')
 
   const submit = () => {
-    dispatch(
-      addNotification({
-        type: NOTIFICATION_TYPES.INFO,
-        message: 'Uploading Report...',
-      })
-    )
+    addNotification({
+      type: NOTIFICATION_TYPES.INFO,
+      message: 'Uploading Report...',
+    })
+
     dispatch(
       report(bot.id, { message, screenshots: screenshots.map((el) => el.id) })
     )
       .then(() => {
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'Issue report sent',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Issue report sent',
+        })
+
         onClose && onClose()
       })
       .catch((err) =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Report failed, please try again later',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Report failed, please try again later',
+        })
       )
   }
   return (

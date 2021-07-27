@@ -5,7 +5,7 @@ import { Paginator } from '../default'
 import { CardBody, Button, Table, Card } from 'reactstrap'
 import { SearchFilter, LimitFilter, Th } from '../default/Table'
 import { NOTIFICATION_TYPES } from 'config'
-import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'lib/helper'
 import { updateStatus } from 'store/user/actions'
 import { getUsers } from 'store/user/actions'
 
@@ -29,12 +29,10 @@ const Users = () => {
       })
     ).then(() => {
       const status = user.status === 'active' ? 'deactivated' : 'activated'
-      dispatch(
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: `User was successfully ${status}`,
-        })
-      )
+      addNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: `User was successfully ${status}`,
+      })
     })
   }
 

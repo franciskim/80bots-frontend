@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBotSettings, updateBotSettings } from 'store/bot/actions'
-import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'lib/helper'
 import { NOTIFICATION_TYPES } from 'config'
 import {
   Button,
@@ -63,21 +63,18 @@ const SettingsEditor = ({ onClose }) => {
         })
       )
         .then(() => {
-          dispatch(
-            addNotification({
-              type: NOTIFICATION_TYPES.SUCCESS,
-              message: 'Settings updated',
-            })
-          )
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: 'Settings updated',
+          })
+
           onClose()
         })
         .catch(() =>
-          dispatch(
-            addNotification({
-              type: NOTIFICATION_TYPES.ERROR,
-              message: "Can't update settings right now",
-            })
-          )
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: "Can't update settings right now",
+          })
         )
     }
   }

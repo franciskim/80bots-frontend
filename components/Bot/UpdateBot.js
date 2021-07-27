@@ -6,7 +6,7 @@ import AsyncSelect from 'react-select/async'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTags } from 'store/bot/actions'
 import { getUsers } from 'store/user/actions'
-import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'lib/helper'
 import {
   Button,
   Input,
@@ -205,21 +205,17 @@ const UpdateBot = () => {
 
       updateBot(aboutBot.id, convertBotData(botData))
         .then(() => {
-          dispatch(
-            addNotification({
-              type: NOTIFICATION_TYPES.SUCCESS,
-              message: 'Bot updated!',
-            })
-          )
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: 'Bot updated!',
+          })
           Router.push('/bots')
         })
         .catch(() =>
-          dispatch(
-            addNotification({
-              type: NOTIFICATION_TYPES.ERROR,
-              message: 'Update failed!',
-            })
-          )
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Update failed!',
+          })
         )
     }
   }

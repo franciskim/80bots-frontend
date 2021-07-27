@@ -27,7 +27,7 @@ import AuthHeader from 'components/Headers/AuthHeader.js'
 import { NOTIFICATION_TYPES } from 'config'
 
 import { login } from 'store/auth/actions'
-import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'lib/helper'
 
 const Login = () => {
   const dispatch = useDispatch()
@@ -47,18 +47,9 @@ const Login = () => {
         const { response } = error
         if (response) {
           const { message } = response.data
-          dispatch(addNotification({ type: NOTIFICATION_TYPES.ERROR, message }))
+          addNotification({ type: NOTIFICATION_TYPES.ERROR, message })
         }
       })
-  }
-
-  const handleTest = () => {
-    dispatch(
-      addNotification({
-        type: NOTIFICATION_TYPES.ERROR,
-        message: 'Test message',
-      })
-    )
   }
 
   return (
@@ -139,7 +130,6 @@ const Login = () => {
                       Sign in
                     </Button>
                   </div>
-                  <Button onClick={handleTest}>TEST Notification</Button>
                 </Form>
               </CardBody>
             </Card>

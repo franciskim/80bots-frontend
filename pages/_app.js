@@ -5,11 +5,11 @@ import Head from 'next/head'
 import Router from 'next/router'
 import withReduxStore from '../lib/connectRedux'
 import { Provider } from 'react-redux'
+import ReduxToastr from 'react-redux-toastr'
 
 import PageChange from 'components/PageChange/PageChange.js'
 
 // plugins styles from node_modules
-import 'react-notification-alert/dist/animate.css'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 import '@fullcalendar/common/main.min.css'
 import '@fullcalendar/daygrid/main.min.css'
@@ -21,6 +21,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 import 'assets/vendor/nucleo/css/nucleo.css'
 // core styles
 import 'assets/scss/nextjs-argon-dashboard-pro.scss?v1.1.0'
+import 'react-redux-toastr/lib/css/react-redux-toastr.min.css'
 
 Router.events.on('routeChangeStart', (url) => {
   console.log(`Loading: ${url}`)
@@ -38,6 +39,14 @@ Router.events.on('routeChangeError', () => {
   ReactDOM.unmountComponentAtNode(document.getElementById('page-transition'))
   document.body.classList.remove('body-page-transition')
 })
+
+// const NotificationIcon = () => {
+//   return (
+//     <div style={{ width: 70, height: 80, backgroundColor: 'red' }}>
+//       <i className="fa fa-edit" />
+//     </div>
+//   )
+// }
 
 class MyApp extends App {
   componentDidMount() {
@@ -84,6 +93,28 @@ class MyApp extends App {
         </Head>
         <Layout>
           <Component {...pageProps} />
+          <ReduxToastr
+            // icon={<NotificationIcon />}
+            timeOut={3000}
+            newestOnTop={false}
+            preventDuplicates
+            position="top-center"
+            getState={(state) => state.toastr} // This is the default
+            transitionIn="fadeIn"
+            transitionOut="fadeOut"
+            progressBar
+            closeOnToastrClick
+            component={
+              <div className="alert-text">
+                <span className="alert-title" data-notify="title">
+                  Bootstrap Notify
+                </span>
+                <span data-notify="message">
+                  Turning standard Bootstrap alerts into awesome notifications
+                </span>
+              </div>
+            }
+          />
         </Layout>
       </Provider>
     )

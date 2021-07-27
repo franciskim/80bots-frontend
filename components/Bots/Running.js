@@ -12,7 +12,7 @@ import {
   CardHeader,
 } from 'reactstrap'
 import { LimitFilter, ListFilter, SearchFilter } from 'components/default/Table'
-import { addNotification } from 'store/notification/actions'
+import { addNotification } from 'lib/helper'
 import { NOTIFICATION_TYPES } from 'config'
 import {
   copyInstance,
@@ -157,12 +157,10 @@ const RunningBots = () => {
             event.instance.status === 'running'
               ? 'launched'
               : event.instance.status
-          dispatch(
-            addNotification({
-              type: NOTIFICATION_TYPES.SUCCESS,
-              message: `Bot ${event.instance.bot_name} successfully ${status}`,
-            })
-          )
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: `Bot ${event.instance.bot_name} successfully ${status}`,
+          })
           dispatch(botInstanceUpdated(event.instance))
         }
       })
@@ -182,12 +180,10 @@ const RunningBots = () => {
     )
     dispatch(
       addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'Sync completed',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Sync completed',
+        })
         dispatch(
           getRunningBots({
             page,
@@ -244,41 +240,33 @@ const RunningBots = () => {
   const choiceRestoreBot = (instance) => {
     dispatch(restoreBot(instance.id))
       .then(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.INFO,
-            message: 'The instance was successfully queued for restoring',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.INFO,
+          message: 'The instance was successfully queued for restoring',
+        })
       )
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Restore failed',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Restore failed',
+        })
       )
   }
 
   const choiceCopyInstance = (instance) => {
     dispatch(copyInstance(instance.id))
       .then(() => {
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.INFO,
-            message: 'The instance was successfully queued for cloning',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.INFO,
+          message: 'The instance was successfully queued for cloning',
+        })
         dispatch(getRunningBots({ page, limit, list }))
       })
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Cloning failed',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Cloning failed',
+        })
       )
   }
 
@@ -295,19 +283,15 @@ const RunningBots = () => {
       })
       .catch(({ error: { response } }) => {
         if (response && response.data) {
-          dispatch(
-            addNotification({
-              type: NOTIFICATION_TYPES.ERROR,
-              message: response.data.message,
-            })
-          )
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: response.data.message,
+          })
         } else {
-          dispatch(
-            addNotification({
-              type: NOTIFICATION_TYPES.ERROR,
-              message: 'Error occurred while downloading file',
-            })
-          )
+          addNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message: 'Error occurred while downloading file',
+          })
         }
       })
   }
@@ -315,40 +299,32 @@ const RunningBots = () => {
   const changeBotInstanceStatus = (option, id) => {
     updateRunningBot(id, { status: option.value })
       .then(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.INFO,
-            message: `Enqueued status change: ${option.value}`,
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.INFO,
+          message: `Enqueued status change: ${option.value}`,
+        })
       )
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Status update failed',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Status update failed',
+        })
       )
   }
 
   const syncWithAWS = () => {
     dispatch(syncBotInstances())
       .then(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.INFO,
-            message: 'Sync sequence started',
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.INFO,
+          message: 'Sync sequence started',
+        })
       )
       .catch(() =>
-        dispatch(
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: "Can't start sync sequence",
-          })
-        )
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: "Can't start sync sequence",
+        })
       )
   }
 
@@ -371,12 +347,10 @@ const RunningBots = () => {
         ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
         : bot.ip
     navigator.clipboard.writeText(text).then(() =>
-      dispatch(
-        addNotification({
-          type: NOTIFICATION_TYPES.INFO,
-          message: 'Copied to clipboard',
-        })
-      )
+      addNotification({
+        type: NOTIFICATION_TYPES.INFO,
+        message: 'Copied to clipboard',
+      })
     )
   }
 
