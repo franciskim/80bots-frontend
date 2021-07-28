@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { useSelector, useDispatch } from 'react-redux'
-import { Card, CardBody, Table } from 'reactstrap'
+import { Card, CardBody, CardFooter, Table } from 'reactstrap'
 import { LimitFilter, SearchFilter, Th } from '../default/Table'
 import { getSessions } from 'store/instanceSession/actions'
 import { Paginator } from 'components/default'
@@ -87,6 +87,8 @@ const SchedulerLog = () => {
             </thead>
             <tbody>{sessions.map(renderRow)}</tbody>
           </Table>
+        </CardBody>
+        <CardFooter>
           <Paginator
             total={total}
             pageSize={limit}
@@ -95,7 +97,7 @@ const SchedulerLog = () => {
               dispatch(getSessions({ page, limit, search }))
             }}
           />
-        </CardBody>
+        </CardFooter>
       </Card>
     </>
   )

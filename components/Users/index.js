@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import dayjs from 'dayjs'
 import { useSelector, useDispatch } from 'react-redux'
 import { Paginator } from '../default'
-import { CardBody, Button, Table, Card } from 'reactstrap'
+import { CardBody, Button, Table, Card, CardFooter } from 'reactstrap'
 import { SearchFilter, LimitFilter, Th } from '../default/Table'
 import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'lib/helper'
@@ -108,6 +108,8 @@ const Users = () => {
             </thead>
             <tbody>{users.map(renderRow)}</tbody>
           </Table>
+        </CardBody>
+        <CardFooter>
           <Paginator
             total={total}
             pageSize={limit}
@@ -122,7 +124,7 @@ const Users = () => {
               )
             }}
           />
-        </CardBody>
+        </CardFooter>
       </Card>
     </>
   )

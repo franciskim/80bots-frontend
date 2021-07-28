@@ -57,14 +57,6 @@ function AdminFooter() {
                 </NavItem>
                 <NavItem>
                   <NavLink
-                    href="http://blog.creative-tim.com?ref=adpr-admin-footer"
-                    target="_blank"
-                  >
-                    Blog
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
                     href="https://www.creative-tim.com/license?ref=adpr-admin-footer"
                     target="_blank"
                   >

@@ -1,35 +1,37 @@
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 import PropTypes from 'prop-types'
+import lightLoaderImage from 'assets/img/loader/80bots_loader_light.svg'
+import darkLoaderImage from 'assets/img/loader/80bots_loader_dark.svg'
+import { Container } from 'reactstrap'
 
-const LoaderContainer = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`
+// const LoaderContainer = styled.div`
+//   display: flex;
+//   flex: 1;
+//   justify-content: center;
+//   align-items: center;
+//   flex-direction: column;
+// `
 
 export const Loader80bots = ({ data, styled, ...props }) => {
+  const [icon, setIcon] = useState(null)
+
   useEffect(() => {
     if (data === 'light') {
-      setIcon('/img/loader/80bots_loader_light.svg')
+      setIcon(lightLoaderImage)
     } else if (data === 'dark') {
-      setIcon('/img/loader/80bots_loader_dark.svg')
+      setIcon(darkLoaderImage)
     }
   }, [data])
 
-  const [icon, setIcon] = useState('')
-
   return (
-    <LoaderContainer>
+    <Container>
       <object
         type="image/svg+xml"
         data={icon}
         className={'loader80bots'}
         style={styled}
       />
-    </LoaderContainer>
+    </Container>
   )
 }
 

@@ -49,15 +49,15 @@ import { addListener } from 'store/socket/actions'
 //   }
 // `
 
-const selectStyles = {
-  select: {
-    valueContainer: (provided) => ({
-      ...provided,
-      padding: '0 8px',
-      borderColor: '#ced4da',
-    }),
-  },
-}
+// const selectStyles = {
+//   select: {
+//     valueContainer: (provided) => ({
+//       ...provided,
+//       padding: '0 8px',
+//       borderColor: '#ced4da',
+//     }),
+//   },
+// }
 
 const Settings = () => {
   const dispatch = useDispatch()
@@ -86,7 +86,6 @@ const Settings = () => {
           type: NOTIFICATION_TYPES.SUCCESS,
           message: 'Sync completed',
         })
-
         dispatch(
           getRegions({
             page,

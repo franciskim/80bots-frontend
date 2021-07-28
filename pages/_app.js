@@ -5,7 +5,7 @@ import Head from 'next/head'
 import Router from 'next/router'
 import { Provider } from 'react-redux'
 import ReduxToastr from 'react-redux-toastr'
-// import { PersistGate } from 'redux-persist/integration/react'
+import { PersistGate } from 'redux-persist/integration/react'
 
 import PageChange from 'components/PageChange/PageChange.js'
 import withReduxStore from '../lib/connectRedux'
@@ -77,40 +77,40 @@ class MyApp extends App {
 
     return (
       <Provider store={reduxStore}>
-        {/* <PersistGate persistor={reduxStore.__PERSISTOR} loading={null}> */}
-        <Head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-          />
-          <title>80bots.com</title>
-        </Head>
-        <Layout>
-          <Component {...pageProps} />
-          <ReduxToastr
-            // icon={<NotificationIcon />}
-            timeOut={3000}
-            newestOnTop={false}
-            preventDuplicates
-            position="top-center"
-            getState={(state) => state.toastr} // This is the default
-            transitionIn="fadeIn"
-            transitionOut="fadeOut"
-            progressBar
-            closeOnToastrClick
-            component={
-              <div className="alert-text">
-                <span className="alert-title" data-notify="title">
-                  Bootstrap Notify
-                </span>
-                <span data-notify="message">
-                  Turning standard Bootstrap alerts into awesome notifications
-                </span>
-              </div>
-            }
-          />
-        </Layout>
-        {/* </PersistGate> */}
+        <PersistGate persistor={reduxStore.__PERSISTOR} loading={null}>
+          <Head>
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1, shrink-to-fit=no"
+            />
+            <title>80bots.com</title>
+          </Head>
+          <Layout>
+            <Component {...pageProps} />
+            <ReduxToastr
+              // icon={<NotificationIcon />}
+              timeOut={3000}
+              newestOnTop={false}
+              preventDuplicates
+              position="top-center"
+              getState={(state) => state.toastr} // This is the default
+              transitionIn="fadeIn"
+              transitionOut="fadeOut"
+              progressBar
+              closeOnToastrClick
+              component={
+                <div className="alert-text">
+                  <span className="alert-title" data-notify="title">
+                    Bootstrap Notify
+                  </span>
+                  <span data-notify="message">
+                    Turning standard Bootstrap alerts into awesome notifications
+                  </span>
+                </div>
+              }
+            />
+          </Layout>
+        </PersistGate>
       </Provider>
     )
   }

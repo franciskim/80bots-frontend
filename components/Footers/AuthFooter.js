@@ -55,14 +55,7 @@ function AuthFooter() {
                     About Us
                   </NavLink>
                 </NavItem>
-                <NavItem>
-                  <NavLink
-                    href="http://blog.creative-tim.com?ref=adpr-auth-footer"
-                    target="_blank"
-                  >
-                    Blog
-                  </NavLink>
-                </NavItem>
+
                 <NavItem>
                   <NavLink
                     href="https://www.creative-tim.com/license?ref=adpr-auth-footer"

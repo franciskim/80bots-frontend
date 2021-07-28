@@ -32,6 +32,7 @@ import {
   NavLink,
   Nav,
 } from 'reactstrap'
+import Animated from 'assets/img/80bots-logo.svg'
 
 function Sidebar({
   toggleSidenav,
@@ -175,17 +176,12 @@ function Sidebar({
           <Link href={logo.innerLink}>
             <span>
               <NavbarBrand href="#pablo">
-                <img
-                  alt={logo.imgAlt}
-                  className="navbar-brand-img"
-                  src={logo.imgSrc}
-                />
-                {/* <object
+                <object
                   type="image/svg+xml"
-                  data="assets/img/80bots-logo.svg"
+                  data={Animated}
                   className="navbar-brand-img"
-                  style={{ width: 200, height: 200 }}
-                /> */}
+                  style={{ height: 78 }}
+                />
               </NavbarBrand>
             </span>
           </Link>

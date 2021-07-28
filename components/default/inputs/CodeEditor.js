@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import beautify from 'js-beautify'
 import dynamic from 'next/dynamic'
-import { Button } from 'reactstrap'
+import { Button, FormGroup } from 'reactstrap'
 
 const AceEditor = dynamic(
   async () => {
@@ -79,32 +79,36 @@ export const CodeEditor = ({ value, onChange, ...props }) => {
 
   return (
     <>
-      <AceEditor
-        mode="javascript"
-        theme="tomorrow_night_eighties"
-        value={value}
-        onChange={(value) => {
-          onChange(value)
-        }}
-        commands={[
-          {
-            name: 'beautifyJavaScript',
-            bindKey: { win: 'Ctrl-Alt-h', mac: 'Command-Alt-h' },
-            exec: execFunc,
-          },
-        ]}
-        name="BOT_EDITOR"
-        editorProps={{ $blockScrolling: true }}
-        enableBasicAutocompletion={false}
-        enableLiveAutocompletion={false}
-        enableSnippets={false}
-        width="100%"
-        fontSize={'1rem'}
-        setOptions={{ useWorker: false }}
-      />
-      <Button color="primary" onClick={() => handleBeautify(value)}>
-        Beautify
-      </Button>
+      <FormGroup>
+        <AceEditor
+          mode="javascript"
+          theme="tomorrow_night_eighties"
+          value={value}
+          onChange={(value) => {
+            onChange(value)
+          }}
+          commands={[
+            {
+              name: 'beautifyJavaScript',
+              bindKey: { win: 'Ctrl-Alt-h', mac: 'Command-Alt-h' },
+              exec: execFunc,
+            },
+          ]}
+          name="BOT_EDITOR"
+          editorProps={{ $blockScrolling: true }}
+          enableBasicAutocompletion={false}
+          enableLiveAutocompletion={false}
+          enableSnippets={false}
+          width="100%"
+          fontSize={'1rem'}
+          setOptions={{ useWorker: false }}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Button color="primary" onClick={() => handleBeautify(value)}>
+          Beautify
+        </Button>
+      </FormGroup>
     </>
   )
 }

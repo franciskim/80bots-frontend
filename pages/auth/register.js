@@ -14,9 +14,9 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React from 'react'
 // nodejs library that concatenates classes
-import classnames from "classnames";
+import classnames from 'classnames'
 // reactstrap components
 import {
   Button,
@@ -32,22 +32,19 @@ import {
   Container,
   Row,
   Col,
-} from "reactstrap";
+} from 'reactstrap'
 // layout for this page
-import Auth from "layouts/Auth.js";
+import Auth from 'layouts/Auth.js'
 // core components
-import AuthHeader from "components/Headers/AuthHeader.js";
+import AuthHeader from 'components/Headers/AuthHeader.js'
 
 function Register() {
-  const [focusedName, setfocusedName] = React.useState(false);
-  const [focusedEmail, setfocusedEmail] = React.useState(false);
-  const [focusedPassword, setfocusedPassword] = React.useState(false);
+  const [focusedName, setfocusedName] = React.useState(false)
+  const [focusedEmail, setfocusedEmail] = React.useState(false)
+  const [focusedPassword, setfocusedPassword] = React.useState(false)
   return (
     <>
-      <AuthHeader
-        title="Create an account"
-        lead="Use these awesome forms to login or create new account in your project for free."
-      />
+      <AuthHeader />
       <Container className="mt--8 pb-5">
         <Row className="justify-content-center">
           <Col lg="6" md="8">
@@ -114,7 +111,7 @@ function Register() {
                   </FormGroup>
                   <div className="text-muted font-italic">
                     <small>
-                      password strength:{" "}
+                      password strength:{' '}
                       <span className="text-success font-weight-700">
                         strong
                       </span>
@@ -133,7 +130,7 @@ function Register() {
                           htmlFor="customCheckRegister"
                         >
                           <span className="text-muted">
-                            I agree with the{" "}
+                            I agree with the{' '}
                             <a
                               href="#pablo"
                               onClick={(e) => e.preventDefault()}
@@ -157,9 +154,9 @@ function Register() {
         </Row>
       </Container>
     </>
-  );
+  )
 }
 
-Register.layout = Auth;
+Register.layout = Auth
 
-export default Register;
+export default Register

@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from '@emotion/styled'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
-import Icon from './icons'
 import { Label } from 'reactstrap'
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
 
@@ -68,7 +67,7 @@ export const Th = ({ order, field, children, onClick, ...props }) => {
   return (
     <Th order={order} onClick={handle} {...props}>
       {children}
-      {order && <Icon name={'arrow'} />}
+      {/* {order && <Icon name={'arrow'} />} */}
     </Th>
   )
 }

@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import Icon from './icons'
 import PropTypes from 'prop-types'
 
 const LoaderContainer = styled.div`
@@ -19,7 +18,7 @@ const Caption = styled.span`
 export const Loader = ({ type, caption, ...props }) => {
   return (
     <LoaderContainer>
-      <Icon name={type || 'bubbles'} {...props} />
+      {/* <Icon name={type || 'bubbles'} {...props} /> */}
       {caption && <Caption>{caption}</Caption>}
     </LoaderContainer>
   )

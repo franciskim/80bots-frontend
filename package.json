@@ -35,6 +35,7 @@
     "dayjs": "^1.10.6",
     "dotenv": "^10.0.0",
     "dropzone": "5.7.2",
+    "gud": "^1.0.0",
     "js-beautify": "^1.14.0",
     "laravel-echo": "^1.11.0",
     "list.js": "2.3.1",

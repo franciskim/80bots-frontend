@@ -12,7 +12,7 @@ import {
 } from 'store/botinstance/actions'
 import { useRouter } from 'next/router'
 import Router from 'next/router'
-import RestartEditor from 'components/RestartEditor'
+import RestartEditor from '../RestartEditor'
 
 const Error = styled.span`
   font-size: 15px;
@@ -159,15 +159,7 @@ const Index = () => {
         </Row>
         {error && <Error>{error}</Error>}
       </Container>
-      <Modal
-        ref={modal}
-        title={'Restart bot instance'}
-        // contentStyles={css`
-        //   overflow-x: visible;
-        //   overflow-y: hidden;
-        // `}
-        disableSideClosing
-      >
+      <Modal ref={modal} title={'Restart bot instance'} disableSideClosing>
         <RestartEditor
           onSubmit={restartSubmit}
           onClose={() => modal.current.close()}

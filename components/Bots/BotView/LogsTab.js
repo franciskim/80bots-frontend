@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import styled from '@emotion/styled'
+// import styled from '@emotion/styled'
 import { connect } from 'react-redux'
-import { CardBody } from 'reactstrap'
+import { Card } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 import { flush, open, close } from 'store/fileSystem/actions'
 import FileSystem from 'components/default/FileSystem'
@@ -16,13 +16,13 @@ const rootFolder = 'logs'
 //   justify-content: space-between;
 // `;
 
-const Content = styled(CardBody)`
-  display: flex;
-  height: 85vh;
-  flex-flow: column nowrap;
-  overflow-y: hidden;
-  ${(props) => props.styles};
-`
+// const Content = styled(CardBody)`
+//   display: flex;
+//   height: 85vh;
+//   flex-flow: column nowrap;
+//   overflow-y: hidden;
+//   ${(props) => props.styles};
+// `
 
 const LogsTab = ({ items, flush, openItem, openedFolder, openedFile }) => {
   const [options, setOptions] = useState([])
@@ -75,7 +75,7 @@ const LogsTab = ({ items, flush, openItem, openedFolder, openedFile }) => {
 
   return (
     <>
-      <Content>
+      <Card>
         {openedFile ? (
           <>
             <FiltersSection>
@@ -103,7 +103,7 @@ const LogsTab = ({ items, flush, openItem, openedFolder, openedFile }) => {
             }}
           />
         )}
-      </Content>
+      </Card>
     </>
   )
 }

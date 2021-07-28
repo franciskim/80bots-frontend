@@ -12,6 +12,7 @@ import {
   ModalFooter,
   ModalHeader,
   CardHeader,
+  CardFooter,
 } from 'reactstrap'
 import {
   LimitFilter,
@@ -334,80 +335,23 @@ const BotsSchedule = () => {
   )
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <Button color="primary" onClick={toggleAddModal}>
-            Add schedule list
-          </Button>
-        </CardHeader>
-        <CardBody>
-          <div>
-            <LimitFilter
-              id="limitfilter"
-              instanceId="limitfilter"
-              onChange={({ value }) => {
-                setLimit(value)
-                dispatch(
-                  getSchedules({
-                    page,
-                    limit: value,
-                    list,
-                    sort: order.field,
-                    order: order.value,
-                    search,
-                  })
-                )
-              }}
-            />
-            <ListFilter
-              id="listfilter1"
-              instanceId="listfilter1"
-              options={FILTERS_LIST_OPTIONS}
-              onChange={({ value }) => {
-                setFilterList(value)
-                dispatch(
-                  getSchedules({
-                    page,
-                    limit,
-                    list: value,
-                    sort: order.field,
-                    order: order.value,
-                    search,
-                  })
-                )
-              }}
-            />
-            <SearchFilter
-              searchProps={{
-                onSearch: (value) => {
-                  searchSchedules(value)
-                },
-              }}
-            />
-          </div>
-          <Table>
-            <thead>
-              <tr>
-                <OrderTh field={'user'}>User</OrderTh>
-                <OrderTh field={'instance_id'}>Instance Id</OrderTh>
-                <OrderTh field={'bot_name'}>Bot Name</OrderTh>
-                <OrderTh field={'status'}>Status</OrderTh>
-                <OrderTh>Details</OrderTh>
-                <OrderTh>Actions</OrderTh>
-              </tr>
-            </thead>
-            <tbody>{schedules.map(renderRow)}</tbody>
-          </Table>
-          <Paginator
-            total={total}
-            pageSize={limit}
-            onChangePage={(page) => {
-              setPage(page)
+    <Card>
+      <CardHeader>
+        <Button color="primary" onClick={toggleAddModal}>
+          Add schedule list
+        </Button>
+      </CardHeader>
+      <CardBody>
+        <div>
+          <LimitFilter
+            id="limitfilter"
+            instanceId="limitfilter"
+            onChange={({ value }) => {
+              setLimit(value)
               dispatch(
                 getSchedules({
                   page,
-                  limit,
+                  limit: value,
                   list,
                   sort: order.field,
                   order: order.value,
@@ -416,54 +360,106 @@ const BotsSchedule = () => {
               )
             }}
           />
-        </CardBody>
-
-        <Modal
-          isOpen={isModalOpen}
-          title={'Delete this schedule?'}
-          onClose={() => setClickedSchedule(null)}
-        >
-          <ModalBody>
-            <Button color="primary" onClick={modalDeleteSchedule}>
-              Yes
-            </Button>
-            <Button type={'danger'} onClick={() => setIsModelOpen(false)}>
-              Cancel
-            </Button>
-          </ModalBody>
-        </Modal>
-
-        <Modal isOpen={isAddModalOpen} onClose={() => setInstanceId(null)}>
-          <ModalHeader>Add Schedule</ModalHeader>
-          <ModalBody>
-            <Label>Select one of your running bots</Label>
-            <AsyncSelect
-              onChange={onBotChange}
-              loadOptions={searchBots}
-              defaultOptions={runningBots.filter(toFilters).map(toOptions)}
-            />
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={() => setIsAddModalOpen(false)}>Cancel</Button>
-            <Button color="primary" onClick={addSchedule}>
-              Add
-            </Button>
-          </ModalFooter>
-        </Modal>
-        <Modal
-          isOpen={isEditModalOpen}
-          onClose={() => setClickedSchedule(null)}
-        >
-          <ModalHeader>Schedule Editor</ModalHeader>
-          <ScheduleEditor
-            schedules={clickedSchedule ? clickedSchedule.details : []}
-            close={() => setIsEditModalOpen(false)}
-            onUpdateClick={updateScheduleInstance}
-            user={user}
+          <ListFilter
+            id="listfilter1"
+            instanceId="listfilter1"
+            options={FILTERS_LIST_OPTIONS}
+            onChange={({ value }) => {
+              setFilterList(value)
+              dispatch(
+                getSchedules({
+                  page,
+                  limit,
+                  list: value,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              )
+            }}
           />
-        </Modal>
-      </Card>
-    </>
+          <SearchFilter
+            searchProps={{
+              onSearch: (value) => {
+                searchSchedules(value)
+              },
+            }}
+          />
+        </div>
+        <Table>
+          <thead>
+            <tr>
+              <OrderTh field={'user'}>User</OrderTh>
+              <OrderTh field={'instance_id'}>Instance Id</OrderTh>
+              <OrderTh field={'bot_name'}>Bot Name</OrderTh>
+              <OrderTh field={'status'}>Status</OrderTh>
+              <OrderTh>Details</OrderTh>
+              <OrderTh>Actions</OrderTh>
+            </tr>
+          </thead>
+          <tbody>{schedules.map(renderRow)}</tbody>
+        </Table>
+      </CardBody>
+      <CardFooter>
+        <Paginator
+          total={total}
+          pageSize={limit}
+          onChangePage={(page) => {
+            setPage(page)
+            dispatch(
+              getSchedules({
+                page,
+                limit,
+                list,
+                sort: order.field,
+                order: order.value,
+                search,
+              })
+            )
+          }}
+        />
+      </CardFooter>
+      <Modal
+        isOpen={isModalOpen}
+        title={'Delete this schedule?'}
+        onClose={() => setClickedSchedule(null)}
+      >
+        <ModalBody>
+          <Button color="primary" onClick={modalDeleteSchedule}>
+            Yes
+          </Button>
+          <Button type={'danger'} onClick={() => setIsModelOpen(false)}>
+            Cancel
+          </Button>
+        </ModalBody>
+      </Modal>
+      <Modal isOpen={isAddModalOpen} onClose={() => setInstanceId(null)}>
+        <ModalHeader>Add Schedule</ModalHeader>
+        <ModalBody>
+          <Label>Select one of your running bots</Label>
+          <AsyncSelect
+            onChange={onBotChange}
+            loadOptions={searchBots}
+            defaultOptions={runningBots.filter(toFilters).map(toOptions)}
+          />
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={() => setIsAddModalOpen(false)}>Cancel</Button>
+          <Button color="primary" onClick={addSchedule}>
+            Add
+          </Button>
+        </ModalFooter>
+      </Modal>
+      <Modal isOpen={isEditModalOpen} onClose={() => setClickedSchedule(null)}>
+        <ModalHeader>Schedule Editor</ModalHeader>
+        <ScheduleEditor
+          schedules={clickedSchedule ? clickedSchedule.details : []}
+          close={() => setIsEditModalOpen(false)}
+          onUpdateClick={updateScheduleInstance}
+          user={user}
+        />
+      </Modal>
+    </Card>
   )
 }
 
