@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import CardWithPreview from '../../CardWithPreview'
+// import CardWithPreview from '../../CardWithPreview'
 import { formatScreenshot, formatTimezone } from '../../../../lib/helpers'
 import { connect } from 'react-redux'
 

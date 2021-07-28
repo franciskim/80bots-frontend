@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import Icon from 'components/default/icons'
+// import Icon from 'components/default/icons'
 import { DragDropContainer } from 'components/default'
 import { Card } from 'reactstrap'
 
@@ -59,13 +59,13 @@ const ImageDivFilled = styled(ImageDiv)`
 
 const Add = ({ onClick, ...props }) => (
   <ImageDiv onClick={onClick} {...props}>
-    <Icon name={'light-plus'} width={50} height={50} />
+    {/* <Icon name={'light-plus'} width={50} height={50} /> */}
   </ImageDiv>
 )
 
 const Image = ({ src, onCancel, ...props }) => (
   <ImageDivFilled imgSrc={src} {...props}>
-    <Icon name={'cross'} width={10} height={10} onClick={onCancel} />
+    {/* <Icon name={'cross'} width={10} height={10} onClick={onCancel} /> */}
   </ImageDivFilled>
 )
 
