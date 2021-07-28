@@ -30,16 +30,16 @@ const SchedulerLog = () => {
     </tr>
   )
 
-  const searchSession = (value) => {
-    setSearch(value)
-    dispatch(
-      getSessions({
-        page,
-        limit,
-        search: value,
-      })
-    )
-  }
+  // const searchSession = (value) => {
+  //   setSearch(value)
+  //   dispatch(
+  //     getSessions({
+  //       page,
+  //       limit,
+  //       search: value,
+  //     })
+  //   )
+  // }
 
   const onOrderChange = () => {
     dispatch(getSessions({ page, limit, search }))
@@ -48,58 +48,56 @@ const SchedulerLog = () => {
   const OrderTh = (props) => <Th {...props} onClick={onOrderChange} />
 
   return (
-    <>
-      <Card>
-        <CardBody>
-          <div>
-            <LimitFilter
-              id="limitfilter"
-              instanceId="limitfilter"
-              onChange={({ value }) => {
-                setLimit(value)
-                dispatch(
-                  getSessions({
-                    page,
-                    limit: value,
-                    search,
-                  })
-                )
-              }}
-            />
-            <SearchFilter
-              searchProps={{
-                onSearch: (e) => {
-                  console.error('onSearch', e)
-                },
-              }}
-            />
-          </div>
-          <Table>
-            <thead>
-              <tr>
-                <OrderTh field={'user'}>User</OrderTh>
-                <OrderTh field={'instance_id'}>Instance Id</OrderTh>
-                <OrderTh field={'type'}>Type</OrderTh>
-                <OrderTh field={'date'}>Date & Time</OrderTh>
-                <OrderTh field={'timezone'}>Time Zone</OrderTh>
-                <OrderTh field={'status'}>Status</OrderTh>
-              </tr>
-            </thead>
-            <tbody>{sessions.map(renderRow)}</tbody>
-          </Table>
-        </CardBody>
-        <CardFooter>
-          <Paginator
-            total={total}
-            pageSize={limit}
-            onChangePage={(page) => {
-              setPage(page)
-              dispatch(getSessions({ page, limit, search }))
+    <Card>
+      <CardBody>
+        <div>
+          <LimitFilter
+            id="limitfilter"
+            instanceId="limitfilter"
+            onChange={({ value }) => {
+              setLimit(value)
+              dispatch(
+                getSessions({
+                  page,
+                  limit: value,
+                  search,
+                })
+              )
             }}
           />
-        </CardFooter>
-      </Card>
-    </>
+          <SearchFilter
+            searchProps={{
+              onSearch: (e) => {
+                console.error('onSearch', e)
+              },
+            }}
+          />
+        </div>
+        <Table responsive>
+          <thead>
+            <tr>
+              <OrderTh field={'user'}>User</OrderTh>
+              <OrderTh field={'instance_id'}>Instance Id</OrderTh>
+              <OrderTh field={'type'}>Type</OrderTh>
+              <OrderTh field={'date'}>Date & Time</OrderTh>
+              <OrderTh field={'timezone'}>Time Zone</OrderTh>
+              <OrderTh field={'status'}>Status</OrderTh>
+            </tr>
+          </thead>
+          <tbody>{sessions.map(renderRow)}</tbody>
+        </Table>
+      </CardBody>
+      <CardFooter>
+        <Paginator
+          total={total}
+          pageSize={limit}
+          onChangePage={(page) => {
+            setPage(page)
+            dispatch(getSessions({ page, limit, search }))
+          }}
+        />
+      </CardFooter>
+    </Card>
   )
 }
 

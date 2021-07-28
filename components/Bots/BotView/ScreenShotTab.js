@@ -8,19 +8,19 @@ import { flush, open, close } from 'store/fileSystem/actions'
 import { Loader80bots } from 'components/default'
 import { Modal } from 'reactstrap'
 import ReportEditor from './ReportIssue'
-import { Button } from 'reactstrap'
+import { Button, Container } from 'reactstrap'
 
 const rootFolder = 'screenshots'
 const defaultLimit = 15
 
-const Container = styled.div`
-  position: relative;
-  flex: 1;
-  bottom: 0;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-`
+// const Container = styled.div`
+//   position: relative;
+//   flex: 1;
+//   bottom: 0;
+//   display: flex;
+//   flex-wrap: wrap;
+//   flex-direction: column;
+// `
 
 // const Report = styled(Button)`
 //   padding: 0 5px;

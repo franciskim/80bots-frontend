@@ -283,10 +283,10 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
     <>
       {botInstance && botInstance.parameters.map(renderParams)}
       <ButtonGroup>
-        <Button type={'danger'} onClick={cancel}>
+        <Button color={'danger'} onClick={cancel}>
           Cancel
         </Button>
-        <Button type={'primary'} onClick={submit}>
+        <Button color={'primary'} onClick={submit}>
           Restart
         </Button>
       </ButtonGroup>

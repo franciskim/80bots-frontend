@@ -1,7 +1,13 @@
 import {
-  AUTH_CHECK, LOGIN, REGISTER, LOGOUT, RESET, RESET_PASSWORD, UPDATE_USER_PROFILE
-} from './types';
-import Router from 'next/router';
+  AUTH_CHECK,
+  LOGIN,
+  REGISTER,
+  LOGOUT,
+  RESET,
+  RESET_PASSWORD,
+  UPDATE_USER_PROFILE,
+} from './types'
+// import Router from 'next/router'
 
 export const login = (email, password) => {
   return {
@@ -10,14 +16,15 @@ export const login = (email, password) => {
       method: 'POST',
       url: '/auth/login',
       data: {
-        email, password
-      }
+        email,
+        password,
+      },
     },
     meta: {
-      thunk: true
-    }
-  };
-};
+      thunk: true,
+    },
+  }
+}
 
 export const register = (email, password, password_confirmation) => {
   return {
@@ -26,14 +33,16 @@ export const register = (email, password, password_confirmation) => {
       method: 'POST',
       url: '/auth/register',
       data: {
-        email, password, password_confirmation
-      }
+        email,
+        password,
+        password_confirmation,
+      },
     },
     meta: {
-      thunk: true
-    }
-  };
-};
+      thunk: true,
+    },
+  }
+}
 
 export const reset = (email) => {
   return {
@@ -42,45 +51,54 @@ export const reset = (email) => {
       method: 'POST',
       url: '/auth/password/email',
       data: {
-        email
-      }
+        email,
+      },
     },
     meta: {
-      thunk: true
-    }
-  };
-};
+      thunk: true,
+    },
+  }
+}
 
-export const resetPassword = (token, email, password, password_confirmation) => {
+export const resetPassword = (
+  token,
+  email,
+  password,
+  password_confirmation
+) => {
   return {
     type: RESET_PASSWORD,
     request: {
       method: 'POST',
       url: '/auth/password/reset',
       data: {
-        token, email, password, password_confirmation
-      }
+        token,
+        email,
+        password,
+        password_confirmation,
+      },
     },
     meta: {
-      thunk: true
-    }
-  };
-};
-
-export const checkAuth = () => dispatch => dispatch({
-  type: AUTH_CHECK,
-  request: {
-    method: 'GET',
-    url: '/auth/login'
-  },
-  meta: {
-    thunk: true
+      thunk: true,
+    },
   }
-}).catch(() => Router.push('/'));
+}
+
+export const checkAuth = () => (dispatch) =>
+  dispatch({
+    type: AUTH_CHECK,
+    request: {
+      method: 'GET',
+      url: '/auth/login',
+    },
+    meta: {
+      thunk: true,
+    },
+  }).catch(() => Router.push('/'))
 
 export const logout = () => ({
-  type: LOGOUT
-});
+  type: LOGOUT,
+})
 
 export const updateUserProfile = (updateData) => ({
   type: UPDATE_USER_PROFILE,
@@ -88,10 +106,10 @@ export const updateUserProfile = (updateData) => ({
     method: 'PUT',
     url: '/user/profile',
     data: {
-      update: updateData
-    }
+      update: updateData,
+    },
   },
   meta: {
-    thunk: true
-  }
-});
+    thunk: true,
+  },
+})

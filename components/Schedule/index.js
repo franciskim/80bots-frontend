@@ -428,7 +428,7 @@ const BotsSchedule = () => {
           <Button color="primary" onClick={modalDeleteSchedule}>
             Yes
           </Button>
-          <Button type={'danger'} onClick={() => setIsModelOpen(false)}>
+          <Button color={'danger'} onClick={() => setIsModelOpen(false)}>
             Cancel
           </Button>
         </ModalBody>

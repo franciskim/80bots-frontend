@@ -407,12 +407,7 @@ const AdminNavbar = ({ theme, sidenavOpen, toggleSidenav }) => {
                 {user && (
                   <DropdownToggle className="nav-link pr-0" color="" tag="a">
                     <Media className="align-items-center">
-                      <span className="avatar avatar-sm rounded-circle">
-                        <img
-                          alt="..."
-                          src={require('assets/img/theme/team-4.jpg')}
-                        />
-                      </span>
+                      <i class="fas fa-user-circle"></i>
                       <Media className="ml-2 d-none d-lg-block">
                         <span className="mb-0 text-sm font-weight-bold">
                           {user.name}
@@ -432,13 +427,6 @@ const AdminNavbar = ({ theme, sidenavOpen, toggleSidenav }) => {
                   >
                     <i className="ni ni-single-02" />
                     <span>My profile</span>
-                  </DropdownItem>
-                  <DropdownItem
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <i className="ni ni-settings-gear-65" />
-                    <span>Settings</span>
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem href="#pablo" onClick={onLogoutClick}>

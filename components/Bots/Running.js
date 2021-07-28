@@ -138,7 +138,7 @@ const FILTERS_LIST_OPTIONS = [
 const RunningBots = () => {
   const dispatch = useDispatch()
   const [list, setFilterList] = useState('all')
-  const [limit, setLimit] = useState(20)
+  const [limit, setLimit] = useState(2)
   const [order, setOrder] = useState({ value: '', field: '' })
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
@@ -152,7 +152,6 @@ const RunningBots = () => {
     (state) => state.scriptNotification.settings_channel
   )
 
-  console.error('>>>', user)
   useEffect(() => {
     dispatch(getRunningBots({ page, limit, list }))
     dispatch(
@@ -409,80 +408,80 @@ const RunningBots = () => {
     />
   )
 
-  const getData = (botInstance) => {
-    // if(botInstance.difference && botInstance.difference.length > 2) {
-    //   let difference = [];
-    //   let prevTime = null;
-    //   botInstance.difference.forEach((data, index)=>{
-    //       if(prevTime){
-    //           const prev = Date.parse(prevTime);
-    //           const current = Date.parse(data.created_at);
-    //           const diffSeconds = (current - prev)/1000 ;
-    //           if(diffSeconds> 300){
-    //               let startTime = Date.parse(prevTime);
-    //               const endTime = Date.parse(data.created_at);
-    //               while(startTime < endTime){
-    //                   difference.push(0)
-    //                   startTime = startTime+ 60000;
-    //               }
-    //           }
-    //           difference.push(data.difference);
-    //       }
-    //       prevTime = data.created_at;
-    //   });
-    //   botInstance.difference  = difference;
-    // }
-    return {
-      labels: botInstance.difference,
-      datasets: [
-        {
-          label: [],
-          lineTension: 0,
-          backgroundColor: 'rgba(125,255,255,0.2)',
-          borderColor: 'rgba(125,255,255,1)',
-          borderWidth: 0.5,
-          data: botInstance.difference,
-        },
-      ],
-    }
-  }
+  // const getData = (botInstance) => {
+  // if(botInstance.difference && botInstance.difference.length > 2) {
+  //   let difference = [];
+  //   let prevTime = null;
+  //   botInstance.difference.forEach((data, index)=>{
+  //       if(prevTime){
+  //           const prev = Date.parse(prevTime);
+  //           const current = Date.parse(data.created_at);
+  //           const diffSeconds = (current - prev)/1000 ;
+  //           if(diffSeconds> 300){
+  //               let startTime = Date.parse(prevTime);
+  //               const endTime = Date.parse(data.created_at);
+  //               while(startTime < endTime){
+  //                   difference.push(0)
+  //                   startTime = startTime+ 60000;
+  //               }
+  //           }
+  //           difference.push(data.difference);
+  //       }
+  //       prevTime = data.created_at;
+  //   });
+  //   botInstance.difference  = difference;
+  // }
+  //   return {
+  //     labels: botInstance.difference,
+  //     datasets: [
+  //       {
+  //         label: [],
+  //         lineTension: 0,
+  //         backgroundColor: 'rgba(125,255,255,0.2)',
+  //         borderColor: 'rgba(125,255,255,1)',
+  //         borderWidth: 0.5,
+  //         data: botInstance.difference,
+  //       },
+  //     ],
+  //   }
+  // }
 
-  const legendOpt = {
-    display: false,
-  }
+  // const legendOpt = {
+  //   display: false,
+  // }
 
-  const chartOptions = {
-    scales: {
-      xAxes: [
-        {
-          ticks: {
-            display: false,
-          },
-          gridLines: {
-            display: false,
-          },
-        },
-      ],
-      yAxes: [
-        {
-          ticks: {
-            display: false,
-          },
-          gridLines: {
-            display: false,
-          },
-        },
-      ],
-    },
-    elements: {
-      point: {
-        radius: 0,
-      },
-    },
-    tooltips: {
-      enabled: false,
-    },
-  }
+  // const chartOptions = {
+  //   scales: {
+  //     xAxes: [
+  //       {
+  //         ticks: {
+  //           display: false,
+  //         },
+  //         gridLines: {
+  //           display: false,
+  //         },
+  //       },
+  //     ],
+  //     yAxes: [
+  //       {
+  //         ticks: {
+  //           display: false,
+  //         },
+  //         gridLines: {
+  //           display: false,
+  //         },
+  //       },
+  //     ],
+  //   },
+  //   elements: {
+  //     point: {
+  //       radius: 0,
+  //     },
+  //   },
+  //   tooltips: {
+  //     enabled: false,
+  //   },
+  // }
 
   const renderRow = (botInstance) => {
     return (
@@ -625,98 +624,32 @@ const RunningBots = () => {
   }
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <ButtonGroup>
-            <Button
-              color="primary"
-              onClick={syncWithAWS}
-              loading={`${syncLoading}`}
-            >
-              Sync Bot Instances
-            </Button>
-            <Button color="secondary" onClick={startAllBots}>
-              Launch Workforce
-            </Button>
-          </ButtonGroup>
-        </CardHeader>
-        <CardBody>
-          <div>
-            <LimitFilter
-              id="limitfilter"
-              instanceId="limitfilter"
-              onChange={({ value }) => {
-                setLimit(value)
-                dispatch(
-                  getRunningBots({
-                    page,
-                    limit: value,
-                    list,
-                    sort: order.field,
-                    order: order.value,
-                    search,
-                  })
-                )
-              }}
-            />
-            <ListFilter
-              id="listfilter1"
-              instanceId="listfilter1"
-              options={FILTERS_LIST_OPTIONS}
-              onChange={({ value }) => {
-                setFilterList(value)
-                dispatch(
-                  getRunningBots({
-                    page,
-                    limit,
-                    list: value,
-                    sort: order.field,
-                    order: order.value,
-                    search,
-                  })
-                )
-              }}
-            />
-            <SearchFilter
-              searchProps={{
-                onSearch: (value) => {
-                  searchRunningBots(value)
-                },
-              }}
-            />
-          </div>
-          <Table>
-            <thead>
-              <tr>
-                <OrderTh field={'status'}>Status</OrderTh>
-                <th>Actions</th>
-                <OrderTh field={'bot_name'}>Bot</OrderTh>
-                <OrderTh field={'script_notification'}>
-                  Last Notification
-                </OrderTh>
-                <OrderTh field={'launched_at'}>Deployed At</OrderTh>
-                <OrderTh field={'uptime'}>Uptime</OrderTh>
-                <OrderTh field={'ip'}>IP</OrderTh>
-                <OrderTh field={'name'}>Name</OrderTh>
-                <th>Instance ID</th>
-                <OrderTh field={'launched_by'}>Deployed By</OrderTh>
-                <OrderTh field={'region'}>Region</OrderTh>
-              </tr>
-            </thead>
-            <tbody>{botInstances.map(renderRow)}</tbody>
-          </Table>
-        </CardBody>
-        <CardFooter className="py-4">
-          <Paginator
-            total={total}
-            pageSize={limit}
-            onChangePage={(page) => {
-              setPage(page)
+    <Card>
+      <CardHeader>
+        <ButtonGroup>
+          <Button
+            color="primary"
+            onClick={syncWithAWS}
+            loading={`${syncLoading}`}
+          >
+            Sync Bot Instances
+          </Button>
+          <Button color="secondary" onClick={startAllBots}>
+            Launch Workforce
+          </Button>
+        </ButtonGroup>
+      </CardHeader>
+      <CardBody>
+        <div>
+          <LimitFilter
+            id="limitfilter"
+            instanceId="limitfilter"
+            onChange={({ value }) => {
+              setLimit(value)
               dispatch(
                 getRunningBots({
                   page,
-                  limit,
+                  limit: value,
                   list,
                   sort: order.field,
                   order: order.value,
@@ -725,9 +658,71 @@ const RunningBots = () => {
               )
             }}
           />
-        </CardFooter>
-      </Card>
-    </>
+          <ListFilter
+            id="listfilter1"
+            instanceId="listfilter1"
+            options={FILTERS_LIST_OPTIONS}
+            onChange={({ value }) => {
+              setFilterList(value)
+              dispatch(
+                getRunningBots({
+                  page,
+                  limit,
+                  list: value,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              )
+            }}
+          />
+          <SearchFilter
+            searchProps={{
+              onSearch: (value) => {
+                searchRunningBots(value)
+              },
+            }}
+          />
+        </div>
+        <Table>
+          <thead>
+            <tr>
+              <OrderTh field={'status'}>Status</OrderTh>
+              <th>Actions</th>
+              <OrderTh field={'bot_name'}>Bot</OrderTh>
+              <OrderTh field={'script_notification'}>Last Notification</OrderTh>
+              <OrderTh field={'launched_at'}>Deployed At</OrderTh>
+              <OrderTh field={'uptime'}>Uptime</OrderTh>
+              <OrderTh field={'ip'}>IP</OrderTh>
+              <OrderTh field={'name'}>Name</OrderTh>
+              <th>Instance ID</th>
+              <OrderTh field={'launched_by'}>Deployed By</OrderTh>
+              <OrderTh field={'region'}>Region</OrderTh>
+            </tr>
+          </thead>
+          <tbody>{botInstances.map(renderRow)}</tbody>
+        </Table>
+      </CardBody>
+      <CardFooter className="py-4">
+        <Paginator
+          total={total}
+          pageSize={limit}
+          onChangePage={(page) => {
+            setPage(page)
+            dispatch(
+              getRunningBots({
+                page,
+                limit,
+                list,
+                sort: order.field,
+                order: order.value,
+                search,
+              })
+            )
+          }}
+        />
+      </CardFooter>
+    </Card>
   )
 }
 

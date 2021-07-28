@@ -221,120 +221,118 @@ const UpdateBot = () => {
   }
 
   return (
-    <>
-      <Card>
-        <CardBody>
-          <Row>
-            <Input
-              type={'text'}
-              label={'Bot Name *'}
-              value={botName}
-              // styles={inputStyles}
-              onChange={(e) => setBotName(e.target.value)}
+    <Card>
+      <CardBody>
+        <Row>
+          <Input
+            type={'text'}
+            label={'Bot Name *'}
+            value={botName}
+            // styles={inputStyles}
+            onChange={(e) => setBotName(e.target.value)}
+          />
+        </Row>
+        <Row>
+          <Label>Bot Script</Label>
+        </Row>
+        <Row>
+          <Col>
+            <Nav tabs>
+              <NavItem>
+                <NavLink
+                  // className={classnames({ active: activeTab === 'script' })}
+                  onClick={() => {
+                    toggle('script')
+                  }}
+                >
+                  index.js
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  // className={classnames({ active: activeTab === 'json' })}
+                  onClick={() => {
+                    toggle('json')
+                  }}
+                >
+                  package.json
+                </NavLink>
+              </NavItem>
+            </Nav>
+            <TabContent activeTab={activeTab}>
+              <TabPane tabId="script">
+                <CodeEditor
+                  value={botScript}
+                  onChange={(code) => setBotScript(code)}
+                />
+              </TabPane>
+              <TabPane tabId="json">
+                <CodeEditor
+                  value={botPackageJSON}
+                  onChange={(code) => setBotPackageJSON(code)}
+                />
+              </TabPane>
+            </TabContent>
+          </Col>
+        </Row>
+        <Row>
+          <Input
+            type="textarea"
+            label={'Description'}
+            rows={5}
+            value={description}
+            // styles={inputStyles}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </Row>
+        <Row>
+          <div>
+            <Label>Tags</Label>
+            <Select
+              id="tags-selector"
+              instanceId="tags-selector"
+              isMulti
+              options={getTagOptions()}
+              // styles={selectStyles}
+              onInputChange={onTagInputChange}
+              onChange={(options) => setTags(options)}
+              value={botTags}
             />
-          </Row>
-          <Row>
-            <Label>Bot Script</Label>
-          </Row>
+          </div>
+          <div>
+            <Label>Access *</Label>
+            <Button
+              className="form-control"
+              color={isPrivate ? 'danger' : 'secondary'}
+              onClick={() => setPrivate(!isPrivate)}
+            >
+              {isPrivate ? 'Private' : 'Public'}
+            </Button>
+          </div>
+        </Row>
+        {isPrivate && (
           <Row>
             <Col>
-              <Nav tabs>
-                <NavItem>
-                  <NavLink
-                    // className={classnames({ active: activeTab === 'script' })}
-                    onClick={() => {
-                      toggle('script')
-                    }}
-                  >
-                    index.js
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    // className={classnames({ active: activeTab === 'json' })}
-                    onClick={() => {
-                      toggle('json')
-                    }}
-                  >
-                    package.json
-                  </NavLink>
-                </NavItem>
-              </Nav>
-              <TabContent activeTab={activeTab}>
-                <TabPane tabId="script">
-                  <CodeEditor
-                    value={botScript}
-                    onChange={(code) => setBotScript(code)}
-                  />
-                </TabPane>
-                <TabPane tabId="json">
-                  <CodeEditor
-                    value={botPackageJSON}
-                    onChange={(code) => setBotPackageJSON(code)}
-                  />
-                </TabPane>
-              </TabContent>
+              <Label>Trusted Users</Label>
+              <AsyncSelect
+                isMulti
+                defaultOptions={users.map(toOptions)}
+                value={trustedUsers}
+                // styles={selectStyles}
+                onChange={(options) => setUsers(options)}
+                loadOptions={onUsersSearch}
+              />
             </Col>
           </Row>
-          <Row>
-            <Input
-              type="textarea"
-              label={'Description'}
-              rows={5}
-              value={description}
-              // styles={inputStyles}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </Row>
-          <Row>
-            <div>
-              <Label>Tags</Label>
-              <Select
-                id="tags-selector"
-                instanceId="tags-selector"
-                isMulti
-                options={getTagOptions()}
-                // styles={selectStyles}
-                onInputChange={onTagInputChange}
-                onChange={(options) => setTags(options)}
-                value={botTags}
-              />
-            </div>
-            <div>
-              <Label>Access *</Label>
-              <Button
-                className="form-control"
-                color={isPrivate ? 'danger' : 'secondary'}
-                onClick={() => setPrivate(!isPrivate)}
-              >
-                {isPrivate ? 'Private' : 'Public'}
-              </Button>
-            </div>
-          </Row>
-          {isPrivate && (
-            <Row>
-              <Col>
-                <Label>Trusted Users</Label>
-                <AsyncSelect
-                  isMulti
-                  defaultOptions={users.map(toOptions)}
-                  value={trustedUsers}
-                  // styles={selectStyles}
-                  onChange={(options) => setUsers(options)}
-                  loadOptions={onUsersSearch}
-                />
-              </Col>
-            </Row>
-          )}
-          {error && <Error>{error}</Error>}
-        </CardBody>
-        <CardFooter>
-          <Button color="primary" onClick={submit}>
-            Update
-          </Button>
-        </CardFooter>
-      </Card>
-    </>
+        )}
+        {error && <Error>{error}</Error>}
+      </CardBody>
+      <CardFooter>
+        <Button color="primary" onClick={submit}>
+          Update
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }
 

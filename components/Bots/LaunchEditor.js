@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Select } from 'components/default/inputs'
-// import { Steps } from 'components/default'
 import { Button, ButtonGroup } from 'reactstrap'
 
 const LaunchEditor = ({ bot, onSubmit, onClose }) => {
@@ -294,7 +293,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
         onChange={(value) => setAmount(value)}
       />
       <ButtonGroup>
-        <Button type={'danger'} onClick={onClose}>
+        <Button color={'danger'} onClick={onClose}>
           Cancel
         </Button>
         <Button color="primary" onClick={() => amountSet(true)}>

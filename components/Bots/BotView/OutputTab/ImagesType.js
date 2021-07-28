@@ -1,71 +1,69 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import FileSystem from "components/default/FileSystem";
-import { flush, open, close } from "store/fileSystem/actions";
-import { Loader80bots } from "components/default";
-const rootFolder = "output/images";
-const defaultLimit = 20;
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import FileSystem from 'components/default/FileSystem'
+import { flush, open, close } from 'store/fileSystem/actions'
+import { Loader80bots } from 'components/default'
+const rootFolder = 'output/images'
+const defaultLimit = 20
 
 const ImagesType = ({
   flush,
-  channel, 
+  channel,
   openItem,
   closeItem,
   openedFolder,
   previous,
   setCustomBack,
   loading,
-  items
+  items,
 }) => {
-  const limit = defaultLimit;
-  const isReportMode = false;
-  const [reportItems, setReportItems] = useState([]);
+  const limit = defaultLimit
+  const isReportMode = false
+  const [reportItems, setReportItems] = useState([])
 
-  const router = useRouter();
-  useEffect(() => {
-    return () => flush();
-  }, [router.query.id]);
+  const router = useRouter()
 
   useEffect(() => {
-    if (channel && !!openedFolder) return;
-    openItem({ path: rootFolder }, { limit });
-  }, [channel, openedFolder]);
+    return () => flush()
+  }, [router.query.id])
+
+  useEffect(() => {
+    if (channel && !!openedFolder) return
+    openItem({ path: rootFolder }, { limit })
+  }, [channel, openedFolder])
 
   useEffect(() => {
     if (!previous || openedFolder.path === rootFolder) {
-      setCustomBack(null);
+      setCustomBack(null)
     } else {
       setCustomBack(() => {
-        closeItem(openedFolder);
-        openItem(previous, { limit });
-      });
+        closeItem(openedFolder)
+        openItem(previous, { limit })
+      })
     }
-  }, [openedFolder, previous]);
+  }, [openedFolder, previous])
 
   useEffect(() => {
-    !isReportMode && setReportItems([]);
-  }, [isReportMode]);
-
+    !isReportMode && setReportItems([])
+  }, [isReportMode])
 
   return (
     <>
       {loading || !items.length ? (
         <Loader80bots
-          data={"light"}
+          data={'light'}
           styled={{
-            width: "200px"
+            width: '200px',
           }}
         />
       ) : (
-        <FileSystem
-          selectedItems={reportItems}
-        />
+        <FileSystem selectedItems={reportItems} />
       )}
     </>
-  );
-};
+  )
+}
 
 ImagesType.propTypes = {
   flush: PropTypes.func.isRequired,
@@ -77,23 +75,20 @@ ImagesType.propTypes = {
   setCustomBack: PropTypes.func.isRequired,
   loading: PropTypes.bool,
   items: PropTypes.array.isRequired,
-};
+}
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   channel: state.bot.botInstance?.storage_channel,
   openedFolder: state.fileSystem.openedFolder,
   previous: state.fileSystem.history.slice(-1)?.[0]?.openedFolder,
   loading: state.fileSystem.loading,
-  items: state.fileSystem.items
-});
+  items: state.fileSystem.items,
+})
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   flush: () => dispatch(flush()),
   openItem: (item, query) => dispatch(open(item, query)),
-  closeItem: item => dispatch(close(item))
-});
+  closeItem: (item) => dispatch(close(item)),
+})
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ImagesType);
+export default connect(mapStateToProps, mapDispatchToProps)(ImagesType)

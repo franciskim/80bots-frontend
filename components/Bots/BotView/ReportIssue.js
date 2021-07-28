@@ -56,11 +56,6 @@ const ReportIssue = ({ bot, screenshots, onClose }) => {
     <>
       <Input
         type="text"
-        // styles={{
-        //   container: css`
-        //     margin-top: 20px;
-        //   `,
-        // }}
         rows={5}
         onChange={(e) => setMessage(e.target.value)}
         value={message}
@@ -74,7 +69,7 @@ const ReportIssue = ({ bot, screenshots, onClose }) => {
         </ScreenshotsContainer>
       )}
       <ButtonGroup>
-        <Button type={'danger'} onClick={onClose}>
+        <Button color={'danger'} onClick={onClose}>
           Cancel
         </Button>
         <Button color="primary" disabled={!message} onClick={submit}>
