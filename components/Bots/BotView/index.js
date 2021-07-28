@@ -11,6 +11,10 @@ import {
   Nav,
   NavLink,
   NavItem,
+  TabPane,
+  TabContent,
+  Col,
+  Row,
 } from 'reactstrap'
 import { getInstance, clearInstance } from 'store/bot/actions'
 import { subscribe, unsubscribe } from 'store/socket/actions'
@@ -60,27 +64,27 @@ const STATUSES = {
   },
 }
 
-const Container = styled(Card)`
-  background: #333;
-  border: none;
-  color: #fff;
-  flex: 1;
-`
+// const Container = styled(Card)`
+//   background: #333;
+//   border: none;
+//   color: #fff;
+//   flex: 1;
+// `
 
-const Header = styled(CardHeader)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-`
+// const Header = styled(CardHeader)`
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   width: 100%;
+// `
 
-const Tabs = styled.div`
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-self: flex-end;
-  justify-content: flex-end;
-`
+// const Tabs = styled.div`
+//   display: flex;
+//   flex: 1;
+//   align-items: center;
+//   justify-self: flex-end;
+//   justify-content: flex-end;
+// `
 
 const Status = styled(Badge)`
   display: inline-flex;
@@ -90,43 +94,38 @@ const Status = styled(Badge)`
   background-color: ${(props) => props.color};
 `
 
-const Content = styled(CardBody)`
-  display: flex;
-  height: 85vh;
-  flex-flow: column;
-`
+// const Content = styled(CardBody)`
+//   display: flex;
+//   height: 85vh;
+//   flex-flow: column;
+// `
 
-const H6 = styled.h6`
-  text-align: start;
-  margin: 0;
-`
+// const h6 = styled.h6`
+//   text-align: start;
+//   margin: 0;
+// `
 
-const Back = styled(Button)`
-  padding: 0 5px;
-  margin-right: 10px;
-`
+// const Back = styled(Button)`
+//   padding: 0 5px;
+//   margin-right: 10px;
+// `
 
-const Tab = styled(Back)`
-  &:last-child {
-    margin-right: 0;
-  }
-`
+// const Tab = styled(Back)`
+//   &:last-child {
+//     margin-right: 0;
+//   }
+// `
 
-const A = styled.a`
-  color: inherit;
-  text-decoration: none;
-`
-
-const Hint = styled.span`
-  font-size: 14px;
-`
+// const Hint = styled.span`
+//   font-size: 14px;
+// `
 
 const ConnectionStatus = ({ status, color }) => (
   <>
     <Status type={'info'} color={color} pill>
       {status}
     </Status>
-    <Hint>&nbsp;|&nbsp;</Hint>
+    <span>&nbsp;|&nbsp;</span>
   </>
 )
 
@@ -136,6 +135,19 @@ const BotView = () => {
   const [status, setStatus] = useState(STATUSES.CONNECTING)
   const [customBack, setCustomBack] = useState(null)
   const router = useRouter()
+
+  const toggle = (tab) => {
+    if (
+      tab.title.toUpperCase() === 'DISPLAY' &&
+      window.location.protocol === 'https:'
+    ) {
+      window.open(`http://${botInstance.ip}:6080?autoconnect=1`)
+    } else {
+      if (activeTab !== tab) {
+        setActiveTab(tab)
+      }
+    }
+  }
 
   const botInstance = useSelector((state) => state.bot.botInstance)
 
@@ -161,35 +173,18 @@ const BotView = () => {
     setCustomBack(null)
   }, [activeTab])
 
-  const renderTab = (item, idx) => {
-    return (
-      <Tab
-        disabled={false}
-        type={activeTab.title === TABS[item].title ? 'success' : 'primary'}
-        key={idx}
-        onClick={() =>
-          item === 'DISPLAY' && window.location.protocol === 'https:'
-            ? window.open(`http://${botInstance.ip}:6080?autoconnect=1`)
-            : setActiveTab(TABS[item])
-        }
-      >
-        {TABS[item].title}
-      </Tab>
-    )
-  }
-
   const CurrentTab = activeTab.component
   return (
-    <Container>
-      <Header>
-        {
-          <Back color="primary">
-            <A onClick={() => (customBack ? customBack() : router.back())}>
-              Back
-            </A>
-          </Back>
-        }
-        <H6>
+    <Card>
+      <CardBody>
+        <Button
+          size="sm"
+          color="primary"
+          onClick={() => (customBack ? customBack() : router.back())}
+        >
+          Back
+        </Button>
+        <h6>
           {Object.keys(botInstance).length ? (
             botInstance.name + ' | ' + botInstance.bot_name
           ) : (
@@ -201,16 +196,16 @@ const BotView = () => {
               }}
             />
           )}
-        </H6>
+        </h6>
         <ConnectionStatus status={status.label} color={status.color} />
         <Nav tabs>
           {Object.values(TABS).map((tab) => {
             return (
-              <NavItem>
+              <NavItem key={tab.title}>
                 <NavLink
                   // className={classnames({ active: activeTab === tab.title })}
                   onClick={() => {
-                    toggle(tab.title)
+                    toggle(tab)
                   }}
                 >
                   {tab.title}
@@ -219,20 +214,28 @@ const BotView = () => {
             )
           })}
         </Nav>
-      </Header>
-      {status === STATUSES.CONNECTING ? (
-        <Content>
-          <Loader80bots
-            data={'light'}
-            styled={{
-              width: '200px',
-            }}
-          />
-        </Content>
-      ) : (
-        <CurrentTab setCustomBack={(f) => setCustomBack(() => f)} />
-      )}
-    </Container>
+        {status === STATUSES.CONNECTING ? (
+          <Card>
+            <Loader80bots
+              data={'light'}
+              styled={{
+                width: '200px',
+              }}
+            />
+          </Card>
+        ) : (
+          <TabContent activeTab={activeTab}>
+            {Object.values(TABS).map((tab) => {
+              return (
+                <TabPane tabId={tab.title}>
+                  <CurrentTab setCustomBack={(f) => setCustomBack(() => f)} />
+                </TabPane>
+              )
+            })}
+          </TabContent>
+        )}
+      </CardBody>
+    </Card>
   )
 }
 

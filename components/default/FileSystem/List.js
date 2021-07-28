@@ -2,9 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import Item from './Item'
-import { CardBody } from 'reactstrap'
+import { CardBody, CardFooter, Card, Button } from 'reactstrap'
 import { Paginator } from '../Paginator'
-import { Button } from 'reactstrap'
 import Toggle from 'react-toggle'
 
 const Row = styled.div`
@@ -12,41 +11,20 @@ const Row = styled.div`
   flex-flow: row;
 `
 
-const Col = styled.div`
-  display: flex;
-  flex-flow: column;
-`
-
-const Content = styled(CardBody)`
-  display: flex;
-  flex-flow: column wrap;
-  height: 77vh;
-  ${(props) => props.styles};
-`
-
-const ListWrapper = styled.div`
-  display: flex;
-  flex: 1;
-  align-content: flex-start;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: center;
-  ${(props) => props.styles};
-`
-
-const PaginatorRow = styled(Row)`
-  justify-content: flex-end;
-`
-
-const FilterButton = styled(Button)`
-  padding: 0 5px;
-`
-
-const WrapperButton = styled.div`
-  margin-left: 20px;
-  display: flex;
-  padding-bottom: 1.25rem;
-`
+// const ListWrapper = styled.div`
+//   display: flex;
+//   flex: 1;
+//   align-content: flex-start;
+//   flex-flow: row wrap;
+//   justify-content: flex-start;
+//   align-items: center;
+//   ${(props) => props.styles};
+// `
+// const WrapperButton = styled.div`
+//   margin-left: 20px;
+//   display: flex;
+//   padding-bottom: 1.25rem;
+// `
 
 const List = ({
   items,
@@ -68,44 +46,38 @@ const List = ({
     : items
 
   return (
-    <Col className={className}>
-      <Row>
-        <Content>
-          <Col>
-            {items[0].type === 'file' ? (
-              <WrapperButton>
-                <Toggle
-                  defaultChecked={filter}
-                  className="custom-classname"
-                  onChange={filterItems}
-                  icons={{
-                    checked: 'I',
-                    unchecked: 'O',
-                  }}
-                />
-                <span>Filter Blank</span>
-              </WrapperButton>
-            ) : null}
-            <ListWrapper>
-              {getFiles.map((item, i) => (
-                <Item item={item} key={i} onClick={onItemClick} />
-              ))}
-            </ListWrapper>
-          </Col>
-        </Content>
-      </Row>
+    <Card>
+      <CardBody>
+        {items[0].type === 'file' ? (
+          <div>
+            <Toggle
+              defaultChecked={filter}
+              className="custom-classname"
+              onChange={filterItems}
+              icons={{
+                checked: 'I',
+                unchecked: 'O',
+              }}
+            />
+            <span>Filter Blank</span>
+          </div>
+        ) : null}
+        <div>
+          {getFiles.map((item, i) => (
+            <Item item={item} key={i} onClick={onItemClick} />
+          ))}
+        </div>
+      </CardBody>
 
-      <PaginatorRow>
-        <Col>
-          <Paginator
-            initialPage={page}
-            total={total}
-            pageSize={limit}
-            onChangePage={(page) => onPageChange(page)}
-          />
-        </Col>
-      </PaginatorRow>
-    </Col>
+      <CardFooter>
+        <Paginator
+          initialPage={page}
+          total={total}
+          pageSize={limit}
+          onChangePage={(page) => onPageChange(page)}
+        />
+      </CardFooter>
+    </Card>
   )
 }
 

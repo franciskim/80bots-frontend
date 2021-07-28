@@ -13,6 +13,8 @@ const LoaderContainer = styled.div`
 `
 
 export const Loader80bots = ({ data, styled, ...props }) => {
+  const [icon, setIcon] = useState(null)
+
   useEffect(() => {
     if (data === 'light') {
       setIcon(lightLoaderImage)
@@ -20,8 +22,6 @@ export const Loader80bots = ({ data, styled, ...props }) => {
       setIcon(darkLoaderImage)
     }
   }, [data])
-
-  const [icon, setIcon] = useState(null)
 
   return (
     <LoaderContainer>

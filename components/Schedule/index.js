@@ -12,6 +12,7 @@ import {
   ModalFooter,
   ModalHeader,
   CardHeader,
+  CardFooter,
 } from 'reactstrap'
 import {
   LimitFilter,
@@ -399,6 +400,8 @@ const BotsSchedule = () => {
             </thead>
             <tbody>{schedules.map(renderRow)}</tbody>
           </Table>
+        </CardBody>
+        <CardFooter>
           <Paginator
             total={total}
             pageSize={limit}
@@ -416,8 +419,7 @@ const BotsSchedule = () => {
               )
             }}
           />
-        </CardBody>
-
+        </CardFooter>
         <Modal
           isOpen={isModalOpen}
           title={'Delete this schedule?'}

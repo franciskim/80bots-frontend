@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import { Button } from 'reactstrap'
+import { Button, PaginationLink, PaginationItem, Pagination } from 'reactstrap'
 
 const PaginationContainer = styled.div`
   display: flex;
@@ -124,37 +124,37 @@ export const Paginator = (props) => {
   }
 
   return (
-    <PaginationContainer>
-      <PaginationList>
-        <ListItem onClick={() => setPage(1)}>&laquo;</ListItem>
-        <ListItem onClick={() => setPage(currentPage - 1)}>&lsaquo;</ListItem>
-        {pages.map((page, index) => (
-          <ListItem
-            active={page === currentPage}
-            key={index}
-            onClick={() => setPage(page)}
-          >
-            {page}
-          </ListItem>
-        ))}
-        <ListItem onClick={() => setPage(currentPage + 1)}>&rsaquo;</ListItem>
-        <ListItem onClick={() => setPage(Math.ceil(total / pageSize))}>
-          &raquo;
-        </ListItem>
-        &nbsp;Page&nbsp;
-        <input
-          type={'text'}
-          style={pageJumpStyle}
-          size={'3'}
-          onChange={(event) => setJumpPage(event.target.value)}
-          placeholder={currentPage}
-        />
-        &nbsp;of {totalPages}&nbsp;
-        <Button type={'primary'} onClick={() => setPage(parseInt(jumpPage))}>
-          Go
-        </Button>
-      </PaginationList>
-    </PaginationContainer>
+    <Pagination
+      className="pagination justify-content-end mb-0"
+      listClassName="justify-content-end mb-0"
+    >
+      <PaginationItem className="disabled">
+        <PaginationLink
+          href="#pablo"
+          onClick={(e) => e.preventDefault()}
+          tabIndex="-1"
+        >
+          <i className="fas fa-angle-left" />
+          <span className="sr-only">Previous</span>
+        </PaginationLink>
+      </PaginationItem>
+      <PaginationItem className="active">
+        <PaginationLink href="#pablo" onClick={(e) => e.preventDefault()}>
+          1
+        </PaginationLink>
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationLink href="#pablo" onClick={(e) => e.preventDefault()}>
+          2 <span className="sr-only">(current)</span>
+        </PaginationLink>
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationLink href="#pablo" onClick={(e) => e.preventDefault()}>
+          <i className="fas fa-angle-right" />
+          <span className="sr-only">Next</span>
+        </PaginationLink>
+      </PaginationItem>
+    </Pagination>
   )
 }
 

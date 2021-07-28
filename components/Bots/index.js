@@ -7,6 +7,7 @@ import {
   ButtonGroup,
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   Modal,
 } from 'reactstrap'
@@ -349,23 +350,6 @@ const Bots = () => {
             </thead>
             <tbody>{bots.map(renderRow)}</tbody>
           </Table>
-          <Paginator
-            total={total}
-            pageSize={limit}
-            initialPage={page}
-            onChangePage={(page) => {
-              setPage(page)
-              dispatch(
-                getBots({
-                  page,
-                  limit,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
-              )
-            }}
-          />
 
           <Modal
             ref={modal}
@@ -396,6 +380,25 @@ const Bots = () => {
             </ButtonGroup>
           </Modal>
         </CardBody>
+        <CardFooter>
+          <Paginator
+            total={total}
+            pageSize={limit}
+            initialPage={page}
+            onChangePage={(page) => {
+              setPage(page)
+              dispatch(
+                getBots({
+                  page,
+                  limit,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              )
+            }}
+          />
+        </CardFooter>
       </Card>
     </>
   )

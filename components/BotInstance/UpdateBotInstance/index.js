@@ -159,15 +159,7 @@ const Index = () => {
         </Row>
         {error && <Error>{error}</Error>}
       </Container>
-      <Modal
-        ref={modal}
-        title={'Restart bot instance'}
-        // contentStyles={css`
-        //   overflow-x: visible;
-        //   overflow-y: hidden;
-        // `}
-        disableSideClosing
-      >
+      <Modal ref={modal} title={'Restart bot instance'} disableSideClosing>
         <RestartEditor
           onSubmit={restartSubmit}
           onClose={() => modal.current.close()}

@@ -10,6 +10,10 @@ import {
   Card,
   Table,
   CardHeader,
+  CardFooter,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
 } from 'reactstrap'
 import { LimitFilter, ListFilter, SearchFilter } from 'components/default/Table'
 import { addNotification } from 'lib/helper'
@@ -512,10 +516,7 @@ const RunningBots = () => {
           />
         </td>
         <td>
-          <Link
-            href={'bots/running/[id]'}
-            as={`bots/running/${botInstance.id}`}
-          >
+          <Link href={'running/[id]'} as={`running/${botInstance.id}`}>
             <a>&gt;&nbsp;View</a>
           </Link>
           {botInstance.status === 'terminated' ? (
@@ -705,6 +706,8 @@ const RunningBots = () => {
             </thead>
             <tbody>{botInstances.map(renderRow)}</tbody>
           </Table>
+        </CardBody>
+        <CardFooter className="py-4">
           <Paginator
             total={total}
             pageSize={limit}
@@ -722,7 +725,7 @@ const RunningBots = () => {
               )
             }}
           />
-        </CardBody>
+        </CardFooter>
       </Card>
     </>
   )
