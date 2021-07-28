@@ -166,19 +166,23 @@ const Index = () => {
   return (
     <Card>
       <CardBody>
-        <Row>
-          <Input
-            type={'text'}
-            label={'Bot Name *'}
-            value={botName}
-            onChange={(e) => setBotName(e.target.value)}
-          />
-        </Row>
-        <Row>
-          <Label>Bot Script</Label>
-        </Row>
-        <Row>
-          <Col>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Bot Name *
+          </Label>
+          <Col md={10}>
+            <Input
+              type="text"
+              value={botName}
+              onChange={(e) => setBotName(e.target.value)}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Bot Script
+          </Label>
+          <Col md={10}>
             <Nav tabs>
               <NavItem>
                 <NavLink
@@ -216,19 +220,26 @@ const Index = () => {
               </TabPane>
             </TabContent>
           </Col>
-        </Row>
-        <Row>
-          <Input
-            type="textarea"
-            label={'Description'}
-            rows={5}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </Row>
-        <Row>
-          <Col md="6">
-            <Label className="form-control-label">Tags</Label>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Description
+          </Label>
+          <Col md={10}>
+            <Input
+              type="textarea"
+              label={'Description'}
+              rows={5}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Tags
+          </Label>
+          <Col md={10}>
             <Select
               id="tags-selector"
               instanceId="tags-selector"
@@ -239,23 +250,27 @@ const Index = () => {
               value={botTags}
             />
           </Col>
-          <Col md="6">
-            <FormGroup>
-              <Label className="form-control-label">Access *</Label>
-              <Button
-                className="form-control"
-                color={isPrivate ? 'danger' : 'primary'}
-                onClick={() => setPrivate(!isPrivate)}
-              >
-                {isPrivate ? 'Private' : 'Public'}
-              </Button>
-            </FormGroup>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Access *
+          </Label>
+          <Col md={10}>
+            <Button
+              className="form-control"
+              color={isPrivate ? 'danger' : 'secondary'}
+              onClick={() => setPrivate(!isPrivate)}
+            >
+              {isPrivate ? 'Private' : 'Public'}
+            </Button>
           </Col>
-        </Row>
+        </FormGroup>
         {isPrivate && (
-          <Row>
-            <Col>
-              <Label>Trusted Users</Label>
+          <FormGroup className="row">
+            <Label md={2} className="form-control-label">
+              Trusted Users
+            </Label>
+            <Col md={10}>
               <AsyncSelect
                 isMulti
                 defaultOptions={users.map(toOptions)}
@@ -265,7 +280,7 @@ const Index = () => {
                 loadOptions={onUsersSearch}
               />
             </Col>
-          </Row>
+          </FormGroup>
         )}
         {error && <Error>{error}</Error>}
       </CardBody>

@@ -299,98 +299,29 @@ const Bots = () => {
   }
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <ButtonGroup>
-            <Button color="success" onClick={() => Router.push('bot')}>
-              Add Bot
-            </Button>
-            <Button color="primary" onClick={sync} loading={`${syncLoading}`}>
-              Sync Bots From Repo
-            </Button>
-          </ButtonGroup>
-        </CardHeader>
-        <CardBody>
-          <div>
-            <LimitFilter
-              id="limitfilter"
-              instanceId="limitfilter"
-              defaultValue={limit}
-              onChange={({ value }) => {
-                setLimit(value)
-                dispatch(
-                  getBots({
-                    page,
-                    limit: value,
-                    sort: order.field,
-                    order: order.value,
-                    search,
-                  })
-                )
-              }}
-            />
-            <SearchFilter
-              searchProps={{
-                onSearch: (value) => {
-                  searchBots(value)
-                },
-              }}
-            />
-          </div>
-          <Table responsive>
-            <thead>
-              <tr>
-                <OrderTh field={'name'}>Bot Name</OrderTh>
-                <OrderTh field={'type'}>Bot Type</OrderTh>
-                <OrderTh field={'description'}>Description</OrderTh>
-                <OrderTh field={'status'}>Status</OrderTh>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>{bots.map(renderRow)}</tbody>
-          </Table>
-
-          <Modal
-            ref={modal}
-            title={'Deploy selected bot?'}
-            onClose={() => setClickedBot(null)}
-            // disableSideClosing
-          >
-            <LaunchEditor
-              onSubmit={launchBot}
-              onClose={() => modal.current.close()}
-              bot={clickedBot}
-            />
-          </Modal>
-          <Modal ref={deleteModal} title={'Delete Bot'}>
-            <ButtonGroup>
-              <Button
-                color="danger"
-                onClick={() => {
-                  setClickedBot(null)
-                  deleteModal.current.close()
-                }}
-              >
-                Cancel
-              </Button>
-              <Button color="primary" onClick={getDeleteBot}>
-                Yes
-              </Button>
-            </ButtonGroup>
-          </Modal>
-        </CardBody>
-        <CardFooter>
-          <Paginator
-            total={total}
-            pageSize={limit}
-            initialPage={page}
-            onChangePage={(page) => {
-              setPage(page)
+    <Card>
+      <CardHeader>
+        <ButtonGroup>
+          <Button color="success" onClick={() => Router.push('bot')}>
+            Add Bot
+          </Button>
+          <Button color="primary" onClick={sync} loading={`${syncLoading}`}>
+            Sync Bots From Repo
+          </Button>
+        </ButtonGroup>
+      </CardHeader>
+      <CardBody>
+        <div>
+          <LimitFilter
+            id="limitfilter"
+            instanceId="limitfilter"
+            defaultValue={limit}
+            onChange={({ value }) => {
+              setLimit(value)
               dispatch(
                 getBots({
                   page,
-                  limit,
+                  limit: value,
                   sort: order.field,
                   order: order.value,
                   search,
@@ -398,9 +329,75 @@ const Bots = () => {
               )
             }}
           />
-        </CardFooter>
-      </Card>
-    </>
+          <SearchFilter
+            searchProps={{
+              onSearch: (value) => {
+                searchBots(value)
+              },
+            }}
+          />
+        </div>
+        <Table responsive>
+          <thead>
+            <tr>
+              <OrderTh field={'name'}>Bot Name</OrderTh>
+              <OrderTh field={'type'}>Bot Type</OrderTh>
+              <OrderTh field={'description'}>Description</OrderTh>
+              <OrderTh field={'status'}>Status</OrderTh>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>{bots.map(renderRow)}</tbody>
+        </Table>
+        <Modal
+          ref={modal}
+          title={'Deploy selected bot?'}
+          onClose={() => setClickedBot(null)}
+          // disableSideClosing
+        >
+          <LaunchEditor
+            onSubmit={launchBot}
+            onClose={() => modal.current.close()}
+            bot={clickedBot}
+          />
+        </Modal>
+        <Modal ref={deleteModal} title={'Delete Bot'}>
+          <ButtonGroup>
+            <Button
+              color="danger"
+              onClick={() => {
+                setClickedBot(null)
+                deleteModal.current.close()
+              }}
+            >
+              Cancel
+            </Button>
+            <Button color="primary" onClick={getDeleteBot}>
+              Yes
+            </Button>
+          </ButtonGroup>
+        </Modal>
+      </CardBody>
+      <CardFooter>
+        <Paginator
+          total={total}
+          pageSize={limit}
+          initialPage={page}
+          onChangePage={(page) => {
+            setPage(page)
+            dispatch(
+              getBots({
+                page,
+                limit,
+                sort: order.field,
+                order: order.value,
+                search,
+              })
+            )
+          }}
+        />
+      </CardFooter>
+    </Card>
   )
 }
 

@@ -58,30 +58,30 @@ export function initializeStore(initialState = undefined) {
   }
 
   let store
-  // if (!isServer) {
-  //   //If it's on client side, create a store which will persist
-  //   const { persistStore, persistReducer } = require('redux-persist')
-  //   const storage = require('redux-persist/lib/storage').default
-  //   const persistConfig = {
-  //     key: '80bots',
-  //     whitelist: ['auth'], // only counter will be persisted, add other reducers if needed
-  //     storage, // if needed, use a safer storage
-  //   }
-  //   const persistedReducer = persistReducer(persistConfig, rootReducer) // Create a new reducer with our existing reducer
+  if (!isServer) {
+    //If it's on client side, create a store which will persist
+    const { persistStore, persistReducer } = require('redux-persist')
+    const storage = require('redux-persist/lib/storage').default
+    const persistConfig = {
+      key: '80bots',
+      whitelist: ['auth'], // only counter will be persisted, add other reducers if needed
+      storage, // if needed, use a safer storage
+    }
+    const persistedReducer = persistReducer(persistConfig, rootReducer) // Create a new reducer with our existing reducer
 
-  //   store = createStore(
-  //     persistedReducer,
-  //     initialState,
-  //     composeWithDevTools(applyMiddleware(...middlewares))
-  //   )
-  //   store.__PERSISTOR = persistStore(store)
-  // } else {
-  store = createStore(
-    rootReducer,
-    initialState,
-    composeWithDevTools(applyMiddleware(...middlewares))
-  )
-  // }
+    store = createStore(
+      persistedReducer,
+      initialState,
+      composeWithDevTools(applyMiddleware(...middlewares))
+    )
+    store.__PERSISTOR = persistStore(store)
+  } else {
+    store = createStore(
+      rootReducer,
+      initialState,
+      composeWithDevTools(applyMiddleware(...middlewares))
+    )
+  }
   sagaMiddleware.run(() => saga(store.dispatch, store.getState))
 
   return store

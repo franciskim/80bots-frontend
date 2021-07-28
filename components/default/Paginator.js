@@ -14,9 +14,8 @@ export const Paginator = ({ total, initialPage, pageSize, onChangePage }) => {
     startIndex: null,
     endIndex: null,
   })
-
   const setPaginator = (page) => {
-    const totalPages = Math.ceil(total / pageSize)
+    const totalPages = Math.ceil(total / 2)
     let startPage, endPage
     if (totalPages <= 10) {
       startPage = 1
@@ -81,13 +80,14 @@ export const Paginator = ({ total, initialPage, pageSize, onChangePage }) => {
   // if (total <= pageSize) {
   //   return null
   // }
+  console.error(totalPages, '<<<')
 
   return (
     <Pagination
       className="pagination justify-content-end mb-0"
       listClassName="justify-content-end mb-0"
     >
-      <PaginationItem className="disabled">
+      {/* <PaginationItem className="disabled">
         <PaginationLink
           href="#pablo"
           onClick={(e) => e.preventDefault()}
@@ -101,18 +101,23 @@ export const Paginator = ({ total, initialPage, pageSize, onChangePage }) => {
         <PaginationLink href="#pablo" onClick={(e) => e.preventDefault()}>
           1
         </PaginationLink>
-      </PaginationItem>
-      <PaginationItem>
-        <PaginationLink href="#pablo" onClick={(e) => e.preventDefault()}>
-          2 <span className="sr-only">(current)</span>
-        </PaginationLink>
-      </PaginationItem>
-      <PaginationItem>
+      </PaginationItem> */}
+      {Array.from({ length: totalPages }, (v, i) => {
+        return (
+          <PaginationItem key={`page-${i}`}>
+            <PaginationLink href="#pablo" onClick={(e) => e.preventDefault()}>
+              {i + 1} <span className="sr-only">(current)</span>
+            </PaginationLink>
+          </PaginationItem>
+        )
+      })}
+
+      {/* <PaginationItem>
         <PaginationLink href="#pablo" onClick={(e) => e.preventDefault()}>
           <i className="fas fa-angle-right" />
           <span className="sr-only">Next</span>
         </PaginationLink>
-      </PaginationItem>
+      </PaginationItem> */}
     </Pagination>
   )
 }

@@ -304,7 +304,7 @@ const UpdateBot = () => {
               <Label>Access *</Label>
               <Button
                 className="form-control"
-                color={isPrivate ? 'danger' : 'primary'}
+                color={isPrivate ? 'danger' : 'secondary'}
                 onClick={() => setPrivate(!isPrivate)}
               >
                 {isPrivate ? 'Private' : 'Public'}
