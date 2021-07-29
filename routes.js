@@ -23,17 +23,11 @@ import ViewRunningBotPage from 'pages/admin/bots/running/[id]'
 
 const routes = [
   {
-    name: 'Dashboards',
-    icon: 'ni ni-shop text-primary',
-    path: '/dashboard',
-    miniName: 'D',
-    layout: '/admin',
-  },
-  {
     path: '/bots/running',
     name: 'Working Bots',
     icon: 'fa fa-robot text-blue',
     layout: '/admin',
+    // miniName: 'R',
     component: RunningBotsPage,
   },
   {
@@ -53,7 +47,7 @@ const routes = [
   {
     path: '/bot',
     name: 'Add New Bot',
-    icon: 'fa fa-plus',
+    icon: 'fa fa-plus text-green',
     layout: '/admin',
   },
   {
@@ -67,7 +61,7 @@ const routes = [
   {
     path: '/scheduler',
     name: 'Scheduler',
-    icon: 'fa fa-calendar-alt',
+    icon: 'fa fa-calendar-alt text-purple',
     layout: '/admin',
     component: SchedulersPage,
   },
@@ -80,14 +74,14 @@ const routes = [
   {
     path: '/settings',
     name: 'AWS AMI Settings',
-    icon: 'fa fa-cog',
+    icon: 'fa fa-cog text-gray',
     layout: '/admin',
     component: SettingsPage,
   },
   {
     path: '/users',
     name: 'Users',
-    icon: 'fa fa-users',
+    icon: 'fa fa-users text-red',
     layout: '/admin',
     component: UsersPage,
   },
@@ -134,145 +128,6 @@ const routes = [
     layout: '/admin',
     redirect: true,
   },
-  //     {
-  //       path: '/rtl-support',
-  //       name: 'RTL Support',
-  //       miniName: 'RS',
-  //       layout: '/rtl',
-  //     },
-  //   ],
-  // },
-  // {
-  //   collapse: true,
-  //   name: 'Components',
-  //   icon: 'ni ni-ui-04 text-info',
-  //   state: 'componentsCollapse',
-  //   views: [
-  //     {
-  //       path: '/buttons',
-  //       name: 'Buttons',
-  //       miniName: 'B',
-  //       layout: '/admin',
-  //     },
-  //     {
-  //       path: '/cards',
-  //       name: 'Cards',
-  //       miniName: 'C',
-  //       layout: '/admin',
-  //     },
-  //     {
-  //       path: '/grid',
-  //       name: 'Grid',
-  //       miniName: 'G',
-  //       layout: '/admin',
-  //     },
-  //     {
-  //       path: '/notifications',
-  //       name: 'Notifications',
-  //       miniName: 'N',
-  //       layout: '/admin',
-  //     },
-  //     {
-  //       path: '/icons',
-  //       name: 'Icons',
-  //       miniName: 'I',
-  //       layout: '/admin',
-  //     },
-  //     {
-  //       path: '/typography',
-  //       name: 'Typography',
-  //       miniName: 'T',
-  //       layout: '/admin',
-  //     },
-  //     {
-  //       collapse: true,
-  //       name: 'Multi Level',
-  //       miniName: 'M',
-  //       state: 'multiCollapse',
-  //       views: [
-  //         {
-  //           path: '#pablo',
-  //           name: 'Third level menu',
-  //           layout: '/',
-  //         },
-  //         {
-  //           path: '#pablo',
-  //           name: 'Just another link',
-  //           layout: '/',
-  //         },
-  //         {
-  //           path: '#pablo',
-  //           name: 'One last link',
-  //           layout: '/',
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
-  // {
-  //   collapse: true,
-  //   name: 'Forms',
-  //   icon: 'ni ni-single-copy-04 text-pink',
-  //   state: 'formsCollapse',
-  //   views: [
-  //     {
-  //       path: '/elements',
-  //       name: 'Elements',
-  //       miniName: 'E',
-  //       layout: '/admin',
-  //     },
-  //     {
-  //       path: '/components',
-  //       name: 'Components',
-  //       miniName: 'C',
-  //       layout: '/admin',
-  //     },
-  //     {
-  //       path: '/validation',
-  //       name: 'Validation',
-  //       miniName: 'V',
-  //       layout: '/admin',
-  //     },
-  //   ],
-  // },
-  // {
-  //   collapse: true,
-  //   name: 'Tables',
-  //   icon: 'ni ni-align-left-2 text-default',
-  //   state: 'tablesCollapse',
-  //   views: [
-  //     {
-  //       path: '/tables',
-  //       name: 'Tables',
-  //       miniName: 'T',
-  //       layout: '/admin',
-  //     },
-  //     {
-  //       path: '/sortable',
-  //       name: 'Sortable',
-  //       miniName: 'S',
-  //       layout: '/admin',
-  //     },
-  //     {
-  //       path: '/react-bs-tables',
-  //       name: 'React BS Tables',
-  //       miniName: 'RBT',
-  //       layout: '/admin',
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: '/widgets',
-  //   name: 'Widgets',
-  //   icon: 'ni ni-archive-2 text-green',
-  //   layout: '/admin',
-  // },
-  // {
-  //   path: '/charts',
-  //   name: 'Charts',
-  //   icon: 'ni ni-chart-pie-35 text-info',
-  //   layout: '/admin',
-  // },
 ]
 
 export default routes

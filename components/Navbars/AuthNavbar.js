@@ -70,7 +70,7 @@ function AdminNavbar() {
             <div className="navbar-collapse-header">
               <Row>
                 <Col className="collapse-brand" xs="6">
-                  <Link href="/admin/dashboard">
+                  <Link href="/admin/bots/running">
                     <img alt="..." src={require('assets/img/brand/blue.png')} />
                   </Link>
                 </Col>
@@ -92,13 +92,6 @@ function AdminNavbar() {
               </Row>
             </div>
             <Nav className="mr-auto" navbar>
-              <NavItem>
-                <Link href="/admin/dashboard">
-                  <NavLink href="#pablo">
-                    <span className="nav-link-inner--text">Dashboard</span>
-                  </NavLink>
-                </Link>
-              </NavItem>
               <NavItem>
                 <Link href="/auth/login">
                   <NavLink href="#pablo">

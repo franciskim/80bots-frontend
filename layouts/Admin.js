@@ -21,6 +21,7 @@ import AdminNavbar from 'components/Navbars/AdminNavbar.js'
 import AdminFooter from 'components/Footers/AdminFooter.js'
 import Sidebar from 'components/Sidebar/Sidebar.js'
 import routes from 'routes.js'
+import logoImage from 'assets/img/80bots-logo.svg'
 
 function Admin({ router, children }) {
   const [sidenavOpen, setSidenavOpen] = useState(true)
@@ -66,6 +67,8 @@ function Admin({ router, children }) {
       ? 'dark'
       : 'light'
   }
+  console.error('Sidenavopen???', sidenavOpen)
+
   return (
     <>
       <Sidebar
@@ -74,8 +77,8 @@ function Admin({ router, children }) {
         sidenavOpen={sidenavOpen}
         logo={{
           innerLink: '/',
-          imgSrc: require('assets/img/80bots-logo.svg'),
-          imgAlt: '...',
+          imgSrc: logoImage,
+          imgAlt: '80bots.com',
         }}
       />
       <div className="main-content">
