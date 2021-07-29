@@ -1,21 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import SettingsEditor from './SettingsEditor'
 import { useSelector, useDispatch } from 'react-redux'
 import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
 import {
+  Col,
   CardBody,
   Button,
   Table,
   Card,
   Modal,
+  Label,
   ModalHeader,
   ModalFooter,
   CardHeader,
   ModalBody,
+  FormGroup,
+  CardFooter,
 } from 'reactstrap'
 import { getRegions, updateRegion } from 'store/bot/actions'
 import { Paginator } from 'components/default'
-import { Select } from 'components/default/inputs'
+import Select from 'react-select'
 import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'lib/helper'
 import { addListener } from 'store/socket/actions'
@@ -195,101 +199,103 @@ const Settings = () => {
   )
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <Button
-            color="primary"
-            onClick={() => {
-              setIsEditSettingsModalOpened(true)
-            }}
-          >
-            Edit Global Bot Settings
-          </Button>
-        </CardHeader>
-        <CardBody>
-          <div>
-            <LimitFilter
-              id="limitfilter"
-              instanceId="limitfilter"
-              onChange={({ value }) => {
-                setLimit(value)
-                getRegions({
-                  page,
-                  limit: value,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
-              }}
-            />
-            <SearchFilter
-              searchProps={{
-                onSearch: (value) => {
-                  searchRegions(value)
-                },
-              }}
-            />
-          </div>
-          <Table responsive>
-            <thead>
-              <tr>
-                <OrderTh field={'name'}>Name</OrderTh>
-                <OrderTh field={'code'}>Code</OrderTh>
-                <OrderTh field={'limit'}>Limit</OrderTh>
-                <OrderTh field={'used_limit'}>Used Limit</OrderTh>
-                <th>Default AMI</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>{regions.map(renderRow)}</tbody>
-          </Table>
-          <Paginator
-            total={total}
-            pageSize={limit}
-            onChangePage={(page) => {
-              setPage(page)
-              dispatch(
-                getRegions({
-                  page,
-                  limit,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
-              )
+    <Card>
+      <CardHeader>
+        <Button
+          color="primary"
+          onClick={() => {
+            setIsEditSettingsModalOpened(true)
+          }}
+        >
+          Edit Global Bot Settings
+        </Button>
+      </CardHeader>
+      <CardBody>
+        <div>
+          <LimitFilter
+            id="limitfilter"
+            instanceId="limitfilter"
+            onChange={({ value }) => {
+              setLimit(value)
+              getRegions({
+                page,
+                limit: value,
+                sort: order.field,
+                order: order.value,
+                search,
+              })
             }}
           />
-        </CardBody>
-      </Card>
-      <Modal isOpen={isModalOpen} onClose={onModalClose}>
-        <ModalHeader>Edit Default AMI</ModalHeader>
-        <ModalBody>
-          <Select
-            label={'AMI'}
-            onChange={(option) => setDefaultAmi(option.value)}
-            // styles={selectStyles}
-            options={amis.map(toOption)}
-            value={getCurrentSelect()}
+          <SearchFilter
+            searchProps={{
+              onSearch: (value) => {
+                searchRegions(value)
+              },
+            }}
           />
-        </ModalBody>
-        <ModalFooter>
-          <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
-          <Button color="primary" onClick={changeRegionAmi}>
-            Update
-          </Button>
-        </ModalFooter>
-      </Modal>
-
-      <Modal isOpen={isEditSettingsModalOpened}>
-        <ModalHeader>Edit Global Settings</ModalHeader>
-        <SettingsEditor
-          onClose={() => {
-            setIsEditSettingsModalOpened(false)
+        </div>
+        <Table responsive>
+          <thead>
+            <tr>
+              <OrderTh field={'name'}>Name</OrderTh>
+              <OrderTh field={'code'}>Code</OrderTh>
+              <OrderTh field={'limit'}>Limit</OrderTh>
+              <OrderTh field={'used_limit'}>Used Limit</OrderTh>
+              <th>Default AMI</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>{regions.map(renderRow)}</tbody>
+        </Table>
+        <Modal isOpen={isModalOpen} onClose={onModalClose}>
+          <ModalHeader>Edit Default AMI</ModalHeader>
+          <ModalBody>
+            <FormGroup className="row">
+              <Label md={3}>AMI</Label>
+              <Col md={9}>
+                <Select
+                  onChange={(option) => setDefaultAmi(option.value)}
+                  options={amis.map(toOption)}
+                  value={getCurrentSelect()}
+                />
+              </Col>
+            </FormGroup>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
+            <Button color="primary" onClick={changeRegionAmi}>
+              Update
+            </Button>
+          </ModalFooter>
+        </Modal>
+        <Modal isOpen={isEditSettingsModalOpened}>
+          <ModalHeader>Edit Global Settings</ModalHeader>
+          <SettingsEditor
+            onClose={() => {
+              setIsEditSettingsModalOpened(false)
+            }}
+          />
+        </Modal>
+      </CardBody>
+      <CardFooter>
+        <Paginator
+          total={total}
+          pageSize={limit}
+          onChangePage={(page) => {
+            setPage(page)
+            dispatch(
+              getRegions({
+                page,
+                limit,
+                sort: order.field,
+                order: order.value,
+                search,
+              })
+            )
           }}
         />
-      </Modal>
-    </>
+      </CardFooter>
+    </Card>
   )
 }
 

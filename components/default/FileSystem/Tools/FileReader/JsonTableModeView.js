@@ -120,7 +120,7 @@ const JsonTableModeView = ({ output }) => {
   }
 
   return (
-    <div>
+    <>
       <Header>
         <LimitFilter
           id="limitfilter"
@@ -130,7 +130,7 @@ const JsonTableModeView = ({ output }) => {
         />
       </Header>
       <Content>
-        <Table>
+        <Table responsive>
           {slicedChunk[0] && (
             <thead>
               <tr>{getHeader(slicedChunk[0])}</tr>
@@ -147,7 +147,7 @@ const JsonTableModeView = ({ output }) => {
           onChangePage={(page) => setPage(page)}
         />
       </Footer>
-    </div>
+    </>
   )
 }
 

@@ -14,7 +14,6 @@ import {
   Col,
   Card,
   CardBody,
-  ButtonGroup,
   Label,
   Nav,
   TabContent,
@@ -22,6 +21,7 @@ import {
   NavLink,
   TabPane,
   CardFooter,
+  FormGroup,
 } from 'reactstrap'
 import { CodeEditor } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
@@ -203,7 +203,7 @@ const UpdateBot = () => {
         ...users,
       }
 
-      updateBot(aboutBot.id, convertBotData(botData))
+      dispatch(updateBot(aboutBot.id, convertBotData(botData)))
         .then(() => {
           addNotification({
             type: NOTIFICATION_TYPES.SUCCESS,
@@ -223,20 +223,25 @@ const UpdateBot = () => {
   return (
     <Card>
       <CardBody>
-        <Row>
-          <Input
-            type={'text'}
-            label={'Bot Name *'}
-            value={botName}
-            // styles={inputStyles}
-            onChange={(e) => setBotName(e.target.value)}
-          />
-        </Row>
-        <Row>
-          <Label>Bot Script</Label>
-        </Row>
-        <Row>
-          <Col>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Bot Name *
+          </Label>
+          <Col md={10}>
+            <Input
+              type={'text'}
+              value={botName}
+              // styles={inputStyles}
+              onChange={(e) => setBotName(e.target.value)}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            {' '}
+            Bot Script
+          </Label>
+          <Col md={10}>
             <Nav tabs>
               <NavItem>
                 <NavLink
@@ -274,20 +279,27 @@ const UpdateBot = () => {
               </TabPane>
             </TabContent>
           </Col>
-        </Row>
-        <Row>
-          <Input
-            type="textarea"
-            label={'Description'}
-            rows={5}
-            value={description}
-            // styles={inputStyles}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </Row>
-        <Row>
-          <div>
-            <Label>Tags</Label>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Description
+          </Label>
+          <Col md={10}>
+            <Input
+              type="textarea"
+              label={'Description'}
+              rows={5}
+              value={description}
+              // styles={inputStyles}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Tags
+          </Label>
+          <Col md={10}>
             <Select
               id="tags-selector"
               instanceId="tags-selector"
@@ -298,9 +310,13 @@ const UpdateBot = () => {
               onChange={(options) => setTags(options)}
               value={botTags}
             />
-          </div>
-          <div>
-            <Label>Access *</Label>
+          </Col>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Access *
+          </Label>
+          <Col md={10}>
             <Button
               className="form-control"
               color={isPrivate ? 'danger' : 'secondary'}
@@ -308,12 +324,14 @@ const UpdateBot = () => {
             >
               {isPrivate ? 'Private' : 'Public'}
             </Button>
-          </div>
-        </Row>
+          </Col>
+        </FormGroup>
         {isPrivate && (
-          <Row>
-            <Col>
-              <Label>Trusted Users</Label>
+          <FormGroup className="row">
+            <Label md={2} className="form-control-label">
+              Trusted Users
+            </Label>
+            <Col md={10}>
               <AsyncSelect
                 isMulti
                 defaultOptions={users.map(toOptions)}
@@ -323,7 +341,7 @@ const UpdateBot = () => {
                 loadOptions={onUsersSearch}
               />
             </Col>
-          </Row>
+          </FormGroup>
         )}
         {error && <Error>{error}</Error>}
       </CardBody>

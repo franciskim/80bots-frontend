@@ -75,6 +75,7 @@ export const CodeEditor = ({ value, onChange, ...props }) => {
   const handleBeautify = (code) => {
     const result = beautifyJavaScript(code)
     onChange(result)
+    console.info('handle beautify')
   }
 
   return (

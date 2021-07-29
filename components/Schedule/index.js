@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import styled from '@emotion/styled'
 import {
   Card,
   CardBody,
@@ -24,6 +23,7 @@ import { addNotification } from 'lib/helper'
 import { useDispatch, useSelector } from 'react-redux'
 import { NOTIFICATION_TYPES } from 'config'
 import Paginator from 'components/default/Paginator'
+import SweetAlert from 'react-bootstrap-sweetalert'
 import {
   getSchedules,
   createSchedule,
@@ -133,11 +133,15 @@ const BotsSchedule = () => {
 
   const searchBots = (value, callback) => {
     dispatch(getRunningBots({ page: 1, limit: 50, search: value })).then(
-      (action) => callback(action.data.data.map(toOptions))
+      (action) => {
+        console.error(action, 'returns,')
+        return callback(action.data.data.map(toOptions))
+      }
     )
   }
 
   const onBotChange = (option) => {
+    console.error(option, '>>>>')
     setInstanceId(option.value)
   }
 
@@ -294,10 +298,10 @@ const BotsSchedule = () => {
       </td>
       <td>
         {schedule.details.length > 0 ? (
-          <ul>
+          <ul className="list-unstyled">
             {schedule.details.map((detail, idx) => (
               <li key={idx}>
-                <Badge pill color={'info'}>
+                <Badge pill color={'info'} key={idx}>
                   {detail.status +
                     ' at ' +
                     detail.day +
@@ -386,7 +390,7 @@ const BotsSchedule = () => {
             }}
           />
         </div>
-        <Table>
+        <Table responsive>
           <thead>
             <tr>
               <OrderTh field={'user'}>User</OrderTh>
@@ -399,6 +403,49 @@ const BotsSchedule = () => {
           </thead>
           <tbody>{schedules.map(renderRow)}</tbody>
         </Table>
+        {isModalOpen && (
+          <SweetAlert
+            warning
+            showCancel
+            confirmBtnText="Yes"
+            confirmBtnBsStyle="danger"
+            title="Delete this schedule?"
+            onConfirm={modalDeleteSchedule}
+            onCancel={() => {
+              setIsModelOpen(false)
+            }}
+            focusCancelBtn
+          />
+        )}
+
+        <Modal isOpen={isAddModalOpen} onClose={() => setInstanceId(null)}>
+          <ModalHeader>Add Schedule</ModalHeader>
+          <ModalBody>
+            <Label>Select one of your running bots</Label>
+            <AsyncSelect
+              onChange={onBotChange}
+              loadOptions={searchBots}
+              defaultOptions={runningBots.filter(toFilters).map(toOptions)}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={() => setIsAddModalOpen(false)}>Cancel</Button>
+            <Button color="primary" onClick={addSchedule}>
+              Add
+            </Button>
+          </ModalFooter>
+        </Modal>
+        <Modal
+          isOpen={isEditModalOpen}
+          onClose={() => setClickedSchedule(null)}
+        >
+          <ScheduleEditor
+            schedules={clickedSchedule ? clickedSchedule.details : []}
+            close={() => setIsEditModalOpen(false)}
+            onUpdateClick={updateScheduleInstance}
+            user={user}
+          />
+        </Modal>
       </CardBody>
       <CardFooter>
         <Paginator
@@ -419,46 +466,6 @@ const BotsSchedule = () => {
           }}
         />
       </CardFooter>
-      <Modal
-        isOpen={isModalOpen}
-        title={'Delete this schedule?'}
-        onClose={() => setClickedSchedule(null)}
-      >
-        <ModalBody>
-          <Button color="primary" onClick={modalDeleteSchedule}>
-            Yes
-          </Button>
-          <Button color={'danger'} onClick={() => setIsModelOpen(false)}>
-            Cancel
-          </Button>
-        </ModalBody>
-      </Modal>
-      <Modal isOpen={isAddModalOpen} onClose={() => setInstanceId(null)}>
-        <ModalHeader>Add Schedule</ModalHeader>
-        <ModalBody>
-          <Label>Select one of your running bots</Label>
-          <AsyncSelect
-            onChange={onBotChange}
-            loadOptions={searchBots}
-            defaultOptions={runningBots.filter(toFilters).map(toOptions)}
-          />
-        </ModalBody>
-        <ModalFooter>
-          <Button onClick={() => setIsAddModalOpen(false)}>Cancel</Button>
-          <Button color="primary" onClick={addSchedule}>
-            Add
-          </Button>
-        </ModalFooter>
-      </Modal>
-      <Modal isOpen={isEditModalOpen} onClose={() => setClickedSchedule(null)}>
-        <ModalHeader>Schedule Editor</ModalHeader>
-        <ScheduleEditor
-          schedules={clickedSchedule ? clickedSchedule.details : []}
-          close={() => setIsEditModalOpen(false)}
-          onUpdateClick={updateScheduleInstance}
-          user={user}
-        />
-      </Modal>
     </Card>
   )
 }

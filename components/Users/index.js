@@ -71,62 +71,60 @@ const Users = () => {
   )
 
   return (
-    <>
-      <Card>
-        <CardBody>
-          <div>
-            <LimitFilter
-              id="limitfilter"
-              instanceId="limitfilter"
-              onChange={({ value }) => {
-                setLimit(value)
-                dispatch(
-                  getUsers({
-                    page,
-                    limit: value,
-                    search,
-                  })
-                )
-              }}
-            />
-            <SearchFilter
-              searchProps={{
-                onSearch: (value) => {
-                  searchUsers(value)
-                },
-              }}
-            />
-          </div>
-          <Table>
-            <thead>
-              <tr>
-                <OrderTh field={'name'}>Name</OrderTh>
-                <OrderTh field={'email'}>Email</OrderTh>
-                <OrderTh field={'date'}>Register Date</OrderTh>
-                <OrderTh field={'status'}>Status</OrderTh>
-              </tr>
-            </thead>
-            <tbody>{users.map(renderRow)}</tbody>
-          </Table>
-        </CardBody>
-        <CardFooter>
-          <Paginator
-            total={total}
-            pageSize={limit}
-            onChangePage={(page) => {
-              setPage(page)
+    <Card>
+      <CardBody>
+        <div>
+          <LimitFilter
+            id="limitfilter"
+            instanceId="limitfilter"
+            onChange={({ value }) => {
+              setLimit(value)
               dispatch(
                 getUsers({
                   page,
-                  limit,
+                  limit: value,
                   search,
                 })
               )
             }}
           />
-        </CardFooter>
-      </Card>
-    </>
+          <SearchFilter
+            searchProps={{
+              onSearch: (value) => {
+                searchUsers(value)
+              },
+            }}
+          />
+        </div>
+        <Table responsive>
+          <thead>
+            <tr>
+              <OrderTh field={'name'}>Name</OrderTh>
+              <OrderTh field={'email'}>Email</OrderTh>
+              <OrderTh field={'date'}>Register Date</OrderTh>
+              <OrderTh field={'status'}>Status</OrderTh>
+            </tr>
+          </thead>
+          <tbody>{users.map(renderRow)}</tbody>
+        </Table>
+      </CardBody>
+      <CardFooter>
+        <Paginator
+          total={total}
+          pageSize={limit}
+          onChangePage={(page) => {
+            setPage(page)
+            dispatch(
+              getUsers({
+                page,
+                limit,
+                search,
+              })
+            )
+          }}
+        />
+      </CardFooter>
+    </Card>
   )
 }
 

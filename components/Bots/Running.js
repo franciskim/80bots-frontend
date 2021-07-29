@@ -684,7 +684,7 @@ const RunningBots = () => {
             }}
           />
         </div>
-        <Table>
+        <Table responsive>
           <thead>
             <tr>
               <OrderTh field={'status'}>Status</OrderTh>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Select } from 'components/default/inputs'
-import { Button, ButtonGroup } from 'reactstrap'
+import Select from 'react-select'
+import { Button, Card, Input, ModalFooter } from 'reactstrap'
 
 const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   const [values, setValues] = useState({})
@@ -292,31 +292,21 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
         max={10}
         onChange={(value) => setAmount(value)}
       />
-      <ButtonGroup>
-        <Button color={'danger'} onClick={onClose}>
-          Cancel
-        </Button>
-        <Button color="primary" onClick={() => amountSet(true)}>
-          Submit
-        </Button>
-      </ButtonGroup>
+      <Button onClick={onClose}>Cancel</Button>
+      <Button color="primary" onClick={() => amountSet(true)}>
+        Submit
+      </Button>
     </>
   ) : (
     <>
       {amount > 1 && <Steps amount={amount} step={step} />}
       {bot && bot.parameters.map(renderParams)}
-      <ButtonGroup>
-        <Button
-          disabled={amount > 1 && step === 1}
-          type={'danger'}
-          onClick={cancel}
-        >
-          {amount === 1 ? 'Cancel' : 'Previous'}
-        </Button>
-        <Button color="primary" onClick={submit}>
-          {step === amount ? 'Launch' : 'Next'}
-        </Button>
-      </ButtonGroup>
+      <Button disabled={amount > 1 && step === 1} onClick={cancel}>
+        {amount === 1 ? 'Cancel' : 'Previous'}
+      </Button>
+      <Button color="primary" onClick={submit}>
+        {step === amount ? 'Launch' : 'Next'}
+      </Button>
     </>
   )
 }

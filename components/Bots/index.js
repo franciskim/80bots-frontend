@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Router from 'next/router'
 import LaunchEditor from './LaunchEditor'
 import {
@@ -10,10 +10,13 @@ import {
   CardFooter,
   CardHeader,
   Modal,
+  ModalBody,
 } from 'reactstrap'
 import { Paginator } from 'components/default'
 import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
 import { useDispatch, useSelector } from 'react-redux'
+import SweetAlert from 'react-bootstrap-sweetalert'
+
 import {
   syncLocalBots,
   launchInstance,
@@ -91,14 +94,15 @@ const Bots = () => {
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
 
-  const modal = useRef(null)
-  const deleteModal = useRef(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const syncLoading = useSelector((state) => state.bot.syncLoading)
   const bots = useSelector((state) => state.bot.bots)
   const total = useSelector((state) => state.bot.total)
   const user = useSelector((state) => state.auth.user)
   const limit = useSelector((state) => state.bot.limit)
+
   useEffect(() => {
     dispatch(getBots({ page, limit }))
     dispatch(
@@ -123,7 +127,7 @@ const Bots = () => {
   }, [page, limit])
 
   const launchBot = (params) => {
-    modal.current.close()
+    setIsDeleteModalOpen(false)
     dispatch(launchInstance(clickedBot.id, params))
       .then(() => {
         addNotification({
@@ -162,13 +166,13 @@ const Bots = () => {
   }
 
   const getDeleteBot = () => {
-    setClickedBot(null)
     dispatch(deleteBot(clickedBot.id))
       .then(() => {
         addNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
           message: 'Bot removed!',
         })
+        setClickedBot(null)
         dispatch(
           getBots({
             page,
@@ -178,7 +182,7 @@ const Bots = () => {
             search,
           })
         )
-        deleteModal.current.close()
+        setIsDeleteModalOpen(false)
       })
       .catch(() =>
         addNotification({
@@ -238,7 +242,7 @@ const Bots = () => {
           size="sm"
           onClick={() => {
             setClickedBot(bot)
-            modal.current.open()
+            setIsModalOpen(true)
           }}
         >
           Deploy
@@ -259,7 +263,7 @@ const Bots = () => {
           title="Delete Bot"
           onClick={() => {
             setClickedBot(bot)
-            deleteModal.current.open()
+            setIsDeleteModalOpen(true)
           }}
         >
           <i className="fas fa-trash" />
@@ -350,33 +354,32 @@ const Bots = () => {
           <tbody>{bots.map(renderRow)}</tbody>
         </Table>
         <Modal
-          ref={modal}
+          isOpen={isModalOpen}
           title={'Deploy selected bot?'}
           onClose={() => setClickedBot(null)}
-          // disableSideClosing
         >
-          <LaunchEditor
-            onSubmit={launchBot}
-            onClose={() => modal.current.close()}
-            bot={clickedBot}
+          <ModalBody>
+            <LaunchEditor
+              onSubmit={launchBot}
+              onClose={() => setIsModalOpen(false)}
+              bot={clickedBot}
+            />
+          </ModalBody>
+        </Modal>
+        {isDeleteModalOpen && (
+          <SweetAlert
+            warning
+            showCancel
+            confirmBtnText="Yes"
+            confirmBtnBsStyle="danger"
+            title="Delete selected bot?"
+            onConfirm={getDeleteBot}
+            onCancel={() => {
+              setIsDeleteModalOpen(false)
+            }}
+            focusCancelBtn
           />
-        </Modal>
-        <Modal ref={deleteModal} title={'Delete Bot'}>
-          <ButtonGroup>
-            <Button
-              color="danger"
-              onClick={() => {
-                setClickedBot(null)
-                deleteModal.current.close()
-              }}
-            >
-              Cancel
-            </Button>
-            <Button color="primary" onClick={getDeleteBot}>
-              Yes
-            </Button>
-          </ButtonGroup>
-        </Modal>
+        )}
       </CardBody>
       <CardFooter>
         <Paginator

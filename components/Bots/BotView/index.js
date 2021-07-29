@@ -174,16 +174,18 @@ const BotView = () => {
   }, [activeTab])
 
   const CurrentTab = activeTab.component
+
   return (
     <Card>
-      <CardBody>
+      <CardHeader>
         <Button
-          size="sm"
           color="primary"
           onClick={() => (customBack ? customBack() : router.back())}
         >
           Back
         </Button>
+      </CardHeader>
+      <CardBody>
         <h6>
           {Object.keys(botInstance).length ? (
             botInstance.name + ' | ' + botInstance.bot_name

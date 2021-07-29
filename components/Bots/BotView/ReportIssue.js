@@ -69,9 +69,7 @@ const ReportIssue = ({ bot, screenshots, onClose }) => {
         </ScreenshotsContainer>
       )}
       <ButtonGroup>
-        <Button color={'danger'} onClick={onClose}>
-          Cancel
-        </Button>
+        <Button onClick={onClose}>Cancel</Button>
         <Button color="primary" disabled={!message} onClick={submit}>
           Submit
         </Button>

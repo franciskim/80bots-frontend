@@ -17,7 +17,7 @@
 import React from 'react'
 import Link from 'next/link'
 // reactstrap components
-import { Button, Card, CardBody, Container, Row, Col } from 'reactstrap'
+import { Card, CardBody, Container, Row, Col } from 'reactstrap'
 
 function IndexHeader() {
   return (
