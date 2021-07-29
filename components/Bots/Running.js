@@ -138,7 +138,7 @@ const FILTERS_LIST_OPTIONS = [
 const RunningBots = () => {
   const dispatch = useDispatch()
   const [list, setFilterList] = useState('all')
-  const [limit, setLimit] = useState(2)
+  const [limit, setLimit] = useState(20)
   const [order, setOrder] = useState({ value: '', field: '' })
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
@@ -634,7 +634,7 @@ const RunningBots = () => {
           >
             Sync Bot Instances
           </Button>
-          <Button color="secondary" onClick={startAllBots}>
+          <Button color="info" onClick={startAllBots}>
             Launch Workforce
           </Button>
         </ButtonGroup>

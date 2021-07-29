@@ -81,6 +81,7 @@ const SettingsEditor = ({ onClose }) => {
 
   return (
     <>
+      <ModalHeader>Edit Global Settings</ModalHeader>
       <ModalBody>
         <FormGroup>
           <Label className="form-control-label" htmlFor="example-time-input">
@@ -117,7 +118,6 @@ const SettingsEditor = ({ onClose }) => {
           </Label>
           <Input
             type="textarea"
-            rows={10}
             value={script}
             onChange={(e) => setScript(e.target.value)}
             error={

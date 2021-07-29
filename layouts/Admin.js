@@ -30,17 +30,11 @@ function Admin({ router, children }) {
       if (prop.collapse) {
         return getRoutes(prop.views)
       }
-      if (prop.layout === '/admin') {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        )
-      } else {
-        return null
-      }
+      // if (prop.layout === '/admin') {
+      return <Route path={prop.path} component={prop.component} key={key} />
+      // } else {
+      //   return null
+      // }
     })
   }
   const getBrandText = (path) => {

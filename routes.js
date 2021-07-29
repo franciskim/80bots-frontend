@@ -14,19 +14,19 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import RunningBotsPage from 'pages/admin/bots/running'
-import UsersPage from 'pages/admin/users'
-import SettingsPage from 'pages/admin/settings'
-import SchedulersPage from 'pages/admin/scheduler'
-import EditBotPage from 'pages/admin/bot/[id]'
-import ViewRunningBotPage from 'pages/admin/bots/running/[id]'
+import RunningBotsPage from 'pages/bots/running'
+import UsersPage from 'pages/users'
+import SettingsPage from 'pages/settings'
+import SchedulersPage from 'pages/scheduler'
+import EditBotPage from 'pages/bot/[id]'
+import ViewRunningBotPage from 'pages/bots/running/[id]'
 
 const routes = [
   {
     path: '/bots/running',
     name: 'Working Bots',
     icon: 'fa fa-robot text-blue',
-    layout: '/admin',
+    // layout: '/admin',
     // miniName: 'R',
     component: RunningBotsPage,
   },
@@ -34,7 +34,7 @@ const routes = [
     path: '/bots/running/:id',
     name: 'View Running Bot',
     icon: 'fa fa-robot text-blue',
-    layout: '/admin',
+    // layout: '/admin',
     component: ViewRunningBotPage,
     redirect: true,
   },
@@ -42,19 +42,19 @@ const routes = [
     path: '/bots',
     name: 'Deploy & Update Bots',
     icon: 'ni ni-archive-2',
-    layout: '/admin',
+    // layout: '/admin',
   },
   {
     path: '/bot',
     name: 'Add New Bot',
     icon: 'fa fa-plus text-green',
-    layout: '/admin',
+    // layout: '/admin',
   },
   {
     path: '/bot/:id',
     name: 'Edit Bot',
     icon: 'fa fa-plus',
-    layout: '/admin',
+    // layout: '/admin',
     component: EditBotPage,
     redirect: true,
   },
@@ -62,70 +62,34 @@ const routes = [
     path: '/scheduler',
     name: 'Scheduler',
     icon: 'fa fa-calendar-alt text-purple',
-    layout: '/admin',
+    // layout: '/admin',
     component: SchedulersPage,
   },
   {
     path: '/scheduler/log',
     name: 'Scheduler Log',
     icon: 'fa fa-history',
-    layout: '/admin',
+    // layout: '/admin',
   },
   {
     path: '/settings',
     name: 'AWS AMI Settings',
     icon: 'fa fa-cog text-gray',
-    layout: '/admin',
+    // layout: '/admin',
     component: SettingsPage,
   },
   {
     path: '/users',
     name: 'Users',
     icon: 'fa fa-users text-red',
-    layout: '/admin',
+    // layout: '/admin',
     component: UsersPage,
   },
-  // {
-  //   collapse: true,
-  //   name: 'Examples',
-  //   icon: 'ni ni-ungroup text-orange',
-  //   state: 'examplesCollapse',
-  //   views: [
-  //     {
-  //       path: '/pricing',
-  //       name: 'Pricing',
-  //       miniName: 'P',
-  //       layout: '/auth',
-  //     },
-  //     {
-  //       path: '/login',
-  //       name: 'Login',
-  //       miniName: 'L',
-  //       layout: '/auth',
-  //     },
-  //     {
-  //       path: '/register',
-  //       name: 'Register',
-  //       miniName: 'R',
-  //       layout: '/auth',
-  //     },
-  //     {
-  //       path: '/lock',
-  //       name: 'Lock',
-  //       miniName: 'L',
-  //       layout: '/auth',
-  //     },
-  //     {
-  //       path: '/timeline',
-  //       name: 'Timeline',
-  //       miniName: 'T',
-  //       layout: '/admin',
-  //     },
   {
     path: '/profile',
     name: 'Profile',
     miniName: 'P',
-    layout: '/admin',
+    // layout: '/admin',
     redirect: true,
   },
 ]

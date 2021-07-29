@@ -269,7 +269,6 @@ const Settings = () => {
           </ModalFooter>
         </Modal>
         <Modal isOpen={isEditSettingsModalOpened}>
-          <ModalHeader>Edit Global Settings</ModalHeader>
           <SettingsEditor
             onClose={() => {
               setIsEditSettingsModalOpened(false)

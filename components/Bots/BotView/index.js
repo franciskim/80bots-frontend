@@ -13,9 +13,8 @@ import {
   NavItem,
   TabPane,
   TabContent,
-  Col,
-  Row,
 } from 'reactstrap'
+import classnames from 'classnames'
 import { getInstance, clearInstance } from 'store/bot/actions'
 import { subscribe, unsubscribe } from 'store/socket/actions'
 import { Loader80bots } from 'components/default'
@@ -205,7 +204,9 @@ const BotView = () => {
             return (
               <NavItem key={tab.title}>
                 <NavLink
-                  // className={classnames({ active: activeTab === tab.title })}
+                  className={classnames({
+                    active: activeTab.title === tab.title,
+                  })}
                   onClick={() => {
                     toggle(tab)
                   }}

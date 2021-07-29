@@ -41,7 +41,7 @@ const Login = () => {
 
     dispatch(login(email, password))
       .then(() => {
-        Router.push('/admin/bots/running')
+        Router.push('/bots/running')
       })
       .catch((error) => {
         const { response } = error

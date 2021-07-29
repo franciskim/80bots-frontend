@@ -24,6 +24,7 @@ import { Button, Input } from 'reactstrap'
 import { CodeEditor } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
 import Router from 'next/router'
+import classnames from 'classnames'
 
 const Error = styled.span`
   font-size: 15px;
@@ -186,7 +187,7 @@ const Index = () => {
             <Nav tabs>
               <NavItem>
                 <NavLink
-                  // className={classnames({ active: activeTab === 'script' })}
+                  className={classnames({ active: activeTab === 'script' })}
                   onClick={() => {
                     toggle('script')
                   }}
@@ -196,7 +197,7 @@ const Index = () => {
               </NavItem>
               <NavItem>
                 <NavLink
-                  // className={classnames({ active: activeTab === 'json' })}
+                  className={classnames({ active: activeTab === 'json' })}
                   onClick={() => {
                     toggle('json')
                   }}

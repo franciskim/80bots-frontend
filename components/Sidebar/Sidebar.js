@@ -147,8 +147,8 @@ const Sidebar = ({
         )
       }
       return (
-        <NavItem className={activeRoute(prop.layout + prop.path)} key={key}>
-          <Link href={prop.layout + prop.path}>
+        <NavItem className={activeRoute(prop.path)} key={key}>
+          <Link href={prop.path}>
             <NavLink href="#pablo" onClick={closeSidenav}>
               {prop.icon !== undefined ? (
                 <>

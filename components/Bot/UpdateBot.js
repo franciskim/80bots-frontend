@@ -27,6 +27,7 @@ import { CodeEditor } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
 import { getBot, clearBot, updateBot } from 'store/bot/actions'
 import Router, { useRouter } from 'next/router'
+import classnames from 'classnames'
 
 const Error = styled.span`
   font-size: 15px;
@@ -245,7 +246,7 @@ const UpdateBot = () => {
             <Nav tabs>
               <NavItem>
                 <NavLink
-                  // className={classnames({ active: activeTab === 'script' })}
+                  className={classnames({ active: activeTab === 'script' })}
                   onClick={() => {
                     toggle('script')
                   }}
@@ -255,7 +256,7 @@ const UpdateBot = () => {
               </NavItem>
               <NavItem>
                 <NavLink
-                  // className={classnames({ active: activeTab === 'json' })}
+                  className={classnames({ active: activeTab === 'json' })}
                   onClick={() => {
                     toggle('json')
                   }}

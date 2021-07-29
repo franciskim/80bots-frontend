@@ -3,7 +3,7 @@ import Router from 'next/router'
 
 export default function _error() {
   React.useEffect(() => {
-    Router.push('/admin/bots/running')
+    Router.push('/bots/running')
   })
   return <div />
 }
