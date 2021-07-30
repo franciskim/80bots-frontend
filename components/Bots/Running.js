@@ -13,7 +13,7 @@ import {
   CardFooter,
 } from 'reactstrap'
 import { LimitFilter, ListFilter, SearchFilter } from 'components/default/Table'
-import { addNotification } from 'lib/helper'
+import { addNotification, download, formatTimezone } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 import {
   copyInstance,
@@ -31,7 +31,7 @@ import {
   unsubscribe as wsUnsubscribe,
 } from 'store/socket/actions'
 import { Paginator, Loader80bots } from 'components/default'
-import { download, formatTimezone } from 'lib/helpers'
+
 import Uptime from 'components/default/Uptime'
 
 import {
@@ -140,6 +140,7 @@ const RunningBots = () => {
   const [order, setOrder] = useState({ value: '', field: '' })
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
+  const [loadingAll, setLoadingAll] = useState(true)
 
   const user = useSelector((state) => state.auth.user)
   const botInstances = useSelector((state) => state.bot.botInstances)
@@ -151,7 +152,9 @@ const RunningBots = () => {
   )
 
   useEffect(() => {
-    dispatch(getRunningBots({ page, limit, list }))
+    dispatch(getRunningBots({ page, limit, list })).then(() => {
+      setLoadingAll(false)
+    })
     dispatch(
       addListener(`running.${user.id}`, 'InstanceLaunched', (event) => {
         if (event.instance) {
@@ -702,23 +705,25 @@ const RunningBots = () => {
         </Table>
       </CardBody>
       <CardFooter className="py-4">
-        <Paginator
-          total={total}
-          pageSize={limit}
-          onChangePage={(page) => {
-            setPage(page)
-            dispatch(
-              getRunningBots({
-                page,
-                limit,
-                list,
-                sort: order.field,
-                order: order.value,
-                search,
-              })
-            )
-          }}
-        />
+        {!loadingAll && (
+          <Paginator
+            total={total}
+            pageSize={limit}
+            onChangePage={(page) => {
+              setPage(page)
+              dispatch(
+                getRunningBots({
+                  page,
+                  limit,
+                  list,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              )
+            }}
+          />
+        )}
       </CardFooter>
     </Card>
   )

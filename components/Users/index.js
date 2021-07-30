@@ -5,9 +5,9 @@ import { Paginator } from '../default'
 import { CardBody, Button, Table, Card, CardFooter } from 'reactstrap'
 import { SearchFilter, LimitFilter, Th } from '../default/Table'
 import { NOTIFICATION_TYPES } from 'config'
-import { addNotification } from 'lib/helper'
-import { updateStatus } from 'store/user/actions'
-import { getUsers } from 'store/user/actions'
+import { addNotification } from 'lib/helpers'
+import { updateStatus, getUsers } from 'store/user/actions'
+
 import Skeleton from 'react-loading-skeleton'
 
 const Users = () => {
@@ -15,14 +15,17 @@ const Users = () => {
   const [limit, setLimit] = useState(10)
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
+  const [order, setOrder] = useState({ value: '', field: '' })
+  const [loadingAll, setLoadingAll] = useState(true)
 
   useEffect(() => {
-    dispatch(getUsers({ page, limit }))
+    dispatch(getUsers({ page, limit })).then(() => {
+      setLoadingAll(false)
+    })
   }, [page, limit])
 
   const users = useSelector((state) => state.user.users)
   const total = useSelector((state) => state.user.total)
-  const loading = useSelector((state) => state.user.loading)
 
   const changeUserStatus = (user) => {
     dispatch(
@@ -49,11 +52,22 @@ const Users = () => {
     )
   }
 
-  const onOrderChange = () => {
+  const onOrderChange = (field, value) => {
+    setOrder({ field, value })
     dispatch(getUsers({ page, limit, search }))
   }
 
-  const OrderTh = (props) => <Th {...props} onClick={onOrderChange} />
+  const OrderTh = (props) => (
+    <Th
+      {...props}
+      order={
+        props.field === order.field || props.children === order.field
+          ? order.value
+          : ''
+      }
+      onClick={onOrderChange}
+    />
+  )
 
   const renderRow = (user) => (
     <tr key={user.id}>
@@ -98,9 +112,8 @@ const Users = () => {
             }}
           />
         </div>
-        {loading && <Skeleton count={5} />}
-
-        {!loading && (
+        {loadingAll && <Skeleton count={5} />}
+        {!loadingAll && (
           <Table responsive>
             <thead>
               <tr>
@@ -115,20 +128,22 @@ const Users = () => {
         )}
       </CardBody>
       <CardFooter>
-        <Paginator
-          total={total}
-          pageSize={limit}
-          onChangePage={(page) => {
-            setPage(page)
-            dispatch(
-              getUsers({
-                page,
-                limit,
-                search,
-              })
-            )
-          }}
-        />
+        {!loadingAll && (
+          <Paginator
+            total={total}
+            pageSize={limit}
+            onChangePage={(page) => {
+              setPage(page)
+              dispatch(
+                getUsers({
+                  page,
+                  limit,
+                  search,
+                })
+              )
+            }}
+          />
+        )}
       </CardFooter>
     </Card>
   )

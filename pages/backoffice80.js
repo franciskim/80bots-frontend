@@ -1,8 +1,6 @@
 import React from 'react'
 // nodejs library that concatenates classes
 import { useSelector } from 'react-redux'
-import LoginForm from 'components/LoginForm'
-
 import {
   Card,
   CardHeader,
@@ -14,6 +12,7 @@ import {
 } from 'reactstrap'
 import Auth from 'layouts/Auth.js'
 import AuthHeader from 'components/Headers/AuthHeader.js'
+import LoginForm from 'components/LoginForm'
 
 const Login = () => {
   const error = useSelector((state) => state.auth.error)

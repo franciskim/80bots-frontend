@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import { connect } from 'react-redux'
 import { CardBody } from 'reactstrap'
-// import { Filters } from "components/default/Table";
 import { Loader80bots } from 'components/default'
 import { flush, open, close } from 'store/fileSystem/actions'
 import FileSystem from 'components/default/FileSystem'

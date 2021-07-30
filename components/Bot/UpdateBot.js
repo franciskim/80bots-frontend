@@ -5,7 +5,7 @@ import AsyncSelect from 'react-select/async'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTags, getBot, clearBot, updateBot } from 'store/bot/actions'
 import { getUsers } from 'store/user/actions'
-import { addNotification } from 'lib/helper'
+import { addNotification } from 'lib/helpers'
 import {
   Button,
   Input,
@@ -20,6 +20,7 @@ import {
   TabPane,
   CardFooter,
   FormGroup,
+  FormFeedback,
 } from 'reactstrap'
 import { CodeEditor } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
@@ -245,7 +246,9 @@ const UpdateBot = () => {
               value={botName}
               // styles={inputStyles}
               onChange={(e) => setBotName(e.target.value)}
+              invalid={!!errors['botName']}
             />
+            <FormFeedback valid={false}>You must fill in bot name</FormFeedback>
           </Col>
         </FormGroup>
         <FormGroup className="row">

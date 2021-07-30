@@ -21,7 +21,7 @@ import { getRegions, updateRegion } from 'store/bot/actions'
 import { Paginator } from 'components/default'
 import Select from 'react-select'
 import { NOTIFICATION_TYPES } from 'config'
-import { addNotification } from 'lib/helper'
+import { addNotification } from 'lib/helpers'
 import { addListener } from 'store/socket/actions'
 import Skeleton from 'react-loading-skeleton'
 
@@ -73,6 +73,7 @@ const Settings = () => {
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
+  const [loadingAll, setLoadingAll] = useState(true)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditSettingsModalOpened, setIsEditSettingsModalOpened] =
@@ -81,10 +82,11 @@ const Settings = () => {
   const user = useSelector((state) => state.auth.user)
   const regions = useSelector((state) => state.bot.regions)
   const total = useSelector((state) => state.bot.totalRegions)
-  const loading = useSelector((state) => state.bot.loading)
 
   useEffect(() => {
-    dispatch(getRegions({ page, limit }))
+    dispatch(getRegions({ page, limit })).then(() => {
+      setLoadingAll(false)
+    })
 
     dispatch(
       addListener(`regions.${user.id}`, 'RegionsSyncSucceeded', () => {
@@ -236,8 +238,8 @@ const Settings = () => {
             }}
           />
         </div>
-        {loading && <Skeleton count={5} />}
-        {!loading && (
+        {loadingAll && <Skeleton count={5} />}
+        {!loadingAll && (
           <Table responsive>
             <thead>
               <tr>
@@ -281,22 +283,24 @@ const Settings = () => {
         />
       </CardBody>
       <CardFooter>
-        <Paginator
-          total={total}
-          pageSize={limit}
-          onChangePage={(page) => {
-            setPage(page)
-            dispatch(
-              getRegions({
-                page,
-                limit,
-                sort: order.field,
-                order: order.value,
-                search,
-              })
-            )
-          }}
-        />
+        {!loadingAll && (
+          <Paginator
+            total={total}
+            pageSize={limit}
+            onChangePage={(page) => {
+              setPage(page)
+              dispatch(
+                getRegions({
+                  page,
+                  limit,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              )
+            }}
+          />
+        )}
       </CardFooter>
     </Card>
   )

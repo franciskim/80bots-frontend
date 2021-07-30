@@ -76,21 +76,19 @@ const LogsTab = ({ items, flush, openItem, openedFolder, openedFile }) => {
     <Card>
       {openedFile ? (
         <>
-          <FiltersSection>
-            <Select
-              onChange={onSelected}
-              options={options}
-              value={selected}
-              styles={{
-                select: {
-                  container: (provided) => ({
-                    ...provided,
-                    minWidth: '200px',
-                  }),
-                },
-              }}
-            />
-          </FiltersSection>
+          <Select
+            onChange={onSelected}
+            options={options}
+            value={selected}
+            styles={{
+              select: {
+                container: (provided) => ({
+                  ...provided,
+                  minWidth: '200px',
+                }),
+              },
+            }}
+          />
           <FileSystem hideNavigator={true} />
         </>
       ) : (

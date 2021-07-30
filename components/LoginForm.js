@@ -16,7 +16,7 @@ import { NOTIFICATION_TYPES } from 'config'
 import * as yup from 'yup'
 
 import { login } from 'store/auth/actions'
-import { addNotification } from 'lib/helper'
+import { addNotification } from 'lib/helpers'
 
 const LoginForm = () => {
   const dispatch = useDispatch()

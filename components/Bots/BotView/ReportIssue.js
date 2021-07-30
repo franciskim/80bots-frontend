@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import { Button, Input, ButtonGroup } from 'reactstrap'
 import { reportBot as report } from 'store/bot/actions'
-import { addNotification } from 'lib/helper'
+import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 
 // const Buttons = styled.div`

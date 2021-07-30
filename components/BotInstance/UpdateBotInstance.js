@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import Router, { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNotification } from 'lib/helper'
+import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 import { Button, ButtonGroup, Modal, Row, Container } from 'reactstrap'
 import { CodeEditor } from 'components/default/inputs'
@@ -12,7 +12,7 @@ import {
   restartInstance,
 } from 'store/botinstance/actions'
 
-import RestartEditor from '../RestartEditor'
+import RestartEditor from './RestartEditor'
 
 const Error = styled.span`
   font-size: 15px;

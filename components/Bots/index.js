@@ -11,6 +11,7 @@ import {
   CardHeader,
   Modal,
   ModalBody,
+  Table,
 } from 'reactstrap'
 import { Paginator } from 'components/default'
 import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
@@ -23,15 +24,14 @@ import {
   launchInstance,
   getBots,
   updateStatusBot,
-  getBotSettings,
-  updateBotSettings,
+  // getBotSettings,
+  // updateBotSettings,
   deleteBot,
-  setBotLimit,
+  // setBotLimit,
 } from 'store/bot/actions'
-import { Table } from 'reactstrap'
 
-import { addNotification } from 'lib/helper'
-import { NOTIFICATION_TYPES, NOTIFICATION_TIMINGS } from 'config'
+import { addNotification } from 'lib/helpers'
+import { NOTIFICATION_TYPES } from 'config'
 import { addListener } from 'store/socket/actions'
 
 // const Container = styled(Card)`
@@ -94,6 +94,7 @@ const Bots = () => {
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
+  const [loadingAll, setLoadingAll] = useState(true)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -103,10 +104,11 @@ const Bots = () => {
   const total = useSelector((state) => state.bot.total)
   const user = useSelector((state) => state.auth.user)
   const limit = useSelector((state) => state.bot.limit)
-  const loading = useSelector((state) => state.bot.loading)
 
   useEffect(() => {
-    dispatch(getBots({ page, limit }))
+    dispatch(getBots({ page, limit })).then(() => {
+      setLoadingAll(false)
+    })
     dispatch(
       addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
         addNotification({
@@ -323,7 +325,7 @@ const Bots = () => {
             instanceId="limitfilter"
             defaultValue={limit}
             onChange={({ value }) => {
-              setLimit(value)
+              // setLimit(value)
               dispatch(
                 getBots({
                   page,
@@ -343,9 +345,9 @@ const Bots = () => {
             }}
           />
         </div>
-        {loading && <Skeleton count={5} />}
+        {loadingAll && <Skeleton count={5} />}
 
-        {!loading && (
+        {!loadingAll && (
           <Table responsive>
             <thead>
               <tr>
@@ -388,23 +390,25 @@ const Bots = () => {
         )}
       </CardBody>
       <CardFooter>
-        <Paginator
-          total={total}
-          pageSize={limit}
-          initialPage={page}
-          onChangePage={(page) => {
-            setPage(page)
-            dispatch(
-              getBots({
-                page,
-                limit,
-                sort: order.field,
-                order: order.value,
-                search,
-              })
-            )
-          }}
-        />
+        {!loadingAll && (
+          <Paginator
+            total={total}
+            pageSize={limit}
+            initialPage={page}
+            onChangePage={(page) => {
+              setPage(page)
+              dispatch(
+                getBots({
+                  page,
+                  limit,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              )
+            }}
+          />
+        )}
       </CardFooter>
     </Card>
   )

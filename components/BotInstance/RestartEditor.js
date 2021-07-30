@@ -3,13 +3,6 @@ import PropTypes from 'prop-types'
 import { Select, Range } from 'components/default/inputs'
 import { Label, Button, Input, ButtonGroup } from 'reactstrap'
 
-// const selectStyles = {
-//   container: css`
-//     margin-top: 10px;
-//     max-width: 400px;
-//   `,
-// }
-
 const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
   const [values, setValues] = useState({})
   const [errors, setErrors] = useState([])

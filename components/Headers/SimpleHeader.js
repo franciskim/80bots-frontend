@@ -15,12 +15,10 @@
 
 */
 import React from 'react'
-// nodejs library to set properties for components
 import PropTypes from 'prop-types'
-// reactstrap components
 import { Breadcrumb, BreadcrumbItem, Container, Row, Col } from 'reactstrap'
 
-function SimpleHeader({ name, parentName }) {
+const SimpleHeader = ({ name, parentName }) => {
   return (
     <div className="header header-dark bg-dark pb-6 content__title content__title--calendar">
       <Container fluid>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBotSettings, updateBotSettings } from 'store/bot/actions'
-import { addNotification } from 'lib/helper'
+import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 import {
   Button,

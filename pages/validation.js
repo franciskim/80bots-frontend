@@ -14,9 +14,9 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React from 'react'
 // nodejs library that concatenates classes
-import classnames from "classnames";
+import classnames from 'classnames'
 // reactstrap components
 import {
   Button,
@@ -32,65 +32,65 @@ import {
   Container,
   Row,
   Col,
-} from "reactstrap";
+} from 'reactstrap'
 // layout for this page
-import Admin from "layouts/Admin.js";
+import Admin from 'layouts/Admin.js'
 // core components
-import SimpleHeader from "components/Headers/SimpleHeader.js";
+import SimpleHeader from 'components/Headers/SimpleHeader.js'
 
 function Validation() {
-  const [focused, setFocused] = React.useState(false);
-  const [firstName, setfirstName] = React.useState("Mark");
-  const [firstNameState, setfirstNameState] = React.useState(null);
-  const [lastName, setlastName] = React.useState("Otto");
-  const [lastNameState, setlastNameState] = React.useState(null);
-  const [username, setusername] = React.useState("");
-  const [usernameState, setusernameState] = React.useState(null);
-  const [city, setcity] = React.useState("");
-  const [cityState, setcityState] = React.useState(null);
-  const [state, setstate] = React.useState("");
-  const [stateState, setstateState] = React.useState(null);
-  const [zip, setzip] = React.useState("");
-  const [zipState, setzipState] = React.useState(null);
-  const [checkbox, setcheckbox] = React.useState(false);
-  const [checkboxState, setcheckboxState] = React.useState(null);
+  const [focused, setFocused] = React.useState(false)
+  const [firstName, setfirstName] = React.useState('Mark')
+  const [firstNameState, setfirstNameState] = React.useState(null)
+  const [lastName, setlastName] = React.useState('Otto')
+  const [lastNameState, setlastNameState] = React.useState(null)
+  const [username, setusername] = React.useState('')
+  const [usernameState, setusernameState] = React.useState(null)
+  const [city, setcity] = React.useState('')
+  const [cityState, setcityState] = React.useState(null)
+  const [state, setstate] = React.useState('')
+  const [stateState, setstateState] = React.useState(null)
+  const [zip, setzip] = React.useState('')
+  const [zipState, setzipState] = React.useState(null)
+  const [checkbox, setcheckbox] = React.useState(false)
+  const [checkboxState, setcheckboxState] = React.useState(null)
   const validateCustomStylesForm = () => {
-    if (firstName === "") {
-      setfirstNameState("invalid");
+    if (firstName === '') {
+      setfirstNameState('invalid')
     } else {
-      setfirstNameState("valid");
+      setfirstNameState('valid')
     }
-    if (lastName === "") {
-      setlastNameState("invalid");
+    if (lastName === '') {
+      setlastNameState('invalid')
     } else {
-      setlastNameState("valid");
+      setlastNameState('valid')
     }
-    if (username === "") {
-      setusernameState("invalid");
+    if (username === '') {
+      setusernameState('invalid')
     } else {
-      setusernameState("valid");
+      setusernameState('valid')
     }
-    if (city === "") {
-      setcityState("invalid");
+    if (city === '') {
+      setcityState('invalid')
     } else {
-      setcityState("valid");
+      setcityState('valid')
     }
-    if (state === "") {
-      setstateState("invalid");
+    if (state === '') {
+      setstateState('invalid')
     } else {
-      setstateState("valid");
+      setstateState('valid')
     }
-    if (zip === "") {
-      setzipState("invalid");
+    if (zip === '') {
+      setzipState('invalid')
     } else {
-      setzipState("valid");
+      setzipState('valid')
     }
     if (checkbox === false) {
-      setcheckboxState("invalid");
+      setcheckboxState('invalid')
     } else {
-      setcheckboxState("valid");
+      setcheckboxState('valid')
     }
-  };
+  }
   return (
     <>
       <SimpleHeader name="Form validation" parentName="Forms" />
@@ -107,12 +107,12 @@ function Validation() {
                     <Col lg="8">
                       <p className="mb-0">
                         For custom form validation messages, you’ll need to add
-                        the novalidate boolean attribute to your{" "}
+                        the novalidate boolean attribute to your{' '}
                         <code>{`<form>`}</code>. This disables the browser
                         default feedback tooltips, but still provides access to
                         the form validation APIs in JavaScript. <br />
                         <br />
-                        When attempting to submit, you’ll see the{" "}
+                        When attempting to submit, you’ll see the{' '}
                         <code>:invalid</code> and <code>:valid</code> styles
                         applied to your form controls.
                       </p>
@@ -133,14 +133,14 @@ function Validation() {
                           id="validationCustom01"
                           placeholder="First name"
                           type="text"
-                          valid={firstNameState === "valid"}
-                          invalid={firstNameState === "invalid"}
+                          valid={firstNameState === 'valid'}
+                          invalid={firstNameState === 'invalid'}
                           onChange={(e) => {
-                            setfirstName(e.target.value);
-                            if (e.target.value === "") {
-                              setfirstNameState("invalid");
+                            setfirstName(e.target.value)
+                            if (e.target.value === '') {
+                              setfirstNameState('invalid')
                             } else {
-                              setfirstNameState("valid");
+                              setfirstNameState('valid')
                             }
                           }}
                         />
@@ -158,14 +158,14 @@ function Validation() {
                           id="validationCustom02"
                           placeholder="Last name"
                           type="text"
-                          valid={lastNameState === "valid"}
-                          invalid={lastNameState === "invalid"}
+                          valid={lastNameState === 'valid'}
+                          invalid={lastNameState === 'invalid'}
                           onChange={(e) => {
-                            setlastName(e.target.value);
-                            if (e.target.value === "") {
-                              setlastNameState("invalid");
+                            setlastName(e.target.value)
+                            if (e.target.value === '') {
+                              setlastNameState('invalid')
                             } else {
-                              setlastNameState("valid");
+                              setlastNameState('valid')
                             }
                           }}
                         />
@@ -183,14 +183,14 @@ function Validation() {
                           id="validationCustomUsername"
                           placeholder="Username"
                           type="text"
-                          valid={usernameState === "valid"}
-                          invalid={usernameState === "invalid"}
+                          valid={usernameState === 'valid'}
+                          invalid={usernameState === 'invalid'}
                           onChange={(e) => {
-                            setusername(e.target.value);
-                            if (e.target.value === "") {
-                              setusernameState("invalid");
+                            setusername(e.target.value)
+                            if (e.target.value === '') {
+                              setusernameState('invalid')
                             } else {
-                              setusernameState("valid");
+                              setusernameState('valid')
                             }
                           }}
                         />
@@ -211,14 +211,14 @@ function Validation() {
                           id="validationCustom03"
                           placeholder="City"
                           type="text"
-                          valid={cityState === "valid"}
-                          invalid={cityState === "invalid"}
+                          valid={cityState === 'valid'}
+                          invalid={cityState === 'invalid'}
                           onChange={(e) => {
-                            setcity(e.target.value);
-                            if (e.target.value === "") {
-                              setcityState("invalid");
+                            setcity(e.target.value)
+                            if (e.target.value === '') {
+                              setcityState('invalid')
                             } else {
-                              setcityState("valid");
+                              setcityState('valid')
                             }
                           }}
                         />
@@ -237,14 +237,14 @@ function Validation() {
                           id="validationCustom04"
                           placeholder="State"
                           type="text"
-                          valid={stateState === "valid"}
-                          invalid={stateState === "invalid"}
+                          valid={stateState === 'valid'}
+                          invalid={stateState === 'invalid'}
                           onChange={(e) => {
-                            setstate(e.target.value);
-                            if (e.target.value === "") {
-                              setstateState("invalid");
+                            setstate(e.target.value)
+                            if (e.target.value === '') {
+                              setstateState('invalid')
                             } else {
-                              setstateState("valid");
+                              setstateState('valid')
                             }
                           }}
                         />
@@ -263,14 +263,14 @@ function Validation() {
                           id="validationCustom05"
                           placeholder="Zip"
                           type="text"
-                          valid={zipState === "valid"}
-                          invalid={zipState === "invalid"}
+                          valid={zipState === 'valid'}
+                          invalid={zipState === 'invalid'}
                           onChange={(e) => {
-                            setzip(e.target.value);
-                            if (e.target.value === "") {
-                              setzipState("invalid");
+                            setzip(e.target.value)
+                            if (e.target.value === '') {
+                              setzipState('invalid')
                             } else {
-                              setzipState("valid");
+                              setzipState('valid')
                             }
                           }}
                         />
@@ -286,14 +286,14 @@ function Validation() {
                           defaultValue=""
                           id="invalidCheck"
                           type="checkbox"
-                          valid={(checkboxState === "valid").toString()}
-                          invalid={(checkboxState === "invalid").toString()}
+                          valid={(checkboxState === 'valid').toString()}
+                          invalid={(checkboxState === 'invalid').toString()}
                           onChange={(e) => {
-                            setcheckbox(e.target.value);
-                            if (e.target.value === "") {
-                              setcheckboxState("invalid");
+                            setcheckbox(e.target.value)
+                            if (e.target.value === '') {
+                              setcheckboxState('invalid')
                             } else {
-                              setcheckboxState("valid");
+                              setcheckboxState('valid')
                             }
                           }}
                         />
@@ -496,8 +496,8 @@ function Validation() {
                       <p className="mb-0">
                         We recommend using client side validation, but in case
                         you require server side, you can indicate invalid and
-                        valid form fields with <code>.is-invalid</code> and{" "}
-                        <code>.is-valid</code>. Note that{" "}
+                        valid form fields with <code>.is-invalid</code> and{' '}
+                        <code>.is-valid</code>. Note that{' '}
                         <code>.invalid-feedback</code> is also supported with
                         these classes.
                       </p>
@@ -656,9 +656,9 @@ function Validation() {
         </Row>
       </Container>
     </>
-  );
+  )
 }
 
-Validation.layout = Admin;
+Validation.layout = Admin
 
-export default Validation;
+export default Validation

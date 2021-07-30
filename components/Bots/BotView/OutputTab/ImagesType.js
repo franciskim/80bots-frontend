@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import FileSystem from 'components/default/FileSystem'
 import { flush, open, close } from 'store/fileSystem/actions'
 import { Loader80bots } from 'components/default'
+import FileSystem from 'components/default/FileSystem'
+
 const rootFolder = 'output/images'
 const defaultLimit = 20
 

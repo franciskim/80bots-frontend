@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Select from 'react-select'
 import Clock from 'react-live-clock'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNotification } from 'lib/helper'
+import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 import { getTimezones, getRegions } from 'store/user/actions'
 import {

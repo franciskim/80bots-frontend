@@ -236,7 +236,7 @@ const BotView = () => {
           <TabContent activeTab={activeTab}>
             {Object.values(TABS).map((tab) => {
               return (
-                <TabPane tabId={tab.title}>
+                <TabPane tabId={tab.title} key={tab.title}>
                   <CurrentTab setCustomBack={(f) => setCustomBack(() => f)} />
                 </TabPane>
               )

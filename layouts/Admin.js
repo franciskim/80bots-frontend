@@ -16,7 +16,8 @@
 */
 import React, { useState } from 'react'
 import { withRouter } from 'next/router'
-// core components
+import { Route } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import AdminNavbar from 'components/Navbars/AdminNavbar.js'
 import AdminFooter from 'components/Footers/AdminFooter.js'
 import Sidebar from 'components/Sidebar/Sidebar.js'
@@ -28,6 +29,7 @@ function Admin({ router, children }) {
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
       if (prop.collapse) {
+        // eslint-disable-next-line no-unused-vars
         return getRoutes(prop.views)
       }
       // if (prop.layout === '/admin') {
@@ -37,7 +39,7 @@ function Admin({ router, children }) {
       // }
     })
   }
-  const getBrandText = (path) => {
+  const getBrandText = () => {
     for (let i = 0; i < routes.length; i++) {
       if (router.pathname.indexOf(routes[i].layout + routes[i].path) !== -1) {
         return routes[i].name
@@ -46,7 +48,7 @@ function Admin({ router, children }) {
     return 'Brand'
   }
   // toggles collapse between mini sidenav and normal
-  const toggleSidenav = (e) => {
+  const toggleSidenav = () => {
     if (document.body.classList.contains('g-sidenav-pinned')) {
       document.body.classList.remove('g-sidenav-pinned')
       document.body.classList.add('g-sidenav-hidden')
@@ -89,6 +91,11 @@ function Admin({ router, children }) {
       ) : null}
     </>
   )
+}
+
+Admin.propTypes = {
+  router: PropTypes.object,
+  children: PropTypes.array,
 }
 
 export default withRouter(Admin)

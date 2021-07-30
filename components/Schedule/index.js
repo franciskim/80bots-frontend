@@ -12,7 +12,6 @@ import {
   ModalHeader,
   CardHeader,
   CardFooter,
-  UncontrolledAlert,
 } from 'reactstrap'
 import {
   LimitFilter,
@@ -20,10 +19,10 @@ import {
   SearchFilter,
   Th,
 } from 'components/default/Table'
-import { addNotification } from 'lib/helper'
+import { addNotification } from 'lib/helpers'
 import { useDispatch, useSelector } from 'react-redux'
 import { NOTIFICATION_TYPES } from 'config'
-import Paginator from 'components/default/Paginator'
+import { Paginator } from 'components/default/Paginator'
 import SweetAlert from 'react-bootstrap-sweetalert'
 import {
   getSchedules,
@@ -119,21 +118,23 @@ const BotsSchedule = () => {
   const [order, setOrder] = useState({ value: '', field: '' })
   const [instanceId, setInstanceId] = useState(null)
   const [search, setSearch] = useState(null)
+  const [loadingAll, setLoadingAll] = useState(true)
 
-  const [isModalOpen, setIsModelOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   useEffect(() => {
-    dispatch(getSchedules({ page, limit, list }))
+    dispatch(getSchedules({ page, limit, list })).then(() => {
+      setLoadingAll(false)
+    })
   }, [])
 
   const schedules = useSelector((state) => state.schedule.schedules)
   const runningBots = useSelector((state) => state.bot.botInstances)
   const total = useSelector((state) => state.schedule.total)
   const user = useSelector((state) => state.auth.user)
-  const error = useSelector((state) => state.schedule.error)
-  const loading = useSelector((state) => state.schedule.loading)
+  // const error = useSelector((state) => state.schedule.error)
 
   const searchBots = (value, callback) => {
     dispatch(getRunningBots({ page: 1, limit: 50, search: value })).then(
@@ -176,7 +177,7 @@ const BotsSchedule = () => {
 
   const toggleModal = (schedule) => {
     setClickedSchedule(schedule)
-    modal.current.open()
+    setIsModalOpen(true)
   }
 
   const toggleAddModal = () => {
@@ -229,7 +230,7 @@ const BotsSchedule = () => {
   }
 
   const modalDeleteSchedule = () => {
-    setIsModelOpen(false)
+    setIsModalOpen(false)
     dispatch(deleteSchedule(clickedSchedule.id))
       .then(() => {
         dispatch(
@@ -403,8 +404,8 @@ const BotsSchedule = () => {
             }}
           />
         </div>
-        {loading && <Skeleton count={5} />}
-        {!loading && (
+        {loadingAll && <Skeleton count={5} />}
+        {!loadingAll && (
           <Table responsive>
             <thead>
               <tr>
@@ -428,7 +429,7 @@ const BotsSchedule = () => {
             title="Delete this schedule?"
             onConfirm={modalDeleteSchedule}
             onCancel={() => {
-              setIsModelOpen(false)
+              setIsModalOpen(false)
             }}
             focusCancelBtn
           />
@@ -464,23 +465,25 @@ const BotsSchedule = () => {
         </Modal>
       </CardBody>
       <CardFooter>
-        <Paginator
-          total={total}
-          pageSize={limit}
-          onChangePage={(page) => {
-            setPage(page)
-            dispatch(
-              getSchedules({
-                page,
-                limit,
-                list,
-                sort: order.field,
-                order: order.value,
-                search,
-              })
-            )
-          }}
-        />
+        {!loadingAll && (
+          <Paginator
+            total={total}
+            pageSize={limit}
+            onChangePage={(page) => {
+              setPage(page)
+              dispatch(
+                getSchedules({
+                  page,
+                  limit,
+                  list,
+                  sort: order.field,
+                  order: order.value,
+                  search,
+                })
+              )
+            }}
+          />
+        )}
       </CardFooter>
     </Card>
   )
