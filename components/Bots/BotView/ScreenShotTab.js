@@ -6,9 +6,8 @@ import PropTypes from 'prop-types'
 import FileSystem from 'components/default/FileSystem'
 import { flush, open, close } from 'store/fileSystem/actions'
 import { Loader80bots } from 'components/default'
-import { Modal } from 'reactstrap'
+import { Modal, Button, Container } from 'reactstrap'
 import ReportEditor from './ReportIssue'
-import { Button, Container } from 'reactstrap'
 
 const rootFolder = 'screenshots'
 const defaultLimit = 15

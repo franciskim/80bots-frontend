@@ -17,3 +17,18 @@ axios.interceptors.request.use((req) => {
   }
   return req
 })
+
+axios.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    const {
+      response: { status, data },
+    } = error
+    if (status === 404) {
+      return Promise.reject(new Error(data.message))
+    }
+    return Promise.reject(error)
+  }
+)

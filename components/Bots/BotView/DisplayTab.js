@@ -39,6 +39,7 @@ const DisplayTab = ({ botInstance }) => {
       <a
         href={`http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`}
         target="_blank"
+        rel="noreferrer"
       >
         View bot in real-time
       </a>

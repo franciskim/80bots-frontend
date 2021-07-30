@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { Label } from 'reactstrap'
-import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
+import { /*ToolkitProvider,*/ Search } from 'react-bootstrap-table2-toolkit'
 
 const { SearchBar } = Search
 

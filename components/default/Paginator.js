@@ -60,12 +60,12 @@ export const Paginator = ({ total, initialPage, pageSize, onChangePage }) => {
   }, [initialPage])
 
   useEffect(() => {
-    if (total !== total) {
-      setTotal(total)
-    }
-    if (pageSize !== pageSize) {
-      setPageSize(pageSize)
-    }
+    // if (total !== total) {
+    //   setTotal(total)
+    // }
+    // if (pageSize !== pageSize) {
+    //   setPageSize(pageSize)
+    // }
     setPaginator(currentPage)
   }, [total, pageSize])
 

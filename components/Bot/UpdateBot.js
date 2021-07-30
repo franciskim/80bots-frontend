@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 import Select from 'react-select'
 import AsyncSelect from 'react-select/async'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { getTags } from 'store/bot/actions'
+import { getTags, getBot, clearBot, updateBot } from 'store/bot/actions'
 import { getUsers } from 'store/user/actions'
 import { addNotification } from 'lib/helper'
 import {
   Button,
   Input,
-  Row,
   Col,
   Card,
   CardBody,
@@ -25,14 +23,10 @@ import {
 } from 'reactstrap'
 import { CodeEditor } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
-import { getBot, clearBot, updateBot } from 'store/bot/actions'
+
 import Router, { useRouter } from 'next/router'
 import classnames from 'classnames'
-
-const Error = styled.span`
-  font-size: 15px;
-  text-align: center;
-`
+import * as yup from 'yup'
 
 // const selectStyles = {
 //   control: (provided, state) => ({
@@ -91,7 +85,7 @@ const UpdateBot = () => {
   const [description, setDescription] = useState('')
   const [isPrivate, setPrivate] = useState(false)
   const [trustedUsers, setUsers] = useState([])
-  const [error, setError] = useState(null)
+  const [errors, setErrors] = useState({})
   const [activeTab, setActiveTab] = useState('script')
 
   const tags = useSelector((state) => state.bot.tags)
@@ -188,37 +182,54 @@ const UpdateBot = () => {
     status: status,
   })
 
-  const submit = () => {
-    if (!botName) {
-      setError("You must fill in required fields marked by '*'")
-    } else {
-      setError(null)
-      const users = isPrivate ? { users: trustedUsers } : { users: [] }
-      const botData = {
-        botName,
-        isPrivate,
-        botScript,
-        botPackageJSON,
-        description,
-        botTags: botTags.map((item) => item.value),
-        ...users,
-      }
-
-      dispatch(updateBot(aboutBot.id, convertBotData(botData)))
-        .then(() => {
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'Bot updated!',
-          })
-          Router.push('/bots')
-        })
-        .catch(() =>
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Update failed!',
-          })
-        )
+  const submitForm = (e) => {
+    e.preventDefault()
+    try {
+      let schema = yup.object().shape({
+        botName: yup.string().required(),
+      })
+      schema.validateSync(
+        {
+          botName,
+        },
+        {
+          abortEarly: false,
+        }
+      )
+    } catch (err) {
+      setErrors(
+        err.inner.reduce((accr, validationError) => {
+          accr[validationError.path] = validationError.message
+          return accr
+        }, {})
+      )
+      return
     }
+    const users = isPrivate ? { users: trustedUsers } : { users: [] }
+    const botData = {
+      botName,
+      isPrivate,
+      botScript,
+      botPackageJSON,
+      description,
+      botTags: botTags.map((item) => item.value),
+      ...users,
+    }
+
+    dispatch(updateBot(aboutBot.id, convertBotData(botData)))
+      .then(() => {
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Bot updated!',
+        })
+        Router.push('/bots')
+      })
+      .catch(() =>
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Update failed!',
+        })
+      )
   }
 
   return (
@@ -270,12 +281,14 @@ const UpdateBot = () => {
                 <CodeEditor
                   value={botScript}
                   onChange={(code) => setBotScript(code)}
+                  mode="javascript"
                 />
               </TabPane>
               <TabPane tabId="json">
                 <CodeEditor
                   value={botPackageJSON}
                   onChange={(code) => setBotPackageJSON(code)}
+                  mode="json"
                 />
               </TabPane>
             </TabContent>
@@ -344,10 +357,9 @@ const UpdateBot = () => {
             </Col>
           </FormGroup>
         )}
-        {error && <Error>{error}</Error>}
       </CardBody>
       <CardFooter>
-        <Button color="primary" onClick={submit}>
+        <Button color="primary" onClick={submitForm}>
           Update
         </Button>
       </CardFooter>

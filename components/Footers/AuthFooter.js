@@ -32,6 +32,7 @@ function AuthFooter() {
                   className="font-weight-bold ml-1"
                   href="https://www.creative-tim.com?ref=adpr-auth-footer"
                   target="_blank"
+                  rel="noreferrer"
                 >
                   80bots.com
                 </a>

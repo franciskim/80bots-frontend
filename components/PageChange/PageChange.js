@@ -1,7 +1,7 @@
 import React from 'react'
 import { Spinner } from 'reactstrap'
 
-function PageChange({ path }) {
+const PageChange = ({ path }) => {
   return (
     <div>
       <div className="page-transition-wrapper-div">

@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import beautify from 'js-beautify'
 import dynamic from 'next/dynamic'
-import { Button, FormGroup } from 'reactstrap'
+import { Button, FormGroup, Label } from 'reactstrap'
 
 const AceEditor = dynamic(
   async () => {
@@ -10,7 +10,6 @@ const AceEditor = dynamic(
 
     // prevent warning in console about misspelled props name.
     await import('ace-builds/src-min-noconflict/ext-language_tools')
-    // import your theme/mode here. <AceEditor mode="javascript" theme="solarized_dark" />
     await import('ace-builds/src-min-noconflict/mode-javascript')
     await import('ace-builds/src-noconflict/theme-tomorrow_night_eighties')
 
@@ -29,7 +28,7 @@ const AceEditor = dynamic(
     return reactAce
   },
   {
-    ssr: false, // react-ace doesn't support server side rendering as it uses the window object.
+    ssr: false,
   }
 )
 
@@ -55,66 +54,62 @@ const beautifyJavaScript = (value) => {
   })
 }
 
-// const Editor = (props) => {
-//   if (typeof window !== 'undefined') {
-//     const Ace = require('react-ace').default
-//     require('brace/mode/javascript')
-//     require('brace/theme/github')
-
-//     return <Ace {...props} />
-//   }
-
-//   return null
-// }
-
-export const CodeEditor = ({ value, onChange, ...props }) => {
+export const CodeEditor = ({ value, mode, onChange }) => {
   const execFunc = useCallback(() => {
-    // todo: beautify using shortcut
+    handleBeautify(value)
   }, [value])
 
   const handleBeautify = (code) => {
     const result = beautifyJavaScript(code)
     onChange(result)
-    console.info('handle beautify')
   }
-
   return (
     <>
-      <FormGroup>
-        <AceEditor
-          mode="javascript"
-          theme="tomorrow_night_eighties"
-          value={value}
-          onChange={(value) => {
-            onChange(value)
-          }}
-          commands={[
-            {
-              name: 'beautifyJavaScript',
-              bindKey: { win: 'Ctrl-Alt-h', mac: 'Command-Alt-h' },
-              exec: execFunc,
-            },
-          ]}
-          name="BOT_EDITOR"
-          editorProps={{ $blockScrolling: true }}
-          enableBasicAutocompletion={false}
-          enableLiveAutocompletion={false}
-          enableSnippets={false}
-          width="100%"
-          fontSize={'1rem'}
-          setOptions={{ useWorker: false }}
-        />
-      </FormGroup>
-      <FormGroup>
-        <Button color="primary" onClick={() => handleBeautify(value)}>
+      <AceEditor
+        mode={mode}
+        theme={mode === 'javascript' ? 'tomorrow_night_eighties' : 'github'}
+        value={value}
+        onChange={(value) => {
+          onChange(value)
+        }}
+        commands={[
+          {
+            name: 'beautifyJavaScript',
+            bindKey: { win: 'Ctrl-Alt-h', mac: 'Command-Alt-h' },
+            exec: execFunc,
+          },
+        ]}
+        name="BOT_EDITOR"
+        editorProps={{ $blockScrolling: true }}
+        enableBasicAutocompletion={false}
+        enableLiveAutocompletion={false}
+        enableSnippets={false}
+        width="100%"
+        fontSize={'1rem'}
+        showGutter
+        setOptions={{ useWorker: false }}
+      />
+      <FormGroup className="mt-2">
+        <Button color="info" onClick={() => handleBeautify(value)}>
           Beautify
-        </Button>
+        </Button>{' '}
+        <Label className="mr-3">
+          <i className="fab fa-windows"></i>: Ctl-Alt-h
+        </Label>
+        <Label>
+          <i className="fab fa-apple"></i>: Command-Alt-h
+        </Label>
       </FormGroup>
     </>
   )
 }
 
 CodeEditor.propTypes = {
-  label: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
   value: PropTypes.string,
+  mode: PropTypes.string,
+}
+
+CodeEditor.defaultProps = {
+  model: 'javascript',
 }

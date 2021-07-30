@@ -12,6 +12,7 @@ import {
   ModalHeader,
   CardHeader,
   CardFooter,
+  UncontrolledAlert,
 } from 'reactstrap'
 import {
   LimitFilter,
@@ -33,6 +34,7 @@ import {
 import { getRunningBots } from 'store/bot/actions'
 import ScheduleEditor from './ScheduleEditor'
 import AsyncSelect from 'react-select/async'
+import Skeleton from 'react-loading-skeleton'
 
 // const Container = styled(Card)`
 //   background: #333;
@@ -130,6 +132,8 @@ const BotsSchedule = () => {
   const runningBots = useSelector((state) => state.bot.botInstances)
   const total = useSelector((state) => state.schedule.total)
   const user = useSelector((state) => state.auth.user)
+  const error = useSelector((state) => state.schedule.error)
+  const loading = useSelector((state) => state.schedule.loading)
 
   const searchBots = (value, callback) => {
     dispatch(getRunningBots({ page: 1, limit: 50, search: value })).then(
@@ -141,7 +145,6 @@ const BotsSchedule = () => {
   }
 
   const onBotChange = (option) => {
-    console.error(option, '>>>>')
     setInstanceId(option.value)
   }
 
@@ -346,6 +349,16 @@ const BotsSchedule = () => {
         </Button>
       </CardHeader>
       <CardBody>
+        {/* {error && (
+          <UncontrolledAlert color="danger">
+            <span className="alert-icon">
+              <i className="ni ni-like-2" />
+            </span>
+            <span className="alert-text ml-1">
+              <strong>Danger!</strong> This is a danger alert—check it out!
+            </span>
+          </UncontrolledAlert>
+        )} */}
         <div>
           <LimitFilter
             id="limitfilter"
@@ -390,19 +403,22 @@ const BotsSchedule = () => {
             }}
           />
         </div>
-        <Table responsive>
-          <thead>
-            <tr>
-              <OrderTh field={'user'}>User</OrderTh>
-              <OrderTh field={'instance_id'}>Instance Id</OrderTh>
-              <OrderTh field={'bot_name'}>Bot Name</OrderTh>
-              <OrderTh field={'status'}>Status</OrderTh>
-              <OrderTh>Details</OrderTh>
-              <OrderTh>Actions</OrderTh>
-            </tr>
-          </thead>
-          <tbody>{schedules.map(renderRow)}</tbody>
-        </Table>
+        {loading && <Skeleton count={5} />}
+        {!loading && (
+          <Table responsive>
+            <thead>
+              <tr>
+                <OrderTh field={'user'}>User</OrderTh>
+                <OrderTh field={'instance_id'}>Instance Id</OrderTh>
+                <OrderTh field={'bot_name'}>Bot Name</OrderTh>
+                <OrderTh field={'status'}>Status</OrderTh>
+                <OrderTh>Details</OrderTh>
+                <OrderTh>Actions</OrderTh>
+              </tr>
+            </thead>
+            <tbody>{schedules.map(renderRow)}</tbody>
+          </Table>
+        )}
         {isModalOpen && (
           <SweetAlert
             warning

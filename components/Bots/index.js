@@ -16,6 +16,7 @@ import { Paginator } from 'components/default'
 import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
 import { useDispatch, useSelector } from 'react-redux'
 import SweetAlert from 'react-bootstrap-sweetalert'
+import Skeleton from 'react-loading-skeleton'
 
 import {
   syncLocalBots,
@@ -102,6 +103,7 @@ const Bots = () => {
   const total = useSelector((state) => state.bot.total)
   const user = useSelector((state) => state.auth.user)
   const limit = useSelector((state) => state.bot.limit)
+  const loading = useSelector((state) => state.bot.loading)
 
   useEffect(() => {
     dispatch(getBots({ page, limit }))
@@ -341,18 +343,22 @@ const Bots = () => {
             }}
           />
         </div>
-        <Table responsive>
-          <thead>
-            <tr>
-              <OrderTh field={'name'}>Bot Name</OrderTh>
-              <OrderTh field={'type'}>Bot Type</OrderTh>
-              <OrderTh field={'description'}>Description</OrderTh>
-              <OrderTh field={'status'}>Status</OrderTh>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>{bots.map(renderRow)}</tbody>
-        </Table>
+        {loading && <Skeleton count={5} />}
+
+        {!loading && (
+          <Table responsive>
+            <thead>
+              <tr>
+                <OrderTh field={'name'}>Bot Name</OrderTh>
+                <OrderTh field={'type'}>Bot Type</OrderTh>
+                <OrderTh field={'description'}>Description</OrderTh>
+                <OrderTh field={'status'}>Status</OrderTh>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>{bots.map(renderRow)}</tbody>
+          </Table>
+        )}
         <Modal
           isOpen={isModalOpen}
           title={'Deploy selected bot?'}

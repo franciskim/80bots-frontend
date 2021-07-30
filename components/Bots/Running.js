@@ -11,9 +11,6 @@ import {
   Table,
   CardHeader,
   CardFooter,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
 } from 'reactstrap'
 import { LimitFilter, ListFilter, SearchFilter } from 'components/default/Table'
 import { addNotification } from 'lib/helper'
@@ -27,20 +24,21 @@ import {
   botInstanceUpdated,
   syncBotInstances,
 } from 'store/bot/actions'
-import { addListener, removeAllListeners } from 'store/socket/actions'
-import { Paginator, Loader80bots } from 'components/default'
-import { download } from 'lib/helpers'
-import Uptime from 'components/default/Uptime'
 import {
+  addListener,
+  removeAllListeners,
   subscribe as wsSubscribe,
   unsubscribe as wsUnsubscribe,
 } from 'store/socket/actions'
+import { Paginator, Loader80bots } from 'components/default'
+import { download, formatTimezone } from 'lib/helpers'
+import Uptime from 'components/default/Uptime'
+
 import {
   openScriptNotification,
   closeScriptNotification,
   flushScriptNotification,
 } from 'store/scriptNotification/actions'
-import { formatTimezone } from 'lib/helpers'
 
 // const Container = styled(Card)`
 //   background: #333;
@@ -345,18 +343,18 @@ const RunningBots = () => {
     })
   }
 
-  const copyToClipboard = (bot) => {
-    const text =
-      process.env.NODE_ENV === 'development'
-        ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
-        : bot.ip
-    navigator.clipboard.writeText(text).then(() =>
-      addNotification({
-        type: NOTIFICATION_TYPES.INFO,
-        message: 'Copied to clipboard',
-      })
-    )
-  }
+  // const copyToClipboard = (bot) => {
+  //   const text =
+  //     process.env.NODE_ENV === 'development'
+  //       ? `chmod 400 ${bot.instance_id}.pem && ssh -i ${bot.instance_id}.pem ubuntu@${bot.ip}`
+  //       : bot.ip
+  //   navigator.clipboard.writeText(text).then(() =>
+  //     addNotification({
+  //       type: NOTIFICATION_TYPES.INFO,
+  //       message: 'Copied to clipboard',
+  //     })
+  //   )
+  // }
 
   const hasBotNotification = (botInstanceId) => {
     return !!botNotifications[botInstanceId]

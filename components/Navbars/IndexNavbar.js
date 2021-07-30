@@ -27,8 +27,6 @@ import {
   Container,
   Row,
   Col,
-  UncontrolledTooltip,
-  Button,
 } from 'reactstrap'
 
 function AdminNavbar() {

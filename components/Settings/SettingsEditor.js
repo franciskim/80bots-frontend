@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBotSettings, updateBotSettings } from 'store/bot/actions'
 import { addNotification } from 'lib/helper'
@@ -11,6 +12,7 @@ import {
   ModalHeader,
   FormGroup,
   Label,
+  Modal,
 } from 'reactstrap'
 
 const VALIDATION = {
@@ -19,7 +21,7 @@ const VALIDATION = {
   STORAGE: 'storage',
 }
 
-const SettingsEditor = ({ onClose }) => {
+const SettingsEditor = ({ isOpen, onClose }) => {
   const dispatch = useDispatch()
   const [instanceType, setInstanceType] = useState('')
   const [storage, setStorage] = useState(0)
@@ -80,7 +82,7 @@ const SettingsEditor = ({ onClose }) => {
   }
 
   return (
-    <>
+    <Modal isOpen={isOpen}>
       <ModalHeader>Edit Global Settings</ModalHeader>
       <ModalBody>
         <FormGroup>
@@ -134,7 +136,13 @@ const SettingsEditor = ({ onClose }) => {
           Submit
         </Button>
       </ModalFooter>
-    </>
+    </Modal>
   )
 }
+
+SettingsEditor.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+}
+
 export default SettingsEditor

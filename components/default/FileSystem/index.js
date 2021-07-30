@@ -63,7 +63,7 @@ const FileSystem = ({
           page={page}
           total={total}
           limit={limit}
-          filterItems={(f) =>
+          filterItems={() =>
             filterItems({ limit: 15, page: 1, isFiltered: !filter })
           }
           filter={filter}

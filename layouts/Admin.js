@@ -61,7 +61,6 @@ function Admin({ router, children }) {
       ? 'dark'
       : 'light'
   }
-  console.error('Sidenavopen???', sidenavOpen)
 
   return (
     <>

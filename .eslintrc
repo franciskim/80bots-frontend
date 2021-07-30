@@ -26,6 +26,13 @@
   "globals": {},
   "rules": {
     "react/display-name": "off",
-    "import/no-duplicates": "on"
+    "import/no-duplicates": 2
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["."]
+      }
+    }
   }
 }

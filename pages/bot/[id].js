@@ -1,7 +1,7 @@
 import React from 'react'
-import UpdateBot from 'components/Bot/UpdateBot'
 import { Container } from 'reactstrap'
 import SimpleHeader from 'components/Headers/SimpleHeader'
+import UpdateBot from 'components/Bot/UpdateBot'
 import Admin from 'layouts/Admin'
 
 const UpdateBotPage = () => {

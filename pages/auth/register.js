@@ -33,9 +33,7 @@ import {
   Row,
   Col,
 } from 'reactstrap'
-// layout for this page
 import Auth from 'layouts/Auth.js'
-// core components
 import AuthHeader from 'components/Headers/AuthHeader.js'
 
 function Register() {
@@ -49,7 +47,7 @@ function Register() {
         <Row className="justify-content-center">
           <Col lg="6" md="8">
             <Card className="bg-secondary border-0">
-              <CardHeader className="bg-transparent pb-5">Sign up</CardHeader>
+              <CardHeader className="bg-transparent pb-3">Sign up</CardHeader>
               <CardBody className="px-lg-5 py-lg-5">
                 <Form role="form">
                   <FormGroup

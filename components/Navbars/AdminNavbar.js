@@ -33,16 +33,12 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  ListGroupItem,
-  ListGroup,
   Media,
   Navbar,
   NavItem,
   NavLink,
   Nav,
   Container,
-  Row,
-  Col,
 } from 'reactstrap'
 import { logout } from 'store/auth/actions'
 
@@ -80,7 +76,7 @@ const AdminNavbar = ({ theme, sidenavOpen, toggleSidenav }) => {
   }
 
   const onLogoutClick = (e) => {
-    // e.preventDefault()
+    e.preventDefault()
     dispatch(logout())
     Router.push('/')
   }
@@ -162,9 +158,6 @@ const AdminNavbar = ({ theme, sidenavOpen, toggleSidenav }) => {
                 )}
                 {!user && <span>...</span>}
                 <DropdownMenu right>
-                  <DropdownItem className="noti-title" header tag="div">
-                    <h6 className="text-overflow m-0">Welcome!</h6>
-                  </DropdownItem>
                   <DropdownItem
                     href="#pablo"
                     onClick={() => Router.push('profile')}
@@ -174,7 +167,7 @@ const AdminNavbar = ({ theme, sidenavOpen, toggleSidenav }) => {
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem href="#pablo" onClick={onLogoutClick}>
-                    <i className="ni ni-user-run" />
+                    <i className="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                   </DropdownItem>
                 </DropdownMenu>

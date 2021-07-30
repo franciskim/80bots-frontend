@@ -8,6 +8,7 @@ import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'lib/helper'
 import { updateStatus } from 'store/user/actions'
 import { getUsers } from 'store/user/actions'
+import Skeleton from 'react-loading-skeleton'
 
 const Users = () => {
   const dispatch = useDispatch()
@@ -21,6 +22,7 @@ const Users = () => {
 
   const users = useSelector((state) => state.user.users)
   const total = useSelector((state) => state.user.total)
+  const loading = useSelector((state) => state.user.loading)
 
   const changeUserStatus = (user) => {
     dispatch(
@@ -96,17 +98,21 @@ const Users = () => {
             }}
           />
         </div>
-        <Table responsive>
-          <thead>
-            <tr>
-              <OrderTh field={'name'}>Name</OrderTh>
-              <OrderTh field={'email'}>Email</OrderTh>
-              <OrderTh field={'date'}>Register Date</OrderTh>
-              <OrderTh field={'status'}>Status</OrderTh>
-            </tr>
-          </thead>
-          <tbody>{users.map(renderRow)}</tbody>
-        </Table>
+        {loading && <Skeleton count={5} />}
+
+        {!loading && (
+          <Table responsive>
+            <thead>
+              <tr>
+                <OrderTh field={'name'}>Name</OrderTh>
+                <OrderTh field={'email'}>Email</OrderTh>
+                <OrderTh field={'date'}>Register Date</OrderTh>
+                <OrderTh field={'status'}>Status</OrderTh>
+              </tr>
+            </thead>
+            <tbody>{users.map(renderRow)}</tbody>
+          </Table>
+        )}
       </CardBody>
       <CardFooter>
         <Paginator

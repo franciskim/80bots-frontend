@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
+import Router, { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNotification } from 'lib/helper'
@@ -10,8 +11,7 @@ import {
   updateBotInstance,
   restartInstance,
 } from 'store/botinstance/actions'
-import { useRouter } from 'next/router'
-import Router from 'next/router'
+
 import RestartEditor from '../RestartEditor'
 
 const Error = styled.span`

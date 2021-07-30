@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import { LimitFilter } from 'components/default/Table'
@@ -64,7 +64,7 @@ const JsonTableModeView = ({ output }) => {
   const getHeader = (row) => {
     let columns = []
     for (let key in row) {
-      if (row.hasOwnProperty(key)) {
+      if (row[key]) {
         columns.push(<th key={key}>{key}</th>)
       }
     }
@@ -88,12 +88,12 @@ const JsonTableModeView = ({ output }) => {
     let rowData = []
     let rowIdx = 0
     for (let key in row) {
-      if (row.hasOwnProperty(key)) {
+      if (row[key]) {
         if (typeof row[key] !== 'object') {
           if (validUrl(row[key])) {
             rowData.push(
               <td key={rowIdx}>
-                <a href={row[key]} target="_blank">
+                <a href={row[key]} target="_blank" rel="noreferrer">
                   {row[key]}
                 </a>
               </td>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
-import { Button, Card, Input, ModalFooter } from 'reactstrap'
+import { Button, Input } from 'reactstrap'
 
 const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   const [values, setValues] = useState({})
@@ -203,7 +203,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             error={
               errors.indexOf(item.name) > -1 ? 'This field is required' : ''
             }
-            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
 
@@ -244,7 +244,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             description={item.description}
             onInputChange={(input) => onMultiSelectChange(item.name, input)}
             value={values[item.name].options}
-            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
 
@@ -262,7 +262,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             error={
               errors.indexOf(item.name) > -1 ? 'This field is required' : ''
             }
-            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
 
@@ -277,7 +277,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             max={item.range && Number(item.range[1])}
             onChange={(value) => changeValue(item.name, value)}
             value={values[item.name]}
-            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
     }

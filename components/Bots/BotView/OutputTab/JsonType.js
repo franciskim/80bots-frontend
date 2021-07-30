@@ -79,22 +79,20 @@ const JsonType = ({ items, flush, openItem, openedFolder, openedFile }) => {
         `}</style>
         {openedFile ? (
           <>
-            <FiltersSection>
-              <Select
-                onChange={onSelected}
-                options={options}
-                value={selected}
-                styles={{
-                  select: {
-                    container: (provided) => ({
-                      ...provided,
-                      minWidth: '200px',
-                      color: '#fff',
-                    }),
-                  },
-                }}
-              />
-            </FiltersSection>
+            <Select
+              onChange={onSelected}
+              options={options}
+              value={selected}
+              styles={{
+                select: {
+                  container: (provided) => ({
+                    ...provided,
+                    minWidth: '200px',
+                    color: '#fff',
+                  }),
+                },
+              }}
+            />
             <FileSystem hideNavigator={true} />
           </>
         ) : (

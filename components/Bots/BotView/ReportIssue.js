@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import { useDispatch } from 'react-redux'
 
-import { Button, Input, Container, ButtonGroup } from 'reactstrap'
+import { Button, Input, ButtonGroup } from 'reactstrap'
 import { reportBot as report } from 'store/bot/actions'
 import { addNotification } from 'lib/helper'
 import { NOTIFICATION_TYPES } from 'config'
@@ -45,7 +45,7 @@ const ReportIssue = ({ bot, screenshots, onClose }) => {
 
         onClose && onClose()
       })
-      .catch((err) =>
+      .catch(() =>
         addNotification({
           type: NOTIFICATION_TYPES.ERROR,
           message: 'Report failed, please try again later',

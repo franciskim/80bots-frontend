@@ -23,6 +23,7 @@ import Select from 'react-select'
 import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'lib/helper'
 import { addListener } from 'store/socket/actions'
+import Skeleton from 'react-loading-skeleton'
 
 // const IconButton = styled(Button)`
 //   display: inline-flex;
@@ -80,6 +81,7 @@ const Settings = () => {
   const user = useSelector((state) => state.auth.user)
   const regions = useSelector((state) => state.bot.regions)
   const total = useSelector((state) => state.bot.totalRegions)
+  const loading = useSelector((state) => state.bot.loading)
 
   useEffect(() => {
     dispatch(getRegions({ page, limit }))
@@ -234,19 +236,22 @@ const Settings = () => {
             }}
           />
         </div>
-        <Table responsive>
-          <thead>
-            <tr>
-              <OrderTh field={'name'}>Name</OrderTh>
-              <OrderTh field={'code'}>Code</OrderTh>
-              <OrderTh field={'limit'}>Limit</OrderTh>
-              <OrderTh field={'used_limit'}>Used Limit</OrderTh>
-              <th>Default AMI</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>{regions.map(renderRow)}</tbody>
-        </Table>
+        {loading && <Skeleton count={5} />}
+        {!loading && (
+          <Table responsive>
+            <thead>
+              <tr>
+                <OrderTh field={'name'}>Name</OrderTh>
+                <OrderTh field={'code'}>Code</OrderTh>
+                <OrderTh field={'limit'}>Limit</OrderTh>
+                <OrderTh field={'used_limit'}>Used Limit</OrderTh>
+                <th>Default AMI</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>{regions.map(renderRow)}</tbody>
+          </Table>
+        )}
         <Modal isOpen={isModalOpen} onClose={onModalClose}>
           <ModalHeader>Edit Default AMI</ModalHeader>
           <ModalBody>
@@ -268,13 +273,12 @@ const Settings = () => {
             </Button>
           </ModalFooter>
         </Modal>
-        <Modal isOpen={isEditSettingsModalOpened}>
-          <SettingsEditor
-            onClose={() => {
-              setIsEditSettingsModalOpened(false)
-            }}
-          />
-        </Modal>
+        <SettingsEditor
+          isOpen={isEditSettingsModalOpened}
+          onClose={() => {
+            setIsEditSettingsModalOpened(false)
+          }}
+        />
       </CardBody>
       <CardFooter>
         <Paginator

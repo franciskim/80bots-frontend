@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { useSelector, useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
+import PropTypes from 'prop-types'
 import {
   Card,
   CardBody,
@@ -127,6 +128,11 @@ const ConnectionStatus = ({ status, color }) => (
     <span>&nbsp;|&nbsp;</span>
   </>
 )
+
+ConnectionStatus.propTypes = {
+  status: PropTypes.string,
+  color: PropTypes.string,
+}
 
 const BotView = () => {
   const dispatch = useDispatch()
