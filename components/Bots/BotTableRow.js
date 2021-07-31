@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Badge, Button } from 'reactstrap'
+import Link from 'next/link'
 import { useDispatch } from 'react-redux'
 import { updateStatusBot } from 'store/bot/actions'
 import { addNotification } from 'lib/helpers'
@@ -72,16 +73,11 @@ const BotTableRow = ({
         >
           Deploy
         </Button>
-        <a
-          className="table-action"
-          href="#"
-          title="Edit Bot"
-          onClick={() => {
-            Router.push(`bot/${bot.id}`)
-          }}
-        >
-          <i className="fas fa-edit" />
-        </a>
+        <Link href={`bot/${bot.id}`} passHref>
+          <a className="table-action" href="#" title="Edit Bot">
+            <i className="fas fa-edit" />
+          </a>
+        </Link>
         <a
           className="table-action"
           href="#"

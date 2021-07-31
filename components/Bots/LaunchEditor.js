@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
-import { Button, Input } from 'reactstrap'
+import { Button, Input, Label, FormGroup, Col, Tooltip } from 'reactstrap'
 
 const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   const [values, setValues] = useState({})
@@ -10,30 +10,46 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   const [step, setStep] = useState(1)
   const [amount, setAmount] = useState(1)
   const [isAmountSet, amountSet] = useState(true)
+  const [tooltipOpenMapping, setTooltipOpenMapping] = useState({})
+
+  const toggle = (tooltipOpenKey) => {
+    setTooltipOpenMapping({
+      ...tooltipOpenMapping,
+      [tooltipOpenKey]: !tooltipOpenMapping[tooltipOpenKey],
+    })
+  }
 
   useEffect(() => {
-    initializeValues()
+    console.error(bot.parameters, '>>>')
+    initializeValues(bot.parameters)
   }, [bot])
 
-  const initializeValues = () => {
+  const initializeValues = (params) => {
     let botParams = {}
-    bot &&
-      bot.parameters.forEach((param) => {
-        if (getInputType(param.type) === 'checkbox')
-          botParams[param.name] = false
-        if (getInputType(param.type) === 'range')
-          botParams[param.name] = Number(
-            Math.floor((Number(param.range[0]) + Number(param.range[1])) / 2)
-          )
-        if (
-          getInputType(param.type) === 'text' ||
-          getInputType(param.type) === 'number' ||
-          getInputType(param.type) === 'password'
+
+    params.forEach((param) => {
+      const paramType = getInputType(param.type)
+
+      if (paramType === 'checkbox') {
+        botParams[param.name] = false
+      }
+      if (paramType === 'range') {
+        botParams[param.name] = Number(
+          Math.floor((Number(param.range[0]) + Number(param.range[1])) / 2)
         )
-          botParams[param.name] = ''
-        if (param.type === 'multiselect')
-          botParams[param.name] = { term: '', options: [] }
+      }
+      if (['text', 'number', 'password'].indexOf(paramType) > -1) {
+        botParams[param.name] = ''
+      }
+      if (paramType === 'multiselect') {
+        botParams[param.name] = { term: '', options: [] }
+      }
+
+      setTooltipOpenMapping({
+        ...tooltipOpenMapping,
+        [param.title]: false,
       })
+    })
     setValues(botParams)
   }
 
@@ -81,15 +97,21 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
     return combined
   }
 
-  const submit = () => {
+  const submitForm = () => {
     if (validateValues()) {
-      if (!combinedResult[step]) initializeValues()
-      else setValues(combinedResult[step])
+      if (!combinedResult[step]) {
+        initializeValues(bot.parameters)
+      } else {
+        setValues(combinedResult[step])
+      }
       let result = [...combinedResult]
       result[step - 1] = values
       setCombinedResult(result)
-      if (step === amount) onSubmit(valuesToResult(result))
-      else setStep(step + 1)
+      if (step === amount) {
+        onSubmit(valuesToResult(result))
+      } else {
+        setStep(step + 1)
+      }
     }
   }
 
@@ -118,24 +140,17 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
     param.title || param.name.charAt(0).toUpperCase() + param.name.slice(1)
 
   const getInputType = (type) => {
-    switch (type) {
+    switch (type.toLowerCase()) {
       case 'string':
-      case 'String':
         return 'text'
-
       case 'integer':
-      case 'Integer':
-      case 'Number':
+      case 'number':
         return 'number'
-
       case 'range':
         return 'range'
-
       case 'password':
         return 'password'
-
       case 'boolean':
-      case 'Boolean':
       case 'bool':
         return 'checkbox'
     }
@@ -167,10 +182,11 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   }
 
   const renderParams = (item, idx) => {
+    console.error(item, '>>>', idx)
     const type = getInputType(item.type)
     const label = getLabel(item)
 
-    switch (item.type) {
+    switch (item.type.toLowerCase()) {
       case 'enum':
         return (
           <Select
@@ -188,13 +204,12 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
         )
 
       case 'integer':
-      case 'Integer':
         return (
           <Input
             key={idx}
             type={type}
             label={label}
-            styles={inputStyle}
+            // styles={inputStyle}
             value={values[item.name]}
             min={item.range && Number(item.range[0])}
             max={item.range && Number(item.range[1])}
@@ -209,7 +224,6 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
 
       case 'bool':
       case 'boolean':
-      case 'Boolean':
         return (
           <div key={idx}>
             <div>
@@ -229,7 +243,6 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             </Button>
           </div>
         )
-
       case 'multiselect':
         return (
           <Select
@@ -247,31 +260,42 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
-
-      case 'String':
-      case 'password':
       case 'string':
+      case 'password':
         return (
-          <Input
-            key={idx}
-            type={type}
-            label={label}
-            value={values[item.name]}
-            onChange={(e) => changeValue(item.name, e.target.value)}
-            description={item.description}
-            error={
-              errors.indexOf(item.name) > -1 ? 'This field is required' : ''
-            }
-            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
-          />
+          <FormGroup className="row">
+            <Label md={3}>
+              {label}
+              <i className="far fa-question-circle" id={item.name}></i>
+              <Tooltip
+                placement="right"
+                isOpen={tooltipOpenMapping[item.name]}
+                target={item.name}
+                toggle={() => toggle(item.name)}
+              >
+                {item.description}
+              </Tooltip>
+            </Label>
+            <Col md={9}>
+              <Input
+                key={idx}
+                type={type}
+                value={values[item.name]}
+                onChange={(e) => changeValue(item.name, e.target.value)}
+                // error={
+                //   errors.indexOf(item.name) > -1 ? 'This field is required' : ''
+                // }
+                // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+              />
+            </Col>
+          </FormGroup>
         )
-
       case 'range':
         return (
           <Range
             key={idx}
             label={label}
-            styles={inputStyle}
+            // styles={inputStyle}
             description={item.description}
             min={item.range && Number(item.range[0])}
             max={item.range && Number(item.range[1])}
@@ -287,7 +311,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
     <>
       <Range
         label={'Number of bot instances to launch'}
-        styles={inputStyle}
+        // styles={inputStyle}
         min={1}
         max={10}
         onChange={(value) => setAmount(value)}
@@ -300,11 +324,11 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   ) : (
     <>
       {amount > 1 && <Steps amount={amount} step={step} />}
-      {bot && bot.parameters.map(renderParams)}
+      {bot.parameters.map(renderParams)}
       <Button disabled={amount > 1 && step === 1} onClick={cancel}>
         {amount === 1 ? 'Cancel' : 'Previous'}
       </Button>
-      <Button color="primary" onClick={submit}>
+      <Button color="primary" onClick={submitForm}>
         {step === amount ? 'Launch' : 'Next'}
       </Button>
     </>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Router from 'next/router'
-import LaunchEditor from './LaunchEditor'
+import DeployBotModal from './DeployBotModal'
 import {
   Button,
   ButtonGroup,
@@ -8,9 +8,6 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Modal,
-  ModalBody,
-  ModalHeader,
   Table,
 } from 'reactstrap'
 import { Paginator } from 'components/default'
@@ -19,74 +16,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import SweetAlert from 'react-bootstrap-sweetalert'
 import Skeleton from 'react-loading-skeleton'
 import BotTableRow from './BotTableRow'
-
 import {
   syncLocalBots,
-  launchInstance,
   getBots,
   // getBotSettings,
   // updateBotSettings,
   deleteBot,
   // setBotLimit,
 } from 'store/bot/actions'
-
 import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 import { addListener } from 'store/socket/actions'
-
-// const Container = styled(Card)`
-//   background: #333;
-//   border: none;
-//   color: #fff;
-// `
-
-// const Deploy = styled(Button)`
-//   padding: 0 10px;
-//   font-size: 16px;
-//   margin-right: 5px;
-// `
-
-// const IconButton = styled(Button)`
-//   display: inline-flex;
-//   justify-content: center;
-//   padding: 2px;
-//   margin-right: 5px;
-//   width: 27px;
-//   height: 27px;
-
-//   &:last-child {
-//     margin-right: 0;
-//   }
-
-//   svg {
-//     width: 15px;
-//     height: 15px;
-//   }
-// `
-
-// const StatusButton = styled(Deploy)`
-//   text-transform: capitalize;
-//   margin-right: 0;
-// `
-// const BotType = styled(Badge)`
-//   font-size: 14px;
-//   text-transform: uppercase;
-// `
-
-// const Tag = styled(Badge)`
-//   margin-right: 0.5rem;
-//   font-size: 14px;
-
-//   &:last-child {
-//     margin-right: 0;
-//   }
-// `
-
-// const Buttons = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-// `
 
 const Bots = () => {
   const dispatch = useDispatch()
@@ -130,25 +70,25 @@ const Bots = () => {
     return setPage(1)
   }, [page, limit])
 
-  const launchBot = (params) => {
-    setIsDeleteModalOpen(false)
-    dispatch(launchInstance(clickedBot.id, params))
-      .then(() => {
-        addNotification({
-          type: NOTIFICATION_TYPES.INFO,
-          message: 'New bot instance is deploying',
-        })
-      })
-      .catch((action) => {
-        addNotification({
-          type: NOTIFICATION_TYPES.ERROR,
-          message:
-            action.error?.response?.data?.message ||
-            'Error occurred during new instance launch',
-          delay: 1500,
-        })
-      })
-  }
+  // const launchBot = (params) => {
+  //   setIsDeleteModalOpen(false)
+  //   dispatch(launchInstance(clickedBot.id, params))
+  //     .then(() => {
+  //       addNotification({
+  //         type: NOTIFICATION_TYPES.INFO,
+  //         message: 'New bot instance is deploying',
+  //       })
+  //     })
+  //     .catch((action) => {
+  //       addNotification({
+  //         type: NOTIFICATION_TYPES.ERROR,
+  //         message:
+  //           action.error?.response?.data?.message ||
+  //           'Error occurred during new instance launch',
+  //         delay: 1500,
+  //       })
+  //     })
+  // }
 
   const getDeleteBot = () => {
     dispatch(deleteBot(clickedBot.id))
@@ -268,7 +208,6 @@ const Bots = () => {
           />
         </div>
         {loadingAll && <Skeleton count={5} />}
-
         {!loadingAll && (
           <Table responsive>
             <thead>
@@ -296,16 +235,14 @@ const Bots = () => {
             </tbody>
           </Table>
         )}
-        <Modal isOpen={isModalOpen} onClose={() => setClickedBot(null)}>
-          <ModalHeader>Deploy selected bot?</ModalHeader>
-          <ModalBody>
-            <LaunchEditor
-              onSubmit={launchBot}
-              onClose={() => setIsModalOpen(false)}
-              bot={clickedBot}
-            />
-          </ModalBody>
-        </Modal>
+
+        <DeployBotModal
+          bot={clickedBot}
+          isModalOpen={isModalOpen}
+          setClickedBot={setClickedBot}
+          setIsModalOpen={setIsModalOpen}
+        />
+
         {isDeleteModalOpen && (
           <SweetAlert
             warning
