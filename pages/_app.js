@@ -83,7 +83,7 @@ class MyApp extends App {
               name="viewport"
               content="width=device-width, initial-scale=1, shrink-to-fit=no"
             />
-            <title>80bots.com</title>
+            <title>80bots Web RPA</title>
           </Head>
           <Layout>
             <Component {...pageProps} />

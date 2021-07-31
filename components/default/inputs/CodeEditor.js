@@ -90,9 +90,13 @@ export const CodeEditor = ({ value, mode, onChange }) => {
         setOptions={{ useWorker: false }}
       />
       <FormGroup className="mt-2">
-        <Button color="info" onClick={() => handleBeautify(value)}>
+        <Button
+          color="info"
+          onClick={() => handleBeautify(value)}
+          disabled={value.trim() === ''}
+        >
           Beautify
-        </Button>{' '}
+        </Button>
         <Label className="mr-3">
           <i className="fab fa-windows"></i>: Ctl-Alt-h
         </Label>

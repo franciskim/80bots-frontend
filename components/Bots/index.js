@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import Router from 'next/router'
 import LaunchEditor from './LaunchEditor'
 import {
-  Badge,
   Button,
   ButtonGroup,
   Card,
@@ -11,6 +10,7 @@ import {
   CardHeader,
   Modal,
   ModalBody,
+  ModalHeader,
   Table,
 } from 'reactstrap'
 import { Paginator } from 'components/default'
@@ -18,12 +18,12 @@ import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
 import { useDispatch, useSelector } from 'react-redux'
 import SweetAlert from 'react-bootstrap-sweetalert'
 import Skeleton from 'react-loading-skeleton'
+import BotTableRow from './BotTableRow'
 
 import {
   syncLocalBots,
   launchInstance,
   getBots,
-  updateStatusBot,
   // getBotSettings,
   // updateBotSettings,
   deleteBot,
@@ -150,25 +150,6 @@ const Bots = () => {
       })
   }
 
-  const changeBotStatus = (bot) => {
-    const statusName = bot.status === 'active' ? 'deactivated' : 'activated'
-    const status = bot.status === 'active' ? 'inactive' : 'active'
-
-    dispatch(updateStatusBot(bot.id, { status }))
-      .then(() =>
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: `Bot was successfully ${statusName}!`,
-        })
-      )
-      .catch(() =>
-        addNotification({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: 'Status update failed',
-        })
-      )
-  }
-
   const getDeleteBot = () => {
     dispatch(deleteBot(clickedBot.id))
       .then(() => {
@@ -211,70 +192,6 @@ const Bots = () => {
         })
       )
   }
-
-  const renderRow = (bot) => (
-    <tr key={bot.id}>
-      <td>{bot.name}</td>
-      <td>
-        <Badge color={bot.type === 'public' ? 'info' : 'danger'}>
-          {bot.type}
-        </Badge>
-      </td>
-      <td>{bot.description}</td>
-      <td>
-        {bot.tags && bot.tags.length > 0
-          ? bot.tags.map((tag, idx) => (
-              <div key={idx} pill color={'info'}>
-                {tag.name}
-              </div>
-            ))
-          : '-'}
-      </td>
-      <td>
-        <Button
-          color={bot.status === 'active' ? 'success' : 'danger'}
-          size="sm"
-          onClick={() => changeBotStatus(bot)}
-        >
-          {bot.status}
-        </Button>
-      </td>
-      <td>
-        <Button
-          color="primary"
-          className="btn-neutral btn-round btn-icon"
-          size="sm"
-          onClick={() => {
-            setClickedBot(bot)
-            setIsModalOpen(true)
-          }}
-        >
-          Deploy
-        </Button>
-        <a
-          className="table-action"
-          href="#"
-          title="Edit Bot"
-          onClick={() => {
-            Router.push(`bot/${bot.id}`)
-          }}
-        >
-          <i className="fas fa-edit" />
-        </a>
-        <a
-          className="table-action"
-          href="#"
-          title="Delete Bot"
-          onClick={() => {
-            setClickedBot(bot)
-            setIsDeleteModalOpen(true)
-          }}
-        >
-          <i className="fas fa-trash" />
-        </a>
-      </td>
-    </tr>
-  )
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value })
@@ -359,18 +276,28 @@ const Bots = () => {
                 <OrderTh field={'name'}>Bot Name</OrderTh>
                 <OrderTh field={'type'}>Bot Type</OrderTh>
                 <OrderTh field={'description'}>Description</OrderTh>
+                <th>Tags</th>
                 <OrderTh field={'status'}>Status</OrderTh>
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>{bots.map(renderRow)}</tbody>
+            <tbody>
+              {bots.map((bot) => {
+                return (
+                  <BotTableRow
+                    bot={bot}
+                    setIsModalOpen={setIsModalOpen}
+                    setIsDeleteModalOpen={setIsDeleteModalOpen}
+                    setClickedBot={setClickedBot}
+                    key={bot.id}
+                  />
+                )
+              })}
+            </tbody>
           </Table>
         )}
-        <Modal
-          isOpen={isModalOpen}
-          title={'Deploy selected bot?'}
-          onClose={() => setClickedBot(null)}
-        >
+        <Modal isOpen={isModalOpen} onClose={() => setClickedBot(null)}>
+          <ModalHeader>Deploy selected bot?</ModalHeader>
           <ModalBody>
             <LaunchEditor
               onSubmit={launchBot}

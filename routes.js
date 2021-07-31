@@ -20,6 +20,7 @@ import SettingsPage from 'pages/settings'
 import SchedulersPage from 'pages/scheduler'
 import EditBotPage from 'pages/bot/[id]'
 import ViewRunningBotPage from 'pages/bots/running/[id]'
+import UpdateBotInstancePage from 'pages/botinstance/[id]'
 
 const routes = [
   {
@@ -29,6 +30,14 @@ const routes = [
     // layout: '/admin',
     // miniName: 'R',
     component: RunningBotsPage,
+  },
+  {
+    path: '/botinstance/:id',
+    name: 'Update Bot Instance',
+    icon: 'fa fa-robot text-blue',
+    // layout: '/admin',
+    component: UpdateBotInstancePage,
+    redirect: true,
   },
   {
     path: '/bots/running/:id',

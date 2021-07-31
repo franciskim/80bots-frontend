@@ -253,7 +253,6 @@ const UpdateBot = () => {
         </FormGroup>
         <FormGroup className="row">
           <Label md={2} className="form-control-label">
-            {' '}
             Bot Script
           </Label>
           <Col md={10}>

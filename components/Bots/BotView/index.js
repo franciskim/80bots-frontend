@@ -47,6 +47,9 @@ const BotView = () => {
   const [status, setStatus] = useState(STATUSES.CONNECTING)
   const [customBack, setCustomBack] = useState(null)
   const router = useRouter()
+  const {
+    query: { id },
+  } = router
 
   const toggle = (tab) => {
     if (tab.title === 'Display' && window.location.protocol === 'https:') {
@@ -72,7 +75,7 @@ const BotView = () => {
   }, [botInstance])
 
   useEffect(() => {
-    dispatch(getInstance(router.query.id))
+    dispatch(getInstance(id))
     return () => {
       dispatch(clearInstance())
     }

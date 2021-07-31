@@ -10,6 +10,7 @@ import {
   Card,
   Table,
   CardHeader,
+  List,
   CardFooter,
 } from 'reactstrap'
 import { LimitFilter, ListFilter, SearchFilter } from 'components/default/Table'
@@ -32,7 +33,7 @@ import {
 } from 'store/socket/actions'
 import { Paginator, Loader80bots } from 'components/default'
 
-import Uptime from 'components/default/Uptime'
+import UptimeLabel from './UptimeLabel'
 
 import {
   openScriptNotification,
@@ -516,41 +517,59 @@ const RunningBots = () => {
           />
         </td>
         <td>
-          <Link href={'running/[id]'} as={`running/${botInstance.id}`}>
-            <a>&gt;&nbsp;View</a>
-          </Link>
-          {botInstance.status === 'terminated' ? (
-            <div
-              title={'Restore Bot'}
-              onClick={() => choiceRestoreBot(botInstance)}
-            >
-              <a>&gt;&nbsp;Restore</a>
-            </div>
-          ) : null}
-          {botInstance.status === 'running' ? (
-            <div
-              title={'New Script'}
-              onClick={() => {
-                Router.push(`/botinstance/${botInstance.id}`)
-              }}
-            >
-              <a>&gt;&nbsp;New Script</a>
-            </div>
-          ) : null}
-          <div
-            title={'Copy Instance'}
-            onClick={() => choiceCopyInstance(botInstance)}
-          >
-            <a>&gt;&nbsp;Clone</a>
-          </div>
-          <div
-            disabled={botInstance.status === 'terminated'}
-            title={'Download PEM'}
-            type={'success'}
-            onClick={() => downloadEventHandler(botInstance)}
-          >
-            <a>&gt;&nbsp;Key</a>
-          </div>
+          <List type="unstyled">
+            <li>
+              <Link
+                href={'running/[id]'}
+                as={`running/${botInstance.id}`}
+                passHref
+              >
+                <a>&gt;&nbsp;View</a>
+              </Link>
+            </li>
+            {botInstance.status === 'terminated' && (
+              <li>
+                <a
+                  href="#pablo"
+                  title={'Restore Bot'}
+                  onClick={() => choiceRestoreBot(botInstance)}
+                >
+                  &gt;&nbsp;Restore
+                </a>
+              </li>
+            )}
+            {botInstance.status === 'running' && (
+              <li>
+                <Link
+                  title={'New Script'}
+                  href={`/botinstance/${botInstance.id}`}
+                  passHref
+                >
+                  <a>&gt;&nbsp;New Script</a>
+                </Link>
+              </li>
+            )}
+            <li>
+              <a
+                href="#pablo"
+                title={'Copy Instance'}
+                onClick={() => choiceCopyInstance(botInstance)}
+              >
+                &gt;&nbsp;Clone
+              </a>
+            </li>
+            <li>
+              <a
+                href="#pablo"
+                disabled={botInstance.status === 'terminated'}
+                title={'Download PEM'}
+                type={'success'}
+                onClick={() => downloadEventHandler(botInstance)}
+              >
+                &gt;&nbsp;Key
+              </a>
+            </li>
+          </List>
         </td>
         <td>{botInstance.bot_name}</td>
         <td>
@@ -575,7 +594,12 @@ const RunningBots = () => {
           )}
         </td>
         <td>{formatTimezone(user.timezone, botInstance.launched_at)}</td>
-        <Uptime uptime={botInstance.uptime} status={botInstance.status} />
+        <td>
+          <UptimeLabel
+            uptime={botInstance.uptime}
+            status={botInstance.status}
+          />
+        </td>
         <td>{botInstance.ip}</td>
         <td>{botInstance.name}</td>
         <td>{botInstance.instance_id}</td>
