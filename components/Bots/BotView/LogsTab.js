@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Card } from 'reactstrap'
+import { CardBody } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 import { flush, open, close } from 'store/fileSystem/actions'
 import FileSystem from 'components/default/FileSystem'
@@ -73,7 +73,7 @@ const LogsTab = ({ items, flush, openItem, openedFolder, openedFile }) => {
   }
 
   return (
-    <Card>
+    <CardBody className="d-flex justify-content-center">
       {openedFile ? (
         <>
           <Select
@@ -99,7 +99,7 @@ const LogsTab = ({ items, flush, openItem, openedFolder, openedFile }) => {
           }}
         />
       )}
-    </Card>
+    </CardBody>
   )
 }
 

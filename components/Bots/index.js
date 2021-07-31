@@ -310,10 +310,15 @@ const Bots = () => {
     <Card>
       <CardHeader>
         <ButtonGroup>
-          <Button color="success" onClick={() => Router.push('bot')}>
+          <Button color="success" outline onClick={() => Router.push('bot')}>
             Add Bot
           </Button>
-          <Button color="primary" onClick={sync} loading={`${syncLoading}`}>
+          <Button
+            color="primary"
+            outline
+            onClick={sync}
+            loading={`${syncLoading}`}
+          >
             Sync Bots From Repo
           </Button>
         </ButtonGroup>

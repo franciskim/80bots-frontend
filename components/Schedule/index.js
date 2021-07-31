@@ -345,7 +345,7 @@ const BotsSchedule = () => {
   return (
     <Card>
       <CardHeader>
-        <Button color="primary" onClick={toggleAddModal}>
+        <Button color="success" outline onClick={toggleAddModal}>
           Add schedule list
         </Button>
       </CardHeader>

@@ -24,45 +24,7 @@ import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'lib/helpers'
 import { addListener } from 'store/socket/actions'
 import Skeleton from 'react-loading-skeleton'
-
-// const IconButton = styled(Button)`
-//   display: inline-flex;
-//   justify-content: center;
-//   padding: 2px;
-//   margin-right: 5px;
-//   width: 30px;
-//   height: 30px;
-//   &:last-child {
-//     margin-right: 0;
-//   }
-// `
-
-// const modalStyles = css`
-//   min-width: 300px;
-//   overflow-y: visible;
-// `
-
-// const ButtonWrap = styled.div`
-//   display: flex;
-//   justify-content: flex-end;
-//   margin-bottom: 5px;
-//   button {
-//     margin-right: 20px;
-//     &:last-child {
-//       margin-right: 0;
-//     }
-//   }
-// `
-
-// const selectStyles = {
-//   select: {
-//     valueContainer: (provided) => ({
-//       ...provided,
-//       padding: '0 8px',
-//       borderColor: '#ced4da',
-//     }),
-//   },
-// }
+import SettingTableRow from './SettingTableRow'
 
 const Settings = () => {
   const dispatch = useDispatch()
@@ -182,31 +144,12 @@ const Settings = () => {
     )
   }
 
-  const renderRow = (region) => (
-    <tr key={region.id}>
-      <td>{region.name}</td>
-      <td>{region.code}</td>
-      <td>{region.limit}</td>
-      <td>{region.created_instances}</td>
-      <td>{region.show_default_ami}</td>
-      <td>
-        <a
-          className="table-action"
-          href="#"
-          title="Edit Region AMI"
-          onClick={() => openEditModal(region)}
-        >
-          <i className="fas fa-edit" />
-        </a>
-      </td>
-    </tr>
-  )
-
   return (
     <Card>
       <CardHeader>
         <Button
-          color="primary"
+          color="success"
+          outline
           onClick={() => {
             setIsEditSettingsModalOpened(true)
           }}
@@ -251,7 +194,17 @@ const Settings = () => {
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody>{regions.map(renderRow)}</tbody>
+            <tbody>
+              {regions.map((region) => {
+                return (
+                  <SettingTableRow
+                    region={region}
+                    openEditModal={openEditModal}
+                    key={region.id}
+                  />
+                )
+              })}
+            </tbody>
           </Table>
         )}
         <Modal isOpen={isModalOpen} onClose={onModalClose}>

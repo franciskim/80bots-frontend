@@ -42,7 +42,7 @@ function Auth({ children }) {
 }
 
 Auth.propTypes = {
-  children: PropTypes.object,
+  children: PropTypes.array,
 }
 
 export default withRouter(Auth)

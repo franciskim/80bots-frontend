@@ -6,27 +6,11 @@ import { connect } from 'react-redux'
 import { CardBody } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 
-const Content = styled(CardBody)`
-  display: flex;
-  height: 85vh;
-  flex-flow: row wrap;
-  flex-direction: column;
-  ${(props) => props.styles};
-`
-
 const Display = styled.iframe`
   display: flex;
   flex: 1 1;
   border: none;
-  ${(props) => props.styles};
 `
-
-// const Link = styled.a`
-//   padding: 20px;
-//   text-align: right;
-//   display: block;
-// `
-
 const STATUSES = {
   LOAD: 'Loading Display',
 }
@@ -35,7 +19,7 @@ const DisplayTab = ({ botInstance }) => {
   const [status, setStatus] = useState(STATUSES.LOAD)
 
   return (
-    <Content>
+    <CardBody className="d-flex justify-content-center">
       <a
         href={`http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`}
         target="_blank"
@@ -56,7 +40,7 @@ const DisplayTab = ({ botInstance }) => {
           }}
         />
       )}
-    </Content>
+    </CardBody>
   )
 }
 

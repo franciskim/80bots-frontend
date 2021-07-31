@@ -302,7 +302,7 @@ const RunningBots = () => {
   }
 
   const changeBotInstanceStatus = (option, id) => {
-    updateRunningBot(id, { status: option.value })
+    dispatch(updateRunningBot(id, { status: option.value }))
       .then(() =>
         addNotification({
           type: NOTIFICATION_TYPES.INFO,
@@ -336,12 +336,12 @@ const RunningBots = () => {
   const startAllBots = () => {
     botInstances.map((botInstance) => {
       if (botInstance.status === 'stopped') {
-        dispatch(
-          changeBotInstanceStatus(
-            { value: 'running', label: 'Running' },
-            botInstance.id
-          )
+        changeBotInstanceStatus(
+          { value: 'running', label: 'Running' },
+          botInstance.id
         )
+      } else {
+        console.info('status not correct', botInstance.id)
       }
     })
   }
@@ -630,12 +630,13 @@ const RunningBots = () => {
         <ButtonGroup>
           <Button
             color="primary"
+            outline
             onClick={syncWithAWS}
             loading={`${syncLoading}`}
           >
             Sync Bot Instances
           </Button>
-          <Button color="info" onClick={startAllBots}>
+          <Button color="info" outline onClick={startAllBots}>
             Launch Workforce
           </Button>
         </ButtonGroup>

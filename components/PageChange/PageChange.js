@@ -1,5 +1,6 @@
 import React from 'react'
 import { Spinner } from 'reactstrap'
+import PropTypes from 'prop-types'
 
 const PageChange = ({ path }) => {
   return (
@@ -15,6 +16,10 @@ const PageChange = ({ path }) => {
       </div>
     </div>
   )
+}
+
+PageChange.propTypes = {
+  path: PropTypes.string.isRequired,
 }
 
 export default PageChange

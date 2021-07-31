@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import FileSystem from 'components/default/FileSystem'
 import { flush, open, close } from 'store/fileSystem/actions'
 import { Loader80bots } from 'components/default'
-import { Modal, Button, Container } from 'reactstrap'
+import { Modal, Button, CardBody } from 'reactstrap'
 import ReportEditor from './ReportIssue'
 
 const rootFolder = 'screenshots'
@@ -90,44 +90,42 @@ const ScreenShotTab = ({
   }
 
   return (
-    <>
-      <Container>
-        {loading || !items.length ? (
-          <Loader80bots
-            data={'light'}
-            styled={{
-              width: '200px',
-            }}
+    <CardBody className="d-flex justify-content-center">
+      {loading || !items.length ? (
+        <Loader80bots
+          data={'light'}
+          styled={{
+            width: '200px',
+          }}
+        />
+      ) : (
+        <>
+          <FiltersSection>
+            {isReportMode && <Hint>Select issued screenshots |&nbsp;</Hint>}
+            <Button
+              type={'danger'}
+              onClick={() => setReportMode(!isReportMode)}
+            >
+              {isReportMode ? 'Cancel' : 'Report Issue'}
+            </Button>
+            {isReportMode && (
+              <>
+                <Hint>&nbsp;|&nbsp;</Hint>
+                <Button
+                  type={'success'}
+                  onClick={() => setShowReportModal(true)}
+                >
+                  Proceed
+                </Button>
+              </>
+            )}
+          </FiltersSection>
+          <FileSystem
+            selectedItems={reportItems}
+            onFileOpen={isReportMode ? handleItemSelect : null}
           />
-        ) : (
-          <>
-            <FiltersSection>
-              {isReportMode && <Hint>Select issued screenshots |&nbsp;</Hint>}
-              <Button
-                type={'danger'}
-                onClick={() => setReportMode(!isReportMode)}
-              >
-                {isReportMode ? 'Cancel' : 'Report Issue'}
-              </Button>
-              {isReportMode && (
-                <>
-                  <Hint>&nbsp;|&nbsp;</Hint>
-                  <Button
-                    type={'success'}
-                    onClick={() => setShowReportModal(true)}
-                  >
-                    Proceed
-                  </Button>
-                </>
-              )}
-            </FiltersSection>
-            <FileSystem
-              selectedItems={reportItems}
-              onFileOpen={isReportMode ? handleItemSelect : null}
-            />
-          </>
-        )}
-      </Container>
+        </>
+      )}
       <Modal
         mode={showReportModal ? 'in' : 'closed'}
         ref={reportModal}
@@ -140,7 +138,7 @@ const ScreenShotTab = ({
           onClose={() => setShowReportModal(false)}
         />
       </Modal>
-    </>
+    </CardBody>
   )
 }
 

@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import dayjs from 'dayjs'
 import { useSelector, useDispatch } from 'react-redux'
 import { Paginator } from '../default'
-import { CardBody, Button, Table, Card, CardFooter } from 'reactstrap'
+import { CardBody, Table, Card, CardFooter } from 'reactstrap'
 import { SearchFilter, LimitFilter, Th } from '../default/Table'
-import { NOTIFICATION_TYPES } from 'config'
-import { addNotification } from 'lib/helpers'
-import { updateStatus, getUsers } from 'store/user/actions'
-
+import { getUsers } from 'store/user/actions'
+import UserTableRow from './UserTableRow'
 import Skeleton from 'react-loading-skeleton'
 
 const Users = () => {
@@ -26,20 +23,6 @@ const Users = () => {
 
   const users = useSelector((state) => state.user.users)
   const total = useSelector((state) => state.user.total)
-
-  const changeUserStatus = (user) => {
-    dispatch(
-      updateStatus(user.id, {
-        status: user.status === 'active' ? 'inactive' : 'active',
-      })
-    ).then(() => {
-      const status = user.status === 'active' ? 'deactivated' : 'activated'
-      addNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: `User was successfully ${status}`,
-      })
-    })
-  }
 
   const searchUsers = (value) => {
     setSearch(value)
@@ -67,23 +50,6 @@ const Users = () => {
       }
       onClick={onOrderChange}
     />
-  )
-
-  const renderRow = (user) => (
-    <tr key={user.id}>
-      <td>{user.name}</td>
-      <td>{user.email}</td>
-      <td>{dayjs(user.created_at).format('YYYY-MM-DD HH:mm:ss')}</td>
-      <td>
-        <Button
-          color={user.status === 'active' ? 'success' : 'danger'}
-          size="sm"
-          onClick={() => changeUserStatus(user)}
-        >
-          {user.status}
-        </Button>
-      </td>
-    </tr>
   )
 
   return (
@@ -123,7 +89,11 @@ const Users = () => {
                 <OrderTh field={'status'}>Status</OrderTh>
               </tr>
             </thead>
-            <tbody>{users.map(renderRow)}</tbody>
+            <tbody>
+              {users.map((user) => {
+                return <UserTableRow user={user} key={user.id} />
+              })}
+            </tbody>
           </Table>
         )}
       </CardBody>
