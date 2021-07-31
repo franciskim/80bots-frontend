@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-// import styled from '@emotion/styled'
 import { connect } from 'react-redux'
 import { Card } from 'reactstrap'
 import { Loader80bots } from 'components/default'
@@ -74,37 +73,33 @@ const LogsTab = ({ items, flush, openItem, openedFolder, openedFile }) => {
   }
 
   return (
-    <>
-      <Card>
-        {openedFile ? (
-          <>
-            <FiltersSection>
-              <Select
-                onChange={onSelected}
-                options={options}
-                value={selected}
-                styles={{
-                  select: {
-                    container: (provided) => ({
-                      ...provided,
-                      minWidth: '200px',
-                    }),
-                  },
-                }}
-              />
-            </FiltersSection>
-            <FileSystem hideNavigator={true} />
-          </>
-        ) : (
-          <Loader80bots
-            data={'light'}
-            styled={{
-              width: '200px',
+    <Card>
+      {openedFile ? (
+        <>
+          <Select
+            onChange={onSelected}
+            options={options}
+            value={selected}
+            styles={{
+              select: {
+                container: (provided) => ({
+                  ...provided,
+                  minWidth: '200px',
+                }),
+              },
             }}
           />
-        )}
-      </Card>
-    </>
+          <FileSystem hideNavigator={true} />
+        </>
+      ) : (
+        <Loader80bots
+          data={'light'}
+          styled={{
+            width: '200px',
+          }}
+        />
+      )}
+    </Card>
   )
 }
 

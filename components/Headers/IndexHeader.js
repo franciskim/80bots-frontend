@@ -15,11 +15,9 @@
 
 */
 import React from 'react'
-import Link from 'next/link'
-// reactstrap components
-import { Button, Card, CardBody, Container, Row, Col } from 'reactstrap'
+import { Card, CardBody, Container, Row, Col } from 'reactstrap'
 
-function IndexHeader() {
+const IndexHeader = () => {
   return (
     <>
       <div className="header bg-info pt-5 pb-7">

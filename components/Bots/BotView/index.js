@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { useSelector, useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
+import PropTypes from 'prop-types'
 import {
   Card,
   CardBody,
@@ -13,9 +14,8 @@ import {
   NavItem,
   TabPane,
   TabContent,
-  Col,
-  Row,
 } from 'reactstrap'
+import classnames from 'classnames'
 import { getInstance, clearInstance } from 'store/bot/actions'
 import { subscribe, unsubscribe } from 'store/socket/actions'
 import { Loader80bots } from 'components/default'
@@ -129,6 +129,11 @@ const ConnectionStatus = ({ status, color }) => (
   </>
 )
 
+ConnectionStatus.propTypes = {
+  status: PropTypes.string,
+  color: PropTypes.string,
+}
+
 const BotView = () => {
   const dispatch = useDispatch()
   const [activeTab, setActiveTab] = useState(TABS.SCREENSHOTS)
@@ -174,16 +179,18 @@ const BotView = () => {
   }, [activeTab])
 
   const CurrentTab = activeTab.component
+
   return (
     <Card>
-      <CardBody>
+      <CardHeader>
         <Button
-          size="sm"
           color="primary"
           onClick={() => (customBack ? customBack() : router.back())}
         >
           Back
         </Button>
+      </CardHeader>
+      <CardBody>
         <h6>
           {Object.keys(botInstance).length ? (
             botInstance.name + ' | ' + botInstance.bot_name
@@ -203,7 +210,9 @@ const BotView = () => {
             return (
               <NavItem key={tab.title}>
                 <NavLink
-                  // className={classnames({ active: activeTab === tab.title })}
+                  className={classnames({
+                    active: activeTab.title === tab.title,
+                  })}
                   onClick={() => {
                     toggle(tab)
                   }}
@@ -227,7 +236,7 @@ const BotView = () => {
           <TabContent activeTab={activeTab}>
             {Object.values(TABS).map((tab) => {
               return (
-                <TabPane tabId={tab.title}>
+                <TabPane tabId={tab.title} key={tab.title}>
                   <CurrentTab setCustomBack={(f) => setCustomBack(() => f)} />
                 </TabPane>
               )

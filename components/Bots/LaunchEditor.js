@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Select } from 'components/default/inputs'
-// import { Steps } from 'components/default'
-import { Button, ButtonGroup } from 'reactstrap'
+import Select from 'react-select'
+import { Button, Input } from 'reactstrap'
 
 const LaunchEditor = ({ bot, onSubmit, onClose }) => {
   const [values, setValues] = useState({})
@@ -204,7 +203,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             error={
               errors.indexOf(item.name) > -1 ? 'This field is required' : ''
             }
-            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
 
@@ -245,7 +244,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             description={item.description}
             onInputChange={(input) => onMultiSelectChange(item.name, input)}
             value={values[item.name].options}
-            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
 
@@ -263,7 +262,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             error={
               errors.indexOf(item.name) > -1 ? 'This field is required' : ''
             }
-            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
 
@@ -278,7 +277,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
             max={item.range && Number(item.range[1])}
             onChange={(value) => changeValue(item.name, value)}
             value={values[item.name]}
-            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
     }
@@ -293,31 +292,21 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
         max={10}
         onChange={(value) => setAmount(value)}
       />
-      <ButtonGroup>
-        <Button type={'danger'} onClick={onClose}>
-          Cancel
-        </Button>
-        <Button color="primary" onClick={() => amountSet(true)}>
-          Submit
-        </Button>
-      </ButtonGroup>
+      <Button onClick={onClose}>Cancel</Button>
+      <Button color="primary" onClick={() => amountSet(true)}>
+        Submit
+      </Button>
     </>
   ) : (
     <>
       {amount > 1 && <Steps amount={amount} step={step} />}
       {bot && bot.parameters.map(renderParams)}
-      <ButtonGroup>
-        <Button
-          disabled={amount > 1 && step === 1}
-          type={'danger'}
-          onClick={cancel}
-        >
-          {amount === 1 ? 'Cancel' : 'Previous'}
-        </Button>
-        <Button color="primary" onClick={submit}>
-          {step === amount ? 'Launch' : 'Next'}
-        </Button>
-      </ButtonGroup>
+      <Button disabled={amount > 1 && step === 1} onClick={cancel}>
+        {amount === 1 ? 'Cancel' : 'Previous'}
+      </Button>
+      <Button color="primary" onClick={submit}>
+        {step === amount ? 'Launch' : 'Next'}
+      </Button>
     </>
   )
 }

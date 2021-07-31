@@ -3,13 +3,6 @@ import PropTypes from 'prop-types'
 import { Select, Range } from 'components/default/inputs'
 import { Label, Button, Input, ButtonGroup } from 'reactstrap'
 
-// const selectStyles = {
-//   container: css`
-//     margin-top: 10px;
-//     max-width: 400px;
-//   `,
-// }
-
 const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
   const [values, setValues] = useState({})
   const [errors, setErrors] = useState([])
@@ -188,7 +181,7 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
             key={idx}
             type={type}
             label={label}
-            styles={inputStyle}
+            // styles={inputStyle}
             value={values[item.name]}
             min={item.range && Number(item.range[0])}
             max={item.range && Number(item.range[1])}
@@ -197,7 +190,7 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
             error={
               errors.indexOf(item.name) > -1 ? 'This field is required' : ''
             }
-            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
 
@@ -239,7 +232,7 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
             description={item.description}
             onInputChange={(input) => onMultiSelectChange(item.name, input)}
             value={values[item.name].options}
-            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
 
@@ -251,14 +244,14 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
             key={idx}
             type={type}
             label={label}
-            styles={inputStyle}
+            // styles={inputStyle}
             value={values[item.name]}
             onChange={(e) => changeValue(item.name, e.target.value)}
             description={item.description}
             error={
               errors.indexOf(item.name) > -1 ? 'This field is required' : ''
             }
-            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
 
@@ -267,13 +260,13 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
           <Range
             key={idx}
             label={label}
-            styles={inputStyle}
+            // styles={inputStyle}
             description={item.description}
             min={item.range && Number(item.range[0])}
             max={item.range && Number(item.range[1])}
             onChange={(value) => changeValue(item.name, value)}
             value={values[item.name]}
-            descriptionPosition={idx === 0 ? 'bottom' : 'top'}
+            // descriptionPosition={idx === 0 ? 'bottom' : 'top'}
           />
         )
     }
@@ -283,10 +276,10 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
     <>
       {botInstance && botInstance.parameters.map(renderParams)}
       <ButtonGroup>
-        <Button type={'danger'} onClick={cancel}>
+        <Button color={'danger'} onClick={cancel}>
           Cancel
         </Button>
-        <Button type={'primary'} onClick={submit}>
+        <Button color={'primary'} onClick={submit}>
           Restart
         </Button>
       </ButtonGroup>

@@ -70,29 +70,27 @@ const OutputTab = ({ setCustomBack }) => {
   }
 
   return (
-    <>
-      <Content>
-        <TypesNavigation>
-          {Object.values(OUTPUT_TYPES).map((item, i, all) => {
-            const variant =
-              item.value === currentType.value ? 'success' : 'primary'
-            return (
-              <>
-                <Button
-                  key={i}
-                  type={variant}
-                  onClick={() => setCurrentType(item)}
-                >
-                  {item.label}
-                </Button>
-                {all.length - 1 > i && <Hint>&nbsp;|&nbsp;</Hint>}
-              </>
-            )
-          })}
-        </TypesNavigation>
-        {renderCurrentType()}
-      </Content>
-    </>
+    <Content>
+      <TypesNavigation>
+        {Object.values(OUTPUT_TYPES).map((item, i, all) => {
+          const variant =
+            item.value === currentType.value ? 'success' : 'primary'
+          return (
+            <>
+              <Button
+                key={i}
+                type={variant}
+                onClick={() => setCurrentType(item)}
+              >
+                {item.label}
+              </Button>
+              {all.length - 1 > i && <Hint>&nbsp;|&nbsp;</Hint>}
+            </>
+          )
+        })}
+      </TypesNavigation>
+      {renderCurrentType()}
+    </Content>
   )
 }
 

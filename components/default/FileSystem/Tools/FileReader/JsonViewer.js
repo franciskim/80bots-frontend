@@ -138,6 +138,7 @@ const TextViewer = ({ item }) => {
                   href={getLink(item, jsonRaw)}
                   download={`${item.name}.json`}
                   target={'_blank'}
+                  rel="noreferrer"
                 >
                   here
                 </a>{' '}

@@ -35,12 +35,13 @@ const openFile = (item, onClose) => {
   }
 }
 
-const FileReaderComponent = ({ item, onClose, ...props }) => {
+const FileReaderComponent = ({ item, onClose }) => {
   return <div>{openFile(item, onClose)}</div>
 }
 
 FileReaderComponent.propTypes = {
   item: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
 }
 
 export default FileReaderComponent

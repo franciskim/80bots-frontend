@@ -12,7 +12,7 @@ import { Container } from 'reactstrap'
 //   flex-direction: column;
 // `
 
-export const Loader80bots = ({ data, styled, ...props }) => {
+export const Loader80bots = ({ data, styled }) => {
   const [icon, setIcon] = useState(null)
 
   useEffect(() => {

@@ -3,7 +3,15 @@ import Select from 'react-select'
 import styled from '@emotion/styled'
 import dayjs from 'dayjs'
 import { WEEKDAYS } from 'config'
-import { Button, ModalFooter, Label, Container, Col, Row } from 'reactstrap'
+import {
+  Button,
+  ModalFooter,
+  Label,
+  Col,
+  Row,
+  ModalHeader,
+  Container,
+} from 'reactstrap'
 
 // const selectStyles = {
 //   control: (provided, state) => ({
@@ -207,7 +215,6 @@ const Schedule = ({
               color="success"
               type="button"
               onClick={addSchedule}
-              size="sm"
             >
               <span className="btn-inner--icon mr-1">
                 <i className="fa fa-plus" />
@@ -219,7 +226,6 @@ const Schedule = ({
               color="danger"
               type="button"
               onClick={remove}
-              size="sm"
             >
               <span className="btn-inner--icon mr-1">
                 <i className="fa fa-trash" />
@@ -255,6 +261,7 @@ const ScheduleEditor = ({ close, onUpdateClick, user, ...props }) => {
 
   return (
     <>
+      <ModalHeader>Schedule Editor</ModalHeader>
       {schedules.map((schedule, idx) => (
         <Schedule
           key={idx}

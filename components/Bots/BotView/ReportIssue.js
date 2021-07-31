@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import { useDispatch } from 'react-redux'
 
-import { Button, Input, Container, ButtonGroup } from 'reactstrap'
+import { Button, Input, ButtonGroup } from 'reactstrap'
 import { reportBot as report } from 'store/bot/actions'
-import { addNotification } from 'lib/helper'
+import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 
 // const Buttons = styled.div`
@@ -45,7 +45,7 @@ const ReportIssue = ({ bot, screenshots, onClose }) => {
 
         onClose && onClose()
       })
-      .catch((err) =>
+      .catch(() =>
         addNotification({
           type: NOTIFICATION_TYPES.ERROR,
           message: 'Report failed, please try again later',
@@ -56,11 +56,6 @@ const ReportIssue = ({ bot, screenshots, onClose }) => {
     <>
       <Input
         type="text"
-        // styles={{
-        //   container: css`
-        //     margin-top: 20px;
-        //   `,
-        // }}
         rows={5}
         onChange={(e) => setMessage(e.target.value)}
         value={message}
@@ -74,9 +69,7 @@ const ReportIssue = ({ bot, screenshots, onClose }) => {
         </ScreenshotsContainer>
       )}
       <ButtonGroup>
-        <Button type={'danger'} onClick={onClose}>
-          Cancel
-        </Button>
+        <Button onClick={onClose}>Cancel</Button>
         <Button color="primary" disabled={!message} onClick={submit}>
           Submit
         </Button>

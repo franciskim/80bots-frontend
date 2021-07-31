@@ -14,22 +14,22 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
-import { withRouter } from "next/router";
-// core components
-import AuthNavbar from "components/Navbars/AuthNavbar.js";
-import AuthFooter from "components/Footers/AuthFooter.js";
+import React from 'react'
+import { withRouter } from 'next/router'
+import PropTypes from 'prop-types'
+import AuthNavbar from 'components/Navbars/AuthNavbar.js'
+import AuthFooter from 'components/Footers/AuthFooter.js'
 
-import routes from "routes.js";
+// import routes from "routes.js";
 
 function Auth({ children }) {
   React.useEffect(() => {
-    document.body.classList.add("bg-default");
+    document.body.classList.add('bg-default')
     // Specify how to clean up after this effect:
     return function cleanup() {
-      document.body.classList.remove("bg-default");
-    };
-  });
+      document.body.classList.remove('bg-default')
+    }
+  })
   return (
     <>
       <div className="main-content">
@@ -38,7 +38,11 @@ function Auth({ children }) {
       </div>
       <AuthFooter />
     </>
-  );
+  )
 }
 
-export default withRouter(Auth);
+Auth.propTypes = {
+  children: PropTypes.object,
+}
+
+export default withRouter(Auth)

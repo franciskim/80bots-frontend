@@ -21,11 +21,11 @@ const Display = styled.iframe`
   ${(props) => props.styles};
 `
 
-const Link = styled.a`
-  padding: 20px;
-  text-align: right;
-  display: block;
-`
+// const Link = styled.a`
+//   padding: 20px;
+//   text-align: right;
+//   display: block;
+// `
 
 const STATUSES = {
   LOAD: 'Loading Display',
@@ -36,12 +36,13 @@ const DisplayTab = ({ botInstance }) => {
 
   return (
     <Content>
-      <Link
+      <a
         href={`http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`}
         target="_blank"
+        rel="noreferrer"
       >
         View bot in real-time
-      </Link>
+      </a>
       <Display
         onLoad={() => setStatus(null)}
         id={'display'}

@@ -19,7 +19,7 @@ import React from 'react'
 // reactstrap components
 import { NavItem, NavLink, Nav, Container, Row, Col } from 'reactstrap'
 
-function AuthFooter() {
+const AuthFooter = () => {
   return (
     <>
       <footer className="py-5" id="footer-main">
@@ -32,6 +32,7 @@ function AuthFooter() {
                   className="font-weight-bold ml-1"
                   href="https://www.creative-tim.com?ref=adpr-auth-footer"
                   target="_blank"
+                  rel="noreferrer"
                 >
                   80bots.com
                 </a>

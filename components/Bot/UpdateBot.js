@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 import Select from 'react-select'
 import AsyncSelect from 'react-select/async'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { getTags } from 'store/bot/actions'
+import { getTags, getBot, clearBot, updateBot } from 'store/bot/actions'
 import { getUsers } from 'store/user/actions'
-import { addNotification } from 'lib/helper'
+import { addNotification } from 'lib/helpers'
 import {
   Button,
   Input,
-  Row,
   Col,
   Card,
   CardBody,
-  ButtonGroup,
   Label,
   Nav,
   TabContent,
@@ -22,16 +19,15 @@ import {
   NavLink,
   TabPane,
   CardFooter,
+  FormGroup,
+  FormFeedback,
 } from 'reactstrap'
 import { CodeEditor } from 'components/default/inputs'
 import { NOTIFICATION_TYPES } from 'config'
-import { getBot, clearBot, updateBot } from 'store/bot/actions'
-import Router, { useRouter } from 'next/router'
 
-const Error = styled.span`
-  font-size: 15px;
-  text-align: center;
-`
+import Router, { useRouter } from 'next/router'
+import classnames from 'classnames'
+import * as yup from 'yup'
 
 // const selectStyles = {
 //   control: (provided, state) => ({
@@ -90,7 +86,7 @@ const UpdateBot = () => {
   const [description, setDescription] = useState('')
   const [isPrivate, setPrivate] = useState(false)
   const [trustedUsers, setUsers] = useState([])
-  const [error, setError] = useState(null)
+  const [errors, setErrors] = useState({})
   const [activeTab, setActiveTab] = useState('script')
 
   const tags = useSelector((state) => state.bot.tags)
@@ -187,96 +183,125 @@ const UpdateBot = () => {
     status: status,
   })
 
-  const submit = () => {
-    if (!botName) {
-      setError("You must fill in required fields marked by '*'")
-    } else {
-      setError(null)
-      const users = isPrivate ? { users: trustedUsers } : { users: [] }
-      const botData = {
-        botName,
-        isPrivate,
-        botScript,
-        botPackageJSON,
-        description,
-        botTags: botTags.map((item) => item.value),
-        ...users,
-      }
-
-      updateBot(aboutBot.id, convertBotData(botData))
-        .then(() => {
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'Bot updated!',
-          })
-          Router.push('/bots')
-        })
-        .catch(() =>
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Update failed!',
-          })
-        )
+  const submitForm = (e) => {
+    e.preventDefault()
+    try {
+      let schema = yup.object().shape({
+        botName: yup.string().required(),
+      })
+      schema.validateSync(
+        {
+          botName,
+        },
+        {
+          abortEarly: false,
+        }
+      )
+    } catch (err) {
+      setErrors(
+        err.inner.reduce((accr, validationError) => {
+          accr[validationError.path] = validationError.message
+          return accr
+        }, {})
+      )
+      return
     }
+    const users = isPrivate ? { users: trustedUsers } : { users: [] }
+    const botData = {
+      botName,
+      isPrivate,
+      botScript,
+      botPackageJSON,
+      description,
+      botTags: botTags.map((item) => item.value),
+      ...users,
+    }
+
+    dispatch(updateBot(aboutBot.id, convertBotData(botData)))
+      .then(() => {
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Bot updated!',
+        })
+        Router.push('/bots')
+      })
+      .catch(() =>
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Update failed!',
+        })
+      )
   }
 
   return (
-    <>
-      <Card>
-        <CardBody>
-          <Row>
+    <Card>
+      <CardBody>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Bot Name *
+          </Label>
+          <Col md={10}>
             <Input
               type={'text'}
-              label={'Bot Name *'}
               value={botName}
               // styles={inputStyles}
               onChange={(e) => setBotName(e.target.value)}
+              invalid={!!errors['botName']}
             />
-          </Row>
-          <Row>
-            <Label>Bot Script</Label>
-          </Row>
-          <Row>
-            <Col>
-              <Nav tabs>
-                <NavItem>
-                  <NavLink
-                    // className={classnames({ active: activeTab === 'script' })}
-                    onClick={() => {
-                      toggle('script')
-                    }}
-                  >
-                    index.js
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    // className={classnames({ active: activeTab === 'json' })}
-                    onClick={() => {
-                      toggle('json')
-                    }}
-                  >
-                    package.json
-                  </NavLink>
-                </NavItem>
-              </Nav>
-              <TabContent activeTab={activeTab}>
-                <TabPane tabId="script">
-                  <CodeEditor
-                    value={botScript}
-                    onChange={(code) => setBotScript(code)}
-                  />
-                </TabPane>
-                <TabPane tabId="json">
-                  <CodeEditor
-                    value={botPackageJSON}
-                    onChange={(code) => setBotPackageJSON(code)}
-                  />
-                </TabPane>
-              </TabContent>
-            </Col>
-          </Row>
-          <Row>
+            <FormFeedback valid={false}>You must fill in bot name</FormFeedback>
+          </Col>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            {' '}
+            Bot Script
+          </Label>
+          <Col md={10}>
+            <Nav tabs>
+              <NavItem>
+                <NavLink
+                  className={classnames({ active: activeTab === 'script' })}
+                  onClick={() => {
+                    toggle('script')
+                  }}
+                >
+                  index.js
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  className={classnames({ active: activeTab === 'json' })}
+                  onClick={() => {
+                    toggle('json')
+                  }}
+                >
+                  package.json
+                </NavLink>
+              </NavItem>
+            </Nav>
+            <TabContent activeTab={activeTab}>
+              <TabPane tabId="script">
+                <CodeEditor
+                  value={botScript}
+                  onChange={(code) => setBotScript(code)}
+                  mode="javascript"
+                />
+              </TabPane>
+              <TabPane tabId="json">
+                <CodeEditor
+                  value={botPackageJSON}
+                  onChange={(code) => setBotPackageJSON(code)}
+                  mode="json"
+                />
+              </TabPane>
+            </TabContent>
+          </Col>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Description
+          </Label>
+          <Col md={10}>
             <Input
               type="textarea"
               label={'Description'}
@@ -285,56 +310,63 @@ const UpdateBot = () => {
               // styles={inputStyles}
               onChange={(e) => setDescription(e.target.value)}
             />
-          </Row>
-          <Row>
-            <div>
-              <Label>Tags</Label>
-              <Select
-                id="tags-selector"
-                instanceId="tags-selector"
+          </Col>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Tags
+          </Label>
+          <Col md={10}>
+            <Select
+              id="tags-selector"
+              instanceId="tags-selector"
+              isMulti
+              options={getTagOptions()}
+              // styles={selectStyles}
+              onInputChange={onTagInputChange}
+              onChange={(options) => setTags(options)}
+              value={botTags}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={2} className="form-control-label">
+            Access *
+          </Label>
+          <Col md={10}>
+            <Button
+              className="form-control"
+              color={isPrivate ? 'danger' : 'secondary'}
+              onClick={() => setPrivate(!isPrivate)}
+            >
+              {isPrivate ? 'Private' : 'Public'}
+            </Button>
+          </Col>
+        </FormGroup>
+        {isPrivate && (
+          <FormGroup className="row">
+            <Label md={2} className="form-control-label">
+              Trusted Users
+            </Label>
+            <Col md={10}>
+              <AsyncSelect
                 isMulti
-                options={getTagOptions()}
+                defaultOptions={users.map(toOptions)}
+                value={trustedUsers}
                 // styles={selectStyles}
-                onInputChange={onTagInputChange}
-                onChange={(options) => setTags(options)}
-                value={botTags}
+                onChange={(options) => setUsers(options)}
+                loadOptions={onUsersSearch}
               />
-            </div>
-            <div>
-              <Label>Access *</Label>
-              <Button
-                className="form-control"
-                color={isPrivate ? 'danger' : 'secondary'}
-                onClick={() => setPrivate(!isPrivate)}
-              >
-                {isPrivate ? 'Private' : 'Public'}
-              </Button>
-            </div>
-          </Row>
-          {isPrivate && (
-            <Row>
-              <Col>
-                <Label>Trusted Users</Label>
-                <AsyncSelect
-                  isMulti
-                  defaultOptions={users.map(toOptions)}
-                  value={trustedUsers}
-                  // styles={selectStyles}
-                  onChange={(options) => setUsers(options)}
-                  loadOptions={onUsersSearch}
-                />
-              </Col>
-            </Row>
-          )}
-          {error && <Error>{error}</Error>}
-        </CardBody>
-        <CardFooter>
-          <Button color="primary" onClick={submit}>
-            Update
-          </Button>
-        </CardFooter>
-      </Card>
-    </>
+            </Col>
+          </FormGroup>
+        )}
+      </CardBody>
+      <CardFooter>
+        <Button color="primary" onClick={submitForm}>
+          Update
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }
 

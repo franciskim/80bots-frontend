@@ -1,4 +1,4 @@
-import { success, error } from "redux-saga-requests";
+import { success, error } from 'redux-saga-requests'
 import {
   GET_FOLDERS,
   GET_SCREENSHOTS,
@@ -27,7 +27,7 @@ import {
   LIMIT_CHANGE,
   ADD_SCRIPT_NOTIFICATION,
   UPDATE_LAST_NOTIFICATION,
-} from "./types";
+} from './types'
 
 const initialState = {
   folders: [],
@@ -43,17 +43,17 @@ const initialState = {
   botNotifications: [],
   botInstance: {
     storage_channel: undefined,
-    notification_channel: undefined
+    notification_channel: undefined,
   },
-  aboutBot:{},
+  aboutBot: {},
   botSettings: {},
   totalRegions: 0,
   total: 0,
   limit: 10,
   loading: true,
   syncLoading: false,
-  error: null
-};
+  error: null,
+}
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -74,145 +74,145 @@ export const reducer = (state = initialState, action) => {
     case UPDATE_STATUS:
     case DOWNLOAD_INSTANCE_PEM_FILE:
     case UPDATE_REGION:
-      return { ...state, loading: true, error: null };
+      return { ...state, loading: true, error: null }
 
     case SYNC_BOT_INSTANCES:
     case SYNC_BOTS:
-      return { ...state, syncLoading: true };
+      return { ...state, syncLoading: true }
 
     case CLEAR_INSTANCE:
-      return { ...state, botInstance: {} };
+      return { ...state, botInstance: {} }
 
     case CLEAR_BOT:
-      return { ...state, aboutBot: {} };
+      return { ...state, aboutBot: {} }
 
     case LIMIT_CHANGE: {
-      localStorage.setItem("bot.limit", action.data);
-      return { ...state, limit: action.data };
+      localStorage.setItem('bot.limit', action.data)
+      return { ...state, limit: action.data }
     }
 
     case success(GET_INSTANCE):
-      return { ...state, botInstance: { ...action.data }, loading: false };
+      return { ...state, botInstance: { ...action.data }, loading: false }
 
     case success(GET_BOT):
-      return { ...state, aboutBot: { ...action.data }, loading: false };
+      return { ...state, aboutBot: { ...action.data }, loading: false }
 
     case success(GET_FOLDERS):
       return {
         ...state,
         folders: action.data.data,
         total: action.data.total,
-        loading: false
-      };
+        loading: false,
+      }
 
     case success(GET_SCREENSHOTS):
       return {
         ...state,
         screenshots: action.data.data,
         total: action.data.total,
-        loading: false
-      };
+        loading: false,
+      }
 
     case success(GET_IMAGES):
       return {
         ...state,
         images: action.data.data,
         total: action.data.total,
-        loading: false
-      };
+        loading: false,
+      }
 
     case success(GET_LOGS):
       return {
         ...state,
         logs: action.data.data,
-        loading: false
-      };
+        loading: false,
+      }
 
     case success(GET_OUTPUT_JSON):
       return {
         ...state,
         jsons: action.data.data,
         total: action.data.total,
-        loading: false
-      };
+        loading: false,
+      }
 
     case success(GET_BOTS):
       return {
         ...state,
         bots: action.data.data,
         total: action.data.total,
-        loading: false
-      };
+        loading: false,
+      }
 
     case success(GET_RUNNING_BOTS):
       return {
         ...state,
         botInstances: action.data.data,
         total: action.data.total,
-        loading: false
-      };
+        loading: false,
+      }
 
     case success(COPY_INSTANCE):
     case success(RESTORE_INSTANCE):
     case success(POST_LAUNCH_INSTANCE):
     case success(DOWNLOAD_INSTANCE_PEM_FILE):
-      return { ...state, loading: false };
+      return { ...state, loading: false }
 
     case success(UPDATE_STATUS):
     case success(UPDATE_BOT): {
-      const botIdx = state.bots.findIndex(item => item.id === action.data.id);
-      if (botIdx || botIdx === 0) state.bots[botIdx] = action.data;
-      return { ...state, bots: [...state.bots], loading: false };
+      const botIdx = state.bots.findIndex((item) => item.id === action.data.id)
+      if (botIdx || botIdx === 0) state.bots[botIdx] = action.data
+      return { ...state, bots: [...state.bots], loading: false }
     }
 
     case success(UPDATE_RUNNING_BOT): {
       const userIdx = state.botInstances.findIndex(
-        item => item.id === action.data.id
-      );
-      if (userIdx || userIdx === 0) state.botInstances[userIdx] = action.data;
+        (item) => item.id === action.data.id
+      )
+      if (userIdx || userIdx === 0) state.botInstances[userIdx] = action.data
       return {
         ...state,
         botInstances: [...state.botInstances],
-        loading: false
-      };
+        loading: false,
+      }
     }
 
     case success(UPDATE_REGION): {
       const userIdx = state.regions.findIndex(
-        item => item.id === action.data.id
-      );
-      if (userIdx || userIdx === 0) state.regions[userIdx] = action.data;
-      return { ...state, regions: [...state.regions], loading: false };
+        (item) => item.id === action.data.id
+      )
+      if (userIdx || userIdx === 0) state.regions[userIdx] = action.data
+      return { ...state, regions: [...state.regions], loading: false }
     }
 
     case success(GET_TAGS):
-      return { ...state, tags: action.data.data };
+      return { ...state, tags: action.data.data }
 
     case success(BOT_SETTINGS):
-      return { ...state, botSettings: action.data.settings };
+      return { ...state, botSettings: action.data.settings }
 
     case success(SYNC_BOT_INSTANCES):
     case success(SYNC_BOTS):
     case error(SYNC_BOT_INSTANCES):
     case error(SYNC_BOTS):
-      return { ...state, syncLoading: false };
+      return { ...state, syncLoading: false }
 
     case success(REGIONS):
       return {
         ...state,
         regions: action.data.data,
         totalRegions: action.data.total,
-        loading: false
-      };
+        loading: false,
+      }
 
     case ADD_SCRIPT_NOTIFICATION: {
-      const notification = {...state.botNotifications};
-      notification[action.data.item.instanceId] = {...action.data.item};
+      const notification = { ...state.botNotifications }
+      notification[action.data.item.instanceId] = { ...action.data.item }
       return {
         ...state,
         botNotifications: notification,
-        loading: false
-      };
+        loading: false,
+      }
     }
 
     case error(GET_FOLDERS):
@@ -233,11 +233,12 @@ export const reducer = (state = initialState, action) => {
     case error(UPDATE_REGION):
     case error(UPDATE_LAST_NOTIFICATION):
     case error(UPDATE_STATUS):
-      return { ...state, loading: false, error: action.error };
+    case error(REGIONS):
+      return { ...state, loading: false, error: action.error }
 
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default reducer;
+export default reducer

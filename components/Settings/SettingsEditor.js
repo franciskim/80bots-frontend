@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBotSettings, updateBotSettings } from 'store/bot/actions'
-import { addNotification } from 'lib/helper'
+import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 import {
   Button,
@@ -11,6 +12,7 @@ import {
   ModalHeader,
   FormGroup,
   Label,
+  Modal,
 } from 'reactstrap'
 
 const VALIDATION = {
@@ -19,7 +21,7 @@ const VALIDATION = {
   STORAGE: 'storage',
 }
 
-const SettingsEditor = ({ onClose }) => {
+const SettingsEditor = ({ isOpen, onClose }) => {
   const dispatch = useDispatch()
   const [instanceType, setInstanceType] = useState('')
   const [storage, setStorage] = useState(0)
@@ -80,7 +82,8 @@ const SettingsEditor = ({ onClose }) => {
   }
 
   return (
-    <>
+    <Modal isOpen={isOpen}>
+      <ModalHeader>Edit Global Settings</ModalHeader>
       <ModalBody>
         <FormGroup>
           <Label className="form-control-label" htmlFor="example-time-input">
@@ -117,7 +120,6 @@ const SettingsEditor = ({ onClose }) => {
           </Label>
           <Input
             type="textarea"
-            rows={10}
             value={script}
             onChange={(e) => setScript(e.target.value)}
             error={
@@ -134,7 +136,13 @@ const SettingsEditor = ({ onClose }) => {
           Submit
         </Button>
       </ModalFooter>
-    </>
+    </Modal>
   )
 }
+
+SettingsEditor.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+}
+
 export default SettingsEditor

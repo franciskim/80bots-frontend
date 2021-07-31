@@ -68,7 +68,6 @@ const List = ({
           ))}
         </div>
       </CardBody>
-
       <CardFooter>
         <Paginator
           initialPage={page}

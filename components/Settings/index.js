@@ -1,24 +1,29 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import SettingsEditor from './SettingsEditor'
 import { useSelector, useDispatch } from 'react-redux'
 import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
 import {
+  Col,
   CardBody,
   Button,
   Table,
   Card,
   Modal,
+  Label,
   ModalHeader,
   ModalFooter,
   CardHeader,
   ModalBody,
+  FormGroup,
+  CardFooter,
 } from 'reactstrap'
 import { getRegions, updateRegion } from 'store/bot/actions'
 import { Paginator } from 'components/default'
-import { Select } from 'components/default/inputs'
+import Select from 'react-select'
 import { NOTIFICATION_TYPES } from 'config'
-import { addNotification } from 'lib/helper'
+import { addNotification } from 'lib/helpers'
 import { addListener } from 'store/socket/actions'
+import Skeleton from 'react-loading-skeleton'
 
 // const IconButton = styled(Button)`
 //   display: inline-flex;
@@ -68,6 +73,7 @@ const Settings = () => {
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
+  const [loadingAll, setLoadingAll] = useState(true)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditSettingsModalOpened, setIsEditSettingsModalOpened] =
@@ -78,7 +84,9 @@ const Settings = () => {
   const total = useSelector((state) => state.bot.totalRegions)
 
   useEffect(() => {
-    dispatch(getRegions({ page, limit }))
+    dispatch(getRegions({ page, limit })).then(() => {
+      setLoadingAll(false)
+    })
 
     dispatch(
       addListener(`regions.${user.id}`, 'RegionsSyncSucceeded', () => {
@@ -195,42 +203,43 @@ const Settings = () => {
   )
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <Button
-            color="primary"
-            onClick={() => {
-              setIsEditSettingsModalOpened(true)
+    <Card>
+      <CardHeader>
+        <Button
+          color="primary"
+          onClick={() => {
+            setIsEditSettingsModalOpened(true)
+          }}
+        >
+          Edit Global Bot Settings
+        </Button>
+      </CardHeader>
+      <CardBody>
+        <div>
+          <LimitFilter
+            id="limitfilter"
+            instanceId="limitfilter"
+            onChange={({ value }) => {
+              setLimit(value)
+              getRegions({
+                page,
+                limit: value,
+                sort: order.field,
+                order: order.value,
+                search,
+              })
             }}
-          >
-            Edit Global Bot Settings
-          </Button>
-        </CardHeader>
-        <CardBody>
-          <div>
-            <LimitFilter
-              id="limitfilter"
-              instanceId="limitfilter"
-              onChange={({ value }) => {
-                setLimit(value)
-                getRegions({
-                  page,
-                  limit: value,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
-              }}
-            />
-            <SearchFilter
-              searchProps={{
-                onSearch: (value) => {
-                  searchRegions(value)
-                },
-              }}
-            />
-          </div>
+          />
+          <SearchFilter
+            searchProps={{
+              onSearch: (value) => {
+                searchRegions(value)
+              },
+            }}
+          />
+        </div>
+        {loadingAll && <Skeleton count={5} />}
+        {!loadingAll && (
           <Table responsive>
             <thead>
               <tr>
@@ -244,6 +253,37 @@ const Settings = () => {
             </thead>
             <tbody>{regions.map(renderRow)}</tbody>
           </Table>
+        )}
+        <Modal isOpen={isModalOpen} onClose={onModalClose}>
+          <ModalHeader>Edit Default AMI</ModalHeader>
+          <ModalBody>
+            <FormGroup className="row">
+              <Label md={3}>AMI</Label>
+              <Col md={9}>
+                <Select
+                  onChange={(option) => setDefaultAmi(option.value)}
+                  options={amis.map(toOption)}
+                  value={getCurrentSelect()}
+                />
+              </Col>
+            </FormGroup>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
+            <Button color="primary" onClick={changeRegionAmi}>
+              Update
+            </Button>
+          </ModalFooter>
+        </Modal>
+        <SettingsEditor
+          isOpen={isEditSettingsModalOpened}
+          onClose={() => {
+            setIsEditSettingsModalOpened(false)
+          }}
+        />
+      </CardBody>
+      <CardFooter>
+        {!loadingAll && (
           <Paginator
             total={total}
             pageSize={limit}
@@ -260,36 +300,9 @@ const Settings = () => {
               )
             }}
           />
-        </CardBody>
-      </Card>
-      <Modal isOpen={isModalOpen} onClose={onModalClose}>
-        <ModalHeader>Edit Default AMI</ModalHeader>
-        <ModalBody>
-          <Select
-            label={'AMI'}
-            onChange={(option) => setDefaultAmi(option.value)}
-            // styles={selectStyles}
-            options={amis.map(toOption)}
-            value={getCurrentSelect()}
-          />
-        </ModalBody>
-        <ModalFooter>
-          <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
-          <Button color="primary" onClick={changeRegionAmi}>
-            Update
-          </Button>
-        </ModalFooter>
-      </Modal>
-
-      <Modal isOpen={isEditSettingsModalOpened}>
-        <ModalHeader>Edit Global Settings</ModalHeader>
-        <SettingsEditor
-          onClose={() => {
-            setIsEditSettingsModalOpened(false)
-          }}
-        />
-      </Modal>
-    </>
+        )}
+      </CardFooter>
+    </Card>
   )
 }
 

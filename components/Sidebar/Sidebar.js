@@ -34,14 +34,14 @@ import {
 } from 'reactstrap'
 import Animated from 'assets/img/80bots-logo.svg'
 
-function Sidebar({
+const Sidebar = ({
   toggleSidenav,
   sidenavOpen,
   routes,
   logo,
   rtlActive,
   router,
-}) {
+}) => {
   const [state, setState] = React.useState({})
   const [windowWidth, setWindowWidth] = React.useState(0)
   const [navigatorPlatform, setNavigatorPlatform] = React.useState('')
@@ -147,8 +147,8 @@ function Sidebar({
         )
       }
       return (
-        <NavItem className={activeRoute(prop.layout + prop.path)} key={key}>
-          <Link href={prop.layout + prop.path}>
+        <NavItem className={activeRoute(prop.path)} key={key}>
+          <Link href={prop.path}>
             <NavLink href="#pablo" onClick={closeSidenav}>
               {prop.icon !== undefined ? (
                 <>

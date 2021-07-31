@@ -27,8 +27,6 @@ import {
   Container,
   Row,
   Col,
-  UncontrolledTooltip,
-  Button,
 } from 'reactstrap'
 
 function AdminNavbar() {
@@ -70,7 +68,7 @@ function AdminNavbar() {
             <div className="navbar-collapse-header">
               <Row>
                 <Col className="collapse-brand" xs="6">
-                  <Link href="/admin/dashboard">
+                  <Link href="/bots/running">
                     <img alt="..." src={require('assets/img/brand/blue.png')} />
                   </Link>
                 </Col>
@@ -93,14 +91,7 @@ function AdminNavbar() {
             </div>
             <Nav className="mr-auto" navbar>
               <NavItem>
-                <Link href="/admin/dashboard">
-                  <NavLink href="#pablo">
-                    <span className="nav-link-inner--text">Dashboard</span>
-                  </NavLink>
-                </Link>
-              </NavItem>
-              <NavItem>
-                <Link href="/auth/login">
+                <Link href="/backoffice80">
                   <NavLink href="#pablo">
                     <span className="nav-link-inner--text">Login</span>
                   </NavLink>
