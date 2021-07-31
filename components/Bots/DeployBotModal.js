@@ -52,7 +52,7 @@ const DeployBotModal = ({
 
 DeployBotModal.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
-  bot: PropTypes.object.isRequired,
+  bot: PropTypes.object,
   setClickedBot: PropTypes.func.isRequired,
   setIsModalOpen: PropTypes.func.isRequired,
   //   params: PropTypes.func.isRequired,

@@ -1,27 +1,8 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from '@emotion/styled'
 import PropTypes from 'prop-types'
-
-// const thumbStyles = css`
-//   appearance: none;
-//   width: 20px;
-//   height: 20px;
-//   border-radius: 50%;
-//   background: hsl(200, 100%, 40%);
-//   cursor: pointer;
-//   transition: background 100ms ease-in-out;
-// `;
-
-const DefaultRange = styled.input`
-  &[type='range'] {
-    -webkit-appearance: none;
-    border-radius: 5px;
-    height: 5px;
-    outline: none;
-    cursor: pointer;
-    width: 100%;
-  }
-`
+import { Row, Col } from 'reactstrap'
+import Slider from 'nouislider'
 
 const RangeValue = styled.span`
   display: inline-block;
@@ -44,67 +25,51 @@ const RangeValue = styled.span`
   }
 `
 
-const RangeContainer = styled.div`
-  display: flex;
-  align-items: center;
-  flex: 1;
-`
+export const Range = ({ onChange, min, max, value, ...props }) => {
+  const [val, setVal] = useState(value || min || 0)
+  const slider1Ref = React.useRef(null)
+  const [slider1Value, setSlider1Value] = React.useState('100.00')
 
-export const Range = ({
-  // styles,
-  // onChange,
-  // min,
-  // label,
-  // value,
-  // description,
-  ...props
-}) => {
-  // const [val, setVal] = useState(value || min || 0)
+  useEffect(() => {
+    if (value) {
+      setVal(value)
+    }
+  }, [value])
 
-  // useEffect(() => {
-  //   onChange(val)
-  // }, [])
+  useEffect(async () => {
+    Slider.create(slider1Ref.current, {
+      start: [100],
+      connect: [true, false],
+      step: 0.01,
+      range: { min: 100.0, max: 500.0 },
+    }).on('update', function (values, handle) {
+      setSlider1Value(values[0])
+    })
+  }, [])
 
-  // useEffect(() => {
-  //   if (value) setVal(value)
-  // }, [value])
-
-  // const changeValue = (e) => {
-  //   onChange(Number(e.target.value))
-  //   setVal(Number(e.target.value))
-  // }
+  const changeValue = (e) => {
+    onChange(Number(e.target.value))
+    setVal(Number(e.target.value))
+  }
 
   return (
-    // <Wrap styles={styles && styles.container}>
-    //   <LabelWrap>
-    //     {label && <Label styles={styles && styles.label}>{label}</Label>}
-    //     {description && <Description text={description} />}
-    //   </LabelWrap>
-    <RangeContainer>
-      <DefaultRange
-        {...props}
-        min={min}
-        type={'range'}
-        value={val}
-        onChange={changeValue}
-      />
-      <RangeValue>{val}</RangeValue>
-    </RangeContainer>
-    // </Wrap>
+    <div className="input-slider-container">
+      <div className="input-slider" ref={slider1Ref} />
+      <Row className="mt-3">
+        <Col xs="6">
+          <span className="range-slider-value">{slider1Value}</span>
+        </Col>
+      </Row>
+    </div>
   )
 }
 
 Range.propTypes = {
-  label: PropTypes.string,
-  description: PropTypes.string,
+  id: PropTypes.string,
   min: PropTypes.number,
+  max: PropTypes.number,
   value: PropTypes.number,
   onChange: PropTypes.func.isRequired,
-  // styles: PropTypes.shape({
-  //   container: PropTypes.object,
-  //   label: PropTypes.object,
-  //   input: PropTypes.input,
-  // }),
 }
 
 export default Range
