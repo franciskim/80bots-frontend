@@ -57,6 +57,7 @@ const OutputTab = ({ setCustomBack }) => {
           {Object.values(OUTPUT_TYPES).map((item, i, all) => {
             const variant =
               item.value === currentType.value ? 'success' : 'primary'
+
             return (
               <>
                 <Button

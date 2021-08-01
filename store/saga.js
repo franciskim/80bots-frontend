@@ -26,7 +26,7 @@ axios.interceptors.response.use(
     const {
       response: { status, data },
     } = error
-    if (status === 404 || status === 401) {
+    if (status === 404 || status === 401 || status === 400) {
       return Promise.reject(new Error(data.message))
     }
     return Promise.reject(error)

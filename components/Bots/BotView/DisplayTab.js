@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { CardBody } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 
@@ -15,8 +15,10 @@ const STATUSES = {
   LOAD: 'Loading Display',
 }
 
-const DisplayTab = ({ botInstance }) => {
+const DisplayTab = () => {
   const [status, setStatus] = useState(STATUSES.LOAD)
+
+  const botInstance = useSelector((state) => state.bot.botInstance)
 
   return (
     <CardBody className="d-flex justify-content-center">
@@ -44,12 +46,4 @@ const DisplayTab = ({ botInstance }) => {
   )
 }
 
-DisplayTab.propTypes = {
-  botInstance: PropTypes.object.isRequired,
-}
-
-const mapStateToProps = (state) => ({
-  botInstance: state.bot.botInstance,
-})
-
-export default connect(mapStateToProps, null)(DisplayTab)
+export default DisplayTab
