@@ -1,40 +1,38 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-
+import Link from 'next/link'
 import { useSelector } from 'react-redux'
-import { CardBody } from 'reactstrap'
+import { CardBody, Row, Col } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 
 const Display = styled.iframe`
   display: flex;
   flex: 1 1;
   border: none;
+  width: 100%;
+  height: 640px;
+  background-color: #999;
 `
-const STATUSES = {
-  LOAD: 'Loading Display',
-}
 
 const DisplayTab = () => {
-  const [status, setStatus] = useState(STATUSES.LOAD)
-
+  const [loadingPage, setLoadingPage] = useState(true)
   const botInstance = useSelector((state) => state.bot.botInstance)
-
+  const url = `http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`
   return (
-    <CardBody className="d-flex justify-content-center">
-      <a
-        href={`http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`}
-        target="_blank"
-        rel="noreferrer"
-      >
-        View bot in real-time
-      </a>
-      <Display
-        onLoad={() => setStatus(null)}
-        id={'display'}
-        src={`http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`}
-      />
-      {status && (
+    <CardBody>
+      <Row>
+        <Col>
+          <Link href={url} passHref>
+            <a target="_blank" rel="noreferrer">
+              View bot in real-time
+            </a>
+          </Link>
+        </Col>
+      </Row>
+
+      <Display onLoad={() => setLoadingPage(false)} id={'display'} src={url} />
+
+      {loadingPage && (
         <Loader80bots
           data={'light'}
           styled={{

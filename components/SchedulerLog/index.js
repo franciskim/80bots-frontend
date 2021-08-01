@@ -35,17 +35,6 @@ const SchedulerLog = () => {
     </tr>
   )
 
-  // const searchSession = (value) => {
-  //   setSearch(value)
-  //   dispatch(
-  //     getSessions({
-  //       page,
-  //       limit,
-  //       search: value,
-  //     })
-  //   )
-  // }
-
   const onOrderChange = (field, value) => {
     setOrder({ field, value })
     dispatch(getSessions({ page, limit, search }))

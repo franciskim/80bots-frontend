@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Select from 'react-select'
 import Link from 'next/link'
-import Router from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   CardBody,
@@ -13,7 +12,12 @@ import {
   List,
   CardFooter,
 } from 'reactstrap'
-import { LimitFilter, ListFilter, SearchFilter } from 'components/default/Table'
+import {
+  LimitFilter,
+  ListFilter,
+  SearchFilter,
+  Th,
+} from 'components/default/Table'
 import { addNotification, download, formatTimezone } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 import {
@@ -41,32 +45,6 @@ import {
   flushScriptNotification,
 } from 'store/scriptNotification/actions'
 
-// const Container = styled(Card)`
-//   background: #333;
-//   border: none;
-//   color: #fff;
-// `;
-
-// const Td = styled.td`
-//   position: absolute;
-//   left: 20px;
-//   width: calc(100% - 40px);
-// `;
-
-// const NotificationTd = styled.td`
-//   min-width: 400px;
-// `;
-
-// const IdTd = styled.td`
-//   white-space: nowrap;
-// `;
-
-// const Tr = styled.tr`
-//   position: relative;
-//   background-color: ${props =>
-//           props.disabled ? "rgba(221, 221, 221, .5)" : "none"};
-// `;
-
 // const Ip = styled.span`
 //   cursor: pointer;
 // `;
@@ -86,15 +64,6 @@ import {
 //     color: #FF0000;
 //   }
 // `;
-// const A = styled.a`
-//   cursor: pointer;
-//   color: #ff7d7d !important;
-
-//   &:hover {
-//     text-decoration: underline !important;
-//   }
-// `;
-
 // const selectStyles = {
 //     container: (provided, state) => ({
 //         ...provided,
@@ -623,7 +592,7 @@ const RunningBots = () => {
   }
 
   const OrderTh = (props) => (
-    <th
+    <Th
       {...props}
       order={
         props.field === order.field || props.children === order.field

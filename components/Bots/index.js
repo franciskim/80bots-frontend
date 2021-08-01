@@ -16,14 +16,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import SweetAlert from 'react-bootstrap-sweetalert'
 import Skeleton from 'react-loading-skeleton'
 import BotTableRow from './BotTableRow'
-import {
-  syncLocalBots,
-  getBots,
-  // getBotSettings,
-  // updateBotSettings,
-  deleteBot,
-  // setBotLimit,
-} from 'store/bot/actions'
+import { syncLocalBots, getBots, deleteBot } from 'store/bot/actions'
 import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 import { addListener } from 'store/socket/actions'

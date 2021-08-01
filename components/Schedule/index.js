@@ -35,43 +35,6 @@ import ScheduleEditor from './ScheduleEditor'
 import AsyncSelect from 'react-select/async'
 import Skeleton from 'react-loading-skeleton'
 
-// const Container = styled(Card)`
-//   background: #333;
-//   border: none;
-//   color: #fff;
-//   align-self: flex-start;
-// `
-
-// const IconButton = styled(Button)`
-//   display: inline-flex;
-//   justify-content: flex-start;
-//   padding: 2px;
-//   margin-right: 5px;
-//   width: 30px;
-//   height: 30px;
-//   &:last-child {
-//     margin-right: 0;
-//   }
-// `
-
-// const Buttons = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-// `
-
-// const StatusButton = styled(Button)`
-//   text-transform: uppercase;
-// `
-
-// const Tag = styled(Badge)`
-//   text-transform: capitalize;
-//   margin-right: 0.5rem;
-//   font-size: 14px;
-//   &:last-child {
-//     margin-right: 0;
-//   }
-// `
 const FILTERS_LIST_OPTIONS = [
   { value: 'all', label: 'All Schedules' },
   { value: 'my', label: 'My Schedules' },
