@@ -10,25 +10,10 @@ import {
   close as closeItem,
 } from 'store/fileSystem/actions'
 import { Loader80bots } from 'components/default'
-import { Modal, Button, CardBody, Row, Col, ModalHeader } from 'reactstrap'
+import { Button, Row, Col } from 'reactstrap'
 import ReportEditor from './ReportEditor'
 
 const rootFolder = 'screenshots'
-const defaultLimit = 15
-
-// const Container = styled.div`
-//   position: relative;
-//   flex: 1;
-//   bottom: 0;
-//   display: flex;
-//   flex-wrap: wrap;
-//   flex-direction: column;
-// `
-
-// const Report = styled(Button)`
-//   padding: 0 5px;
-//   animation: ${Fade} 200ms ease-in;
-// `
 
 const FiltersSection = styled.div`
   width: 100%;
@@ -42,7 +27,7 @@ const Hint = styled.span`
 
 const ScreenShotTab = ({ setCustomBack }) => {
   const dispatch = useDispatch()
-  const [limit] = useState(defaultLimit)
+  const [limit] = useState(16)
   const [reportItems, setReportItems] = useState([])
   const [isReportMode, setReportMode] = useState(false)
   // const [showReportModal, setShowReportModal] = useState(false)
@@ -94,7 +79,6 @@ const ScreenShotTab = ({ setCustomBack }) => {
     setReportItems([...reportItems, item])
   }
 
-  console.error('setReportItems', reportItems, items)
   return (
     <div className="justify-content-center">
       {loading || !items.length ? (
