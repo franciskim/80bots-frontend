@@ -29,9 +29,6 @@ const DisplayTab = () => {
           </Link>
         </Col>
       </Row>
-
-      <Display onLoad={() => setLoadingPage(false)} id={'display'} src={url} />
-
       {loadingPage && (
         <Loader80bots
           data={'light'}
@@ -40,6 +37,7 @@ const DisplayTab = () => {
           }}
         />
       )}
+      <Display onLoad={() => setLoadingPage(false)} id={'display'} src={url} />
     </CardBody>
   )
 }

@@ -3,24 +3,22 @@ import {
   CREATE_SCHEDULE,
   UPDATE_SCHEDULE,
   DELETE_SCHEDULE,
-} from './types';
+} from './types'
 
 export const getSchedules = (query = { page: 1, limit: 1 }) => {
-
-  Object.keys(query).forEach((key) => (query[key] === '') && delete query[key]);
-
+  Object.keys(query).forEach((key) => query[key] === '' && delete query[key])
   return {
     type: GET_SCHEDULES,
     request: {
       method: 'GET',
       url: '/schedule',
-      params: query
+      params: query,
     },
     meta: {
-      thunk: true
-    }
-  };
-};
+      thunk: true,
+    },
+  }
+}
 
 export const createSchedule = ({ instanceId }) => {
   return {
@@ -29,14 +27,14 @@ export const createSchedule = ({ instanceId }) => {
       method: 'POST',
       url: '/schedule',
       data: {
-        instance_id: instanceId
-      }
+        instance_id: instanceId,
+      },
     },
     meta: {
-      thunk: true
-    }
-  };
-};
+      thunk: true,
+    },
+  }
+}
 
 export const updateSchedule = (id, updateData) => {
   return {
@@ -44,13 +42,13 @@ export const updateSchedule = (id, updateData) => {
     request: {
       method: 'PUT',
       url: `/schedule/${id}`,
-      data: { update: updateData }
+      data: { update: updateData },
     },
     meta: {
-      thunk: true
-    }
-  };
-};
+      thunk: true,
+    },
+  }
+}
 
 export const deleteSchedule = (id) => {
   return {
@@ -60,7 +58,7 @@ export const deleteSchedule = (id) => {
       url: `/schedule/${id}`,
     },
     meta: {
-      thunk: true
-    }
-  };
-};
+      thunk: true,
+    },
+  }
+}

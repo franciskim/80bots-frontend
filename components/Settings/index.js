@@ -22,7 +22,7 @@ import { Paginator } from 'components/default'
 import Select from 'react-select'
 import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'lib/helpers'
-import { addListener } from 'store/socket/actions'
+import { addListener, removeAllListeners } from 'store/socket/actions'
 import Skeleton from 'react-loading-skeleton'
 import SettingTableRow from './SettingTableRow'
 
@@ -36,6 +36,7 @@ const Settings = () => {
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
   const [loadingAll, setLoadingAll] = useState(true)
+  const [loadingAllAfterSync, setLoadingAllAfterSync] = useState(false)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditSettingsModalOpened, setIsEditSettingsModalOpened] =
@@ -56,23 +57,30 @@ const Settings = () => {
           type: NOTIFICATION_TYPES.SUCCESS,
           message: 'Sync completed',
         })
-        dispatch(
-          getRegions({
-            page,
-            limit,
-            sort: order.field,
-            order: order.value,
-            search,
-          })
-        )
+        setLoadingAllAfterSync(true)
       })
     )
+    return () => {
+      dispatch(removeAllListeners())
+    }
   }, [])
 
-  const toOption = (item) => ({
-    value: item.image_id,
-    label: `${item.name} | ${item.image_id}`,
-  })
+  useEffect(() => {
+    if (loadingAllAfterSync) {
+      dispatch(
+        getRegions({
+          page,
+          limit,
+          sort: order.field,
+          order: order.value,
+          search,
+        }).then(() => {
+          setLoadingAll(false)
+          setLoadingAllAfterSync(false)
+        })
+      )
+    }
+  }, [loadingAllAfterSync])
 
   const openEditModal = (region) => {
     setClickedRegion(region)
@@ -215,7 +223,10 @@ const Settings = () => {
               <Col md={9}>
                 <Select
                   onChange={(option) => setDefaultAmi(option.value)}
-                  options={amis.map(toOption)}
+                  options={amis.map(({ image_id, name }) => ({
+                    value: image_id,
+                    label: `${name} | ${image_id}`,
+                  }))}
                   value={getCurrentSelect()}
                 />
               </Col>

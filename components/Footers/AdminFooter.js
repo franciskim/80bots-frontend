@@ -29,7 +29,7 @@ const AdminFooter = () => {
               © {new Date().getFullYear()}{' '}
               <a
                 className="font-weight-bold ml-1"
-                href="https://www.creative-tim.com?ref=adpr-admin-footer"
+                href="https://www.80bots.com"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -40,19 +40,8 @@ const AdminFooter = () => {
           <Col lg="6">
             <Nav className="nav-footer justify-content-center justify-content-lg-end">
               <NavItem>
-                <NavLink
-                  href="https://www.creative-tim.com?ref=adpr-admin-footer"
-                  target="_blank"
-                >
+                <NavLink href="https://www.80bots.com" target="_blank">
                   80bots.com
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  href="https://www.creative-tim.com/presentation?ref=adpr-admin-footer"
-                  target="_blank"
-                >
-                  About Us
                 </NavLink>
               </NavItem>
               <NavItem>

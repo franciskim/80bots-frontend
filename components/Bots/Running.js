@@ -127,14 +127,13 @@ const RunningBots = () => {
     })
     dispatch(
       addListener(`running.${user.id}`, 'InstanceLaunched', (event) => {
+        const { status } = event.instance
         if (event.instance) {
-          const status =
-            event.instance.status === 'running'
-              ? 'launched'
-              : event.instance.status
+          const statusText = status === 'running' ? 'launched' : status
+
           addNotification({
             type: NOTIFICATION_TYPES.SUCCESS,
-            message: `Bot ${event.instance.bot_name} successfully ${status}`,
+            message: `Bot ${event.instance.bot_name} successfully ${statusText}`,
           })
           dispatch(botInstanceUpdated(event.instance))
         }

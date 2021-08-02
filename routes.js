@@ -14,13 +14,13 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import RunningBotsPage from 'pages/bots/running'
-import UsersPage from 'pages/users'
-import SettingsPage from 'pages/settings'
-import SchedulersPage from 'pages/scheduler'
-import EditBotPage from 'pages/bot/[id]'
-import ViewRunningBotPage from 'pages/bots/running/[id]'
-import UpdateBotInstancePage from 'pages/botinstance/[id]'
+// import RunningBotsPage from 'pages/bots/running'
+// import UsersPage from 'pages/users'
+// import SettingsPage from 'pages/settings'
+// import SchedulersPage from 'pages/scheduler'
+// import EditBotPage from 'pages/bot/[id]'
+// import ViewRunningBotPage from 'pages/bots/running/[id]'
+// import UpdateBotInstancePage from 'pages/botinstance/[id]'
 
 const routes = [
   {
@@ -29,14 +29,12 @@ const routes = [
     icon: 'fa fa-robot text-blue',
     // layout: '/admin',
     // miniName: 'R',
-    component: RunningBotsPage,
   },
   {
     path: '/botinstance/:id',
     name: 'Update Bot Instance',
     icon: 'fa fa-robot text-blue',
     // layout: '/admin',
-    component: UpdateBotInstancePage,
     redirect: true,
   },
   {
@@ -44,7 +42,6 @@ const routes = [
     name: 'View Running Bot',
     icon: 'fa fa-robot text-blue',
     // layout: '/admin',
-    component: ViewRunningBotPage,
     redirect: true,
   },
   {
@@ -64,7 +61,6 @@ const routes = [
     name: 'Edit Bot',
     icon: 'fa fa-plus',
     // layout: '/admin',
-    component: EditBotPage,
     redirect: true,
   },
   {
@@ -72,7 +68,6 @@ const routes = [
     name: 'Scheduler',
     icon: 'fa fa-calendar-alt text-purple',
     // layout: '/admin',
-    component: SchedulersPage,
   },
   {
     path: '/scheduler/log',
@@ -85,14 +80,12 @@ const routes = [
     name: 'AWS AMI Settings',
     icon: 'fa fa-cog text-gray',
     // layout: '/admin',
-    component: SettingsPage,
   },
   {
     path: '/users',
     name: 'Users',
     icon: 'fa fa-users text-red',
     // layout: '/admin',
-    component: UsersPage,
   },
   {
     path: '/profile',

@@ -72,7 +72,6 @@ class MyApp extends App {
   }
   render() {
     const { Component, pageProps, reduxStore } = this.props
-
     const Layout = Component.layout || (({ children }) => <>{children}</>)
 
     return (

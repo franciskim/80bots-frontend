@@ -2,14 +2,10 @@ import React, { useState, useEffect } from 'react'
 import {
   Card,
   CardBody,
-  ModalBody,
   Modal,
   Button,
   Badge,
-  Label,
   Table,
-  ModalFooter,
-  ModalHeader,
   CardHeader,
   CardFooter,
 } from 'reactstrap'
@@ -26,14 +22,13 @@ import { Paginator } from 'components/default/Paginator'
 import SweetAlert from 'react-bootstrap-sweetalert'
 import {
   getSchedules,
-  createSchedule,
   updateSchedule,
   deleteSchedule,
 } from 'store/schedule/actions'
 import { getRunningBots } from 'store/bot/actions'
 import ScheduleEditor from './ScheduleEditor'
-import AsyncSelect from 'react-select/async'
 import Skeleton from 'react-loading-skeleton'
+import AddScheduleModal from './AddScheduleModal'
 
 const FILTERS_LIST_OPTIONS = [
   { value: 'all', label: 'All Schedules' },
@@ -79,7 +74,6 @@ const BotsSchedule = () => {
   const [limit, setLimit] = useState(10)
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState({ value: '', field: '' })
-  const [instanceId, setInstanceId] = useState(null)
   const [search, setSearch] = useState(null)
   const [loadingAll, setLoadingAll] = useState(true)
 
@@ -94,30 +88,9 @@ const BotsSchedule = () => {
   }, [])
 
   const schedules = useSelector((state) => state.schedule.schedules)
-  const runningBots = useSelector((state) => state.bot.botInstances)
   const total = useSelector((state) => state.schedule.total)
-  const user = useSelector((state) => state.auth.user)
+  // const user = useSelector((state) => state.auth.user)
   // const error = useSelector((state) => state.schedule.error)
-
-  const searchBots = (value, callback) => {
-    dispatch(getRunningBots({ page: 1, limit: 50, search: value })).then(
-      (action) => {
-        console.error(action, 'returns,')
-        return callback(action.data.data.map(toOptions))
-      }
-    )
-  }
-
-  const onBotChange = (option) => {
-    setInstanceId(option.value)
-  }
-
-  const toOptions = (bot) => ({
-    value: bot.instance_id,
-    label: bot.instance_id + '|' + bot.name,
-  })
-
-  const toFilters = (bot) => bot.status !== 'terminated'
 
   const changeScheduleStatus = (schedule) => {
     const statusName =
@@ -151,27 +124,6 @@ const BotsSchedule = () => {
   const toggleEditModal = (schedule) => {
     setClickedSchedule(schedule)
     setIsEditModalOpen(true)
-  }
-
-  const addSchedule = () => {
-    if (instanceId) {
-      dispatch(createSchedule({ instanceId })).then(() => {
-        dispatch(
-          getSchedules({
-            page: 1,
-            limit,
-            sort: order.field,
-            order: order.value,
-            search,
-          })
-        )
-        setIsAddModalOpen(false)
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: 'Schedule was successfully added',
-        })
-      })
-    }
   }
 
   const updateScheduleInstance = (editedSchedules) => {
@@ -305,6 +257,8 @@ const BotsSchedule = () => {
     </tr>
   )
 
+  // const loadSchedules = () => {}
+
   return (
     <Card>
       <CardHeader>
@@ -397,33 +351,30 @@ const BotsSchedule = () => {
             focusCancelBtn
           />
         )}
-
-        <Modal isOpen={isAddModalOpen} onClose={() => setInstanceId(null)}>
-          <ModalHeader>Add Schedule</ModalHeader>
-          <ModalBody>
-            <Label>Select one of your running bots</Label>
-            <AsyncSelect
-              onChange={onBotChange}
-              loadOptions={searchBots}
-              defaultOptions={runningBots.filter(toFilters).map(toOptions)}
-            />
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={() => setIsAddModalOpen(false)}>Cancel</Button>
-            <Button color="primary" onClick={addSchedule}>
-              Add
-            </Button>
-          </ModalFooter>
-        </Modal>
+        <AddScheduleModal
+          isOpen={isAddModalOpen}
+          onClose={setIsAddModalOpen}
+          onRefresh={() => {
+            dispatch(
+              getSchedules({
+                page: 1,
+                limit,
+                sort: order.field,
+                order: order.value,
+                search,
+              })
+            )
+          }}
+        />
         <Modal
           isOpen={isEditModalOpen}
           onClose={() => setClickedSchedule(null)}
+          size="lg"
         >
           <ScheduleEditor
             schedules={clickedSchedule ? clickedSchedule.details : []}
             close={() => setIsEditModalOpen(false)}
             onUpdateClick={updateScheduleInstance}
-            user={user}
           />
         </Modal>
       </CardBody>

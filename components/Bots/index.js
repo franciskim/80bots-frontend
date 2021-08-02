@@ -19,7 +19,7 @@ import BotTableRow from './BotTableRow'
 import { syncLocalBots, getBots, deleteBot } from 'store/bot/actions'
 import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
-import { addListener } from 'store/socket/actions'
+import { addListener, removeAllListeners } from 'store/socket/actions'
 
 const Bots = () => {
   const dispatch = useDispatch()
@@ -28,6 +28,7 @@ const Bots = () => {
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
   const [loadingAll, setLoadingAll] = useState(true)
+  const [loadingAllAfterSync, setLoadingAllAfterSync] = useState(false)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -41,6 +42,7 @@ const Bots = () => {
   useEffect(() => {
     dispatch(getBots({ page, limit })).then(() => {
       setLoadingAll(false)
+      setPage(1)
     })
     dispatch(
       addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
@@ -48,40 +50,31 @@ const Bots = () => {
           type: NOTIFICATION_TYPES.SUCCESS,
           message: 'Sync completed',
         })
-        dispatch(
-          getBots({
-            page,
-            limit,
-            sort: order.field,
-            order: order.value,
-            search,
-          })
-        )
-        setPage(1)
+        setLoadingAllAfterSync(true)
       })
     )
-    return setPage(1)
+    return () => {
+      dispatch(removeAllListeners())
+    }
   }, [page, limit])
 
-  // const launchBot = (params) => {
-  //   setIsDeleteModalOpen(false)
-  //   dispatch(launchInstance(clickedBot.id, params))
-  //     .then(() => {
-  //       addNotification({
-  //         type: NOTIFICATION_TYPES.INFO,
-  //         message: 'New bot instance is deploying',
-  //       })
-  //     })
-  //     .catch((action) => {
-  //       addNotification({
-  //         type: NOTIFICATION_TYPES.ERROR,
-  //         message:
-  //           action.error?.response?.data?.message ||
-  //           'Error occurred during new instance launch',
-  //         delay: 1500,
-  //       })
-  //     })
-  // }
+  useEffect(() => {
+    if (loadingAllAfterSync) {
+      dispatch(
+        getBots({
+          page,
+          limit,
+          sort: order.field,
+          order: order.value,
+          search,
+        })
+      ).then(() => {
+        setLoadingAll(false)
+        setPage(1)
+        setLoadingAllAfterSync(false)
+      })
+    }
+  }, [loadingAllAfterSync])
 
   const getDeleteBot = () => {
     dispatch(deleteBot(clickedBot.id))

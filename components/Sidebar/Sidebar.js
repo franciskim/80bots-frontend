@@ -71,7 +71,7 @@ const Sidebar = ({
   // that it gets through props.routes
   const getCollapseStates = (routes) => {
     let initialState = {}
-    routes.map((prop, key) => {
+    routes.map((prop) => {
       if (prop.collapse) {
         initialState = {
           [prop.state]: getCollapseInitialState(prop.views),
@@ -244,6 +244,7 @@ Sidebar.defaultProps = {
 }
 
 Sidebar.propTypes = {
+  router: PropTypes.object,
   // function used to make sidenav mini or normal
   toggleSidenav: PropTypes.func,
   // prop to know if the sidenav is mini or normal

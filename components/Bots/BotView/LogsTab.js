@@ -39,7 +39,9 @@ const LogsTab = () => {
   }, [items])
 
   useEffect(() => {
-    if (!options.length) return
+    if (!options.length) {
+      return
+    }
     if (!selected) {
       setSelected(options[0])
     }
