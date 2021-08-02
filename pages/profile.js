@@ -15,8 +15,6 @@
 
 */
 import React from 'react'
-
-// reactstrap components
 import { Container } from 'reactstrap'
 import Profile from 'components/Profile'
 import SimpleHeader from 'components/Headers/SimpleHeader'

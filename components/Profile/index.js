@@ -15,6 +15,7 @@ import {
   Row,
   Col,
   CardHeader,
+  CardFooter,
 } from 'reactstrap'
 import { updateUserProfile as updateUser } from 'store/auth/actions'
 
@@ -64,7 +65,7 @@ const Profile = () => {
   const regions = useSelector((state) => state.user.regions)
 
   useEffect(() => {
-    if (user && !timezone && timezones.length > 0) {
+    if (user && user.timezone && timezones.length > 0) {
       const defaultValue = timezones.find(
         (item) => item.timezone === user.timezone
       )
@@ -73,32 +74,28 @@ const Profile = () => {
   }, [timezones])
 
   useEffect(() => {
-    if (user && !region && regions.length > 0) {
+    if (user && user.region && regions.length > 0) {
       const defaultValue = regions.find((item) => item.name === user.region)
       setRegion({ value: defaultValue.id, label: defaultValue.name })
     }
   }, [regions])
 
-  const updateTimezone = () => {
+  const handleUpdate = () => {
     dispatch(
-      updateUser({ timezone_id: timezone.value }).then(() => {
+      updateUser({ region_id: region.value, timezone_id: timezone.value })
+    )
+      .then(() => {
         addNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
-          message: `Timezone was successfully set to ${timezone.label}`,
+          message: `Settings were successfully saved`,
         })
       })
-    )
-  }
-
-  const updateRegion = () => {
-    dispatch(
-      updateUser({ region_id: region.value }).then(() => {
+      .catch((err) => {
         addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: `Region was successfully set to ${region.label}`,
+          type: NOTIFICATION_TYPES.ERROR,
+          message: err.error.message,
         })
       })
-    )
   }
 
   return (
@@ -127,8 +124,8 @@ const Profile = () => {
             <hr className="my-4" />
             <div className="pl-lg-4">
               <FormGroup className="row">
-                <label md="3">Your current time: </label>
-                <Col md="9">
+                <Label md="4">Your current time: </Label>
+                <Col md="8">
                   <Clock
                     format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
                     timezone={null}
@@ -138,8 +135,8 @@ const Profile = () => {
                 </Col>
               </FormGroup>
               <FormGroup className="row">
-                <label md={3}>Current platform time: </label>
-                <Col md="9">
+                <Label md={4}>Current platform time: </Label>
+                <Col md="8">
                   <Clock
                     format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
                     timezone={user.timezone}
@@ -165,12 +162,8 @@ const Profile = () => {
                     onChange={(option) => setTimezone(option)}
                     value={timezone}
                   />
-                  <Button color={'primary'} onClick={updateTimezone}>
-                    Update
-                  </Button>
                 </Col>
               </FormGroup>
-
               <FormGroup className="row">
                 <Label
                   className="form-control-label"
@@ -189,15 +182,17 @@ const Profile = () => {
                     onChange={(option) => setRegion(option)}
                     value={region}
                   />
-                  <Button color={'primary'} onClick={updateRegion}>
-                    Update
-                  </Button>
                 </Col>
               </FormGroup>
             </div>
           </>
         )}
       </CardBody>
+      <CardFooter>
+        <Button color={'primary'} onClick={handleUpdate}>
+          Update
+        </Button>
+      </CardFooter>
     </Card>
   )
 }
