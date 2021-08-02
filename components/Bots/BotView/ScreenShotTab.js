@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
 import { useSelector, useDispatch } from 'react-redux'

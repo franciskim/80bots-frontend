@@ -174,7 +174,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
 
   const changeMultiSelectValue = (field, options) => {
     let valuesCopy = { ...values }
-    valuesCopy[field].options = options
+    valuesCopy[field].options = options || []
     setValues(valuesCopy)
   }
 

@@ -40,7 +40,7 @@ const Users = () => {
     dispatch(getUsers({ page, limit, search }))
   }
 
-  const OrderTh = (props) => (
+  const SortableTableHeader = (props) => (
     <Th
       {...props}
       order={
@@ -83,10 +83,14 @@ const Users = () => {
           <Table responsive>
             <thead>
               <tr>
-                <OrderTh field={'name'}>Name</OrderTh>
-                <OrderTh field={'email'}>Email</OrderTh>
-                <OrderTh field={'date'}>Register Date</OrderTh>
-                <OrderTh field={'status'}>Status</OrderTh>
+                <SortableTableHeader field={'name'}>Name</SortableTableHeader>
+                <SortableTableHeader field={'email'}>Email</SortableTableHeader>
+                <SortableTableHeader field={'date'}>
+                  Register Date
+                </SortableTableHeader>
+                <SortableTableHeader field={'status'}>
+                  Status
+                </SortableTableHeader>
               </tr>
             </thead>
             <tbody>

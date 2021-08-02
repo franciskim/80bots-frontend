@@ -1,7 +1,15 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, ModalFooter, ModalHeader, ModalBody, Table } from 'reactstrap'
+import {
+  Button,
+  ModalFooter,
+  ModalHeader,
+  ModalBody,
+  Table,
+  UncontrolledAlert,
+} from 'reactstrap'
 import ScheduleEditorRow from './ScheduleEditorRow'
+import { useSelector } from 'react-redux'
 // const selectStyles = {
 //   control: (provided, state) => ({
 //     ...provided,
@@ -81,6 +89,9 @@ import ScheduleEditorRow from './ScheduleEditorRow'
 
 const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
   const [schedules, setSchedules] = useState([{}].concat(props.schedules))
+  const [error, setError] = useState(null)
+
+  const user = useSelector((state) => state.auth.user)
 
   const addSchedule = () => {
     setSchedules([{}].concat(schedules))
@@ -103,6 +114,14 @@ const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
     <>
       <ModalHeader>Schedule Editor</ModalHeader>
       <ModalBody>
+        {error && (
+          <UncontrolledAlert color="danger">
+            <span className="alert-icon">
+              <i className="ni ni-like-2" />
+            </span>
+            <span className="alert-text ml-1">{error}</span>
+          </UncontrolledAlert>
+        )}
         <Table>
           <thead>
             <tr>
@@ -121,6 +140,8 @@ const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
                 add={addSchedule}
                 remove={() => removeSchedule(idx)}
                 updateScheduleList={updateScheduleList}
+                user={user}
+                setError={setError}
               />
             ))}
           </tbody>

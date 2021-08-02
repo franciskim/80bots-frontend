@@ -7,12 +7,7 @@ import { launchInstance } from 'store/bot/actions'
 import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 
-const DeployBotModal = ({
-  isModalOpen,
-  bot,
-  setClickedBot,
-  setIsModalOpen,
-}) => {
+const DeployBotModal = ({ isOpen, bot, onClose }) => {
   const dispatch = useDispatch()
 
   const launchBot = (params) => {
@@ -35,13 +30,13 @@ const DeployBotModal = ({
   }
 
   return (
-    <Modal isOpen={isModalOpen} onClose={() => setClickedBot(null)} size="lg">
+    <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalHeader>Deploy selected bot?</ModalHeader>
       <ModalBody>
         {bot && (
           <LaunchEditor
             onSubmit={launchBot}
-            onClose={() => setIsModalOpen(false)}
+            onClose={() => onClose(false)}
             bot={bot}
           />
         )}
@@ -51,11 +46,9 @@ const DeployBotModal = ({
 }
 
 DeployBotModal.propTypes = {
-  isModalOpen: PropTypes.bool.isRequired,
+  isOpen: PropTypes.bool.isRequired,
   bot: PropTypes.object,
-  setClickedBot: PropTypes.func.isRequired,
-  setIsModalOpen: PropTypes.func.isRequired,
-  //   params: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 }
 
 export default DeployBotModal

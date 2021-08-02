@@ -235,14 +235,14 @@ const Index = () => {
                 <TabPane tabId="script">
                   <CodeEditor
                     value={botScript}
-                    onChange={(code) => setBotScript(code)}
+                    onChange={setBotScript}
                     mode="javascript"
                   />
                 </TabPane>
                 <TabPane tabId="json">
                   <CodeEditor
                     value={botPackageJSON}
-                    onChange={(code) => setBotPackageJSON(code)}
+                    onChange={setBotPackageJSON}
                     mode="json"
                   />
                 </TabPane>

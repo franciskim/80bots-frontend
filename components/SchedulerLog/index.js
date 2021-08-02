@@ -40,7 +40,7 @@ const SchedulerLog = () => {
     dispatch(getSessions({ page, limit, search }))
   }
 
-  const OrderTh = (props) => (
+  const SortableTableHeader = (props) => (
     <Th
       {...props}
       order={
@@ -83,12 +83,20 @@ const SchedulerLog = () => {
           <Table responsive>
             <thead>
               <tr>
-                <OrderTh field={'user'}>User</OrderTh>
-                <OrderTh field={'instance_id'}>Instance Id</OrderTh>
-                <OrderTh field={'type'}>Type</OrderTh>
-                <OrderTh field={'date'}>Date & Time</OrderTh>
-                <OrderTh field={'timezone'}>Time Zone</OrderTh>
-                <OrderTh field={'status'}>Status</OrderTh>
+                <SortableTableHeader field={'user'}>User</SortableTableHeader>
+                <SortableTableHeader field={'instance_id'}>
+                  Instance Id
+                </SortableTableHeader>
+                <SortableTableHeader field={'type'}>Type</SortableTableHeader>
+                <SortableTableHeader field={'date'}>
+                  Date & Time
+                </SortableTableHeader>
+                <SortableTableHeader field={'timezone'}>
+                  Time Zone
+                </SortableTableHeader>
+                <SortableTableHeader field={'status'}>
+                  Status
+                </SortableTableHeader>
               </tr>
             </thead>
             <tbody>{sessions.map(renderRow)}</tbody>

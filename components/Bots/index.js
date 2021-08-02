@@ -124,7 +124,7 @@ const Bots = () => {
     dispatch(getBots({ page, limit, sort: field, order: value, search }))
   }
 
-  const OrderTh = (props) => (
+  const SortableTableHeader = (props) => (
     <Th
       {...props}
       order={
@@ -198,11 +198,19 @@ const Bots = () => {
           <Table responsive>
             <thead>
               <tr>
-                <OrderTh field={'name'}>Bot Name</OrderTh>
-                <OrderTh field={'type'}>Bot Type</OrderTh>
-                <OrderTh field={'description'}>Description</OrderTh>
+                <SortableTableHeader field={'name'}>
+                  Bot Name
+                </SortableTableHeader>
+                <SortableTableHeader field={'type'}>
+                  Bot Type
+                </SortableTableHeader>
+                <SortableTableHeader field={'description'}>
+                  Description
+                </SortableTableHeader>
                 <th>Tags</th>
-                <OrderTh field={'status'}>Status</OrderTh>
+                <SortableTableHeader field={'status'}>
+                  Status
+                </SortableTableHeader>
                 <th>Action</th>
               </tr>
             </thead>
@@ -224,9 +232,11 @@ const Bots = () => {
 
         <DeployBotModal
           bot={clickedBot}
-          isModalOpen={isModalOpen}
-          setClickedBot={setClickedBot}
-          setIsModalOpen={setIsModalOpen}
+          isOpen={isModalOpen}
+          onClose={() => {
+            setClickedBot(null)
+            setIsModalOpen(false)
+          }}
         />
 
         {isDeleteModalOpen && (

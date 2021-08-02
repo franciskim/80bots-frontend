@@ -176,7 +176,7 @@ const BotsSchedule = () => {
     dispatch(getSchedules({ page, limit, sort: field, order: value, search }))
   }
 
-  const OrderTh = (props) => (
+  const SortableTableHeader = (props) => (
     <Th
       {...props}
       order={
@@ -326,12 +326,18 @@ const BotsSchedule = () => {
           <Table responsive>
             <thead>
               <tr>
-                <OrderTh field={'user'}>User</OrderTh>
-                <OrderTh field={'instance_id'}>Instance Id</OrderTh>
-                <OrderTh field={'bot_name'}>Bot Name</OrderTh>
-                <OrderTh field={'status'}>Status</OrderTh>
-                <OrderTh>Details</OrderTh>
-                <OrderTh>Actions</OrderTh>
+                <SortableTableHeader field={'user'}>User</SortableTableHeader>
+                <SortableTableHeader field={'instance_id'}>
+                  Instance Id
+                </SortableTableHeader>
+                <SortableTableHeader field={'bot_name'}>
+                  Bot Name
+                </SortableTableHeader>
+                <SortableTableHeader field={'status'}>
+                  Status
+                </SortableTableHeader>
+                <SortableTableHeader>Details</SortableTableHeader>
+                <SortableTableHeader>Actions</SortableTableHeader>
               </tr>
             </thead>
             <tbody>{schedules.map(renderRow)}</tbody>

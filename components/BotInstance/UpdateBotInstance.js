@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
 import Router, { useRouter } from 'next/router'
-// import styled from '@emotion/styled'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
@@ -80,7 +79,7 @@ import classnames from 'classnames'
 //   `,
 // }
 
-const Index = () => {
+const UpdateBotInstance = () => {
   const dispatch = useDispatch()
   const { id } = useRouter().query
   const [botScript, setBotScript] = useState('')
@@ -91,7 +90,9 @@ const Index = () => {
   const router = useRouter()
 
   const toggle = (tab) => {
-    if (activeTab !== tab) setActiveTab(tab)
+    if (activeTab !== tab) {
+      setActiveTab(tab)
+    }
   }
 
   const isEmpty = (obj) => {
@@ -204,14 +205,14 @@ const Index = () => {
                 <TabPane tabId="script">
                   <CodeEditor
                     value={botScript}
-                    onChange={(code) => setBotScript(code)}
+                    onChange={setBotScript}
                     mode="javascript"
                   />
                 </TabPane>
                 <TabPane tabId="json">
                   <CodeEditor
-                    value={botScript}
-                    onChange={(code) => setBotPackageJSON(code)}
+                    value={botPackageJSON}
+                    onChange={setBotPackageJSON}
                     mode="json"
                   />
                 </TabPane>
@@ -239,4 +240,4 @@ const Index = () => {
   )
 }
 
-export default Index
+export default UpdateBotInstance

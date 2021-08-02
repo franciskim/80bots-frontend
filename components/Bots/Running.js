@@ -590,7 +590,7 @@ const RunningBots = () => {
     })
   }
 
-  const OrderTh = (props) => (
+  const SortableTableHeader = (props) => (
     <Th
       {...props}
       order={
@@ -681,17 +681,23 @@ const RunningBots = () => {
         <Table responsive>
           <thead>
             <tr>
-              <OrderTh field={'status'}>Status</OrderTh>
+              <SortableTableHeader field={'status'}>Status</SortableTableHeader>
               <th>Actions</th>
-              <OrderTh field={'bot_name'}>Bot</OrderTh>
-              <OrderTh field={'script_notification'}>Last Notification</OrderTh>
-              <OrderTh field={'launched_at'}>Deployed At</OrderTh>
-              <OrderTh field={'uptime'}>Uptime</OrderTh>
-              <OrderTh field={'ip'}>IP</OrderTh>
-              <OrderTh field={'name'}>Name</OrderTh>
+              <SortableTableHeader field={'bot_name'}>Bot</SortableTableHeader>
+              <SortableTableHeader field={'script_notification'}>
+                Last Notification
+              </SortableTableHeader>
+              <SortableTableHeader field={'launched_at'}>
+                Deployed At
+              </SortableTableHeader>
+              <SortableTableHeader field={'uptime'}>Uptime</SortableTableHeader>
+              <SortableTableHeader field={'ip'}>IP</SortableTableHeader>
+              <SortableTableHeader field={'name'}>Name</SortableTableHeader>
               <th>Instance ID</th>
-              <OrderTh field={'launched_by'}>Deployed By</OrderTh>
-              <OrderTh field={'region'}>Region</OrderTh>
+              <SortableTableHeader field={'launched_by'}>
+                Deployed By
+              </SortableTableHeader>
+              <SortableTableHeader field={'region'}>Region</SortableTableHeader>
             </tr>
           </thead>
           <tbody>{botInstances.map(renderRow)}</tbody>

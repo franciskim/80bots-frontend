@@ -3,34 +3,25 @@ import SettingsEditor from './SettingsEditor'
 import { useSelector, useDispatch } from 'react-redux'
 import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
 import {
-  Col,
   CardBody,
   Button,
   Table,
   Card,
-  Modal,
-  Label,
-  ModalHeader,
-  ModalFooter,
   CardHeader,
-  ModalBody,
-  FormGroup,
   CardFooter,
 } from 'reactstrap'
-import { getRegions, updateRegion } from 'store/bot/actions'
+import { getRegions } from 'store/bot/actions'
 import { Paginator } from 'components/default'
-import Select from 'react-select'
 import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'lib/helpers'
 import { addListener, removeAllListeners } from 'store/socket/actions'
 import Skeleton from 'react-loading-skeleton'
 import SettingTableRow from './SettingTableRow'
+import EditDefaultAMIModal from './EditDefaultAMIModal'
 
 const Settings = () => {
   const dispatch = useDispatch()
   const [clickedRegion, setClickedRegion] = useState(null)
-  const [amis, setAmis] = useState([])
-  const [defaultAmi, setDefaultAmi] = useState(null)
   const [limit, setLimit] = useState(20)
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState({ value: '', field: '' })
@@ -84,42 +75,7 @@ const Settings = () => {
 
   const openEditModal = (region) => {
     setClickedRegion(region)
-    setAmis(region.amis)
-    setDefaultAmi(region.default_ami)
     setIsModalOpen(true)
-  }
-
-  const onModalClose = () => {
-    setClickedRegion(null)
-    setDefaultAmi(null)
-    setAmis([])
-  }
-
-  const getCurrentSelect = () => {
-    const value = amis.find((item) => {
-      return item.image_id === defaultAmi
-    })
-    return value
-      ? { value: value.image_id, label: `${value.name} | ${value.image_id}` }
-      : null
-  }
-
-  const changeRegionAmi = () => {
-    dispatch(updateRegion(clickedRegion.id, { default_ami: defaultAmi }))
-      .then(() => {
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: `Region ami was successfully ${defaultAmi}`,
-        })
-
-        setIsModalOpen(false)
-      })
-      .catch(() =>
-        addNotification({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: 'Ami update failed',
-        })
-      )
   }
 
   const onOrderChange = (field, value) => {
@@ -127,7 +83,7 @@ const Settings = () => {
     dispatch(getRegions({ page, limit, sort: field, order: value, search }))
   }
 
-  const OrderTh = (props) => (
+  const SortableTableHeader = (props) => (
     <Th
       {...props}
       order={
@@ -194,10 +150,12 @@ const Settings = () => {
           <Table responsive>
             <thead>
               <tr>
-                <OrderTh field={'name'}>Name</OrderTh>
-                <OrderTh field={'code'}>Code</OrderTh>
-                <OrderTh field={'limit'}>Limit</OrderTh>
-                <OrderTh field={'used_limit'}>Used Limit</OrderTh>
+                <SortableTableHeader field={'name'}>Name</SortableTableHeader>
+                <SortableTableHeader field={'code'}>Code</SortableTableHeader>
+                <SortableTableHeader field={'limit'}>Limit</SortableTableHeader>
+                <SortableTableHeader field={'used_limit'}>
+                  Used Limit
+                </SortableTableHeader>
                 <th>Default AMI</th>
                 <th>Actions</th>
               </tr>
@@ -215,30 +173,14 @@ const Settings = () => {
             </tbody>
           </Table>
         )}
-        <Modal isOpen={isModalOpen} onClose={onModalClose}>
-          <ModalHeader>Edit Default AMI</ModalHeader>
-          <ModalBody>
-            <FormGroup className="row">
-              <Label md={3}>AMI</Label>
-              <Col md={9}>
-                <Select
-                  onChange={(option) => setDefaultAmi(option.value)}
-                  options={amis.map(({ image_id, name }) => ({
-                    value: image_id,
-                    label: `${name} | ${image_id}`,
-                  }))}
-                  value={getCurrentSelect()}
-                />
-              </Col>
-            </FormGroup>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button color="primary" onClick={changeRegionAmi}>
-              Update
-            </Button>
-          </ModalFooter>
-        </Modal>
+        <EditDefaultAMIModal
+          onClose={() => {
+            setIsModalOpen(false)
+            setClickedRegion(null)
+          }}
+          isOpen={isModalOpen}
+          region={clickedRegion}
+        />
         <SettingsEditor
           isOpen={isEditSettingsModalOpened}
           onClose={() => {
