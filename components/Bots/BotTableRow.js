@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux'
 import { updateStatusBot } from 'store/bot/actions'
 import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
-import Router from 'next/router'
 
 const BotTableRow = ({
   bot,
@@ -15,7 +14,8 @@ const BotTableRow = ({
   setClickedBot,
 }) => {
   const dispatch = useDispatch()
-  const changeBotStatus = (bot) => {
+
+  const handleStatusChange = (bot) => {
     const statusName = bot.status === 'active' ? 'deactivated' : 'activated'
     const status = bot.status === 'active' ? 'inactive' : 'active'
 
@@ -53,13 +53,18 @@ const BotTableRow = ({
           : '-'}
       </td>
       <td>
-        <Button
-          color={bot.status === 'active' ? 'success' : 'danger'}
-          size="sm"
-          onClick={() => changeBotStatus(bot)}
-        >
-          {bot.status}
-        </Button>
+        <label className="custom-toggle custom-toggle-success">
+          <input
+            defaultChecked
+            type="checkbox"
+            onChange={() => handleStatusChange(bot)}
+          />
+          <span
+            className="custom-toggle-slider rounded-circle"
+            data-label-off="No"
+            data-label-on="Yes"
+          />
+        </label>
       </td>
       <td>
         <Button

@@ -33,18 +33,18 @@ const SimpleHeader = ({ name, parentName }) => {
                 listClassName="breadcrumb-links breadcrumb-dark"
               >
                 <BreadcrumbItem>
-                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                  <a href="/bots/running#pablo">
                     <i className="fas fa-home" />
                   </a>
                 </BreadcrumbItem>
-                <BreadcrumbItem>
+                {/* <BreadcrumbItem>
                   <a href="#pablo" onClick={(e) => e.preventDefault()}>
                     {parentName}
                   </a>
                 </BreadcrumbItem>
                 <BreadcrumbItem aria-current="page" className="active">
                   {name}
-                </BreadcrumbItem>
+                </BreadcrumbItem> */}
               </Breadcrumb>
             </Col>
           </Row>

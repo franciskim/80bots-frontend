@@ -9,8 +9,13 @@ import {
   CardHeader,
   CardFooter,
 } from 'reactstrap'
-import { SearchFilter, LimitFilter, ListFilter } from 'components/default'
-import { Th } from 'components/default/Table'
+import {
+  SearchFilter,
+  LimitFilter,
+  ListFilter,
+  TableHeader,
+} from 'components/default'
+
 import { addNotification } from 'lib/helpers'
 import { useDispatch, useSelector } from 'react-redux'
 import { NOTIFICATION_TYPES } from 'config'
@@ -179,7 +184,7 @@ const BotsSchedule = () => {
   }
 
   const SortableTableHeader = (props) => (
-    <Th
+    <TableHeader
       {...props}
       order={
         props.field === order.field || props.children === order.field
@@ -293,8 +298,8 @@ const BotsSchedule = () => {
         </div>
         {loadingAll && <Skeleton count={5} />}
         {!loadingAll && (
-          <Table responsive>
-            <thead>
+          <Table className="table-flush" responsive>
+            <thead className="thead-light">
               <tr>
                 <SortableTableHeader field={'user'}>User</SortableTableHeader>
                 <SortableTableHeader field={'instance_id'}>
@@ -306,8 +311,8 @@ const BotsSchedule = () => {
                 <SortableTableHeader field={'status'}>
                   Status
                 </SortableTableHeader>
-                <SortableTableHeader>Details</SortableTableHeader>
-                <SortableTableHeader>Actions</SortableTableHeader>
+                <th>Details</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>{schedules.map(renderRow)}</tbody>

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import dayjs from 'dayjs'
+import { Badge } from 'reactstrap'
 
 const ScheduleLogTableRow = ({ session }) => {
   return (
@@ -10,7 +11,24 @@ const ScheduleLogTableRow = ({ session }) => {
       <td>{session.type}</td>
       <td>{dayjs(session.date).format('YYYY-MM-DD hh:mm A')}</td>
       <td>{session.time_zone}</td>
-      <td>{session.status}</td>
+      <td>
+        {session.status === 'failed' && (
+          <>
+            <Badge color="" className="badge-dot mr-4">
+              <i className="bg-warning" />
+              <span className="status">{session.status}</span>
+            </Badge>
+          </>
+        )}
+        {session.status === 'succeed' && (
+          <>
+            <Badge color="" className="badge-dot mr-4">
+              <i className="bg-success" />
+              <span className="status">{session.status}</span>
+            </Badge>
+          </>
+        )}
+      </td>
     </tr>
   )
 }

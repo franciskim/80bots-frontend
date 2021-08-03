@@ -14,8 +14,9 @@ import {
   Paginator,
   LimitFilter,
   ListFilter,
+  TableHeader,
 } from 'components/default'
-import { Th } from 'components/default/Table'
+
 import { addNotification, download } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 import {
@@ -291,7 +292,7 @@ const RunningBots = () => {
   }
 
   const SortableTableHeader = (props) => (
-    <Th
+    <TableHeader
       {...props}
       order={
         props.field === order.field || props.children === order.field
@@ -345,11 +346,10 @@ const RunningBots = () => {
             }}
           />
         </div>
-        <Table responsive>
-          <thead>
+        <Table className="table-flush" responsive>
+          <thead className="thead-light">
             <tr>
               <SortableTableHeader field={'status'}>Status</SortableTableHeader>
-              <th>Actions</th>
               <SortableTableHeader field={'bot_name'}>Bot</SortableTableHeader>
               <SortableTableHeader field={'script_notification'}>
                 Last Notification
@@ -365,6 +365,7 @@ const RunningBots = () => {
                 Deployed By
               </SortableTableHeader>
               <SortableTableHeader field={'region'}>Region</SortableTableHeader>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>

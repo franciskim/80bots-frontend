@@ -10,8 +10,12 @@ import {
   CardHeader,
   Table,
 } from 'reactstrap'
-import { Paginator, SearchFilter, LimitFilter } from 'components/default'
-import { Th } from 'components/default/Table'
+import {
+  Paginator,
+  SearchFilter,
+  LimitFilter,
+  TableHeader,
+} from 'components/default'
 
 import { useDispatch, useSelector } from 'react-redux'
 import SweetAlert from 'react-bootstrap-sweetalert'
@@ -132,7 +136,7 @@ const Bots = () => {
   }
 
   const SortableTableHeader = (props) => (
-    <Th
+    <TableHeader
       {...props}
       order={
         props.field === order.field || props.children === order.field
@@ -180,8 +184,8 @@ const Bots = () => {
         </div>
         {loadingAll && <Skeleton count={5} />}
         {!loadingAll && (
-          <Table responsive>
-            <thead>
+          <Table className="table-flush" responsive>
+            <thead className="thead-light">
               <tr>
                 <SortableTableHeader field={'name'}>
                   Bot Name
@@ -189,12 +193,10 @@ const Bots = () => {
                 <SortableTableHeader field={'type'}>
                   Bot Type
                 </SortableTableHeader>
-                <SortableTableHeader field={'description'}>
-                  Description
-                </SortableTableHeader>
+                <th field={'description'}>Description</th>
                 <th>Tags</th>
                 <SortableTableHeader field={'status'}>
-                  Status
+                  Active
                 </SortableTableHeader>
                 <th>Action</th>
               </tr>

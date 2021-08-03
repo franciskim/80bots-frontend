@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import SettingsEditor from './SettingsEditor'
 import { useSelector, useDispatch } from 'react-redux'
-import { SearchFilter, Paginator, LimitFilter } from 'components/default'
-import { Th } from 'components/default/Table'
+import {
+  SearchFilter,
+  Paginator,
+  LimitFilter,
+  TableHeader,
+} from 'components/default'
+
 import {
   CardBody,
   Button,
@@ -83,7 +88,7 @@ const Settings = () => {
   }
 
   const SortableTableHeader = (props) => (
-    <Th
+    <TableHeader
       {...props}
       order={
         props.field === order.field || props.children === order.field
@@ -126,8 +131,8 @@ const Settings = () => {
         </div>
         {loadingAll && <Skeleton count={5} />}
         {!loadingAll && (
-          <Table responsive>
-            <thead>
+          <Table className="table-flush" responsive>
+            <thead className="thead-light">
               <tr>
                 <SortableTableHeader field={'name'}>Name</SortableTableHeader>
                 <SortableTableHeader field={'code'}>Code</SortableTableHeader>

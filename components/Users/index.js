@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Paginator, SearchFilter, LimitFilter } from '../default'
+import { Paginator, SearchFilter, LimitFilter, TableHeader } from '../default'
 import { CardBody, Table, Card, CardFooter } from 'reactstrap'
-import { Th } from '../default/Table'
+
 import { getUsers } from 'store/user/actions'
 import UserTableRow from './UserTableRow'
 import Skeleton from 'react-loading-skeleton'
@@ -20,7 +20,7 @@ const Users = () => {
    * Dispatch the action
    */
   const onSearch = () => {
-    dispatch(
+    return dispatch(
       getUsers({
         page,
         limit,
@@ -46,7 +46,7 @@ const Users = () => {
   }
 
   const SortableTableHeader = (props) => (
-    <Th
+    <TableHeader
       {...props}
       order={
         props.field === order.field || props.children === order.field
@@ -77,8 +77,8 @@ const Users = () => {
         </div>
         {loadingAll && <Skeleton count={5} />}
         {!loadingAll && (
-          <Table responsive>
-            <thead>
+          <Table className="table-flush" responsive>
+            <thead className="thead-light">
               <tr>
                 <SortableTableHeader field={'name'}>Name</SortableTableHeader>
                 <SortableTableHeader field={'email'}>Email</SortableTableHeader>
@@ -86,7 +86,7 @@ const Users = () => {
                   Register Date
                 </SortableTableHeader>
                 <SortableTableHeader field={'status'}>
-                  Status
+                  Active
                 </SortableTableHeader>
               </tr>
             </thead>

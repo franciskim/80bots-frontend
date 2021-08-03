@@ -3,7 +3,13 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { useSelector } from 'react-redux'
 import Link from 'next/link'
-import { List } from 'reactstrap'
+import {
+  List,
+  DropdownItem,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+} from 'reactstrap'
 import { Loader80bots } from 'components/default'
 import { formatTimezone } from 'lib/helpers'
 
@@ -96,61 +102,7 @@ const RunningBotTableRow = ({
               menuPlacement={'bottom'}
             />
           </td>
-          <td>
-            <List type="unstyled">
-              <li>
-                <Link
-                  href={'running/[id]'}
-                  as={`running/${botInstance.id}`}
-                  passHref
-                >
-                  <a>&gt;&nbsp;View</a>
-                </Link>
-              </li>
-              {botInstance.status === 'terminated' && (
-                <li>
-                  <a
-                    href="#pablo"
-                    title={'Restore Bot'}
-                    onClick={() => choiceRestoreBot(botInstance)}
-                  >
-                    &gt;&nbsp;Restore
-                  </a>
-                </li>
-              )}
-              {botInstance.status === 'running' && (
-                <li>
-                  <Link
-                    title={'New Script'}
-                    href={`/botinstance/${botInstance.id}`}
-                    passHref
-                  >
-                    <a>&gt;&nbsp;New Script</a>
-                  </Link>
-                </li>
-              )}
-              <li>
-                <a
-                  href="#pablo"
-                  title={'Copy Instance'}
-                  onClick={() => choiceCopyInstance(botInstance)}
-                >
-                  &gt;&nbsp;Clone
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#pablo"
-                  disabled={botInstance.status === 'terminated'}
-                  title={'Download PEM'}
-                  type={'success'}
-                  onClick={() => downloadEventHandler(botInstance)}
-                >
-                  &gt;&nbsp;Key
-                </a>
-              </li>
-            </List>
-          </td>
+
           <td>{botInstance.bot_name}</td>
           <td>
             {hasBotNotification() ? (
@@ -183,6 +135,48 @@ const RunningBotTableRow = ({
           <td>{botInstance.instance_id}</td>
           <td>{botInstance.launched_by}</td>
           <td>{botInstance.region}</td>
+          <td className="text-right">
+            <UncontrolledDropdown>
+              <DropdownToggle
+                color=""
+                size="sm"
+                className="btn-icon-only text-light"
+              >
+                <i className="fas fa-ellipsis-v" />
+              </DropdownToggle>
+              <DropdownMenu className="dropdown-menu-arrow" right>
+                <DropdownItem href={`running/${botInstance.id}`}>
+                  View
+                </DropdownItem>
+                {botInstance.status === 'terminated' && (
+                  <DropdownItem
+                    href="#pablo"
+                    onClick={() => choiceRestoreBot(botInstance)}
+                  >
+                    Restore
+                  </DropdownItem>
+                )}
+                {botInstance.status === 'running' && (
+                  <DropdownItem href={`/botinstance/${botInstance.id}`}>
+                    New Script
+                  </DropdownItem>
+                )}
+                <DropdownItem
+                  href="#pablo"
+                  onClick={() => choiceCopyInstance(botInstance)}
+                >
+                  Clone
+                </DropdownItem>
+                <DropdownItem
+                  href="#pablo"
+                  disabled={botInstance.status === 'terminated'}
+                  onClick={() => downloadEventHandler(botInstance)}
+                >
+                  Key
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </td>
         </tr>
       )}
       {botInstance.status === 'pending' && (

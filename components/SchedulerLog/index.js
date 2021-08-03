@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Card, CardBody, CardFooter, Table } from 'reactstrap'
-import { SearchFilter, Paginator, LimitFilter } from 'components/default'
-import { Th } from '../default/Table'
+import {
+  SearchFilter,
+  Paginator,
+  LimitFilter,
+  TableHeader,
+} from 'components/default'
+
 import ScheduleLogTableRow from './ScheduleLogTableRow'
 import { getSessions } from 'store/instanceSession/actions'
 
@@ -43,7 +48,7 @@ const SchedulerLog = () => {
   }
 
   const SortableTableHeader = (props) => (
-    <Th
+    <TableHeader
       {...props}
       order={
         props.field === order.field || props.children === order.field
@@ -75,8 +80,8 @@ const SchedulerLog = () => {
         </div>
         {loadingAll && <Skeleton count={5} />}
         {!loadingAll && (
-          <Table responsive>
-            <thead>
+          <Table className="table-flush" responsive>
+            <thead className="thead-light">
               <tr>
                 <SortableTableHeader field={'user'}>User</SortableTableHeader>
                 <SortableTableHeader field={'instance_id'}>

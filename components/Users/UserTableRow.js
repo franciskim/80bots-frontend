@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button } from 'reactstrap'
 import dayjs from 'dayjs'
 import { useDispatch } from 'react-redux'
 import { NOTIFICATION_TYPES } from 'config'
@@ -9,7 +8,8 @@ import { updateStatus } from 'store/user/actions'
 
 const UserTableRow = ({ user }) => {
   const dispatch = useDispatch()
-  const changeUserStatus = (user) => {
+
+  const handleStatusChange = (user) => {
     dispatch(
       updateStatus(user.id, {
         status: user.status === 'active' ? 'inactive' : 'active',
@@ -29,13 +29,19 @@ const UserTableRow = ({ user }) => {
       <td>{user.email}</td>
       <td>{dayjs(user.created_at).format('YYYY-MM-DD HH:mm:ss')}</td>
       <td>
-        <Button
-          color={user.status === 'active' ? 'success' : 'danger'}
-          size="sm"
-          onClick={() => changeUserStatus(user)}
-        >
-          {user.status}
-        </Button>
+        <label className="custom-toggle custom-toggle-success">
+          <input
+            defaultChecked
+            type="checkbox"
+            className="success"
+            onChange={() => handleStatusChange(user)}
+          />
+          <span
+            className="custom-toggle-slider rounded-circle"
+            data-label-off="No"
+            data-label-on="Yes"
+          />
+        </label>
       </td>
     </tr>
   )

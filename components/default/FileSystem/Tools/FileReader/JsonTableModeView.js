@@ -130,9 +130,9 @@ const JsonTableModeView = ({ output }) => {
         />
       </Header>
       <Content>
-        <Table responsive>
+        <Table className="table-flush" responsive>
           {slicedChunk[0] && (
-            <thead>
+            <thead className="thead-light">
               <tr>{getHeader(slicedChunk[0])}</tr>
             </thead>
           )}
