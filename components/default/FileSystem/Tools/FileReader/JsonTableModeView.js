@@ -123,10 +123,8 @@ const JsonTableModeView = ({ output }) => {
     <>
       <Header>
         <LimitFilter
-          id="limitfilter"
-          instanceId="limitfilter"
           defaultValue={limit}
-          onChange={({ value }) => setLimit(value)}
+          onChange={(value) => setLimit(value)}
         />
       </Header>
       <Content>

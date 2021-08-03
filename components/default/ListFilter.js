@@ -9,14 +9,10 @@ export const ListFilter = ({
   label,
   onChange,
   defaultValue,
-  instanceId,
 }) => (
   <div id="datatable-basic_filter" className="dataTables_filter px-4 pb-1">
     <Label>{label || 'Show'}&nbsp;</Label>
     <Select
-      id={instanceId}
-      instanceId={instanceId}
-      inputId={instanceId}
       components={{ IndicatorSeparator: () => null }}
       options={options}
       defaultValue={defaultValue ? defaultValue : options[0]}
@@ -30,11 +26,6 @@ export const ListFilter = ({
           minWidth: '120px',
           display: 'inline-block',
           margin: '0 10px',
-        }),
-        menuPortal: (base) => ({ ...base, zIndex: 5 }),
-        singleValue: (provided) => ({
-          ...provided,
-          color: '#fff',
         }),
       }}
     />

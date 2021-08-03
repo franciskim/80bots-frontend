@@ -91,7 +91,6 @@ const RunningBotTableRow = ({
               onChange={(option) =>
                 changeBotInstanceStatus(option, botInstance.id)
               }
-              // styles={selectStyles}
               isOptionDisabled={(option) => option.readOnly}
               isDisabled={
                 botInstance.status === 'pending' ||

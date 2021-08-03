@@ -115,9 +115,8 @@ const Settings = () => {
       <CardBody>
         <div>
           <LimitFilter
-            id="limitfilter"
-            instanceId="limitfilter"
-            onChange={({ value }) => {
+            defaultValue={limit}
+            onChange={(value) => {
               setLimit(value)
               onSearch()
             }}

@@ -71,7 +71,7 @@ const FILTERS_LIST_OPTIONS = [
 const BotsSchedule = () => {
   const dispatch = useDispatch()
   const [list, setFilterList] = useState('all')
-  const [limit, setLimit] = useState(10)
+  const [limit, setLimit] = useState(20)
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
@@ -273,9 +273,8 @@ const BotsSchedule = () => {
         )} */}
         <div>
           <LimitFilter
-            id="limitfilter"
-            instanceId="limitfilter"
-            onChange={({ value }) => {
+            defaultValue={limit}
+            onChange={(value) => {
               setLimit(value)
               onSearch()
             }}

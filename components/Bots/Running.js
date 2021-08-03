@@ -323,16 +323,13 @@ const RunningBots = () => {
       <CardBody>
         <div>
           <LimitFilter
-            id="limitfilter"
-            instanceId="limitfilter"
-            onChange={({ value }) => {
+            defaultValue={limit}
+            onChange={(value) => {
               setLimit(value)
               onSearch()
             }}
           />
           <ListFilter
-            id="listfilter1"
-            instanceId="listfilter1"
             options={FILTERS_LIST_OPTIONS}
             onChange={({ value }) => {
               setFilterList(value)

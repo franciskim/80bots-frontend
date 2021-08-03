@@ -12,6 +12,7 @@ import {
   NavItem,
   TabPane,
   TabContent,
+  Navbar,
 } from 'reactstrap'
 import classnames from 'classnames'
 import { getInstance, clearInstance } from 'store/bot/actions'
@@ -110,7 +111,6 @@ const BotView = () => {
             />
           )}
         </h3>
-
         <Nav tabs>
           <NavItem className="mr-5">
             <ConnectionStatus status={status.label} color={status.color} />

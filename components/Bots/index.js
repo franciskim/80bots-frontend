@@ -167,10 +167,8 @@ const Bots = () => {
       <CardBody>
         <div>
           <LimitFilter
-            id="limitfilter"
-            instanceId="limitfilter"
             defaultValue={limit}
-            onChange={({ value }) => {
+            onChange={(value) => {
               setLimit(value)
               onSearch()
             }}

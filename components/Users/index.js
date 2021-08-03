@@ -9,7 +9,7 @@ import Skeleton from 'react-loading-skeleton'
 
 const Users = () => {
   const dispatch = useDispatch()
-  const [limit, setLimit] = useState(10)
+  const [limit, setLimit] = useState(20)
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
   const [order, setOrder] = useState({ value: '', field: '' })
@@ -61,9 +61,8 @@ const Users = () => {
       <CardBody>
         <div>
           <LimitFilter
-            id="limitfilter"
-            instanceId="limitfilter"
-            onChange={({ value }) => {
+            defaultValue={limit}
+            onChange={(value) => {
               setLimit(value)
               onSearch()
             }}

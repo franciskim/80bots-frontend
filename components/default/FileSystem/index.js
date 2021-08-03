@@ -4,12 +4,10 @@ import List from './List'
 import FileReaderComponent from './Tools/FileReader'
 import {
   close as closeItem,
-  // flush,
   getItems,
   open as openItem,
   filterItems,
 } from 'store/fileSystem/actions'
-import { Container } from 'reactstrap'
 import { useDispatch, useSelector } from 'react-redux'
 
 const FileSystem = ({
@@ -19,10 +17,6 @@ const FileSystem = ({
   selectedItems,
 }) => {
   const dispatch = useDispatch()
-
-  // const channel = useSelector(
-  //   (state) => state.bot.botInstance?.storage?.channel
-  // )
   const openedFolder = useSelector((state) => state.fileSystem.openedFolder)
   const openedFile = useSelector((state) => state.fileSystem.openedFile)
   const items = useSelector((state) => state.fileSystem.items)
