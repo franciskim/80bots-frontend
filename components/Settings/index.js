@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import SettingsEditor from './SettingsEditor'
 import { useSelector, useDispatch } from 'react-redux'
-import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
+import { SearchFilter, Paginator, LimitFilter } from 'components/default'
+import { Th } from 'components/default/Table'
 import {
   CardBody,
   Button,
@@ -11,7 +12,6 @@ import {
   CardFooter,
 } from 'reactstrap'
 import { getRegions } from 'store/bot/actions'
-import { Paginator } from 'components/default'
 import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'lib/helpers'
 import { addListener, removeAllListeners } from 'store/socket/actions'
@@ -21,11 +21,12 @@ import EditDefaultAMIModal from './EditDefaultAMIModal'
 
 const Settings = () => {
   const dispatch = useDispatch()
-  const [clickedRegion, setClickedRegion] = useState(null)
   const [limit, setLimit] = useState(20)
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
+
+  const [clickedRegion, setClickedRegion] = useState(null)
   const [loadingAll, setLoadingAll] = useState(true)
   const [loadingAllAfterSync, setLoadingAllAfterSync] = useState(false)
 
@@ -37,8 +38,14 @@ const Settings = () => {
   const regions = useSelector((state) => state.bot.regions)
   const total = useSelector((state) => state.bot.totalRegions)
 
+  const onSearch = () => {
+    return dispatch(
+      getRegions({ page, limit, sort: order.field, order: order.value, search })
+    )
+  }
+
   useEffect(() => {
-    dispatch(getRegions({ page, limit })).then(() => {
+    onSearch().then(() => {
       setLoadingAll(false)
     })
 
@@ -58,18 +65,10 @@ const Settings = () => {
 
   useEffect(() => {
     if (loadingAllAfterSync) {
-      dispatch(
-        getRegions({
-          page,
-          limit,
-          sort: order.field,
-          order: order.value,
-          search,
-        }).then(() => {
-          setLoadingAll(false)
-          setLoadingAllAfterSync(false)
-        })
-      )
+      onSearch().then(() => {
+        setLoadingAll(false)
+        setLoadingAllAfterSync(false)
+      })
     }
   }, [loadingAllAfterSync])
 
@@ -80,7 +79,7 @@ const Settings = () => {
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value })
-    dispatch(getRegions({ page, limit, sort: field, order: value, search }))
+    onSearch()
   }
 
   const SortableTableHeader = (props) => (
@@ -94,19 +93,6 @@ const Settings = () => {
       onClick={onOrderChange}
     />
   )
-
-  const searchRegions = (value) => {
-    setSearch(value)
-    dispatch(
-      getRegions({
-        page,
-        limit,
-        sort: order.field,
-        order: order.value,
-        search: value,
-      })
-    )
-  }
 
   return (
     <Card>
@@ -128,20 +114,13 @@ const Settings = () => {
             instanceId="limitfilter"
             onChange={({ value }) => {
               setLimit(value)
-              getRegions({
-                page,
-                limit: value,
-                sort: order.field,
-                order: order.value,
-                search,
-              })
+              onSearch()
             }}
           />
           <SearchFilter
-            searchProps={{
-              onSearch: (value) => {
-                searchRegions(value)
-              },
+            onChange={(value) => {
+              setSearch(value)
+              onSearch()
             }}
           />
         </div>
@@ -195,15 +174,7 @@ const Settings = () => {
             pageSize={limit}
             onChangePage={(page) => {
               setPage(page)
-              dispatch(
-                getRegions({
-                  page,
-                  limit,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
-              )
+              onSearch()
             }}
           />
         )}

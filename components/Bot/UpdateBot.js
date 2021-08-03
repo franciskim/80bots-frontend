@@ -186,7 +186,7 @@ const UpdateBot = () => {
   const submitForm = (e) => {
     e.preventDefault()
     try {
-      let schema = yup.object().shape({
+      const schema = yup.object().shape({
         botName: yup.string().required(),
       })
       schema.validateSync(
@@ -321,7 +321,6 @@ const UpdateBot = () => {
               instanceId="tags-selector"
               isMulti
               options={getTagOptions()}
-              // styles={selectStyles}
               onInputChange={onTagInputChange}
               onChange={(options) => setTags(options)}
               value={botTags}
@@ -332,7 +331,7 @@ const UpdateBot = () => {
           <Label md={2} className="form-control-label">
             Access *
           </Label>
-          <Col md={10}>
+          <Col md={2}>
             <Button
               className="form-control"
               color={isPrivate ? 'danger' : 'secondary'}
@@ -352,7 +351,6 @@ const UpdateBot = () => {
                 isMulti
                 defaultOptions={users.map(toOptions)}
                 value={trustedUsers}
-                // styles={selectStyles}
                 onChange={(options) => setUsers(options)}
                 loadOptions={onUsersSearch}
               />

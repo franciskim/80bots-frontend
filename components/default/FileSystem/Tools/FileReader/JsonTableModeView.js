@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import { LimitFilter } from 'components/default/Table'
+import { LimitFilter } from 'components/default'
 import { Paginator } from 'components/default/Paginator'
 import { Table } from 'reactstrap'
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
+import PropTypes from 'prop-types'
 
 const BaseImageViewer = styled.div`
   top: 0;
@@ -28,6 +29,11 @@ const ImageViewer = ({ item, onClose }) => {
       />
     </BaseImageViewer>
   )
+}
+
+ImageViewer.propTypes = {
+  item: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
 }
 
 export default ImageViewer

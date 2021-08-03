@@ -31,6 +31,7 @@ const EditDefaultAMIModal = ({ isOpen, onClose, region }) => {
     const value = amis.find((item) => {
       return item.image_id === defaultAmi
     })
+
     return value
       ? { value: value.image_id, label: `${value.name} | ${value.image_id}` }
       : null

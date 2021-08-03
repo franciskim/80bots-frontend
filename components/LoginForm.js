@@ -29,7 +29,7 @@ const LoginForm = () => {
   const submitForm = (e) => {
     e.preventDefault()
     try {
-      let schema = yup.object().shape({
+      const schema = yup.object().shape({
         email: yup.string().required(),
         password: yup.string().required(),
       })

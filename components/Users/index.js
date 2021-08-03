@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Paginator } from '../default'
+import { Paginator, SearchFilter, LimitFilter } from '../default'
 import { CardBody, Table, Card, CardFooter } from 'reactstrap'
-import { SearchFilter, LimitFilter, Th } from '../default/Table'
+import { Th } from '../default/Table'
 import { getUsers } from 'store/user/actions'
 import UserTableRow from './UserTableRow'
 import Skeleton from 'react-loading-skeleton'
@@ -13,10 +13,26 @@ const Users = () => {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
   const [order, setOrder] = useState({ value: '', field: '' })
+
   const [loadingAll, setLoadingAll] = useState(true)
 
+  /***
+   * Dispatch the action
+   */
+  const onSearch = () => {
+    dispatch(
+      getUsers({
+        page,
+        limit,
+        sort: order.field,
+        order: order.value,
+        search,
+      })
+    )
+  }
+
   useEffect(() => {
-    dispatch(getUsers({ page, limit })).then(() => {
+    onSearch().then(() => {
       setLoadingAll(false)
     })
   }, [page, limit])
@@ -24,20 +40,9 @@ const Users = () => {
   const users = useSelector((state) => state.user.users)
   const total = useSelector((state) => state.user.total)
 
-  const searchUsers = (value) => {
-    setSearch(value)
-    dispatch(
-      getUsers({
-        page,
-        limit,
-        search: value,
-      })
-    )
-  }
-
   const onOrderChange = (field, value) => {
     setOrder({ field, value })
-    dispatch(getUsers({ page, limit, search }))
+    onSearch()
   }
 
   const SortableTableHeader = (props) => (
@@ -51,7 +56,6 @@ const Users = () => {
       onClick={onOrderChange}
     />
   )
-
   return (
     <Card>
       <CardBody>
@@ -61,20 +65,13 @@ const Users = () => {
             instanceId="limitfilter"
             onChange={({ value }) => {
               setLimit(value)
-              dispatch(
-                getUsers({
-                  page,
-                  limit: value,
-                  search,
-                })
-              )
+              onSearch()
             }}
           />
           <SearchFilter
-            searchProps={{
-              onSearch: (value) => {
-                searchUsers(value)
-              },
+            onChange={(value) => {
+              setSearch(value)
+              onSearch()
             }}
           />
         </div>
@@ -108,13 +105,7 @@ const Users = () => {
             pageSize={limit}
             onChangePage={(page) => {
               setPage(page)
-              dispatch(
-                getUsers({
-                  page,
-                  limit,
-                  search,
-                })
-              )
+              onSearch()
             }}
           />
         )}

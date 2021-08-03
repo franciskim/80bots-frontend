@@ -170,7 +170,6 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
             }
             description={item.description}
             onChange={(option) => changeValue(item.name, option.value, option)}
-            // styles={selectStyles}
           />
         )
 
@@ -227,7 +226,6 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
               errors.indexOf(item.name) > -1 ? 'This field is required' : ''
             }
             onChange={(options) => changeMultiSelectValue(item.name, options)}
-            // styles={selectStyles}
             options={getMultiSelectOptions(item.name)}
             description={item.description}
             onInputChange={(input) => onMultiSelectChange(item.name, input)}

@@ -178,7 +178,6 @@ const Profile = () => {
                       value: item.id,
                       label: item.name,
                     }))}
-                    // styles={selectStyles}
                     onChange={(option) => setRegion(option)}
                     value={region}
                   />

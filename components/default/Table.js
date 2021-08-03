@@ -3,9 +3,6 @@ import styled from '@emotion/styled'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { Label } from 'reactstrap'
-import { /*ToolkitProvider,*/ Search } from 'react-bootstrap-table2-toolkit'
-
-const { SearchBar } = Search
 
 // export const Table = styled.table`
 //   font-size: 12px;
@@ -93,42 +90,6 @@ export const Th = ({ order, field, children, onClick, ...props }) => {
 //   }
 // `
 
-export const SearchFilter = (props) => {
-  // const [term, setTerm] = useState('')
-  // const onChange = (e) => {
-  //   setTerm(e.target.value)
-  //   props.onChange(e.target.value)
-  // }
-
-  return (
-    <>
-      <div
-        id="datatable-basic_filter"
-        className="dataTables_filter px-4 pb-1 float-right"
-      >
-        <label>
-          Search:
-          <SearchBar
-            className="form-control-sm"
-            placeholder=""
-            {...props.searchProps}
-          />
-        </label>
-      </div>
-    </>
-  )
-}
-SearchFilter.propTypes = {
-  searchProps: PropTypes.object.isRequired,
-}
-
-const LIMIT_OPTIONS = [
-  { value: 20, label: 20 },
-  { value: 50, label: 50 },
-  { value: 100, label: 100 },
-  { value: 500, label: 500 },
-]
-
 // const selectStyles = {
 //     control: (provided, {selectProps: {width}}) => ({
 //         ...provided,
@@ -161,103 +122,9 @@ const LIMIT_OPTIONS = [
 //     }),
 // };
 
-export const LimitFilter = ({ defaultValue, onChange, ...props }) => (
-  <div
-    id="datatable-basic_filter"
-    className="dataTables_filter px-4 pb-1 float-left"
-  >
-    <Label style={{ display: 'inline-block' }}>Show</Label>
-    <Select
-      id={props.id}
-      instanceId={props.instanceId}
-      inputId={props.instanceId}
-      components={{ IndicatorSeparator: () => null }}
-      options={LIMIT_OPTIONS}
-      defaultValue={
-        defaultValue
-          ? LIMIT_OPTIONS.find((item) => item.value === defaultValue)
-          : LIMIT_OPTIONS[0]
-      }
-      onChange={onChange}
-      styles={{
-        container: (provided, state) => ({
-          ...provided,
-          width: state.selectProps.width,
-          minWidth: '120px',
-          display: 'inline-block',
-          margin: '0 10px',
-        }),
-        menuPortal: (base) => ({ ...base, zIndex: 5 }),
-        singleValue: (provided, state) => ({
-          ...provided,
-          color: '#fff',
-        }),
-      }}
-      // menuPortalTarget={document.body}
-      // menuPosition={"absolute"}
-      // menuPlacement={"bottom"}
-    />
-    entries
-  </div>
-)
-
-export const ListFilter = ({
-  options,
-  value,
-  label,
-  onChange,
-  defaultValue,
-  ...props
-}) => (
-  <div id="datatable-basic_filter" className="dataTables_filter px-4 pb-1">
-    <Label>{label || 'Show'}&nbsp;</Label>
-    <Select
-      id={props.id}
-      instanceId={props.instanceId}
-      inputId={props.instanceId}
-      components={{ IndicatorSeparator: () => null }}
-      options={options}
-      defaultValue={defaultValue ? defaultValue : options[0]}
-      onChange={onChange}
-      width={'200px'}
-      // menuPortalTarget={document.body}
-      // menuPosition={"absolute"}
-      // menuPlacement={"bottom"}
-      value={value}
-      styles={{
-        container: (provided, state) => ({
-          ...provided,
-          width: state.selectProps.width,
-          minWidth: '120px',
-          display: 'inline-block',
-          margin: '0 10px',
-        }),
-        menuPortal: (base) => ({ ...base, zIndex: 5 }),
-        singleValue: (provided, state) => ({
-          ...provided,
-          color: '#fff',
-        }),
-      }}
-    />
-  </div>
-)
-
-ListFilter.propTypes = {
-  options: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired,
-  defaultValue: PropTypes.any,
-  value: PropTypes.any,
-  label: PropTypes.string,
-}
-
 // Table.propTypes = {
 //   responsive: PropTypes.bool,
 // }
-
-LimitFilter.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  defaultValue: PropTypes.oneOf([10, 25, 50, 100]),
-}
 
 Th.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc', '']),

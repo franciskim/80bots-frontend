@@ -10,8 +10,9 @@ import {
   CardHeader,
   Table,
 } from 'reactstrap'
-import { Paginator } from 'components/default'
-import { LimitFilter, SearchFilter, Th } from 'components/default/Table'
+import { Paginator, SearchFilter, LimitFilter } from 'components/default'
+import { Th } from 'components/default/Table'
+
 import { useDispatch, useSelector } from 'react-redux'
 import SweetAlert from 'react-bootstrap-sweetalert'
 import Skeleton from 'react-loading-skeleton'
@@ -23,12 +24,15 @@ import { addListener, removeAllListeners } from 'store/socket/actions'
 
 const Bots = () => {
   const dispatch = useDispatch()
-  const [clickedBot, setClickedBot] = useState(null)
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
+  const [limit, setLimit] = useState(20)
+
   const [loadingAll, setLoadingAll] = useState(true)
   const [loadingAllAfterSync, setLoadingAllAfterSync] = useState(false)
+
+  const [clickedBot, setClickedBot] = useState(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -37,7 +41,6 @@ const Bots = () => {
   const bots = useSelector((state) => state.bot.bots)
   const total = useSelector((state) => state.bot.total)
   const user = useSelector((state) => state.auth.user)
-  const limit = useSelector((state) => state.bot.limit)
 
   useEffect(() => {
     dispatch(getBots({ page, limit })).then(() => {
@@ -58,17 +61,21 @@ const Bots = () => {
     }
   }, [page, limit])
 
+  const onSearch = () => {
+    return dispatch(
+      getBots({
+        page,
+        limit,
+        sort: order.field,
+        order: order.value,
+        search,
+      })
+    )
+  }
+
   useEffect(() => {
     if (loadingAllAfterSync) {
-      dispatch(
-        getBots({
-          page,
-          limit,
-          sort: order.field,
-          order: order.value,
-          search,
-        })
-      ).then(() => {
+      onSearch().then(() => {
         setLoadingAll(false)
         setPage(1)
         setLoadingAllAfterSync(false)
@@ -121,7 +128,7 @@ const Bots = () => {
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value })
-    dispatch(getBots({ page, limit, sort: field, order: value, search }))
+    onSearch()
   }
 
   const SortableTableHeader = (props) => (
@@ -135,19 +142,6 @@ const Bots = () => {
       onClick={onOrderChange}
     />
   )
-
-  const searchBots = (value) => {
-    setSearch(value)
-    dispatch(
-      getBots({
-        page,
-        limit,
-        sort: order.field,
-        order: order.value,
-        search: value,
-      })
-    )
-  }
 
   return (
     <Card>
@@ -173,23 +167,14 @@ const Bots = () => {
             instanceId="limitfilter"
             defaultValue={limit}
             onChange={({ value }) => {
-              // setLimit(value)
-              dispatch(
-                getBots({
-                  page,
-                  limit: value,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
-              )
+              setLimit(value)
+              onSearch()
             }}
           />
           <SearchFilter
-            searchProps={{
-              onSearch: (value) => {
-                searchBots(value)
-              },
+            onChange={(value) => {
+              setSearch(value)
+              onSearch()
             }}
           />
         </div>
@@ -262,15 +247,7 @@ const Bots = () => {
             initialPage={page}
             onChangePage={(page) => {
               setPage(page)
-              dispatch(
-                getBots({
-                  page,
-                  limit,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
-              )
+              onSearch()
             }}
           />
         )}

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getBotSettings, updateBotSettings } from 'store/bot/actions'
 import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
+import * as yup from 'yup'
 import {
   Button,
   Input,
@@ -13,20 +14,18 @@ import {
   FormGroup,
   Label,
   Modal,
+  Col,
+  Form,
+  FormFeedback,
 } from 'reactstrap'
-
-const VALIDATION = {
-  SCRIPT: 'script',
-  TYPE: 'instance_type',
-  STORAGE: 'storage',
-}
 
 const SettingsEditor = ({ isOpen, onClose }) => {
   const dispatch = useDispatch()
   const [instanceType, setInstanceType] = useState('')
   const [storage, setStorage] = useState(0)
   const [script, setScript] = useState('')
-  const [errors, setErrors] = useState([])
+
+  const [errors, setErrors] = useState({})
 
   useEffect(() => {
     dispatch(getBotSettings())
@@ -36,103 +35,114 @@ const SettingsEditor = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (botSettings) {
-      setInstanceType(botSettings.type || '')
-      setStorage(botSettings.storage || '')
-      setScript(botSettings.script || '')
+      setInstanceType(botSettings.type)
+      setStorage(botSettings.storage)
+      setScript(botSettings.script)
     }
   }, [botSettings])
 
-  const validate = () => {
-    setErrors([])
-    let err = []
-    if (!instanceType) err.push(VALIDATION.TYPE)
-    if (!storage) err.push(VALIDATION.STORAGE)
-    if (!script) err.push(VALIDATION.SCRIPT)
-    return err
-  }
-
-  const submit = () => {
-    const err = validate()
-
-    if (err.length > 0) {
-      setErrors(err)
-    } else {
-      dispatch(
-        updateBotSettings(botSettings.id, {
-          type: instanceType,
+  const submitForm = () => {
+    try {
+      const schema = yup.object().shape({
+        instanceType: yup.string().required(),
+        storage: yup.string().required(),
+        script: yup.string().required(),
+      })
+      schema.validateSync(
+        {
+          instanceType,
           storage,
           script,
+        },
+        {
+          abortEarly: false,
+        }
+      )
+    } catch (err) {
+      setErrors(
+        err.inner.reduce((accr, validationError) => {
+          accr[validationError.path] = validationError.message
+          return accr
+        }, {})
+      )
+      return
+    }
+    setErrors({})
+    dispatch(
+      updateBotSettings(botSettings.id, {
+        type: instanceType,
+        storage,
+        script,
+      })
+    )
+      .then(() => {
+        addNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: 'Settings updated',
+        })
+        onClose()
+      })
+      .catch(() =>
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: "Can't update settings right now",
         })
       )
-        .then(() => {
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: 'Settings updated',
-          })
-
-          onClose()
-        })
-        .catch(() =>
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: "Can't update settings right now",
-          })
-        )
-    }
   }
 
   return (
     <Modal isOpen={isOpen}>
       <ModalHeader>Edit Global Settings</ModalHeader>
       <ModalBody>
-        <FormGroup>
-          <Label className="form-control-label" htmlFor="example-time-input">
-            Instance Type
-          </Label>
-          <Input
-            value={instanceType}
-            onChange={(e) => setInstanceType(e.target.value)}
-            error={
-              errors.indexOf(VALIDATION.TYPE) > -1
-                ? 'This field is required'
-                : ''
-            }
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label className="form-control-label" htmlFor="example-time-input">
-            Storage GB
-          </Label>
-          <Input
-            type={'number'}
-            value={storage}
-            onChange={(e) => setStorage(e.target.value)}
-            error={
-              errors.indexOf(VALIDATION.STORAGE) > -1
-                ? 'This field is required'
-                : ''
-            }
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label className="form-control-label" htmlFor="example-time-input">
-            Startup Script
-          </Label>
-          <Input
-            type="textarea"
-            value={script}
-            onChange={(e) => setScript(e.target.value)}
-            error={
-              errors.indexOf(VALIDATION.SCRIPT) > -1
-                ? 'This field is required'
-                : ''
-            }
-          />
-        </FormGroup>
+        <Form noValidate>
+          <FormGroup className="row">
+            <Label md={4} className="form-control-label" htmlFor="type">
+              Instance Type
+            </Label>
+            <Col md={8}>
+              <Input
+                id="type"
+                value={instanceType}
+                onChange={(e) => setInstanceType(e.target.value)}
+                invalid={!!errors['instanceType']}
+              />
+              <FormFeedback valid={false}>This field is required</FormFeedback>
+            </Col>
+          </FormGroup>
+          <FormGroup className="row">
+            <Label md={4} className="form-control-label" htmlFor="storage">
+              Storage(GB)
+            </Label>
+            <Col md={8}>
+              <Input
+                id="storage"
+                type={'number'}
+                value={storage}
+                onChange={(e) => setStorage(e.target.value)}
+                invalid={!!errors['storage']}
+              />
+              <FormFeedback valid={false}>This field is required</FormFeedback>
+            </Col>
+          </FormGroup>
+          <FormGroup>
+            <Label className="form-control-label" htmlFor="script">
+              Startup Script
+            </Label>
+            <Input
+              id="script"
+              type="textarea"
+              value={script}
+              rows={6}
+              onChange={(e) => setScript(e.target.value)}
+              invalid={!!errors['script']}
+            />
+            <FormFeedback valid={false}>This field is required</FormFeedback>
+          </FormGroup>
+        </Form>
       </ModalBody>
       <ModalFooter>
         <Button onClick={onClose}>Cancel</Button>
-        <Button color={'primary'} onClick={submit}>
+        <Button color={'primary'} onClick={submitForm}>
           Submit
         </Button>
       </ModalFooter>

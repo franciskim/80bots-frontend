@@ -9,12 +9,8 @@ import {
   CardHeader,
   CardFooter,
 } from 'reactstrap'
-import {
-  LimitFilter,
-  ListFilter,
-  SearchFilter,
-  Th,
-} from 'components/default/Table'
+import { SearchFilter, LimitFilter, ListFilter } from 'components/default'
+import { Th } from 'components/default/Table'
 import { addNotification } from 'lib/helpers'
 import { useDispatch, useSelector } from 'react-redux'
 import { NOTIFICATION_TYPES } from 'config'
@@ -69,20 +65,33 @@ const FILTERS_LIST_OPTIONS = [
 
 const BotsSchedule = () => {
   const dispatch = useDispatch()
-  const [clickedSchedule, setClickedSchedule] = useState(null)
   const [list, setFilterList] = useState('all')
   const [limit, setLimit] = useState(10)
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
+  const [clickedSchedule, setClickedSchedule] = useState(null)
   const [loadingAll, setLoadingAll] = useState(true)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
+  const onSearch = () => {
+    return dispatch(
+      getSchedules({
+        page,
+        limit,
+        list,
+        sort: order.field,
+        value: order.value,
+        search,
+      })
+    )
+  }
+
   useEffect(() => {
-    dispatch(getSchedules({ page, limit, list })).then(() => {
+    onSearch().then(() => {
       setLoadingAll(false)
     })
   }, [])
@@ -148,15 +157,8 @@ const BotsSchedule = () => {
     setIsModalOpen(false)
     dispatch(deleteSchedule(clickedSchedule.id))
       .then(() => {
-        dispatch(
-          getSchedules({
-            page: 1,
-            limit,
-            sort: order.field,
-            order: order.value,
-            search,
-          })
-        )
+        setPage(1)
+        onSearch()
         addNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
           message: 'Schedule was successfully deleted',
@@ -187,19 +189,6 @@ const BotsSchedule = () => {
       onClick={onOrderChange}
     />
   )
-
-  const searchSchedules = (value) => {
-    setSearch(value)
-    dispatch(
-      getSchedules({
-        page,
-        limit,
-        sort: order.field,
-        order: order.value,
-        search: value,
-      })
-    )
-  }
 
   const renderRow = (schedule) => (
     <tr key={schedule.id}>
@@ -283,16 +272,7 @@ const BotsSchedule = () => {
             instanceId="limitfilter"
             onChange={({ value }) => {
               setLimit(value)
-              dispatch(
-                getSchedules({
-                  page,
-                  limit: value,
-                  list,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
-              )
+              onSearch()
             }}
           />
           <ListFilter
@@ -301,23 +281,13 @@ const BotsSchedule = () => {
             options={FILTERS_LIST_OPTIONS}
             onChange={({ value }) => {
               setFilterList(value)
-              dispatch(
-                getSchedules({
-                  page,
-                  limit,
-                  list: value,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
-              )
+              onSearch()
             }}
           />
           <SearchFilter
-            searchProps={{
-              onSearch: (value) => {
-                searchSchedules(value)
-              },
+            onChange={(value) => {
+              setSearch(value)
+              onSearch()
             }}
           />
         </div>
@@ -361,15 +331,8 @@ const BotsSchedule = () => {
           isOpen={isAddModalOpen}
           onClose={setIsAddModalOpen}
           onRefresh={() => {
-            dispatch(
-              getSchedules({
-                page: 1,
-                limit,
-                sort: order.field,
-                order: order.value,
-                search,
-              })
-            )
+            setPage(1)
+            onSearch()
           }}
         />
         <Modal
@@ -391,16 +354,7 @@ const BotsSchedule = () => {
             pageSize={limit}
             onChangePage={(page) => {
               setPage(page)
-              dispatch(
-                getSchedules({
-                  page,
-                  limit,
-                  list,
-                  sort: order.field,
-                  order: order.value,
-                  search,
-                })
-              )
+              onSearch()
             }}
           />
         )}

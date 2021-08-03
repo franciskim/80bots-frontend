@@ -4,14 +4,18 @@ import { SUBSCRIBE_CHANNEL, UNSUBSCRIBE_CHANNEL } from './types'
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SUBSCRIBE_CHANNEL: {
-      const { channel } = action.data
+      const {
+        data: { channel },
+      } = action
       return {
         ...state,
         [channel]: {},
       }
     }
     case UNSUBSCRIBE_CHANNEL: {
-      const { channel } = action.data
+      const {
+        data: { channel },
+      } = action
       delete state[channel]
       return { ...state }
     }
