@@ -32,7 +32,7 @@ import {
   NavLink,
   Nav,
 } from 'reactstrap'
-import Animated from 'assets/img/80bots-logo.svg'
+import Animated from 'assets/img/80bots-logo-ebony-clay.svg'
 
 const Sidebar = ({
   toggleSidenav,

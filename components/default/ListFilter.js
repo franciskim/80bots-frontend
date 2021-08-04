@@ -27,6 +27,11 @@ export const ListFilter = ({
           display: 'inline-block',
           margin: '0 10px',
         }),
+        input: () => ({
+          '& input': {
+            font: 'inherit',
+          },
+        }),
       }}
     />
   </div>

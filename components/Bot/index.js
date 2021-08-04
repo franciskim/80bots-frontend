@@ -182,11 +182,12 @@ const Index = () => {
       <CardBody>
         <Form noValidate>
           <FormGroup className="row">
-            <Label md={2} className="form-control-label">
+            <Label htmlFor="bot-name" md={2} className="form-control-label">
               Bot Name *
             </Label>
             <Col md={10}>
               <Input
+                id="bot-name"
                 type="text"
                 value={botName}
                 onChange={(e) => {
@@ -249,11 +250,12 @@ const Index = () => {
             </Col>
           </FormGroup>
           <FormGroup className="row">
-            <Label md={2} className="form-control-label">
+            <Label htmlFor="description" md={2} className="form-control-label">
               Description
             </Label>
             <Col md={10}>
               <Input
+                id="description"
                 type="textarea"
                 label={'Description'}
                 rows={5}
@@ -263,13 +265,16 @@ const Index = () => {
             </Col>
           </FormGroup>
           <FormGroup className="row">
-            <Label md={2} className="form-control-label">
+            <Label
+              htmlFor="tags-selector"
+              md={2}
+              className="form-control-label"
+            >
               Tags
             </Label>
             <Col md={10}>
               <Select
                 id="tags-selector"
-                instanceId="tags-selector"
                 isMulti
                 options={getTagOptions()}
                 onInputChange={onTagInputChange}
@@ -279,11 +284,12 @@ const Index = () => {
             </Col>
           </FormGroup>
           <FormGroup className="row">
-            <Label md={2} className="form-control-label">
+            <Label htmlFor="visible-btn" md={2} className="form-control-label">
               Access *
             </Label>
             <Col md={2}>
               <Button
+                id="visible-btn"
                 className="form-control"
                 color={isPrivate ? 'danger' : 'secondary'}
                 onClick={() => setPrivate(!isPrivate)}
@@ -294,11 +300,16 @@ const Index = () => {
           </FormGroup>
           {isPrivate && (
             <FormGroup className="row">
-              <Label md={2} className="form-control-label">
+              <Label
+                htmlFor="user-selector"
+                md={2}
+                className="form-control-label"
+              >
                 Trusted Users
               </Label>
               <Col md={10}>
                 <AsyncSelect
+                  id="user-selector"
                   isMulti
                   defaultOptions={users.map(toOptions)}
                   value={trustedUsers}
@@ -308,7 +319,6 @@ const Index = () => {
               </Col>
             </FormGroup>
           )}
-          {/* {error && <Error>{error}</Error>} */}
         </Form>
       </CardBody>
       <CardFooter>

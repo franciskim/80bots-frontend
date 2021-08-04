@@ -7,12 +7,13 @@ import {
   ModalFooter,
   Button,
   Label,
+  FormGroup,
+  Col,
 } from 'reactstrap'
 import AsyncSelect from 'react-select/async'
 import { createSchedule } from 'store/schedule/actions'
 import PropTypes from 'prop-types'
 import { getRunningBots } from 'store/bot/actions'
-
 import { NOTIFICATION_TYPES } from 'config'
 import { addNotification } from 'lib/helpers'
 
@@ -54,25 +55,32 @@ const AddScheduleModal = ({ isOpen, onClose, onRefresh }) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={() => setInstanceId(null)}>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalHeader>Add Schedule</ModalHeader>
       <ModalBody>
-        <Label>Select one of your running bots</Label>
-        <AsyncSelect
-          onChange={(option) => {
-            setInstanceId(option.value)
-          }}
-          loadOptions={searchBots}
-          defaultOptions={runningBots
-            .filter((bot) => bot.status !== 'terminated')
-            .map((bot) => ({
-              value: bot.instance_id,
-              label: bot.instance_id + '|' + bot.name,
-            }))}
-        />
+        <FormGroup className="row">
+          <Label md={4} htmlFor="bot-selector">
+            Running bots
+          </Label>
+          <Col md={8}>
+            <AsyncSelect
+              id="bot-selector"
+              onChange={(option) => {
+                setInstanceId(option.value)
+              }}
+              loadOptions={searchBots}
+              defaultOptions={runningBots
+                .filter((bot) => bot.status !== 'terminated')
+                .map((bot) => ({
+                  value: bot.instance_id,
+                  label: bot.instance_id + '|' + bot.name,
+                }))}
+            />
+          </Col>
+        </FormGroup>
       </ModalBody>
       <ModalFooter>
-        <Button onClick={() => onClose(false)}>Cancel</Button>
+        <Button onClick={onClose}>Cancel</Button>
         <Button color="primary" onClick={addSchedule} disabled={!instanceId}>
           Add
         </Button>

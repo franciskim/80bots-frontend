@@ -10,7 +10,9 @@ const ScheduleLogTableRow = ({ session }) => {
       <td>{session.instance_id}</td>
       <td>{session.type}</td>
       <td>{dayjs(session.date).format('YYYY-MM-DD hh:mm A')}</td>
-      <td>{session.time_zone}</td>
+      <td>
+        <Badge>{session.time_zone}</Badge>
+      </td>
       <td>
         {session.status === 'failed' && (
           <>
