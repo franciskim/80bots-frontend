@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import Select from 'react-select'
-import styled from '@emotion/styled'
-import dayjs from 'dayjs'
-import { WEEKDAYS } from 'config'
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import {
   Button,
   ModalFooter,
-  Label,
-  Col,
-  Row,
   ModalHeader,
-  Container,
+  ModalBody,
+  Table,
+  UncontrolledAlert,
 } from 'reactstrap'
-
+import ScheduleEditorRow from './ScheduleEditorRow'
+import { useSelector } from 'react-redux'
 // const selectStyles = {
 //   control: (provided, state) => ({
 //     ...provided,
@@ -85,162 +82,16 @@ import {
 //   }
 // `
 
-const Error = styled.span`
-  font-size: 15px;
-  text-align: center;
-`
+// const Error = styled.span`
+//   font-size: 15px;
+//   text-align: center;
+// `
 
-const STATUS_OPTIONS = [
-  { value: 'stopped', label: 'Stopped' },
-  { value: 'running', label: 'Running' },
-]
-
-const DAY_OPTIONS = WEEKDAYS.map((day) => ({ value: day, label: day }))
-
-const TIME_OPTIONS = (() => {
-  let startTime = dayjs().hour(0).minute(0).second(0)
-  const endTime = dayjs().hour(23).minute(30).second(0)
-  let timeStops = []
-  while (startTime.isBefore(endTime) || startTime.isSame(endTime)) {
-    let stop = startTime.format('h:mm A')
-    timeStops.push({ value: stop, label: stop })
-    startTime = startTime.add(30, 'minute')
-  }
-  return timeStops
-})()
-
-const Schedule = ({
-  status,
-  time,
-  day,
-  idx,
-  add,
-  remove,
-  updateScheduleList,
-  timezone,
-}) => {
-  const [scheduleStatus, setScheduleStatus] = useState(
-    STATUS_OPTIONS.find((item) => item.value === status) || null
-  )
-
-  const [scheduleDay, setScheduleDay] = useState(
-    DAY_OPTIONS.find((item) => item.value === day) || null
-  )
-
-  const [scheduleTime, setScheduleTime] = useState(
-    TIME_OPTIONS.find((item) => item.value === time) || null
-  )
-
+const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
+  const [schedules, setSchedules] = useState([{}].concat(props.schedules))
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    setScheduleStatus(
-      STATUS_OPTIONS.find((item) => item.value === status) || null
-    )
-  }, [status])
-
-  useEffect(() => {
-    setScheduleDay(DAY_OPTIONS.find((item) => item.value === day) || null)
-  }, [day])
-
-  useEffect(() => {
-    setScheduleTime(TIME_OPTIONS.find((item) => item.value === time) || null)
-  }, [time])
-
-  const addSchedule = () => {
-    if (!scheduleStatus || !scheduleDay || !scheduleTime) {
-      setError('You must fill all fields')
-    } else {
-      setError(null)
-      setScheduleStatus(null)
-      setScheduleDay(null)
-      setScheduleTime(null)
-      add()
-    }
-  }
-
-  const changeSchedule = (status, setter, option) => {
-    setter(option)
-    let schedule = {
-      status: scheduleStatus && scheduleStatus.value,
-      day: scheduleDay && scheduleDay.value,
-      time: scheduleTime && scheduleTime.value,
-      timezone: timezone,
-    }
-    schedule[status] = option.value
-    updateScheduleList(schedule, idx)
-  }
-
-  return (
-    <Container>
-      <Row>
-        <Col md="3">
-          <Label>Status</Label>
-          <Select
-            options={STATUS_OPTIONS}
-            defaultValue={scheduleStatus}
-            value={scheduleStatus}
-            onChange={(option) =>
-              changeSchedule('status', setScheduleStatus, option)
-            }
-            // styles={selectStyles}
-          />
-        </Col>
-        <Col md="3">
-          <Label>Day</Label>
-          <Select
-            options={DAY_OPTIONS}
-            // styles={selectStyles}
-            defaultValue={scheduleDay}
-            value={scheduleDay}
-            onChange={(option) => changeSchedule('day', setScheduleDay, option)}
-          />
-        </Col>
-        <Col md="3">
-          <Label>Time</Label>
-          <Select
-            options={TIME_OPTIONS}
-            // styles={selectStyles}
-            defaultValue={scheduleTime}
-            value={scheduleTime}
-            onChange={(option) =>
-              changeSchedule('time', setScheduleTime, option)
-            }
-          />
-        </Col>
-        <Col md="3">
-          {idx === 0 ? (
-            <Button
-              className="btn-icon"
-              color="success"
-              type="button"
-              onClick={addSchedule}
-            >
-              <span className="btn-inner--icon mr-1">
-                <i className="fa fa-plus" />
-              </span>
-            </Button>
-          ) : (
-            <Button
-              className="btn-icon"
-              color="danger"
-              type="button"
-              onClick={remove}
-            >
-              <span className="btn-inner--icon mr-1">
-                <i className="fa fa-trash" />
-              </span>
-            </Button>
-          )}
-        </Col>
-        {error && <Error>{error}</Error>}
-      </Row>
-    </Container>
-  )
-}
-
-const ScheduleEditor = ({ close, onUpdateClick, user, ...props }) => {
-  const [schedules, setSchedules] = useState([{}].concat(props.schedules))
+  const user = useSelector((state) => state.auth.user)
 
   const addSchedule = () => {
     setSchedules([{}].concat(schedules))
@@ -262,23 +113,42 @@ const ScheduleEditor = ({ close, onUpdateClick, user, ...props }) => {
   return (
     <>
       <ModalHeader>Schedule Editor</ModalHeader>
-      {schedules.map((schedule, idx) => (
-        <Schedule
-          key={idx}
-          status={schedule.status}
-          time={schedule.time}
-          day={schedule.day}
-          idx={idx}
-          add={addSchedule}
-          timezone={user.timezone}
-          remove={() => removeSchedule(idx)}
-          updateScheduleList={updateScheduleList}
-        />
-      ))}
+      <ModalBody>
+        {error && (
+          <UncontrolledAlert color="danger">
+            <span className="alert-icon">
+              <i className="ni ni-like-2" />
+            </span>
+            <span className="alert-text ml-1">{error}</span>
+          </UncontrolledAlert>
+        )}
+        <Table className="table-flush" responsive>
+          <thead className="thead-light">
+            <tr>
+              <th>Status</th>
+              <th>Day</th>
+              <th>Time</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {schedules.map((schedule, idx) => (
+              <ScheduleEditorRow
+                key={idx}
+                idx={idx}
+                schedule={schedule}
+                add={addSchedule}
+                remove={() => removeSchedule(idx)}
+                updateScheduleList={updateScheduleList}
+                user={user}
+                setError={setError}
+              />
+            ))}
+          </tbody>
+        </Table>
+      </ModalBody>
       <ModalFooter>
-        <Button color={'danger'} onClick={close}>
-          Cancel
-        </Button>
+        <Button onClick={close}>Cancel</Button>
         <Button color={'primary'} onClick={updateSchedule}>
           Update
         </Button>
@@ -287,24 +157,10 @@ const ScheduleEditor = ({ close, onUpdateClick, user, ...props }) => {
   )
 }
 
-// ScheduleEditor.propTypes = {
-//   close: PropTypes.func.isRequired,
-//   schedules: PropTypes.array.isRequired,
-//   onUpdateClick: PropTypes.func.isRequired,
-//   user: PropTypes.object.isRequired,
-// }
-
-// Schedule.propTypes = {
-//   status: PropTypes.string,
-//   time: PropTypes.string,
-//   day: PropTypes.string,
-//   idx: PropTypes.number.isRequired,
-//   add: PropTypes.func.isRequired,
-//   remove: PropTypes.func.isRequired,
-//   updateScheduleList: PropTypes.func.isRequired,
-//   onClick: PropTypes.func,
-//   value: PropTypes.string,
-//   timezone: PropTypes.string,
-// }
+ScheduleEditor.propTypes = {
+  close: PropTypes.func.isRequired,
+  schedules: PropTypes.array.isRequired,
+  onUpdateClick: PropTypes.func.isRequired,
+}
 
 export default ScheduleEditor

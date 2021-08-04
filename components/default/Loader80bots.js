@@ -4,14 +4,6 @@ import lightLoaderImage from 'assets/img/loader/80bots_loader_light.svg'
 import darkLoaderImage from 'assets/img/loader/80bots_loader_dark.svg'
 import { Container } from 'reactstrap'
 
-// const LoaderContainer = styled.div`
-//   display: flex;
-//   flex: 1;
-//   justify-content: center;
-//   align-items: center;
-//   flex-direction: column;
-// `
-
 export const Loader80bots = ({ data, styled }) => {
   const [icon, setIcon] = useState(null)
 
@@ -24,14 +16,12 @@ export const Loader80bots = ({ data, styled }) => {
   }, [data])
 
   return (
-    <Container>
-      <object
-        type="image/svg+xml"
-        data={icon}
-        className={'loader80bots'}
-        style={styled}
-      />
-    </Container>
+    <object
+      type="image/svg+xml"
+      data={icon}
+      className={'loader80bots'}
+      style={styled}
+    />
   )
 }
 

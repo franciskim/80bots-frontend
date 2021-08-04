@@ -1,45 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 import { parseUrl } from 'lib/helpers'
 import { lookup } from 'mime-types'
 import PropTypes from 'prop-types'
 import dynamic from 'next/dynamic'
 const ReactJson = dynamic(import('react-json-view'), { ssr: false })
-import { Button, Input } from 'reactstrap'
+import { Button, Input, Row, Col, Label } from 'reactstrap'
 import JsonTableModeView from './JsonTableModeView'
-import _ from 'lodash'
-import { Loader80bots } from 'components/default'
-
-// const Wrapper = styled.div`
-//   display: flex;
-//   flex: 1;
-//   height: 100%;
-//   flex-wrap: nowrap;
-//   flex-direction: column;
-// `
-
-const Viewer = styled.div`
-  display: flex;
-  flex: 1;
-  flex-wrap: nowrap;
-  flex-direction: column;
-  overflow: hidden;
-`
-
-const Controls = styled.div`
-  flex-direction: row;
-  width: 100%;
-  text-align: left;
-  margin-bottom: 15px;
-  margin-top: 15px;
-`
-
-const ReactJsonWrapper = styled.div`
-  display: block;
-  text-align: left;
-  overflow-y: scroll;
-  width: 100%;
-`
 
 const MODS = {
   STRUCTURED: 2,
@@ -68,28 +34,20 @@ const TextViewer = ({ item }) => {
 
   const renderByMode = () => {
     switch (mode) {
-      case MODS.RAW: {
-        return (
-          <Input
-            type="textarea"
-            disabled
-            value={jsonRaw}
-            onChange={() => null}
-          />
-        )
-      }
-      case MODS.STRUCTURED: {
+      case MODS.RAW:
+        return <Input type="textarea" disabled value={jsonRaw} />
+      case MODS.STRUCTURED:
         return (
           json && (
-            <ReactJsonWrapper>
-              <ReactJson src={json} name={null} />
-            </ReactJsonWrapper>
+            <Row>
+              <Col md={12}>
+                <ReactJson src={json} name={null} />
+              </Col>
+            </Row>
           )
         )
-      }
-      case MODS.TABLE: {
-        return _.isArray(json) && <JsonTableModeView output={json} />
-      }
+      case MODS.TABLE:
+        return Array.isArray(json) && <JsonTableModeView output={json} />
     }
   }
 
@@ -103,59 +61,58 @@ const TextViewer = ({ item }) => {
     return `data:${mime};base64,${data}`
   }
 
+  const startCase = (str) => {
+    return str
+      .split(' ')
+      .map((s) => s.slice(0, 1).toUpperCase() + s.slice(1).toLowerCase())
+      .join(' ')
+  }
+
   return (
-    <div>
-      {jsonRaw ? (
-        <>
-          <Controls>
-            <strong>View mode: </strong>
-            {Object.keys(MODS)
-              .filter((modeName) => {
-                if (MODS[modeName] === MODS.TABLE && !_.isArray(json)) {
-                  return false
-                }
-                return MODS[modeName] > 0
-              })
-              .map((modeName, i) => {
-                return (
-                  <Button
-                    type={mode === MODS[modeName] ? 'success' : 'primary'}
-                    key={i}
-                    onClick={() => setMode(MODS[modeName])}
-                  >
-                    {_.startCase(_.toLower(modeName))}
-                  </Button>
-                )
-              })}
-          </Controls>
-          <Viewer>
-            {valid ? (
-              renderByMode(item)
-            ) : (
-              <div>
-                Could not parse JSON file. Click{' '}
-                <a
-                  href={getLink(item, jsonRaw)}
-                  download={`${item.name}.json`}
-                  target={'_blank'}
-                  rel="noreferrer"
+    <>
+      <Row className="mt-2 mb-2">
+        <Label md={2}>View mode: </Label>
+        <Col md={4}>
+          {Object.keys(MODS)
+            .filter((modeName) => {
+              if (MODS[modeName] === MODS.TABLE && !Array.isArray(json)) {
+                return false
+              }
+              return MODS[modeName] > 0
+            })
+            .map((modeName, i) => {
+              return (
+                <Button
+                  color={mode === MODS[modeName] ? 'info' : 'secondary'}
+                  key={i}
+                  outline
+                  onClick={() => setMode(MODS[modeName])}
                 >
-                  here
-                </a>{' '}
-                to download
-              </div>
-            )}
-          </Viewer>
-        </>
-      ) : (
-        <Loader80bots
-          data={'light'}
-          styled={{
-            width: '200px',
-          }}
-        />
-      )}
-    </div>
+                  {startCase(modeName.toLowerCase())}
+                </Button>
+              )
+            })}
+        </Col>
+      </Row>
+      <>
+        {valid ? (
+          renderByMode(item)
+        ) : (
+          <div>
+            Could not parse JSON file. Click{' '}
+            <a
+              href={getLink(item, jsonRaw)}
+              download={`${item.name}.json`}
+              target={'_blank'}
+              rel="noreferrer"
+            >
+              here
+            </a>{' '}
+            to download
+          </div>
+        )}
+      </>
+    </>
   )
 }
 

@@ -1,54 +1,35 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-
-import { connect } from 'react-redux'
-import { CardBody } from 'reactstrap'
+import Link from 'next/link'
+import { useSelector } from 'react-redux'
+import { CardBody, Row, Col } from 'reactstrap'
 import { Loader80bots } from 'components/default'
-
-const Content = styled(CardBody)`
-  display: flex;
-  height: 85vh;
-  flex-flow: row wrap;
-  flex-direction: column;
-  ${(props) => props.styles};
-`
 
 const Display = styled.iframe`
   display: flex;
   flex: 1 1;
   border: none;
-  ${(props) => props.styles};
+  width: 100%;
+  height: 640px;
+  background-color: #999;
 `
 
-// const Link = styled.a`
-//   padding: 20px;
-//   text-align: right;
-//   display: block;
-// `
-
-const STATUSES = {
-  LOAD: 'Loading Display',
-}
-
-const DisplayTab = ({ botInstance }) => {
-  const [status, setStatus] = useState(STATUSES.LOAD)
-
+const DisplayTab = () => {
+  const [loadingPage, setLoadingPage] = useState(true)
+  const botInstance = useSelector((state) => state.bot.botInstance)
+  const url = `http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`
   return (
-    <Content>
-      <a
-        href={`http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`}
-        target="_blank"
-        rel="noreferrer"
-      >
-        View bot in real-time
-      </a>
-      <Display
-        onLoad={() => setStatus(null)}
-        id={'display'}
-        src={`http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`}
-      />
-      {status && (
+    <CardBody>
+      <Row>
+        <Col>
+          <Link href={url} passHref>
+            <a target="_blank" rel="noreferrer">
+              View bot in real-time
+            </a>
+          </Link>
+        </Col>
+      </Row>
+      {loadingPage && (
         <Loader80bots
           data={'light'}
           styled={{
@@ -56,16 +37,9 @@ const DisplayTab = ({ botInstance }) => {
           }}
         />
       )}
-    </Content>
+      <Display onLoad={() => setLoadingPage(false)} id={'display'} src={url} />
+    </CardBody>
   )
 }
 
-DisplayTab.propTypes = {
-  botInstance: PropTypes.object.isRequired,
-}
-
-const mapStateToProps = (state) => ({
-  botInstance: state.bot.botInstance,
-})
-
-export default connect(mapStateToProps, null)(DisplayTab)
+export default DisplayTab

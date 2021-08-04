@@ -24,8 +24,9 @@ import Sidebar from 'components/Sidebar/Sidebar.js'
 import routes from 'routes.js'
 import logoImage from 'assets/img/80bots-logo.svg'
 
-function Admin({ router, children }) {
+const Admin = ({ router, children }) => {
   const [sidenavOpen, setSidenavOpen] = useState(true)
+
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
       if (prop.collapse) {

@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { CardBody } from 'reactstrap'
 import { Loader80bots } from 'components/default'
-import { flush, open, close } from 'store/fileSystem/actions'
+import { flush, open as openItem } from 'store/fileSystem/actions'
 import FileSystem from 'components/default/FileSystem'
 import { Select } from 'components/default/inputs'
 
 const rootFolder = 'output/json'
 const defaultLimit = 20
-
-// const FiltersSection = styled(Filters)`
-//   display: flex;
-//   align-self: flex-start;
-//   justify-content: space-between;
-// `
 
 const Content = styled(CardBody)`
   display: flex;
@@ -25,30 +18,37 @@ const Content = styled(CardBody)`
   ${(props) => props.styles};
 `
 
-const JsonType = ({ items, flush, openItem, openedFolder, openedFile }) => {
+const JsonType = () => {
+  const dispatch = useDispatch()
   const [options, setOptions] = useState([])
   const [selected, setSelected] = useState(null)
 
+  const items = useSelector((state) => state.fileSystem.items)
+  const openedFile = useSelector((state) => state.fileSystem.openedFile)
+  const openedFolder = useSelector((state) => state.fileSystem.openedFolder)
+
   useEffect(() => {
     // eslint-disable-next-line no-console
-    console.log(openedFolder)
     if (!openedFolder || !openedFolder.path.startsWith(rootFolder)) {
-      openItem({ path: rootFolder }, { limit: defaultLimit })
+      dispatch(openItem({ path: rootFolder }, { limit: defaultLimit }))
     }
     return () => flush()
   }, [openedFolder])
 
   useEffect(() => {
-    const newOptions = items.map((item) => {
-      item.value = item.name
-      item.label = item.name
-      return item
-    })
-    setOptions(newOptions)
+    setOptions(
+      items.map((item) => {
+        item.value = item.name
+        item.label = item.name
+        return item
+      })
+    )
   }, [items])
 
   useEffect(() => {
-    if (!options.length) return
+    if (!options.length) {
+      return
+    }
     if (!selected) {
       setSelected(options[0])
     }
@@ -57,10 +57,10 @@ const JsonType = ({ items, flush, openItem, openedFolder, openedFile }) => {
   useEffect(() => {
     if (!selected) return
     if (!selected.path.startsWith(rootFolder)) {
-      flush()
+      dispatch(flush())
       setSelected(null)
     } else {
-      openItem(selected)
+      dispatch(openItem(selected))
     }
   }, [selected])
 
@@ -107,23 +107,4 @@ const JsonType = ({ items, flush, openItem, openedFolder, openedFile }) => {
   )
 }
 
-JsonType.propTypes = {
-  items: PropTypes.array.isRequired,
-  flush: PropTypes.func.isRequired,
-  openItem: PropTypes.func.isRequired,
-  openedFolder: PropTypes.object,
-  openedFile: PropTypes.object,
-}
-
-const mapStateToProps = (state) => ({
-  items: state.fileSystem.items,
-  openedFile: state.fileSystem.openedFile,
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  flush: () => dispatch(flush()),
-  openItem: (item, query) => dispatch(open(item, query)),
-  closeItem: (item) => dispatch(close(item)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(JsonType)
+export default JsonType

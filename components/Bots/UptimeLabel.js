@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import { minToTime } from 'lib/helpers'
 
-const NwTd = styled.td`
+const UTLabel = styled.label`
   white-space: nowrap;
 `
 
-const Uptime = ({ uptime, status }) => {
+const UptimeLabel = ({ uptime, status }) => {
   const [time, setTime] = useState(null)
   let current = uptime
 
@@ -24,12 +24,12 @@ const Uptime = ({ uptime, status }) => {
     }
   }, [uptime])
 
-  return <NwTd>{minToTime(time)}</NwTd>
+  return <UTLabel>{minToTime(time)}</UTLabel>
 }
 
-Uptime.propTypes = {
+UptimeLabel.propTypes = {
   uptime: PropTypes.number,
   status: PropTypes.string,
 }
 
-export default Uptime
+export default UptimeLabel

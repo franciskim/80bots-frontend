@@ -1,25 +1,38 @@
 import React, { useState, useEffect } from 'react'
-import dayjs from 'dayjs'
 import { useSelector, useDispatch } from 'react-redux'
-import { Paginator } from '../default'
-import { CardBody, Button, Table, Card, CardFooter } from 'reactstrap'
-import { SearchFilter, LimitFilter, Th } from '../default/Table'
-import { NOTIFICATION_TYPES } from 'config'
-import { addNotification } from 'lib/helpers'
-import { updateStatus, getUsers } from 'store/user/actions'
+import { Paginator, SearchFilter, LimitFilter, TableHeader } from '../default'
+import { CardBody, Table, Card, CardFooter } from 'reactstrap'
 
+import { getUsers } from 'store/user/actions'
+import UserTableRow from './UserTableRow'
 import Skeleton from 'react-loading-skeleton'
 
 const Users = () => {
   const dispatch = useDispatch()
-  const [limit, setLimit] = useState(10)
+  const [limit, setLimit] = useState(20)
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
   const [order, setOrder] = useState({ value: '', field: '' })
+
   const [loadingAll, setLoadingAll] = useState(true)
 
+  /***
+   * Dispatch the action
+   */
+  const onSearch = () => {
+    return dispatch(
+      getUsers({
+        page,
+        limit,
+        sort: order.field,
+        order: order.value,
+        search,
+      })
+    )
+  }
+
   useEffect(() => {
-    dispatch(getUsers({ page, limit })).then(() => {
+    onSearch().then(() => {
       setLoadingAll(false)
     })
   }, [page, limit])
@@ -27,38 +40,13 @@ const Users = () => {
   const users = useSelector((state) => state.user.users)
   const total = useSelector((state) => state.user.total)
 
-  const changeUserStatus = (user) => {
-    dispatch(
-      updateStatus(user.id, {
-        status: user.status === 'active' ? 'inactive' : 'active',
-      })
-    ).then(() => {
-      const status = user.status === 'active' ? 'deactivated' : 'activated'
-      addNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: `User was successfully ${status}`,
-      })
-    })
-  }
-
-  const searchUsers = (value) => {
-    setSearch(value)
-    dispatch(
-      getUsers({
-        page,
-        limit,
-        search: value,
-      })
-    )
-  }
-
   const onOrderChange = (field, value) => {
     setOrder({ field, value })
-    dispatch(getUsers({ page, limit, search }))
+    onSearch()
   }
 
-  const OrderTh = (props) => (
-    <Th
+  const SortableTableHeader = (props) => (
+    <TableHeader
       {...props}
       order={
         props.field === order.field || props.children === order.field
@@ -68,62 +56,44 @@ const Users = () => {
       onClick={onOrderChange}
     />
   )
-
-  const renderRow = (user) => (
-    <tr key={user.id}>
-      <td>{user.name}</td>
-      <td>{user.email}</td>
-      <td>{dayjs(user.created_at).format('YYYY-MM-DD HH:mm:ss')}</td>
-      <td>
-        <Button
-          color={user.status === 'active' ? 'success' : 'danger'}
-          size="sm"
-          onClick={() => changeUserStatus(user)}
-        >
-          {user.status}
-        </Button>
-      </td>
-    </tr>
-  )
-
   return (
     <Card>
       <CardBody>
         <div>
           <LimitFilter
-            id="limitfilter"
-            instanceId="limitfilter"
-            onChange={({ value }) => {
+            defaultValue={limit}
+            onChange={(value) => {
               setLimit(value)
-              dispatch(
-                getUsers({
-                  page,
-                  limit: value,
-                  search,
-                })
-              )
+              onSearch()
             }}
           />
           <SearchFilter
-            searchProps={{
-              onSearch: (value) => {
-                searchUsers(value)
-              },
+            onChange={(value) => {
+              setSearch(value)
+              onSearch()
             }}
           />
         </div>
         {loadingAll && <Skeleton count={5} />}
         {!loadingAll && (
-          <Table responsive>
-            <thead>
+          <Table className="table-flush" responsive>
+            <thead className="thead-light">
               <tr>
-                <OrderTh field={'name'}>Name</OrderTh>
-                <OrderTh field={'email'}>Email</OrderTh>
-                <OrderTh field={'date'}>Register Date</OrderTh>
-                <OrderTh field={'status'}>Status</OrderTh>
+                <SortableTableHeader field={'name'}>Name</SortableTableHeader>
+                <SortableTableHeader field={'email'}>Email</SortableTableHeader>
+                <SortableTableHeader field={'date'}>
+                  Register Date
+                </SortableTableHeader>
+                <SortableTableHeader field={'status'}>
+                  Active
+                </SortableTableHeader>
               </tr>
             </thead>
-            <tbody>{users.map(renderRow)}</tbody>
+            <tbody>
+              {users.map((user) => {
+                return <UserTableRow user={user} key={user.id} />
+              })}
+            </tbody>
           </Table>
         )}
       </CardBody>
@@ -134,13 +104,7 @@ const Users = () => {
             pageSize={limit}
             onChangePage={(page) => {
               setPage(page)
-              dispatch(
-                getUsers({
-                  page,
-                  limit,
-                  search,
-                })
-              )
+              onSearch()
             }}
           />
         )}

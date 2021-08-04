@@ -1,30 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styled from '@emotion/styled'
 import Item from './Item'
-import { CardBody, CardFooter, Card, Button } from 'reactstrap'
+import { Col, Row, Label, FormGroup } from 'reactstrap'
 import { Paginator } from '../Paginator'
-import Toggle from 'react-toggle'
-
-const Row = styled.div`
-  display: flex;
-  flex-flow: row;
-`
-
-// const ListWrapper = styled.div`
-//   display: flex;
-//   flex: 1;
-//   align-content: flex-start;
-//   flex-flow: row wrap;
-//   justify-content: flex-start;
-//   align-items: center;
-//   ${(props) => props.styles};
-// `
-// const WrapperButton = styled.div`
-//   margin-left: 20px;
-//   display: flex;
-//   padding-bottom: 1.25rem;
-// `
 
 const List = ({
   items,
@@ -33,7 +11,6 @@ const List = ({
   page,
   onPageChange,
   onItemClick,
-  className,
   filterItems,
   filter,
 }) => {
@@ -46,43 +23,45 @@ const List = ({
     : items
 
   return (
-    <Card>
-      <CardBody>
-        {items[0].type === 'file' ? (
-          <div>
-            <Toggle
-              defaultChecked={filter}
-              className="custom-classname"
-              onChange={filterItems}
-              icons={{
-                checked: 'I',
-                unchecked: 'O',
-              }}
-            />
-            <span>Filter Blank</span>
-          </div>
-        ) : null}
-        <div>
-          {getFiles.map((item, i) => (
-            <Item item={item} key={i} onClick={onItemClick} />
-          ))}
-        </div>
-      </CardBody>
-      <CardFooter>
-        <Paginator
-          initialPage={page}
-          total={total}
-          pageSize={limit}
-          onChangePage={(page) => onPageChange(page)}
-        />
-      </CardFooter>
-    </Card>
+    <>
+      {items[0].type === 'file' && (
+        <FormGroup className="row">
+          <Col>
+            <Label className="mr-2">Filter Blank</Label>
+            <label className="custom-toggle custom-toggle-info mr-1">
+              <input
+                type="checkbox"
+                defaultChecked={filter}
+                onChange={filterItems}
+              />
+              <span
+                className="custom-toggle-slider rounded-circle"
+                data-label-off="No"
+                data-label-on="Yes"
+              />
+            </label>
+          </Col>
+        </FormGroup>
+      )}
+      <Row>
+        {getFiles.map((item, i) => (
+          <Item item={item} key={i} onClick={onItemClick} />
+        ))}
+      </Row>
+
+      <Paginator
+        initialPage={page}
+        total={total}
+        pageSize={limit}
+        onChangePage={(page) => onPageChange(page)}
+      />
+    </>
   )
 }
 
 List.propTypes = {
   items: PropTypes.array.isRequired,
-  filterItems: PropTypes.array.isRequired,
+  filterItems: PropTypes.func.isRequired,
   total: PropTypes.number,
   limit: PropTypes.number,
   page: PropTypes.number,

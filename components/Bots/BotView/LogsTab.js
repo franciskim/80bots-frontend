@@ -1,40 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { Card } from 'reactstrap'
+import { useSelector } from 'react-redux'
+import { CardBody } from 'reactstrap'
 import { Loader80bots } from 'components/default'
-import { flush, open, close } from 'store/fileSystem/actions'
+import { flush, open as openItem } from 'store/fileSystem/actions'
 import FileSystem from 'components/default/FileSystem'
 import { Select } from 'components/default/inputs'
 
 const rootFolder = 'logs'
 
-// const FiltersSection = styled(Filters)`
-//   display: flex;
-//   align-self: flex-start;
-//   justify-content: space-between;
-// `;
-
-// const Content = styled(CardBody)`
-//   display: flex;
-//   height: 85vh;
-//   flex-flow: column nowrap;
-//   overflow-y: hidden;
-//   ${(props) => props.styles};
-// `
-
-const LogsTab = ({ items, flush, openItem, openedFolder, openedFile }) => {
+const LogsTab = () => {
   const [options, setOptions] = useState([])
   const [selected, setSelected] = useState(null)
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(openedFolder)
     if (!openedFolder || !openedFolder.path.startsWith(rootFolder)) {
       openItem({ path: rootFolder }, { limit: 10 })
     }
     return () => flush()
   }, [openedFolder])
+
+  const items = useSelector((state) => state.fileSystem.items)
+  const openedFile = useSelector((state) => state.fileSystem.openedFile)
+  const openedFolder = useSelector((state) => state.fileSystem.openedFolder)
 
   useEffect(() => {
     const newOptions = items.map((item) => {
@@ -52,7 +39,9 @@ const LogsTab = ({ items, flush, openItem, openedFolder, openedFile }) => {
   }, [items])
 
   useEffect(() => {
-    if (!options.length) return
+    if (!options.length) {
+      return
+    }
     if (!selected) {
       setSelected(options[0])
     }
@@ -73,7 +62,7 @@ const LogsTab = ({ items, flush, openItem, openedFolder, openedFile }) => {
   }
 
   return (
-    <Card>
+    <CardBody className="d-flex justify-content-center">
       {openedFile ? (
         <>
           <Select
@@ -99,27 +88,8 @@ const LogsTab = ({ items, flush, openItem, openedFolder, openedFile }) => {
           }}
         />
       )}
-    </Card>
+    </CardBody>
   )
 }
 
-LogsTab.propTypes = {
-  items: PropTypes.array.isRequired,
-  flush: PropTypes.func.isRequired,
-  openItem: PropTypes.func.isRequired,
-  openedFolder: PropTypes.object,
-  openedFile: PropTypes.object,
-}
-
-const mapStateToProps = (state) => ({
-  items: state.fileSystem.items,
-  openedFile: state.fileSystem.openedFile,
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  flush: () => dispatch(flush()),
-  openItem: (item, query) => dispatch(open(item, query)),
-  closeItem: (item) => dispatch(close(item)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(LogsTab)
+export default LogsTab

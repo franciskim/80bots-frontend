@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import { LimitFilter } from 'components/default/Table'
+import { LimitFilter } from 'components/default'
 import { Paginator } from 'components/default/Paginator'
 import { Table } from 'reactstrap'
 
@@ -123,16 +123,14 @@ const JsonTableModeView = ({ output }) => {
     <>
       <Header>
         <LimitFilter
-          id="limitfilter"
-          instanceId="limitfilter"
           defaultValue={limit}
-          onChange={({ value }) => setLimit(value)}
+          onChange={(value) => setLimit(value)}
         />
       </Header>
       <Content>
-        <Table responsive>
+        <Table className="table-flush" responsive>
           {slicedChunk[0] && (
-            <thead>
+            <thead className="thead-light">
               <tr>{getHeader(slicedChunk[0])}</tr>
             </thead>
           )}

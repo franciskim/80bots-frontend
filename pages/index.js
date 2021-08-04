@@ -47,12 +47,10 @@ function Index() {
                   A complete React and NextJS solution
                 </h2>
                 <p className="lead text-white">
-                  Argon is a completly new product built on our newest re-built
-                  from scratch framework structure that is meant to make our
-                  products more intuitive, more adaptive and, needless to say,
-                  so much easier to customize. Let Argon amaze you with its cool
-                  features and build tools and get your project to a whole new
-                  level.
+                  80bots is a hyper-modern, cloud-native RPA (Robotic Process
+                  Automation) platform for the web that helps you and your
+                  organisation automate tasks that cannot be done with IFTTT or
+                  Zapier.
                 </p>
               </Col>
             </Row>
@@ -148,128 +146,6 @@ function Index() {
                 </Row>
               </Col>
             </Row>
-          </Container>
-        </section>
-        <section className="py-6">
-          <Container>
-            <Row className="row-grid align-items-center">
-              <Col className="order-md-2" md="6">
-                <img
-                  alt="..."
-                  className="img-fluid"
-                  src={require('assets/img/theme/landing-1.png')}
-                />
-              </Col>
-              <Col className="order-md-1" md="6">
-                <div className="pr-md-5">
-                  <h1>Awesome features</h1>
-                  <p>
-                    The kit comes with three pre-built pages to help you get
-                    started faster. You can change the text and images and
-                    you're good to go.
-                  </p>
-                  <ul className="list-unstyled mt-5">
-                    <li className="py-2">
-                      <div className="d-flex align-items-center">
-                        <div>
-                          <Badge className="badge-circle mr-3" color="success">
-                            <i className="ni ni-settings-gear-65" />
-                          </Badge>
-                        </div>
-                        <div>
-                          <h4 className="mb-0">Carefully crafted components</h4>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="py-2">
-                      <div className="d-flex align-items-center">
-                        <div>
-                          <Badge className="badge-circle mr-3" color="success">
-                            <i className="ni ni-html5" />
-                          </Badge>
-                        </div>
-                        <div>
-                          <h4 className="mb-0">Amazing page examples</h4>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="py-2">
-                      <div className="d-flex align-items-center">
-                        <div>
-                          <Badge className="badge-circle mr-3" color="success">
-                            <i className="ni ni-satisfied" />
-                          </Badge>
-                        </div>
-                        <div>
-                          <h4 className="mb-0">Super friendly support team</h4>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </section>
-        <section className="py-7 section-nucleo-icons bg-white overflow-hidden">
-          <Container>
-            <Row className="justify-content-center">
-              <Col className="text-center" lg="8">
-                <h2 className="display-3">Nucleo Icons</h2>
-                <p className="lead">
-                  The official package contains over 21.000 icons which are
-                  looking great in combination with Argon Design System. Make
-                  sure you check all of them and use those that you like the
-                  most.
-                </p>
-                <div className="btn-wrapper">
-                  <Button
-                    color="info"
-                    href="https://www.creative-tim.com/learning-lab/nextjs/icons/argon-dashboard?ref=njsadp-index-page"
-                    target="_blank"
-                  >
-                    View demo icons
-                  </Button>
-                  <Button
-                    className="mt-3 mt-md-0"
-                    color="default"
-                    href="https://nucleoapp.com/?ref=1712"
-                    target="_blank"
-                  >
-                    View all icons
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-            <div className="blur--hover">
-              <a
-                href="https://www.creative-tim.com/learning-lab/nextjs/icons/argon-dashboard?ref=njsadp-index-page"
-                target="_blank"
-              >
-                <div className="icons-container blur-item mt-5">
-                  <i className="icon ni ni-diamond" />
-
-                  <i className="icon icon-sm ni ni-album-2" />
-                  <i className="icon icon-sm ni ni-app" />
-                  <i className="icon icon-sm ni ni-atom" />
-
-                  <i className="icon ni ni-bag-17" />
-                  <i className="icon ni ni-bell-55" />
-                  <i className="icon ni ni-credit-card" />
-
-                  <i className="icon icon-sm ni ni-briefcase-24" />
-                  <i className="icon icon-sm ni ni-building" />
-                  <i className="icon icon-sm ni ni-button-play" />
-
-                  <i className="icon ni ni-calendar-grid-58" />
-                  <i className="icon ni ni-camera-compact" />
-                  <i className="icon ni ni-chart-bar-32" />
-                </div>
-                <span className="blur-hidden h5 text-success">
-                  Eplore all the 21.000+ Nucleo Icons
-                </span>
-              </a>
-            </div>
           </Container>
         </section>
       </div>

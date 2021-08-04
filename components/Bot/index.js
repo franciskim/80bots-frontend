@@ -130,9 +130,8 @@ const Index = () => {
   const submitForm = (e) => {
     e.preventDefault()
     try {
-      let schema = yup.object().shape({
+      const schema = yup.object().shape({
         botName: yup.string().required(),
-        // botScript: yup.string().required(),
       })
       schema.validateSync(
         {
@@ -235,14 +234,14 @@ const Index = () => {
                 <TabPane tabId="script">
                   <CodeEditor
                     value={botScript}
-                    onChange={(code) => setBotScript(code)}
+                    onChange={setBotScript}
                     mode="javascript"
                   />
                 </TabPane>
                 <TabPane tabId="json">
                   <CodeEditor
                     value={botPackageJSON}
-                    onChange={(code) => setBotPackageJSON(code)}
+                    onChange={setBotPackageJSON}
                     mode="json"
                   />
                 </TabPane>
@@ -283,7 +282,7 @@ const Index = () => {
             <Label md={2} className="form-control-label">
               Access *
             </Label>
-            <Col md={10}>
+            <Col md={2}>
               <Button
                 className="form-control"
                 color={isPrivate ? 'danger' : 'secondary'}
@@ -303,7 +302,6 @@ const Index = () => {
                   isMulti
                   defaultOptions={users.map(toOptions)}
                   value={trustedUsers}
-                  // styles={selectStyles}
                   onChange={(options) => setUsers(options)}
                   loadOptions={onUsersSearch}
                 />

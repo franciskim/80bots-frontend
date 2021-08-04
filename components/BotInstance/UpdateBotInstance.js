@@ -1,23 +1,39 @@
 import React, { useEffect, useState, useRef } from 'react'
 import Router, { useRouter } from 'next/router'
-import styled from '@emotion/styled'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
-import { Button, ButtonGroup, Modal, Row, Container } from 'reactstrap'
+import {
+  Button,
+  ButtonGroup,
+  Modal,
+  Card,
+  CardBody,
+  Nav,
+  NavItem,
+  FormGroup,
+  Label,
+  NavLink,
+  Col,
+  Form,
+  TabContent,
+  TabPane,
+  CardFooter,
+  CardHeader,
+} from 'reactstrap'
 import { CodeEditor } from 'components/default/inputs'
 import {
   getBotInstance,
   updateBotInstance,
   restartInstance,
 } from 'store/botinstance/actions'
-
 import RestartEditor from './RestartEditor'
+import classnames from 'classnames'
 
-const Error = styled.span`
-  font-size: 15px;
-  text-align: center;
-`
+// const Error = styled.span`
+//   font-size: 15px;
+//   text-align: center;
+// `
 
 // const selectStyles = {
 //   control: (provided, state) => ({
@@ -63,13 +79,21 @@ const Error = styled.span`
 //   `,
 // }
 
-const Index = () => {
+const UpdateBotInstance = () => {
   const dispatch = useDispatch()
-  const router = useRouter().query.id
+  const { id } = useRouter().query
   const [botScript, setBotScript] = useState('')
   const [botPackageJSON, setBotPackageJSON] = useState('')
-  const [error, setError] = useState(null)
+  // const [error, setError] = useState(null)
   const modal = useRef(null)
+  const [activeTab, setActiveTab] = useState('script')
+  const router = useRouter()
+
+  const toggle = (tab) => {
+    if (activeTab !== tab) {
+      setActiveTab(tab)
+    }
+  }
 
   const isEmpty = (obj) => {
     for (let key in obj) {
@@ -81,7 +105,7 @@ const Index = () => {
   const aboutBot = useSelector((state) => state.botInstance.aboutBot)
 
   useEffect(() => {
-    dispatch(getBotInstance(router))
+    dispatch(getBotInstance(id))
   }, [])
 
   useEffect(() => {
@@ -97,7 +121,7 @@ const Index = () => {
   })
 
   const submit = () => {
-    setError(null)
+    // setError(null)
     const botData = {
       botScript,
       botPackageJSON,
@@ -137,42 +161,83 @@ const Index = () => {
   }
 
   return (
-    <>
-      <Container>
-        <Row>
-          <div>
-            <Tabs defaultActiveKey="script">
-              <Tab eventKey="script" title="index.js">
-                <CodeEditor
-                  value={botScript}
-                  onChange={(code) => setBotScript(code)}
-                />
-              </Tab>
-              <Tab eventKey="json" title="package.json">
-                <CodeEditor
-                  value={botPackageJSON}
-                  onChange={(code) => setBotPackageJSON(code)}
-                />
-              </Tab>
-            </Tabs>
-          </div>
-        </Row>
-        {error && <Error>{error}</Error>}
-      </Container>
-      <Modal ref={modal} title={'Restart bot instance'} disableSideClosing>
-        <RestartEditor
-          onSubmit={restartSubmit}
-          onClose={() => modal.current.close()}
-          botInstance={aboutBot}
-        />
-      </Modal>
-      <ButtonGroup>
-        <Button color="primary" onClick={submit}>
-          Update & Restart
+    <Card>
+      <CardHeader>
+        <Button
+          color="primary"
+          onClick={() => {
+            return router.back()
+          }}
+        >
+          Back
         </Button>
-      </ButtonGroup>
-    </>
+      </CardHeader>
+      <CardBody>
+        <Form noValidate>
+          <FormGroup className="row">
+            <Label md={2} className="form-control-label">
+              Bot Script
+            </Label>
+            <Col md={10}>
+              <Nav tabs>
+                <NavItem>
+                  <NavLink
+                    className={classnames({ active: activeTab === 'script' })}
+                    onClick={() => {
+                      toggle('script')
+                    }}
+                  >
+                    index.js
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    className={classnames({ active: activeTab === 'json' })}
+                    onClick={() => {
+                      toggle('json')
+                    }}
+                  >
+                    package.json
+                  </NavLink>
+                </NavItem>
+              </Nav>
+              <TabContent activeTab={activeTab}>
+                <TabPane tabId="script">
+                  <CodeEditor
+                    value={botScript}
+                    onChange={setBotScript}
+                    mode="javascript"
+                  />
+                </TabPane>
+                <TabPane tabId="json">
+                  <CodeEditor
+                    value={botPackageJSON}
+                    onChange={setBotPackageJSON}
+                    mode="json"
+                  />
+                </TabPane>
+              </TabContent>
+            </Col>
+          </FormGroup>
+        </Form>
+        {/* {error && <Error>{error}</Error>} */}
+        <Modal ref={modal} title={'Restart bot instance'} disableSideClosing>
+          <RestartEditor
+            onSubmit={restartSubmit}
+            onClose={() => modal.current.close()}
+            botInstance={aboutBot}
+          />
+        </Modal>
+      </CardBody>
+      <CardFooter>
+        <ButtonGroup>
+          <Button color="primary" onClick={submit}>
+            Update & Restart
+          </Button>
+        </ButtonGroup>
+      </CardFooter>
+    </Card>
   )
 }
 
-export default Index
+export default UpdateBotInstance

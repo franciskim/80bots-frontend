@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import ImagesType from './ImagesType'
 import JsonType from './JsonType'
-import { CardBody, Button } from 'reactstrap'
+import { CardBody, Button, Row, Col } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 import FilesType from './FileType'
+import PropTypes from 'prop-types'
 
 const OUTPUT_TYPES = {
   JSON: {
@@ -21,31 +22,11 @@ const OUTPUT_TYPES = {
   },
 }
 
-const Content = styled(CardBody)`
-  display: flex;
-  flex-flow: column;
-  ${(props) => props.styles};
-`
-
-const TypesNavigation = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-top: 8px;
-  margin-bottom: 23px;
-`
-
-// const Type = styled(Button)`
-//   padding: 0 5px;
-//   animation: ${Fade} 200ms ease-in;
-// `
-
 const Hint = styled.span`
   font-size: 14px;
   color: #fff;
 `
 
-// eslint-disable-next-line react/prop-types
 const OutputTab = ({ setCustomBack }) => {
   const [currentType, setCurrentType] = useState(OUTPUT_TYPES.JSON)
 
@@ -70,28 +51,39 @@ const OutputTab = ({ setCustomBack }) => {
   }
 
   return (
-    <Content>
-      <TypesNavigation>
-        {Object.values(OUTPUT_TYPES).map((item, i, all) => {
-          const variant =
-            item.value === currentType.value ? 'success' : 'primary'
-          return (
-            <>
-              <Button
-                key={i}
-                type={variant}
-                onClick={() => setCurrentType(item)}
-              >
-                {item.label}
-              </Button>
-              {all.length - 1 > i && <Hint>&nbsp;|&nbsp;</Hint>}
-            </>
-          )
-        })}
-      </TypesNavigation>
-      {renderCurrentType()}
-    </Content>
+    <>
+      <Row className="mt-2 mb-2">
+        <Col>
+          {Object.values(OUTPUT_TYPES).map((item, i, all) => {
+            const variant =
+              item.value === currentType.value ? 'success' : 'primary'
+
+            return (
+              <>
+                <Button
+                  outline
+                  key={i}
+                  color={variant}
+                  onClick={() => setCurrentType(item)}
+                  size="sm"
+                >
+                  {item.label}
+                </Button>
+                {all.length - 1 > i && <Hint>&nbsp;|&nbsp;</Hint>}
+              </>
+            )
+          })}
+        </Col>
+      </Row>
+      <CardBody className="d-flex justify-content-center">
+        {renderCurrentType()}
+      </CardBody>
+    </>
   )
+}
+
+OutputTab.propTypes = {
+  setCustomBack: PropTypes.func.isRequired,
 }
 
 export default OutputTab

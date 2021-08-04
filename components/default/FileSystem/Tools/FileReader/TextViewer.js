@@ -19,7 +19,9 @@ const TextViewer = ({ item }) => {
   const onLoaded = (res) => {
     const enc = new TextDecoder('utf-8')
     const newText = enc.decode(res)
-    if (!newText) setPlaceholder('File is empty. Waiting for updates...')
+    if (!newText) {
+      setPlaceholder('File is empty. Waiting for updates...')
+    }
     setText(newText)
     if (input.current) {
       if (shouldAutoScroll) {

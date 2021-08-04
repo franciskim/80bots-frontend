@@ -1,30 +1,19 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import FileSystem from 'components/default/FileSystem'
-import { flush, open, close } from 'store/fileSystem/actions'
+import {
+  flush,
+  open as openItem,
+  close as closeItem,
+} from 'store/fileSystem/actions'
 import { Loader80bots } from 'components/default'
-import { Modal, Button, Container } from 'reactstrap'
-import ReportEditor from './ReportIssue'
+import { Button, Row, Col } from 'reactstrap'
+import ReportEditor from './ReportEditor'
 
 const rootFolder = 'screenshots'
-const defaultLimit = 15
-
-// const Container = styled.div`
-//   position: relative;
-//   flex: 1;
-//   bottom: 0;
-//   display: flex;
-//   flex-wrap: wrap;
-//   flex-direction: column;
-// `
-
-// const Report = styled(Button)`
-//   padding: 0 5px;
-//   animation: ${Fade} 200ms ease-in;
-// `
 
 const FiltersSection = styled.div`
   width: 100%;
@@ -36,33 +25,34 @@ const Hint = styled.span`
   font-size: 14px;
 `
 
-const ScreenShotTab = ({
-  flush,
-  channel,
-  openItem,
-  closeItem,
-  openedFolder,
-  previous,
-  setCustomBack,
-  loading,
-  items,
-  botInstance,
-}) => {
-  const [limit] = useState(defaultLimit)
+const ScreenShotTab = ({ setCustomBack }) => {
+  const dispatch = useDispatch()
+  const [limit] = useState(16)
   const [reportItems, setReportItems] = useState([])
   const [isReportMode, setReportMode] = useState(false)
-  const [showReportModal, setShowReportModal] = useState(false)
+  // const [showReportModal, setShowReportModal] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const router = useRouter()
-  const reportModal = useRef(null)
+
+  const botInstance = useSelector((state) => state.bot.botInstance)
+  const channel = useSelector((state) => state.bot.botInstance?.storage_channel)
+  const openedFolder = useSelector((state) => state.fileSystem.openedFolder)
+  const previous = useSelector(
+    (state) => state.fileSystem.history.slice(-1)?.[0]?.openedFolder
+  )
+  const loading = useSelector((state) => state.fileSystem.loading)
+  const items = useSelector((state) => state.fileSystem.items)
 
   useEffect(() => {
     return () => flush()
   }, [router.query.id])
 
   useEffect(() => {
-    if (channel && !!openedFolder) return
-    openItem({ path: rootFolder }, { limit })
+    if (channel && !!openedFolder) {
+      return
+    }
+    dispatch(openItem({ path: rootFolder }, { limit }))
   }, [channel, openedFolder])
 
   useEffect(() => {
@@ -71,7 +61,7 @@ const ScreenShotTab = ({
     } else {
       setCustomBack(() => {
         closeItem(openedFolder)
-        openItem(previous, { limit })
+        dispatch(openItem(previous, { limit }))
       })
     }
   }, [openedFolder, previous])
@@ -90,21 +80,23 @@ const ScreenShotTab = ({
   }
 
   return (
-    <>
-      <Container>
-        {loading || !items.length ? (
-          <Loader80bots
-            data={'light'}
-            styled={{
-              width: '200px',
-            }}
-          />
-        ) : (
-          <>
+    <div className="justify-content-center">
+      {loading || !items.length ? (
+        <Loader80bots
+          data={'light'}
+          styled={{
+            width: '200px',
+          }}
+        />
+      ) : (
+        <Row>
+          <Col>
             <FiltersSection>
               {isReportMode && <Hint>Select issued screenshots |&nbsp;</Hint>}
               <Button
+                size="sm"
                 type={'danger'}
+                color="danger"
                 onClick={() => setReportMode(!isReportMode)}
               >
                 {isReportMode ? 'Cancel' : 'Report Issue'}
@@ -113,8 +105,9 @@ const ScreenShotTab = ({
                 <>
                   <Hint>&nbsp;|&nbsp;</Hint>
                   <Button
+                    size="sm"
                     type={'success'}
-                    onClick={() => setShowReportModal(true)}
+                    onClick={() => setIsModalOpen(true)}
                   >
                     Proceed
                   </Button>
@@ -125,51 +118,22 @@ const ScreenShotTab = ({
               selectedItems={reportItems}
               onFileOpen={isReportMode ? handleItemSelect : null}
             />
-          </>
-        )}
-      </Container>
-      <Modal
-        mode={showReportModal ? 'in' : 'closed'}
-        ref={reportModal}
-        title={'Report Issue'}
-        close={() => setShowReportModal(false)}
-      >
-        <ReportEditor
-          bot={botInstance}
-          screenshots={reportItems}
-          onClose={() => setShowReportModal(false)}
-        />
-      </Modal>
-    </>
+          </Col>
+        </Row>
+      )}
+      <ReportEditor
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        bot={botInstance}
+        screenshots={reportItems}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </div>
   )
 }
 
 ScreenShotTab.propTypes = {
-  flush: PropTypes.func.isRequired,
-  channel: PropTypes.string,
-  openItem: PropTypes.func.isRequired,
-  closeItem: PropTypes.func.isRequired,
-  openedFolder: PropTypes.object,
-  previous: PropTypes.object,
-  loading: PropTypes.bool,
   setCustomBack: PropTypes.func.isRequired,
-  items: PropTypes.array.isRequired,
-  botInstance: PropTypes.object,
 }
 
-const mapStateToProps = (state) => ({
-  botInstance: state.bot.botInstance,
-  channel: state.bot.botInstance?.storage_channel,
-  openedFolder: state.fileSystem.openedFolder,
-  previous: state.fileSystem.history.slice(-1)?.[0]?.openedFolder,
-  loading: state.fileSystem.loading,
-  items: state.fileSystem.items,
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  flush: () => dispatch(flush()),
-  openItem: (item, query) => dispatch(open(item, query)),
-  closeItem: (item) => dispatch(close(item)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(ScreenShotTab)
+export default ScreenShotTab

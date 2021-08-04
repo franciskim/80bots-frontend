@@ -27,7 +27,7 @@ const IndexHeader = () => {
               <Col lg="6">
                 <div className="pr-5">
                   <h1 className="display-2 text-white font-weight-bold mb-0">
-                    NextJS Argon Dashboard PRO
+                    80bots.com
                   </h1>
                   <h2 className="display-4 text-white font-weight-light">
                     A beautiful premium dashboard for NextJS, Bootstrap 4, React
@@ -52,18 +52,6 @@ const IndexHeader = () => {
                         <p>Argon comes with over 70 handcrafted components.</p>
                       </CardBody>
                     </Card>
-                    <Card>
-                      <CardBody>
-                        <div className="icon icon-shape bg-gradient-info text-white rounded-circle shadow mb-4">
-                          <i className="ni ni-active-40" />
-                        </div>
-                        <h5 className="h3">Plugins</h5>
-                        <p>
-                          Fully integrated and extendable third-party plugins
-                          that you will love.
-                        </p>
-                      </CardBody>
-                    </Card>
                   </Col>
                   <Col className="pt-lg-5 pt-4" md="6">
                     <Card className="mb-4">
@@ -76,15 +64,6 @@ const IndexHeader = () => {
                           From simple to complex, you get a beautiful set of 15+
                           page examples.
                         </p>
-                      </CardBody>
-                    </Card>
-                    <Card className="mb-4">
-                      <CardBody>
-                        <div className="icon icon-shape bg-gradient-warning text-white rounded-circle shadow mb-4">
-                          <i className="ni ni-active-40" />
-                        </div>
-                        <h5 className="h3">Documentation</h5>
-                        <p>You will love how easy is to to work with Argon.</p>
                       </CardBody>
                     </Card>
                   </Col>

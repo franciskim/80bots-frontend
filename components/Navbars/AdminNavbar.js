@@ -160,7 +160,7 @@ const AdminNavbar = ({ theme, sidenavOpen, toggleSidenav }) => {
                 <DropdownMenu right>
                   <DropdownItem
                     href="#pablo"
-                    onClick={() => Router.push('profile')}
+                    onClick={() => Router.push('/profile')}
                   >
                     <i className="ni ni-single-02" />
                     <span>My profile</span>

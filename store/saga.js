@@ -23,10 +23,12 @@ axios.interceptors.response.use(
     return response
   },
   (error) => {
-    const {
-      response: { status, data },
-    } = error
-    if (status === 404 || status === 401) {
+    const { response } = error
+    if (!response) {
+      return Promise.reject(new Error('Could not communicate with server'))
+    }
+    const { status, data } = response
+    if (status === 404 || status === 401 || status === 400) {
       return Promise.reject(new Error(data.message))
     }
     return Promise.reject(error)
