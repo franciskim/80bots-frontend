@@ -16,7 +16,6 @@ import {
   ListFilter,
   TableHeader,
 } from 'components/default'
-
 import { addNotification, download } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 import {
@@ -42,33 +41,6 @@ import {
   closeScriptNotification,
   flushScriptNotification,
 } from 'store/scriptNotification/actions'
-
-// const selectStyles = {
-//     container: (provided, state) => ({
-//         ...provided,
-//         width: state.selectProps.width,
-//         minWidth: "150px"
-//     }),
-//     menuPortal: base => ({...base, zIndex: 5}),
-//     control: (provided, state) => ({
-//         ...provided,
-//         background: "rgba(0,0,0,0.2)",
-//         // match with the menu
-//         borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
-//         // Overrides the different states of border
-//         borderColor: state.isFocused ? "black" : "rgba(0,0,0,0.2)",
-//         // Removes weird border around container
-//         boxShadow: state.isFocused ? null : null,
-//         "&:hover": {
-//             // Overrides the different states of border
-//             borderColor: "black"
-//         }
-//     }),
-//     singleValue: (provided, state) => ({
-//         ...provided,
-//         color: "#fff"
-//     })
-// };
 
 const FILTERS_LIST_OPTIONS = [
   { value: 'all', label: 'All Instances' },
@@ -146,10 +118,10 @@ const RunningBots = () => {
   }, [])
 
   useEffect(() => {
-    console.log('botInstances ****** ' + JSON.stringify(botInstances))
+    // console.log('botInstances ****** ' + JSON.stringify(botInstances))
     botInstances.map(async (botInstance) => {
       const { notification_channel, status } = botInstance
-      console.log('settings_channel ******', settings_channel)
+      // console.log('settings_channel ******', settings_channel)
       const subscribe = settings_channel.some(
         (item) => item.channel === botInstance.notification_channel
       )

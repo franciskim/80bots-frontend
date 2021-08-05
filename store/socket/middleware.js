@@ -40,6 +40,7 @@ export default function createWebSocketMiddleware() {
         case success(LOGIN):
         case success(AUTH_CHECK): {
           socket = connect()
+
           return next(action)
         }
         case error(REGISTER):
