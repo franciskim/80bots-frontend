@@ -22,7 +22,7 @@ export const LimitFilter = ({ defaultValue, onChange, total }) => {
       id="datatable-basic_filter"
       className="dataTables_filter px-4 pb-1 float-left"
     >
-      <Label style={{ display: 'inline-block' }}>Show</Label>
+      <Label>Show</Label>
       <Select
         options={LIMIT_OPTIONS}
         value={LIMIT_OPTIONS.find((o) => o.value === pageSize)}
@@ -31,9 +31,10 @@ export const LimitFilter = ({ defaultValue, onChange, total }) => {
           container: (provided, state) => ({
             ...provided,
             width: state.selectProps.width,
-            minWidth: '120px',
+            minWidth: '80px',
             display: 'inline-block',
             margin: '0 10px',
+            fontSize: '14px',
           }),
         }}
       />

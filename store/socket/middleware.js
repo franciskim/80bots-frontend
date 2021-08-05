@@ -92,7 +92,7 @@ export default function createWebSocketMiddleware() {
           )
         case REMOVE_ALL_LISTENERS: {
           for (let key in rooms) {
-            if (rooms.hasOwnProperty(key)) {
+            if (rooms[key]) {
               socket.leave(key)
             }
           }

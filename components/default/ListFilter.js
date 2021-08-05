@@ -43,5 +43,4 @@ ListFilter.propTypes = {
   defaultValue: PropTypes.any,
   value: PropTypes.any,
   label: PropTypes.string,
-  instanceId: PropTypes.string.isRequired,
 }

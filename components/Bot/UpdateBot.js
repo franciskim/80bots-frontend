@@ -245,7 +245,7 @@ const UpdateBot = () => {
               id="bot-name"
               type={'text'}
               value={botName}
-              onChange={(e) => setBotName(e.target.value)}
+              onChange={({ target }) => setBotName(target.value)}
               invalid={!!errors['botName']}
             />
             <FormFeedback valid={false}>You must fill in bot name</FormFeedback>
@@ -307,8 +307,7 @@ const UpdateBot = () => {
               label={'Description'}
               rows={5}
               value={description}
-              // styles={inputStyles}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={({ target }) => setDescription(target.value)}
             />
           </Col>
         </FormGroup>

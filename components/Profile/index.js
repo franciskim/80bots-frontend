@@ -12,12 +12,22 @@ import {
   CardBody,
   FormGroup,
   Input,
-  Row,
   Col,
   CardHeader,
   CardFooter,
 } from 'reactstrap'
 import { updateUserProfile as updateUser } from 'store/auth/actions'
+import Skeleton from 'react-loading-skeleton'
+
+const clockStyle = {
+  color: '#7dffff',
+  fontSize: '16px',
+}
+
+const currClockStyle = {
+  color: '#7CFC00',
+  fontSize: '16px',
+}
 
 const Profile = () => {
   const dispatch = useDispatch()
@@ -71,60 +81,63 @@ const Profile = () => {
     <Card>
       <CardHeader>User information</CardHeader>
       <CardBody className="row">
-        {user && (
-          <Col md={6}>
-            <FormGroup className="row">
-              <Label
-                md={4}
-                className="form-control-label"
-                htmlFor="input-email"
-              >
-                Email address
-              </Label>
-              <Col md={8}>
+        <Col md={6}>
+          <FormGroup className="row">
+            <Label md={4} className="form-control-label" htmlFor="input-email">
+              Email address
+            </Label>
+            <Col md={8}>
+              {user && (
                 <Input
                   id="input-email"
                   type="email"
                   value={user.email}
                   readOnly
                 />
-              </Col>
-            </FormGroup>
-            <FormGroup className="row">
-              <Label md="4" className="form-control-label">
-                Your current time:{' '}
-              </Label>
-              <Col md="8">
-                <Clock
-                  format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
-                  timezone={null}
-                  // style={currClockStyle}
-                  ticking={true}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup className="row">
-              <Label md={4} className="form-control-label">
-                Current platform time:{' '}
-              </Label>
-              <Col md="8">
+              )}
+              {!user && <Skeleton count={1} />}
+            </Col>
+          </FormGroup>
+          <FormGroup className="row">
+            <Label md="4" className="form-control-label">
+              Your current time:
+            </Label>
+            <Col md="8">
+              <Clock
+                format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
+                timezone={null}
+                style={currClockStyle}
+                ticking={true}
+              />
+            </Col>
+          </FormGroup>
+          <FormGroup className="row">
+            <Label md={4} className="form-control-label">
+              Current platform time:
+            </Label>
+            <Col md="8">
+              {user && (
                 <Clock
                   format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
                   timezone={user.timezone}
+                  style={clockStyle}
                   ticking={true}
                 />
-              </Col>
-            </FormGroup>
+              )}
+              {!user && <Skeleton count={1} />}
+            </Col>
+          </FormGroup>
 
-            <FormGroup className="row">
-              <Label
-                className="form-control-label"
-                htmlFor="example-text-input"
-                md="4"
-              >
-                My Timezone
-              </Label>
-              <Col md="8">
+          <FormGroup className="row">
+            <Label
+              className="form-control-label"
+              htmlFor="example-text-input"
+              md="4"
+            >
+              My Timezone
+            </Label>
+            <Col md="8">
+              {user && (
                 <Select
                   options={timezones.map((item) => ({
                     value: item.id,
@@ -133,17 +146,20 @@ const Profile = () => {
                   onChange={(option) => setTimezone(option)}
                   value={timezone}
                 />
-              </Col>
-            </FormGroup>
-            <FormGroup className="row">
-              <Label
-                className="form-control-label"
-                htmlFor="example-text-input"
-                md="4"
-              >
-                Preferred Region
-              </Label>
-              <Col md={8}>
+              )}
+              {!user && <Skeleton count={1} />}
+            </Col>
+          </FormGroup>
+          <FormGroup className="row">
+            <Label
+              className="form-control-label"
+              htmlFor="example-text-input"
+              md="4"
+            >
+              Preferred Region
+            </Label>
+            <Col md={8}>
+              {user && (
                 <Select
                   options={regions.map((item) => ({
                     value: item.id,
@@ -152,10 +168,11 @@ const Profile = () => {
                   onChange={(option) => setRegion(option)}
                   value={region}
                 />
-              </Col>
-            </FormGroup>
-          </Col>
-        )}
+              )}
+              {!user && <Skeleton count={1} />}
+            </Col>
+          </FormGroup>
+        </Col>
       </CardBody>
       <CardFooter>
         <Button color={'primary'} onClick={handleUpdate}>

@@ -28,37 +28,6 @@ import Router from 'next/router'
 import * as yup from 'yup'
 import classnames from 'classnames'
 
-// const selectStyles = {
-//   control: (provided, state) => ({
-//     ...provided,
-//     border: 'solid 1px hsl(0,0%,80%)',
-//     borderRadius: '4px',
-//     color: '#fff',
-//     backgroundColor: 'transparent',
-//     '&:hover': {
-//       borderColor: '#7dffff',
-//     },
-//   }),
-//   singleValue: (provided, state) => ({
-//     ...provided,
-//     color: '#fff',
-//   }),
-//   menu: (provided, state) => ({
-//     ...provided,
-//     border: 'solid 1px hsl(0,0%,80%)',
-//     borderRadius: '4px',
-//     zIndex: '7',
-//   }),
-//   menuList: (provided, state) => ({
-//     ...provided,
-//     backgroundColor: '#333',
-//   }),
-//   option: (provided, state) => ({
-//     ...provided,
-//     color: state.isFocused ? 'black' : '#fff',
-//   }),
-// }
-
 const Index = () => {
   const dispatch = useDispatch()
   const [tagName, setTagName] = useState('')
@@ -190,8 +159,8 @@ const Index = () => {
                 id="bot-name"
                 type="text"
                 value={botName}
-                onChange={(e) => {
-                  setBotName(e.target.value)
+                onChange={({ target }) => {
+                  setBotName(target.value)
                   setErrors({
                     ...errors,
                     botName: null,
@@ -260,7 +229,7 @@ const Index = () => {
                 label={'Description'}
                 rows={5}
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={({ target }) => setDescription(target.value)}
               />
             </Col>
           </FormGroup>
