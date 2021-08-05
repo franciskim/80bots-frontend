@@ -2,52 +2,12 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { PaginationLink, PaginationItem, Pagination } from 'reactstrap'
 
+const MaximumShownPages = 10
+
 export const Paginator = ({ total, initialPage, pageSize, onChangePage }) => {
-  const [currentPage, setCurrentPage] = useState(initialPage || 1)
-  // const [pages, setPages] = useState([])
+  const [pages, setPages] = useState([])
+  const [currentPage, setCurrentPage] = useState(initialPage)
   const [totalPages, setTotalPages] = useState(0)
-
-  const [diapasonAndIndexes, setDiapasonAndIndexes] = useState({
-    startPage: null,
-    endPage: null,
-    startIndex: null,
-    endIndex: null,
-  })
-  const setPaginator = (page) => {
-    const totalPages = Math.ceil(total / pageSize)
-    let startPage, endPage
-    if (totalPages <= 10) {
-      startPage = 1
-      endPage = totalPages
-    } else {
-      if (page <= 6) {
-        startPage = 1
-        endPage = 10
-      } else if (page + 4 >= totalPages) {
-        startPage = totalPages - 9
-        endPage = totalPages
-      } else {
-        startPage = page - 5
-        endPage = page + 4
-      }
-    }
-
-    const startIndex = (page - 1) * pageSize
-    const endIndex = Math.min(startIndex + pageSize - 1, total - 1)
-    // const pages = [...Array(endPage + 1 - startPage).keys()].map(
-    //   (i) => startPage + i
-    // )
-
-    setCurrentPage(page)
-    setTotalPages(totalPages)
-    setDiapasonAndIndexes({
-      startPage,
-      endPage,
-      startIndex,
-      endIndex,
-    })
-    // setPages(pages)
-  }
 
   useEffect(() => {
     setPaginator(1)
@@ -59,13 +19,34 @@ export const Paginator = ({ total, initialPage, pageSize, onChangePage }) => {
     }
   }, [initialPage])
 
+  const setPaginator = (page) => {
+    const totalPages = Math.ceil(total / pageSize)
+    let startPage, endPage
+    if (totalPages <= MaximumShownPages) {
+      startPage = 1
+      endPage = totalPages
+    } else {
+      if (page <= MaximumShownPages / 2 + 1) {
+        startPage = 1
+        endPage = MaximumShownPages
+      } else if (page + 4 >= totalPages) {
+        startPage = totalPages - MaximumShownPages + 1
+        endPage = totalPages
+      } else {
+        startPage = page - MaximumShownPages / 2
+        endPage = page + MaximumShownPages / 2 - 1
+      }
+    }
+
+    setCurrentPage(page)
+    setTotalPages(totalPages)
+
+    setPages(
+      [...Array(endPage + 1 - startPage).keys()].map((i) => startPage + i)
+    )
+  }
+
   useEffect(() => {
-    // if (total !== total) {
-    //   setTotal(total)
-    // }
-    // if (pageSize !== pageSize) {
-    //   setPageSize(pageSize)
-    // }
     setPaginator(currentPage)
   }, [total, pageSize])
 
@@ -77,10 +58,9 @@ export const Paginator = ({ total, initialPage, pageSize, onChangePage }) => {
     onChangePage(page)
   }
 
-  // if (total <= pageSize) {
-  //   return null
-  // }
-
+  if (total <= pageSize) {
+    return null
+  }
   return (
     <Pagination
       className="pagination justify-content-end mb-0"
@@ -89,7 +69,6 @@ export const Paginator = ({ total, initialPage, pageSize, onChangePage }) => {
       <PaginationItem className={currentPage === 1 ? 'disabled' : ''}>
         <PaginationLink href="#pablo" onClick={() => setPage(1)} tabIndex="-1">
           <i className="fas fa-angle-double-left" />
-          <span className="sr-only">First</span>
         </PaginationLink>
       </PaginationItem>
       <PaginationItem className={currentPage === 1 ? 'disabled' : ''}>
@@ -99,29 +78,24 @@ export const Paginator = ({ total, initialPage, pageSize, onChangePage }) => {
           tabIndex="-1"
         >
           <i className="fas fa-angle-left" />
-          <span className="sr-only">First</span>
         </PaginationLink>
       </PaginationItem>
 
-      {Array.from({ length: totalPages }, (v, i) => {
-        const pageIdx = i + 1
-        return (
-          <PaginationItem
-            key={`page-${i}`}
-            className={pageIdx === currentPage ? 'active' : ''}
-            onClick={() => setPage(pageIdx)}
-          >
-            <PaginationLink href="#pablo" onClick={(e) => e.preventDefault()}>
-              {pageIdx} <span className="sr-only">(current)</span>
-            </PaginationLink>
-          </PaginationItem>
-        )
-      })}
+      {pages.map((page) => (
+        <PaginationItem
+          key={`page-${page}`}
+          className={page === currentPage ? 'active' : ''}
+          onClick={() => setPage(page)}
+        >
+          <PaginationLink href="#pablo" onClick={(e) => e.preventDefault()}>
+            {page} <span className="sr-only">(current)</span>
+          </PaginationLink>
+        </PaginationItem>
+      ))}
 
-      <PaginationItem className={currentPage < totalPages ? 'disabled' : ''}>
+      <PaginationItem className={currentPage === totalPages ? 'disabled' : ''}>
         <PaginationLink href="#pablo" onClick={() => setPage(currentPage + 1)}>
           <i className="fas fa-angle-right" />
-          <span className="sr-only">Last</span>
         </PaginationLink>
       </PaginationItem>
       <PaginationItem className={currentPage === totalPages ? 'disabled' : ''}>
@@ -130,7 +104,6 @@ export const Paginator = ({ total, initialPage, pageSize, onChangePage }) => {
           onClick={() => setPage(Math.ceil(total / pageSize))}
         >
           <i className="fas fa-angle-double-right" />
-          <span className="sr-only">Last</span>
         </PaginationLink>
       </PaginationItem>
     </Pagination>
@@ -141,11 +114,10 @@ Paginator.propTypes = {
   total: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
   initialPage: PropTypes.number,
-  pageSize: PropTypes.number,
+  pageSize: PropTypes.number.isRequired,
 }
 
 Paginator.defautProps = {
-  pageSize: 10,
   initialPage: 1,
 }
 

@@ -83,6 +83,7 @@ const LoginForm = () => {
             onFocus={() => setfocusedEmail(true)}
             onBlur={() => setfocusedEmail(true)}
             onChange={(e) => setEmail(e.target.value)}
+            tabIndex="1"
           />
         </InputGroup>
         <FormFeedback className={classnames({ 'd-block': !!errors['email'] })}>
@@ -107,6 +108,7 @@ const LoginForm = () => {
             onBlur={() => setfocusedPassword(true)}
             onChange={(e) => setPassword(e.target.value)}
             invalid={true}
+            tabIndex="2"
           />
         </InputGroup>
         <FormFeedback
@@ -120,10 +122,11 @@ const LoginForm = () => {
       <div className="custom-control custom-control-alternative custom-checkbox">
         <input
           className="custom-control-input"
-          id=" customCheckLogin"
+          id="remember"
           type="checkbox"
+          tabIndex="3"
         />
-        <label className="custom-control-label" htmlFor=" customCheckLogin">
+        <label className="custom-control-label" htmlFor="remember">
           <span className="text-muted">Remember me</span>
         </label>
       </div>
@@ -133,6 +136,7 @@ const LoginForm = () => {
           color="info"
           type="button"
           onClick={submitForm}
+          tabIndex="4"
         >
           Sign in
         </Button>

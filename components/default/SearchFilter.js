@@ -18,10 +18,10 @@ export const SearchFilter = ({ onChange, ...props }) => {
         id="datatable-basic_filter"
         className="dataTables_filter px-4 pb-1 float-right"
       >
-        <Label>Search:</Label>
+        <Label htmlFor="table-search">Search:</Label>
         <SearchBar
+          id="table-search"
           className="form-control-sm"
-          placeholder=""
           onSearch={handleChange}
           searchText={keyword}
         />

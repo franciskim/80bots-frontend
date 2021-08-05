@@ -4,7 +4,6 @@ import {
   CardBody,
   Modal,
   Button,
-  Badge,
   Table,
   CardHeader,
   CardFooter,
@@ -15,6 +14,7 @@ import {
   ListFilter,
   TableHeader,
 } from 'components/default'
+import ScheduleTableRow from './ScheduleTableRow'
 
 import { addNotification } from 'lib/helpers'
 import { useDispatch, useSelector } from 'react-redux'
@@ -106,7 +106,7 @@ const BotsSchedule = () => {
   // const user = useSelector((state) => state.auth.user)
   // const error = useSelector((state) => state.schedule.error)
 
-  const changeScheduleStatus = (schedule) => {
+  const handleStatusChange = (schedule) => {
     const statusName =
       schedule.status === 'active' ? 'deactivated' : 'activated'
     const status = schedule.status === 'active' ? 'inactive' : 'active'
@@ -125,7 +125,7 @@ const BotsSchedule = () => {
       )
   }
 
-  const toggleModal = (schedule) => {
+  const handleDelete = (schedule) => {
     setClickedSchedule(schedule)
     setIsModalOpen(true)
   }
@@ -135,7 +135,7 @@ const BotsSchedule = () => {
     setIsAddModalOpen(true)
   }
 
-  const toggleEditModal = (schedule) => {
+  const handleEdit = (schedule) => {
     setClickedSchedule(schedule)
     setIsEditModalOpen(true)
   }
@@ -195,64 +195,6 @@ const BotsSchedule = () => {
     />
   )
 
-  const renderRow = (schedule) => (
-    <tr key={schedule.id}>
-      <td>{schedule.user}</td>
-      <td>{schedule.instance_id}</td>
-      <td>{schedule.bot_name}</td>
-      <td>
-        <Button
-          color={schedule.status === 'active' ? 'success' : 'danger'}
-          onClick={() => changeScheduleStatus(schedule)}
-          size="sm"
-        >
-          {schedule.status}
-        </Button>
-      </td>
-      <td>
-        {schedule.details.length > 0 ? (
-          <ul className="list-unstyled">
-            {schedule.details.map((detail, idx) => (
-              <li key={idx}>
-                <Badge pill color={'info'} key={idx}>
-                  {detail.status +
-                    ' at ' +
-                    detail.day +
-                    ' ' +
-                    detail.time +
-                    ', ' +
-                    detail.timezone}
-                </Badge>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          'No schedules added yet'
-        )}
-      </td>
-      <td>
-        <a
-          className="table-action"
-          href="#"
-          title="Edit"
-          onClick={() => toggleEditModal(schedule)}
-        >
-          <i className="fas fa-edit" />
-        </a>
-        <a
-          className="table-action"
-          href="#"
-          title="Delete"
-          onClick={() => toggleModal(schedule)}
-        >
-          <i className="fas fa-trash" />
-        </a>
-      </td>
-    </tr>
-  )
-
-  // const loadSchedules = () => {}
-
   return (
     <Card>
       <CardHeader>
@@ -274,6 +216,7 @@ const BotsSchedule = () => {
         <div>
           <LimitFilter
             defaultValue={limit}
+            total={total}
             onChange={(value) => {
               setLimit(value)
               onSearch()
@@ -314,7 +257,19 @@ const BotsSchedule = () => {
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody>{schedules.map(renderRow)}</tbody>
+            <tbody>
+              {schedules.map((schedule) => {
+                return (
+                  <ScheduleTableRow
+                    key={schedule.id}
+                    schedule={schedule}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    handleStatusChange={handleStatusChange}
+                  />
+                )
+              })}
+            </tbody>
           </Table>
         )}
         {isModalOpen && (
@@ -333,7 +288,9 @@ const BotsSchedule = () => {
         )}
         <AddScheduleModal
           isOpen={isAddModalOpen}
-          onClose={setIsAddModalOpen}
+          onClose={() => {
+            setIsAddModalOpen(false)
+          }}
           onRefresh={() => {
             setPage(1)
             onSearch()

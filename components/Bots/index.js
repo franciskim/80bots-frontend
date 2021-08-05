@@ -168,6 +168,7 @@ const Bots = () => {
         <div>
           <LimitFilter
             defaultValue={limit}
+            total={total}
             onChange={(value) => {
               setLimit(value)
               onSearch()

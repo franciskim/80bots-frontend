@@ -40,6 +40,7 @@ export default function createWebSocketMiddleware() {
         case success(LOGIN):
         case success(AUTH_CHECK): {
           socket = connect()
+
           return next(action)
         }
         case error(REGISTER):
@@ -92,7 +93,7 @@ export default function createWebSocketMiddleware() {
           )
         case REMOVE_ALL_LISTENERS: {
           for (let key in rooms) {
-            if (rooms.hasOwnProperty(key)) {
+            if (rooms[key]) {
               socket.leave(key)
             }
           }

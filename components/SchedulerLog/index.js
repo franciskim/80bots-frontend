@@ -65,6 +65,7 @@ const SchedulerLog = () => {
         <div>
           <LimitFilter
             defaultValue={limit}
+            total={total}
             onChange={(value) => {
               setLimit(value)
               onSearch()

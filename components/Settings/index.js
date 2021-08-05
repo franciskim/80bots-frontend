@@ -116,6 +116,7 @@ const Settings = () => {
         <div>
           <LimitFilter
             defaultValue={limit}
+            total={total}
             onChange={(value) => {
               setLimit(value)
               onSearch()

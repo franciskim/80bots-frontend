@@ -28,37 +28,6 @@ import Router from 'next/router'
 import * as yup from 'yup'
 import classnames from 'classnames'
 
-// const selectStyles = {
-//   control: (provided, state) => ({
-//     ...provided,
-//     border: 'solid 1px hsl(0,0%,80%)',
-//     borderRadius: '4px',
-//     color: '#fff',
-//     backgroundColor: 'transparent',
-//     '&:hover': {
-//       borderColor: '#7dffff',
-//     },
-//   }),
-//   singleValue: (provided, state) => ({
-//     ...provided,
-//     color: '#fff',
-//   }),
-//   menu: (provided, state) => ({
-//     ...provided,
-//     border: 'solid 1px hsl(0,0%,80%)',
-//     borderRadius: '4px',
-//     zIndex: '7',
-//   }),
-//   menuList: (provided, state) => ({
-//     ...provided,
-//     backgroundColor: '#333',
-//   }),
-//   option: (provided, state) => ({
-//     ...provided,
-//     color: state.isFocused ? 'black' : '#fff',
-//   }),
-// }
-
 const Index = () => {
   const dispatch = useDispatch()
   const [tagName, setTagName] = useState('')
@@ -182,15 +151,16 @@ const Index = () => {
       <CardBody>
         <Form noValidate>
           <FormGroup className="row">
-            <Label md={2} className="form-control-label">
+            <Label htmlFor="bot-name" md={2} className="form-control-label">
               Bot Name *
             </Label>
             <Col md={10}>
               <Input
+                id="bot-name"
                 type="text"
                 value={botName}
-                onChange={(e) => {
-                  setBotName(e.target.value)
+                onChange={({ target }) => {
+                  setBotName(target.value)
                   setErrors({
                     ...errors,
                     botName: null,
@@ -249,27 +219,31 @@ const Index = () => {
             </Col>
           </FormGroup>
           <FormGroup className="row">
-            <Label md={2} className="form-control-label">
+            <Label htmlFor="description" md={2} className="form-control-label">
               Description
             </Label>
             <Col md={10}>
               <Input
+                id="description"
                 type="textarea"
                 label={'Description'}
                 rows={5}
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={({ target }) => setDescription(target.value)}
               />
             </Col>
           </FormGroup>
           <FormGroup className="row">
-            <Label md={2} className="form-control-label">
+            <Label
+              htmlFor="tags-selector"
+              md={2}
+              className="form-control-label"
+            >
               Tags
             </Label>
             <Col md={10}>
               <Select
                 id="tags-selector"
-                instanceId="tags-selector"
                 isMulti
                 options={getTagOptions()}
                 onInputChange={onTagInputChange}
@@ -279,11 +253,12 @@ const Index = () => {
             </Col>
           </FormGroup>
           <FormGroup className="row">
-            <Label md={2} className="form-control-label">
+            <Label htmlFor="visible-btn" md={2} className="form-control-label">
               Access *
             </Label>
             <Col md={2}>
               <Button
+                id="visible-btn"
                 className="form-control"
                 color={isPrivate ? 'danger' : 'secondary'}
                 onClick={() => setPrivate(!isPrivate)}
@@ -294,11 +269,16 @@ const Index = () => {
           </FormGroup>
           {isPrivate && (
             <FormGroup className="row">
-              <Label md={2} className="form-control-label">
+              <Label
+                htmlFor="user-selector"
+                md={2}
+                className="form-control-label"
+              >
                 Trusted Users
               </Label>
               <Col md={10}>
                 <AsyncSelect
+                  id="user-selector"
                   isMulti
                   defaultOptions={users.map(toOptions)}
                   value={trustedUsers}
@@ -308,7 +288,6 @@ const Index = () => {
               </Col>
             </FormGroup>
           )}
-          {/* {error && <Error>{error}</Error>} */}
         </Form>
       </CardBody>
       <CardFooter>

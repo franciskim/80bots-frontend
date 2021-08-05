@@ -59,9 +59,12 @@ const EditDefaultAMIModal = ({ isOpen, onClose, region }) => {
       <ModalHeader>Edit Default AMI</ModalHeader>
       <ModalBody>
         <FormGroup className="row">
-          <Label md={3}>AMI</Label>
+          <Label md={3} htmlFor="ami">
+            AMI
+          </Label>
           <Col md={9}>
             <Select
+              id="ami"
               onChange={(option) => setDefaultAmi(option.value)}
               options={amis.map(({ image_id, name }) => ({
                 value: image_id,

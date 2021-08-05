@@ -1,0 +1,349 @@
+<svg width="1000" height="252" viewBox="0 0 1000 252" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <style>
+
+    :root {
+      --animation-duration: 7s;
+      --color-face-glass: #FF7D7D;
+      --color-bot-eyes: #16ACF7;
+      --color-eighty: #23343E;
+      --color-bots: #16ACF7;
+
+      --color-beam-1: #FF6AFF;
+      --color-beam-2: #FF00FF;
+      --color-beam-3: #FF086E;
+      --color-beam-4: #FF0000;
+      --color-beam-5: #F40075;
+    }
+
+    @keyframes blink-eyes {
+      75% {
+        opacity: 1;
+        transform: scaleY(1);
+      }
+
+      77% {
+        opacity: 0;
+        transform: scaleY(0.2);
+      }
+
+      80% {
+        opacity: 1;
+        transform: scaleY(1);
+      }
+    }
+
+    @keyframes drop-visor {
+      0% { transform: translateY(0); }
+      5% { transform: translateY(104px); }
+      50% { transform: translateY(104px); }
+      55% { transform: translateY(0); }
+    }
+
+    @keyframes nod-ears {
+      10% { transform: scaleY(1);}
+      15% { transform: scaleY(0.95); }
+      20% { transform: scaleY(1); }
+    }
+
+    @keyframes nod-aerial {
+      10% { transform: translateY(0) scaleY(1); }
+      15% { transform: translateY(3px) scaleY(0.9); }
+      20% { transform: translateY(0) scaleY(1); }
+    }
+
+    @keyframes nod-face {
+      10% { transform: translateY(0); }
+      15% { transform: translateY(-5px); }
+      20% { transform: translateY(0); }
+    }
+
+    @keyframes lighting-beam {
+      18% { 
+        opacity: 0; 
+        transform: scaleX(1);
+      }
+      25% { opacity: 1; }
+      45% {
+        opacity: 1;
+        transform: scaleX(1);
+      }
+      50% { 
+        opacity: 0; 
+        transform: scaleX(0.4);
+      }
+    }
+
+    @keyframes lighting-beam-l {
+      20% { transform: scaleX(1); }
+      23% { transform: scaleX(0.5); }
+      26% { transform: scaleX(1); }
+      29% { transform: scaleX(0.1); }
+      32% { transform: scaleX(1); }
+      35% { transform: scaleX(0.5); }
+      38% { transform: scaleX(1); }
+      41% { transform: scaleX(0.1); }
+      44% { transform: scaleX(1); }
+      47% { transform: scaleX(0.5); }
+      50% { transform: scaleX(0); }
+    }
+
+    @keyframes lighting-beam-r {
+      20% { transform: scaleX(1); }
+      23% { transform: scaleX(0.5); }
+      26% { transform: scaleX(0.2); }
+      29% { transform: scaleX(1); }
+      32% { transform: scaleX(0); }
+      35% { transform: scaleX(0.5); }
+      38% { transform: scaleX(0.3); }
+      41% { transform: scaleX(1); }
+      47% { transform: scaleX(1); }
+      47% { transform: scaleX(0.2); }
+      50% { transform: scaleX(0); }
+    }
+
+    @keyframes nod-and-lighting-glass {
+      10% { transform: translateY(0); }
+      15% { transform: translateY(-12px); }
+      20% { 
+        fill: var(--color-face-glass); 
+        transform: translateY(0);
+      }
+      23% { fill: var(--color-beam-5); }
+      26% { fill: var(--color-beam-4); }
+      29% { fill: var(--color-beam-3); }
+      32% { fill: var(--color-beam-2); }
+      35% { fill: var(--color-beam-1); }
+      38% { fill: var(--color-beam-5); }
+      41% { fill: var(--color-beam-4); }
+      44% { fill: var(--color-beam-3); }
+      47% { fill: var(--color-beam-2); }
+      50% { fill: var(--color-face-glass); }
+    }
+
+    @keyframes lighting-beam-stop-1 {
+      20% { stop-color: var(--color-beam-1); }
+      23% { stop-color: var(--color-beam-5); }
+      26% { stop-color: var(--color-beam-4); }
+      29% { stop-color: var(--color-beam-3); }
+      32% { stop-color: var(--color-beam-2); }
+      35% { stop-color: var(--color-beam-1); }
+      38% { stop-color: var(--color-beam-5); }
+      41% { stop-color: var(--color-beam-4); }
+      44% { stop-color: var(--color-beam-3); }
+      47% { stop-color: var(--color-beam-2); }
+      50% { stop-color: var(--color-beam-1); }
+    }
+    
+    @keyframes lighting-beam-stop-2 {
+      20% { stop-color: var(--color-beam-2); }
+      23% { stop-color: var(--color-beam-1); }
+      26% { stop-color: var(--color-beam-5); }
+      29% { stop-color: var(--color-beam-4); }
+      32% { stop-color: var(--color-beam-3); }
+      35% { stop-color: var(--color-beam-2); }
+      38% { stop-color: var(--color-beam-1); }
+      41% { stop-color: var(--color-beam-5); }
+      44% { stop-color: var(--color-beam-4); }
+      47% { stop-color: var(--color-beam-3); }
+      50% { stop-color: var(--color-beam-2); }
+    }
+
+    @keyframes lighting-beam-stop-3 {
+      20% { stop-color: var(--color-beam-3); }
+      23% { stop-color: var(--color-beam-4); }
+      26% { stop-color: var(--color-beam-5); }
+      29% { stop-color: var(--color-beam-1); }
+      32% { stop-color: var(--color-beam-2); }
+      35% { stop-color: var(--color-beam-3); }
+      38% { stop-color: var(--color-beam-4); }
+      41% { stop-color: var(--color-beam-5); }
+      44% { stop-color: var(--color-beam-1); }
+      47% { stop-color: var(--color-beam-2); }
+      50% { stop-color: var(--color-beam-3); }
+    }
+
+    @keyframes lighting-beam-stop-4 {
+      20% { stop-color: var(--color-beam-4); }
+      23% { stop-color: var(--color-beam-3); }
+      26% { stop-color: var(--color-beam-2); }
+      29% { stop-color: var(--color-beam-1); }
+      32% { stop-color: var(--color-beam-5); }
+      35% { stop-color: var(--color-beam-4); }
+      38% { stop-color: var(--color-beam-3); }
+      41% { stop-color: var(--color-beam-2); }
+      44% { stop-color: var(--color-beam-1); }
+      47% { stop-color: var(--color-beam-5); }
+      50% { stop-color: var(--color-beam-4); }
+    }
+
+    @keyframes lighting-beam-stop-5 {
+      20% { stop-color: var(--color-beam-5); }
+      23% { stop-color: var(--color-beam-4); }
+      26% { stop-color: var(--color-beam-3); }
+      29% { stop-color: var(--color-beam-2); }
+      32% { stop-color: var(--color-beam-1); }
+      35% { stop-color: var(--color-beam-5); }
+      38% { stop-color: var(--color-beam-4); }
+      41% { stop-color: var(--color-beam-3); }
+      44% { stop-color: var(--color-beam-2); }
+      47% { stop-color: var(--color-beam-1); }
+      50% { stop-color: var(--color-beam-5); }
+    }
+
+    #bots {
+      fill: var(--color-bots);
+    }
+
+    #bot-face-eyes {
+      fill: var(--color-bot-eyes);
+    }
+
+    #bot, #eight {
+      fill: var(--color-eighty);
+    }
+
+    #bot-face-eyes path {
+      transform-box: fill-box;
+      transform-origin: 50% 100%;
+      animation: var(--animation-duration) infinite blink-eyes;
+    }
+
+    #bot-face-visor {
+      animation: var(--animation-duration) linear infinite drop-visor;
+    }
+
+    #bot-ears {
+      transform-box: fill-box;
+      transform-origin: 50% 100%;
+      animation: var(--animation-duration) linear infinite nod-ears;
+    }
+
+    #bot-aerial {
+      transform-box: fill-box;
+      transform-origin: 50% 100%;
+      animation: var(--animation-duration) linear infinite nod-aerial;
+    }
+
+    #bot-cutout-inner {
+      animation: var(--animation-duration) linear  infinite nod-face;
+    }
+
+    #bot-face-visor-glass {
+      fill: var(--color-face-glass);
+      animation: var(--animation-duration) linear infinite nod-and-lighting-glass;
+    }
+
+    #bot-beam {
+      opacity: 0;
+      transform-origin: 282px 0;
+      animation: var(--animation-duration) infinite lighting-beam;
+    }
+
+    #bot-beam-l {
+      transform-origin: 232px 0%;
+      animation: var(--animation-duration) infinite lighting-beam-l;
+    }
+
+    #bot-beam-r {
+      transform-origin: 332px 0%;
+      animation: var(--animation-duration) infinite lighting-beam-r;
+    }
+
+    #beam-gradient stop:nth-child(1) {
+      animation: var(--animation-duration) linear infinite lighting-beam-stop-1;
+    }
+
+    #beam-gradient stop:nth-child(2) {
+      animation: var(--animation-duration) linear infinite lighting-beam-stop-2;
+    }
+
+    #beam-gradient stop:nth-child(3) {
+      animation: var(--animation-duration) linear infinite lighting-beam-stop-2;
+    }
+
+    #beam-gradient stop:nth-child(4) {
+      animation: var(--animation-duration) linear infinite lighting-beam-stop-4;
+    }
+
+    #beam-gradient stop:nth-child(5) {
+      animation: var(--animation-duration) linear infinite lighting-beam-stop-5;
+    }
+
+  </style>
+
+  <g id="symbols" clip-path="url(#clip0)">
+    <g id="bots">
+      <path id="symbols-s" d="M999.993 152.37C999.993 133.413 983.183 123.435 951.417 123.435H912.671C909.537 123.435 906.688 123.15 904.266 122.722C899.993 121.867 896.859 118.446 896.859 114.455V110.607C896.859 106.331 900.277 102.91 904.978 102.197C907.115 101.912 909.679 101.769 912.528 101.769H987.314C993.725 101.769 996.716 98.7761 997.856 96.9231C999.138 94.9276 999.708 93.3597 999.708 90.0813C999.708 86.9455 999.138 85.5201 997.856 83.6672L997.713 83.3821C996.574 81.5291 993.725 78.6784 987.314 78.6784H912.956C881.189 78.6784 864.38 88.656 864.38 107.613V117.306C864.38 136.263 881.189 146.241 912.956 146.241H951.702C954.408 146.241 956.83 146.384 958.967 146.669C963.81 147.239 967.371 150.802 967.371 155.078V158.072C967.371 162.205 963.81 165.911 959.109 166.481C956.973 166.766 954.408 166.909 951.559 166.909H876.773C870.363 166.909 867.371 169.902 866.374 171.613L866.232 171.898C865.092 173.608 864.522 175.176 864.522 178.169C864.522 181.448 865.235 183.016 866.374 185.011C867.514 186.864 870.363 189.857 876.773 189.857H951.132C982.899 189.857 999.708 179.88 999.708 160.922V152.37H999.993Z" />
+      <path id="symbols-t" d="M844.725 177.457C844.725 171.47 839.169 166.624 832.331 166.624H817.944C806.833 166.624 801.99 165.341 797.574 163.203C793.727 161.35 791.733 159.925 791.733 152.655V101.342H833.044C838.742 101.342 841.448 99.0612 842.588 97.2082C843.87 95.0701 844.582 93.3597 844.582 89.6537C844.582 85.9478 843.87 84.2373 842.588 82.0993C841.306 80.2463 838.742 77.9657 833.044 77.9657H791.733V50.456C791.733 44.0418 785.75 38.9104 778.485 38.9104H770.935C763.67 38.9104 757.83 44.0418 757.83 50.456V154.508C757.83 178.454 777.203 190 817.232 190H832.759C839.454 190 844.867 185.296 844.867 179.452V177.457H844.725Z" />
+      <path id="symbols-o" fill-rule="evenodd" clip-rule="evenodd" d="M674.484 78.8209C725.766 78.8209 736.449 97.9209 736.449 114.028V154.793C736.449 170.9 725.623 190 674.484 190H634.597C583.315 190 572.632 170.9 572.632 154.793V114.028C572.632 97.9209 583.315 78.8209 634.597 78.8209H674.484ZM696.706 163.488C702.404 160.637 702.404 158.072 702.404 157.216V111.604C702.404 110.749 702.404 108.184 696.706 105.333C693.572 103.765 687.019 101.912 673.771 101.912H635.31C622.062 101.912 615.509 103.765 612.375 105.333C606.677 108.041 606.677 110.749 606.677 111.604V157.216C606.677 158.072 606.677 160.637 612.375 163.488C615.509 165.056 622.062 166.909 635.31 166.909H673.771C687.019 166.909 693.572 165.056 696.706 163.488Z" />
+      <path id="symbols-b" fill-rule="evenodd" clip-rule="evenodd" d="M432.888 78.8209H489.583C540.58 78.8209 551.264 97.9209 551.122 114.028V154.793C551.122 170.9 540.438 190 489.441 190H477.76H460.381H455.395C408.672 188.717 398.7 170.33 398.7 154.793V51.8813C398.7 45.8948 401.691 43.3291 404.256 42.1888C407.105 40.7634 410.951 40.1933 415.936 40.1933C420.78 40.1933 424.483 40.906 427.332 42.1888C429.897 43.3291 432.888 46.0373 432.888 51.8813V78.8209ZM511.663 163.488C517.361 160.637 517.361 158.072 517.361 157.216L517.503 111.604C517.503 110.749 517.503 108.184 511.805 105.333C508.814 103.765 502.261 101.912 489.013 101.912H433.03V152.37V157.216C433.03 158.072 433.03 160.637 438.729 163.488C441.862 165.056 448.273 166.909 461.521 166.909H477.902H488.871C502.119 166.909 508.529 165.056 511.663 163.488Z" />
+    </g>
+    <g id="bot">
+      <g id="bot-ears">
+        <path d="M356.599 137.037C359.32 131.68 360.88 125.753 360.993 119.511L361 118.779V110.221C361 102.935 359.028 96.06 355.536 90L373.042 90L383 97.1231V129.911L373.042 137.037L356.599 137.037Z" />
+        <path d="M208.464 89.9999C205.089 95.8568 203.134 102.475 203.007 109.489L203 110.221V118.779C203 125.29 204.574 131.472 207.401 137.038L191 137.037L181 129.911V97.1231L190.958 90L208.464 89.9999Z" />
+      </g>
+      <path id="bot-aerial" fill-rule="evenodd" clip-rule="evenodd" d="M282 0C290.284 0 297 6.71573 297 15C297 20.9258 293.564 26.0491 288.575 28.4859L294 44H270L275.485 28.515C270.464 26.0901 267 20.9496 267 15C267 6.71573 273.716 0 282 0Z" />
+      <g id="bot-face">
+        <path id="bot-face-peak" fill-rule="evenodd" clip-rule="evenodd" d="M310.188 61C334.937 61 355 84.6927 355 108.985V117.498C355 122.208 354.246 126.746 352.849 131C353.254 128.777 353.49 126.497 353.543 124.172L353.554 123.173V114.66C353.554 90.6111 333.891 71.0698 309.484 70.6814L308.743 70.6755H255.257C230.756 70.6755 210.847 89.9763 210.452 113.933L210.446 114.66V123.173C210.446 125.844 210.688 128.459 211.153 130.999C209.754 126.746 209 122.208 209 117.498V108.985C209 84.6927 229.063 61 253.812 61H310.188Z" fill="#FF7D7D" />
+        <g id="bot-face-eyes">
+          <path id="bot-face-eyes-l" fill-rule="evenodd" clip-rule="evenodd" d="M255.484 100C249.217 100 244.088 103.278 244.088 113.541C244.088 123.804 249.217 127.082 255.484 127.082C261.752 127.082 266.88 123.804 266.88 113.541C266.88 103.278 261.752 100 255.484 100Z" />
+          <path id="bot-face-eyes-r" fill-rule="evenodd" clip-rule="evenodd" d="M295.37 113.541C295.37 123.804 300.499 127.082 306.766 127.082C313.034 127.082 318.162 123.804 318.162 113.541C318.162 103.278 313.034 100 306.766 100C300.499 100 295.37 103.278 295.37 113.541Z" />
+        </g>
+        <mask id="bot-face-mask" mask-type="alpha" maskUnits="userSpaceOnUse" x="206" y="61" width="152" height="107">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M253.371 61H309.805C335.919 61 357.088 82.8393 357.088 109.779V119.221C357.088 146.161 335.919 168 309.805 168H253.371C227.258 168 206.088 146.161 206.088 119.221V109.779C206.088 82.8393 227.258 61 253.371 61Z" fill="black" />
+        </mask>
+        <g mask="url(#bot-face-mask)">
+          <g id="bot-face-visor">
+            <path id="bot-face-visor-oval" fill-rule="evenodd" clip-rule="evenodd" d="M254.717 -45H309.283C334.532 -45 355 -22.3443 355 5.60294V15.3971C355 43.3443 334.532 66 309.283 66H254.717C229.468 66 209 43.3443 209 15.3971V5.60294C209 -22.3443 229.468 -45 254.717 -45Z" fill="black" />
+            <path id="bot-face-visor-glass" fill-rule="evenodd" clip-rule="evenodd" d="M243.429 -3H320.571C326.883 -3 332 2.10529 332 8.40298V12.6791C332 18.9768 326.883 24.0821 320.571 24.0821H243.429C237.117 24.0821 232 18.9768 232 12.6791V8.40298C232 2.10529 237.117 -3 243.429 -3Z" />
+          </g>
+        </g>
+      </g>
+      <rect mask="url(#bot-cutout-mask)" x="188" y="40" width="188" height="149" fill-rule="evenodd" clip-rule="evenodd" />
+      <g id="bot-beam" fill="url(#beam-gradient)" mask="url(#fade-mask)" filter="url(#bitmap-filter)">
+        <path id="bot-beam-l" d="M232 114L332 252H132L232 114Z" />
+        <path id="bot-beam-c" d="M332 114V252H232V114H332Z" />
+        <path id="bot-beam-r" d="M332 114L432 252H232L332 114Z" />
+      </g>
+    </g>
+    <path id="eight" fill-rule="evenodd" clip-rule="evenodd" d="M161.878 124.529C158.176 118.225 152.908 112.924 146.786 109.629C148.21 107.766 149.634 105.761 150.773 103.755C154.332 97.5942 156.325 90.2875 156.325 82.9808C156.325 59.1981 138.102 40 115.749 40H52.2508C41.0034 40 30.8949 44.8712 23.4915 52.6077C16.2305 60.3442 11.6746 71.0894 11.6746 82.9808C11.6746 92.8663 15.8034 102.609 21.6407 109.915C9.53898 116.649 0 131.692 0 146.019C0 157.911 4.55593 168.656 11.9593 176.392C19.3627 184.129 29.4712 189 40.7186 189H127.424C149.919 189 168 169.802 168 146.019C168 138.569 165.722 131.119 161.878 124.529ZM54.7239 65H114.276C124.06 65 132 73.2538 132 83.5C132 93.7462 124.06 102 114.276 102H54.7239C44.9403 102 37 93.7462 37 83.5C37 73.2538 44.9403 65 54.7239 65ZM43.6499 161H126.491C136.17 161 144.14 152.746 143.998 142.5C143.998 132.254 136.17 124 126.348 124H43.6499C33.9709 124 26 132.254 26 142.5C26 152.746 33.8286 161 43.6499 161Z" fill="white" />
+  </g>
+  <defs>
+    <linearGradient id="beam-gradient" y2="1" x2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0"/>
+      <stop offset="0.4"/>
+      <stop offset="0.6162"/>
+      <stop offset="0.8"/>
+      <stop offset="1"/>
+    </linearGradient>
+    <linearGradient id="fade-gradient" y2="1" x2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="white" stop-opacity="1"/>
+      <stop offset="0.4" stop-color="white" stop-opacity="1" />
+      <stop offset="1" stop-color="white" stop-opacity="0" />
+    </linearGradient>
+    <clipPath id="clip0">
+      <rect width="1000" height="252" fill="white"/>
+    </clipPath>
+
+    <filter id="bitmap-filter">
+      <feColorMatrix
+            type="matrix"
+            values="1   0   0   0   0
+                    0   1   0   0   0
+                    0   0   1   0   0
+                    0   0   0   1   0" />
+   </filter>
+   
+
+    <mask id="fade-mask" fill-rule="evenodd" maskUnits="userSpaceOnUse" mask-mode="luminance">
+      <rect x="0" y="114" width="100%" height="138" fill="url(#fade-gradient)"/>
+    </mask>
+
+    <mask id="bot-cutout-mask" fill-rule="evenodd">
+      <path id="bot-cutout-outer" fill-rule="evenodd" d="M309.061 40C346.03 40 376 70.1476 376 107.337V121.663C376 158.852 346.03 189 309.061 189H254.939C217.97 189 188 158.852 188 121.663V107.337C188 70.1476 217.97 40 254.939 40H309.061Z" fill="white" />
+      <path id="bot-cutout-inner" fill-rule="evenodd" d="M308.535 66H255.465C231.153 66 211.399 85.4042 211.006 109.489L211 110.221V118.779C211 142.958 230.511 162.604 254.729 162.994L255.465 163H308.535C332.847 163 352.601 143.596 352.994 119.511L353 118.779V110.221C353 86.0425 333.489 66.3964 309.271 66.0059L308.535 66Z" fill="black" />
+    </mask>
+  </defs>
+</svg>
