@@ -1,339 +1,335 @@
-# [NextJS Argon Dashboard PRO](https://demos.creative-tim.com/nextjs-argon-dashboard-pro?ref=njsadp-github-readme) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/home?status=NextJS%20Argon%20Dashboard%20is%20a%20Premium%20NextJS%204,%20Bootstrap%204,%20React%20and%20Reactstrap%20Dashboard%20%E2%9D%A4%EF%B8%8F%0Ahttps%3A//demos.creative-tim.com/nextjs-argon-dashboard-pro-%20%23react%20%23reactstrap%20%23nextjs%20%23argon%20%23argondesign%20%23reactdashboard%20%23argonreact%20%23reactdesign%20%23bootstrap%20%23uikit%20%23freebie%20%20via%20%40CreativeTim)
+![80bots builder](misc/images/80bots-beam-animated-3x-padding.gif)
 
+# 80bots builder
 
-![version](https://img.shields.io/badge/version-1.1.0-blue.svg)  ![license](https://img.shields.io/badge/license-MIT-blue.svg) [![GitHub issues open](https://img.shields.io/github/issues/creativetimofficial/ct-nextjs-argon-dashboard-pro.svg?maxAge=2592000)](https://github.com/creativetimofficial/ct-nextjs-argon-dashboard-pro/issues?q=is%3Aopen+is%3Aissue) [![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/creativetimofficial/ct-nextjs-argon-dashboard-pro.svg?maxAge=2592000)](https://github.com/creativetimofficial/ct-nextjs-argon-dashboard-pro/issues?q=is%3Aissue+is%3Aclosed) [![Join the chat at https://gitter.im/NIT-dgp/General](https://badges.gitter.im/NIT-dgp/General.svg)](https://gitter.im/creative-tim-general/Lobby) [![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/E4aHAQy)
+## Brief information:
 
+This application is developed for simple local deployment and AWS deployment of 80bots application architecture that includes the following repositories and they are added as submodules:
 
-![Product Image](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/nextjs-argon-dashboard-pro/nextjs-argon-dashboard-pro.jpg)
+##### Laravel APP (https://github.com/80bots/backend) is intended for:
 
-Start your development with a premium dashboard for NextJS, Bootstrap 4, Reactstrap and React. Argon perfectly combines using NextJS reusable HTML and React and modular CSS with a modern styling and beautiful markup throughout each page template in the pack.
+- Backend to interact with functional options;
+- Laravel Schedule to perform routine tasks such as sync and data update;
+- Demonized Queue worker based on Supervisor for processing a queue of tasks set;
+- Broadcasting - for notifying subscribers about events (notification via WebSockets);
+- Interaction with Primary database based on MySQL;
+- Bots (instances) management (Start, Stop, Terminate etc.).
 
+##### NextJS APP (https://github.com/80bots/frontend) is intended for:
 
-#### Fully Coded Components
+- Convenient providing data related to bots;
+- Interaction with API for managing data and services;
+- Reviewing info about users and everything related;
+- Configuring custom scripts and parameters of launching bots and instances on which they will be installed.
 
-NextJS Argon Dashboard PRO is built with over 200 individual components, giving you the freedom of choosing and combining. All components can take variations in colour, that you can easily modify using SASS files.
+## Tl;dr - Quick Start on AWS
 
-You will save a lot of time going from prototyping to full-functional code, because all elements are implemented. This Dashboard is coming with prebuilt examples, so the development process is seamless, switching from our pages to the real website is very easy to be done.
-
-Every element has multiple states for colors, styles, hover, focus, that you can easily access and use.
-
-#### Complex Documentation
-
-Each element is well presented in a very complex documentation. You can read more about the idea behind this dashboard here. You can check the components here and the foundation here.
-
-#### Example Pages
-
-If you want to get inspiration or just show something directly to your clients, you can jump start your development with our pre-built example pages. You will be able to quickly set up the basic structure for your web project.
-
-#### Quick Start
-
-*   Install NodeJS **LTS** version from [NodeJs Official Page](https://nodejs.org/en/)
-*   Go to [creative tim website](https://www.creative-tim.com/?ref=adspr-github-readme) and login into your account
-*   Go to [downloads](https://www.creative-tim.com/downloads?ref=adspr-github-readme) section on creative tim website (be sure to be logged into your account)
-*   Press the download button near **NextJS Argon Dashboard PRO** product (this will download onto your computer a zip file)
-*   Unzip the downloaded file to a folder in your computer
-*   Open Terminal
-*   Go to your file project (where you’ve unzipped the product)
-*   Run in terminal `npm install`
-*   Then run `npm run dev`
-*   Or you can simply run `npm run install:clean` (if you use a linux based terminal) which will install `node_modules` and also will start your project.
-*   If you have an error something containing **Module not found** please make sure your `next.config.js`, `pages/_app.js` and `pages/_document.js` files is configured as that from our product
-*   (Optional) You can create a new nextjs application
-    *   Check their official docs here: https://nextjs.org/learn/basics/create-nextjs-app
-    *   Copy what you need from **NextJS Argon Dashboard PRO** to your own project)
-    *   Also, if you have issues with integrating your project with our product, please check that you have our config (`nextjs.config.js`, `pages/_app.js` and `pages/_document.js`) integrated with yours as well
-    *   [Here](https://github.com/creativetimofficial/ct-material-dashboard-pro-react/issues/50#issuecomment-407030675) is a useful thread on integrating our product with other projects
-*   Navigate to [https://localhost:3000](https://localhost:3000)
-
-#### Special thanks
-During the development of this dashboard, we have used many existing resources from awesome developers. We want to thank them for providing their tools open source.
-
-Let us know your thoughts below. And good luck with development!
-
-
-## Table of Contents
-
-* [Versions](#versions)
-* [Demo](#demo)
-* [Quick Start](#quick-start)
-* [Documentation](#documentation)
-* [File Structure](#file-structure)
-* [Browser Support](#browser-support)
-* [Resources](#resources)
-* [FREE Versions](#pro-versions)
-* [Kit Versions](#kit-versions)
-* [Reporting Issues](#reporting-issues)
-* [Licensing](#licensing)
-* [Useful Links](#useful-links)
-
-
-## Versions
-
-
-[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/nextjs.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/nextjs-argon-dashboard-pro?ref=njsadp-github-readme)[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/nodejs-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-pro-nodejs?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/react-logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-pro-react?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/angular-logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-pro-angular?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/react-native-logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-pro-react-native?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/vue-logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/vue-argon-dashboard-pro?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/laravel_logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-pro-laravel?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/bootstrap-logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-pro?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/bootstrap-vue-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/bootstrap-vue-argon-dashboard-pro?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/nuxt.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/nuxt-argon-dashboard-pro?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/svelte.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-pro-svelte?ref=njsadp-github-readme)
-
-
-
-| NextJS | NodeJS | React  | Angular  | VueJS |
-| --- | --- | --- | --- | --- |
-| [![NextJS Argon Dashboard PRO](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/nextjs-argon-dashboard-pro/nextjs-argon-dashboard-pro.jpg)](https://www.creative-tim.com/product/nextjs-argon-dashboard-pro) | [![Argon Dashboard PRO Nodejs](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro-nodejs/argon-dashboard-pro-nodejs.jpg)](https://www.creative-tim.com/product/argon-dashboard-pro-nodejs) | [![Argon Dashboard PRO React](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro-react/argon-dashboard-pro-react.jpg)](https://www.creative-tim.com/product/argon-dashboard-pro-react) | [![Argon Dashboard PRO Angular](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro-angular/opt_adp_angular_thumbnail.jpg)](https://www.creative-tim.com/product/argon-dashboard-pro-angular) | [![Vue Argon Dashboard PRO](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/vue-argon-dashboard-pro/vue-argon-dashboard-pro.jpg)](https://www.creative-tim.com/product/vue-argon-dashboard-pro) |
-
-| React Native | Laravel | Bootstrap  | BootstrapVue  | Nuxt  | Svelte  |
-| --- | --- | --- | --- | --- | --- |
-| [![Argon PRO React Native](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-pro-react-native/argp-rn-thumbnail.jpg)](https://www.creative-tim.com/product/argon-pro-react-native) | [![Argon Dashboard PRO Laravel](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro-laravel/argon-dashboard-pro-laravel.jpg)](https://www.creative-tim.com/product/argon-dashboard-pro-laravel) | [![Argon Dashboard PRO](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/argon-dashboard-pro.jpg)](https://www.creative-tim.com/product/argon-dashboard-pro) | [![BootstrapVue Argon Dashboard PRO](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/bootstrap-vue-argon-dashboard-pro/opt_badp_thumbnail.jpg)](https://www.creative-tim.com/product/bootstrap-vue-argon-dashboard-pro) | [![Nuxt Argon Dashboard PRO](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/nuxt-argon-dashboard-pro/nuxt-argon-dashboard-pro.jpg)](https://www.creative-tim.com/product/nuxt-argon-dashboard-pro) | [![Nuxt Argon Dashboard PRO](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro-svelte/argon-dashboard-pro-svelte.jpg)](https://www.creative-tim.com/product/argon-dashboard-pro-svelte) |
-
-
-## Demo
-
-- [Start page](https://demos.creative-tim.com/nextjs-argon-dashboard-pro/admin/dashboard)
-- [User profile page](https://demos.creative-tim.com/nextjs-argon-dashboard-pro/admin/profile)
-- [Tables page ](https://demos.creative-tim.com/nextjs-argon-dashboard-pro/admin/tables)
-- [Maps Page](https://demos.creative-tim.com/nextjs-argon-dashboard-pro/admin/maps)
-- [Login page](https://demos.creative-tim.com/nextjs-argon-dashboard-pro/auth/login)
-
-[View More](https://demos.creative-tim.com/nextjs-argon-dashboard-pro/admin/dashboard).
-
-
-## Quick start
-
-- [Buy from Creative Tim](https://www.creative-tim.com/product/nextjs-argon-dashboard-pro?ref=njsadp-github-readme)
-
-
-## Documentation
-The documentation for the NextJS Argon Dashboard PRO is hosted at our [website](https://www.creative-tim.com/learning-lab/nextjs/overview/argon-dashboard).
-
-
-## File Structure
-Within the download you'll find the following directories and files:
+1. Launch a brand new EC2 instance of Ubuntu 20.04. We recommend t3.medium and at least 32GB of space.
+2. Ensure ports `80`, `6001` and `8080` are open in the security group. (Todo: review security)
+3. Create an S3 bucket. (You'll need the bucket name later).
+4. Create an IAM user with admin permissions. (You'll need the Access Key ID and Secret Access Key later). (Todo: work out the least amount of privilege required)
+5. SSH into your EC2 (username is ubuntu).
+6. Clone the repo and run the shell script:
 
 ```
-NextJS Argon Dashboard PRO
-.
-├── CHANGELOG.md
-├── README.md
-├── ISSUE_TEMPLATE.md
-├── next.config.js
-├── package.json
-├── routes.js
-├── Documentation
-│   └── documentation.html
-├── assets
-│   ├── css
-│   │   ├── nextjs-argon-dashboard-pro.css
-│   │   ├── nextjs-argon-dashboard-pro.css.map
-│   │   └── nextjs-argon-dashboard-pro.min.css
-│   ├── fonts
-│   │   └── nucleo
-│   ├── img
-│   │   ├── brand
-│   │   │   └── favicon.ico
-│   │   ├── icons
-│   │   │   ├── cards
-│   │   │   ├── common
-│   │   │   └── flags
-│   │   └── theme
-│   ├── scss
-│   │   ├── bootstrap
-│   │   │   ├── mixins
-│   │   │   ├── utilities
-│   │   │   └── vendor
-│   │   ├── core
-│   │   │   ├── alerts
-│   │   │   ├── avatars
-│   │   │   ├── badges
-│   │   │   ├── breadcrumbs
-│   │   │   ├── buttons
-│   │   │   ├── cards
-│   │   │   ├── charts
-│   │   │   ├── close
-│   │   │   ├── collapse
-│   │   │   ├── content
-│   │   │   ├── custom-forms
-│   │   │   ├── dropdowns
-│   │   │   ├── footers
-│   │   │   ├── forms
-│   │   │   ├── grid
-│   │   │   ├── headers
-│   │   │   ├── icons
-│   │   │   ├── list-groups
-│   │   │   ├── maps
-│   │   │   ├── masks
-│   │   │   ├── medias
-│   │   │   ├── mixins
-│   │   │   ├── modals
-│   │   │   ├── navbars
-│   │   │   ├── navs
-│   │   │   ├── paginations
-│   │   │   ├── popovers
-│   │   │   ├── progresses
-│   │   │   ├── reboot
-│   │   │   ├── rtl
-│   │   │   ├── sections
-│   │   │   ├── separators
-│   │   │   ├── shortcuts
-│   │   │   ├── tables
-│   │   │   ├── timeline
-│   │   │   ├── type
-│   │   │   ├── utilities
-│   │   │   └── vendors
-│   │   ├── custom
-│   │   └── react
-│   │       ├── bootstrap
-│   │       └── plugins
-│   └── vendor
-│       ├── @fortawesome
-│       ├── animate.css
-│       ├── bootstrap-rtl
-│       ├── fullcalendar
-│       ├── nucleo
-│       ├── quill
-│       ├── select2
-│       └── sweetalert2
-├── components
-│   ├── Footers
-│   │   ├── AdminFooter.js
-│   │   └── AuthFooter.js
-│   ├── Headers
-│   │   ├── AlternativeHeader.js
-│   │   ├── AuthHeader.js
-│   │   ├── CardsHeader.js
-│   │   ├── IndexHeader.js
-│   │   ├── ProfileHeader.js
-│   │   ├── RTLProfileHeader.js
-│   │   └── SimpleHeader.js
-│   ├── Navbars
-│   │   ├── AdminNavbar.js
-│   │   ├── AuthNavbar.js
-│   │   └── IndexNavbar.js
-│   ├── PageChange
-│   │   └── PageChange.js
-│   └── Sidebar
-│       └── Sidebar.js
-├── layouts
-│   ├── Admin.js
-│   ├── Auth.js
-│   └── RTL.js
-├── pages
-│   ├── 404.js
-│   ├── _app.js
-│   ├── _document.js
-│   ├── _error.js
-│   ├── admin
-│   │   ├── alternative.js
-│   │   ├── buttons.js
-│   │   ├── calendar.js
-│   │   ├── cards.js
-│   │   ├── charts.js
-│   │   ├── components.js
-│   │   ├── dashboard.js
-│   │   ├── elements.js
-│   │   ├── google.js
-│   │   ├── grid.js
-│   │   ├── icons.js
-│   │   ├── notifications.js
-│   │   ├── profile.js
-│   │   ├── react-bs-tables.js
-│   │   ├── sortable.js
-│   │   ├── tables.js
-│   │   ├── timeline.js
-│   │   ├── typography.js
-│   │   ├── validation.js
-│   │   ├── vector.js
-│   │   └── widgets.js
-│   ├── auth
-│   │   ├── lock.js
-│   │   ├── login.js
-│   │   ├── pricing.js
-│   │   └── register.js
-│   ├── index.js
-│   └── rtl
-│       └── rtl-support.js
-└── variables
-    ├── charts.js
-    └── general.js
+git clone https://github.com/80bots/80bots && cd 80bots && chmod +x deploy-aws-ubuntu.sh && ./deploy-aws-ubuntu.sh
 ```
 
+7. Simply follow the prompts. Note the username and password at the end.
+8. You should be able to access your 80bots backend at `{EC2 Public IP}/backoffice80` - login with the credentials.
+9. Once logged in, click on the top right hand corner and click Profile.
+10. Set your timezone and your preferred Availability Zone.
+11. You should be able to now launch a demo bot or add your own Puppeteer bot and launch it. If any issues, contact me at francis@80bots.com - good luck!
 
-## Browser Support
+## Requirements
 
-At present, we officially aim to support the last two versions of the following browsers:
+#### Software:
 
-<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/chrome-logo.png?raw=true" width="64" height="64"> <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/firefox-logo.png" width="64" height="64"> <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/edge-logo.png" width="64" height="64"> <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/safari-logo.png" width="64" height="64"> <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/opera-logo.png" width="64" height="64">
+- Docker: ^19 - https://docs.docker.com/get-docker/;
+- NodeJS: ^10 - https://nodejs.org/en/download/;
+- NPM: ^6.4 - https://www.npmjs.com/get-npm;
+- Yarn: ^1 - https://classic.yarnpkg.com/en/docs/install;
+- Composer: latest - https://getcomposer.org/doc/00-intro.md;
+- Git: latest - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git.
 
+## Basic (Min required) Environment variables:
 
+#### NGROK APP CONFIG
 
-## Resources
-- Demo: <https://demos.creative-tim.com/nextjs-argon-dashboard-pro/admin/dashboard?ref=njsadp-github-readme>
-- Download Page: <https://www.creative-tim.com/product/nextjs-argon-dashboard-pro?ref=njsadp-github-readme>
-- Documentation: <https://www.creative-tim.com/learning-lab/nextjs/overview/argon-dashboard?ref=njsadp-github-readme>
-- License Agreement: <https://www.creative-tim.com/license?ref=njsadp-github-readme>
-- Support: <https://www.creative-tim.com/contact-us?ref=njsadp-github-readme>
-- Issues: [Github Issues Page](https://github.com/creativetimofficial/ct-nextjs-argon-dashboard-pro/issues?ref=creativetim)
+- `NGROK_AUTH` - Authentication key for Ngrok account.
 
-### FREE Versions
+To launch via Ngrok, you'll need the API key, because is uses multi-tunnel functionality.
 
-[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/aspnet-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-asp-net?ref=njsadp-github-readme)[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/nodejs-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-nodejs?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/react-logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-react?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/angular-logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-angular?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/react-native-logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-react-native?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/vue-logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/vue-argon-dashboard?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/laravel_logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-laravel?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/bootstrap-logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/bootstrap-vue-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/bootstrap-vue-argon-dashboard?ref=njsadp-github-readme)[<img style="background:white" src="https://github.com/creativetimofficial/public-assets/blob/master/logos/icon-django.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-dashboard-django?ref=njsadp-github-readme)
+#### LARAVEL APP CONFIG
 
+- `APP_KEY` - App secret key. Important! If the application key is not set, your user sessions and other encrypted data will not be secure!;
 
+- `AWS_ACCESS_KEY_ID` - AWS access key ID;
+- `AWS_SECRET_ACCESS_KEY` - AWS secret access key;
+- `AWS_IMAGE_ID` - Default AWS Image id;
+- `AWS_CLOUDFRONT_INSTANCES_HOST` - AWS url for the instance configuration.
 
-| NextJS | ASP.NET | NodeJS | React  | Angular  |
-| --- | --- | --- | --- | --- |
-| [![Argon Dashboard Asp.net](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/nextjs-argon-dashboard/nextjs-argon-dashboard.jpg)](https://www.creative-tim.com/product/nextjs-argon-dashboard) | [![Argon Dashboard Asp.net](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-aspnet/argon-dashboard-aspnet.jpg)](https://www.creative-tim.com/product/argon-dashboard-asp-net) | [![Argon Dashboard Nodejs](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-nodejs/argon-dashboard-nodejs.jpg)](https://www.creative-tim.com/product/argon-dashboard-nodejs) | [![Argon Dashboard React](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-react/argon-dashboard-react.jpg)](https://www.creative-tim.com/product/argon-dashboard-react) | [![Argon Dashboard Angular](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-angular/argon-dashboard-angular.jpg)](https://www.creative-tim.com/product/argon-dashboard-angular) |
+This configuration is a key configuration for starting 80bots.
 
-| React Native | VueJS | Laravel | Bootstrap  | BootstrapVue  | Django  |
-| --- | --- | --- | --- | --- | --- |
-| [![Argon React Native](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-react-native/arg-rn-thumbnail.jpg)](https://www.creative-tim.com/product/argon-react-native) | [![Vue Argon Dashboard](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/vue-argon-dashboard/vue-argon-dashboard.jpg)](https://www.creative-tim.com/product/vue-argon-dashboard) | [![Argon Dashboard Laravel](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-laravel/argon-dashboard-laravel.jpg)](https://www.creative-tim.com/product/argon-dashboard-laravel) | [![Argon Dashboard](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard/argon-dashboard.jpg)](https://www.creative-tim.com/product/argon-dashboard) | [![BootstrapVue Argon Dashboard](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/bootstrap-vue-argon-dashboard/bootstrap-vue-argon-dashboard.jpg)](https://www.creative-tim.com/product/bootstrap-vue-argon-dashboard) | [![Argon Dashboard Django](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-django/argon-dashboard-django.jpg)](https://www.creative-tim.com/product/argon-dashboard-django) |
+## The 80bots Quickstart:
 
+#### Assuming that all abovementioned Requirements are set, it is needed to do the following in order to start the application:
 
-### Kit Versions
+1. Create and configure `{appRoot}/.env` file according to provided example `{appRoot}/.env.example` or start `configure.sh`;
+2. Configure the git config user’s data (name and email) https://help.github.com/en/github/using-git/setting-your-username-in-git;
+3. Run `./start.sh` and wait for the task completion.
 
-#### FREE Kit Versions
+`./start.sh` script installs all required app dependencies, configures docker architecture and runs all required services.
 
-[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/html-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-design-system?ref=njsadp-github-readme)[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/angular-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-design-system-angular?ref=njsadp-github-readme)[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/react-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-design-system-react?ref=njsadp-github-readme)[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/vue-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/vue-argon-design-system?ref=njsadp-github-readme)
+Browser with required links opens after installation.
 
-| HTML | Angular | React  | VueJS  |
-| --- | --- | --- | --- |
-| [![Argon Design System PRO HTML](https://github.com/creativetimofficial/public-assets/blob/master/argon-design-system/argon-design-system.jpg?raw=true)](https://www.creative-tim.com/product/argon-design-system?ref=njsadp-github-readme)  | [![Argon Design System PRO Angular](https://github.com/creativetimofficial/public-assets/blob/master/argon-design-system-angular/argon-design-system-angular.jpg?raw=true)](https://www.creative-tim.com/product/argon-design-system-angular?ref=njsadp-github-readme)  | [![Argon Design System PRO React](https://github.com/creativetimofficial/public-assets/blob/master/argon-design-system-react/argon-design-system-react.jpg?raw=true)](https://www.creative-tim.com/product/argon-design-system-react?ref=njsadp-github-readme)  | [![Argon Design System PRO React](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/vue-argon-design-system/vue-argon-design-system.jpg)](https://www.creative-tim.com/product/vue-argon-design-system?ref=njsadp-github-readme)|
+As a result of the successful launch of these tunnels, the local project becomes available for public on the web.
+Such a specific deployment is needed for making bots,deployed on AWS, able to interact with your local environment.
 
-#### PRO Kit Versions
+## NOTE:
 
-[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/html-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-design-system-pro?ref=njsadp-github-readme)[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/angular-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-design-system-pro-angular?ref=njsadp-github-readme)[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/react-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/argon-design-system-pro-react?ref=njsadp-github-readme)[<img src="https://github.com/creativetimofficial/public-assets/blob/master/logos/vue-logo.jpg?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/vue-argon-design-system-pro?ref=njsadp-github-readme)
+#### Also, the following resources should be available in Web Browser:
 
-| HTML | Angular | React  | VueJS  |
-| --- | --- | --- | --- |
-| [![Argon Design System PRO HTML](https://github.com/creativetimofficial/public-assets/blob/master/argon-design-system-pro/argon-design-system-pro.jpg?raw=true)](https://www.creative-tim.com/product/argon-design-system-pro?ref=njsadp-github-readme)  | [![Argon Design System PRO Angular](https://github.com/creativetimofficial/public-assets/blob/master/argon-design-system-pro-angular/argon-design-system-pro-angular.jpg?raw=true)](https://www.creative-tim.com/product/argon-design-system-pro-angular?ref=njsadp-github-readme)  | [![Argon Design System PRO React](https://github.com/creativetimofficial/public-assets/blob/master/argon-design-system-pro-react/argon-design-system-pro-react.jpg?raw=true)](https://www.creative-tim.com/product/argon-design-system-pro-react?ref=njsadp-github-readme)  | [![Argon Design System PRO React](https://raw.githubusercontent.com/creativetimofficial/public-assets/master/vue-argon-design-system-pro/opt_adsp_vue_thumbnail.jpg)](https://www.creative-tim.com/product/vue-argon-design-system-pro?ref=njsadp-github-readme)|
+- Backend - By default `http://localhost:8080/api/ping`;
+- Frontend - By default `http://localhost:80`;
+- WebSockets - By default `http://localhost:6001`.
 
-## Reporting Issues
+Additionally, after Initial setup, it is necessary to perform Laravel & Database configuration that is launched by a command in case if containers are already running:
 
-We use GitHub Issues as the official bug tracker for the NextJS Argon Dashboard PRO. Here are some advices for our users that want to report an issue:
+```
+docker exec 80bots-backend php artisan db:refresh
+```
 
-1. Make sure that you are using the latest version of the NextJS Argon Dashboard PRO. Check the CHANGELOG from your dashboard on our [website](https://www.creative-tim.com/?ref=njsadp-github-readme).
-2. Providing us reproducible steps for the issue will shorten the time it takes for it to be fixed.
-3. Some issues may be browser specific, so specifying in what browser you encountered the issue might help.
+Warning! This action will clear the database and populate it with default values!
 
-## Licensing
+#### NOTE:
 
-- Copyright 2021 Creative Tim (https://www.creative-tim.com/?ref=njsadp-github-readme)
+You can run service creation manually following 3-6 points(Setup) as well as using was cli, just runing `{appRoot}/deploy-aws.sh`;
 
-## Useful Links
+#### Deployment:
 
-- [Tutorials](https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w?ref=creativetim)
-- [Affiliate Program](https://www.creative-tim.com/affiliates/new?ref=njsadp-github-readme) (earn money)
-- [Blog Creative Tim](http://blog.creative-tim.com/?ref=njsadp-github-readme)
-- [Free Products](https://www.creative-tim.com/bootstrap-themes/free?ref=njsadp-github-readme) from Creative Tim
-- [Premium Products](https://www.creative-tim.com/bootstrap-themes/premium?ref=njsadp-github-readme) from Creative Tim
-- [React Products](https://www.creative-tim.com/bootstrap-themes/react-themes?ref=njsadp-github-readme) from Creative Tim
-- [Angular Products](https://www.creative-tim.com/bootstrap-themes/angular-themes?ref=njsadp-github-readme) from Creative Tim
-- [VueJS Products](https://www.creative-tim.com/bootstrap-themes/vuejs-themes?ref=njsadp-github-readme) from Creative Tim
-- [More products](https://www.creative-tim.com/bootstrap-themes?ref=njsadp-github-readme) from Creative Tim
-- Check our Bundles [here](https://www.creative-tim.com/bundles?ref=njsadp-github-readme)
+1. Connect to the instance using `ssh your_custom_name` command<br/><br/>
+   ![connect](misc/images/connect.png)<br/><br/>
 
-### Social Media
+2. After you connected to your instance successfully, enter `./deploy.sh` command and configure an environment by entering relevant info in order to launch 80bots correctly. The installation will request entering such info as AWS credentials, store configuration, and basic app settings. Details of requested info:
 
-Twitter: <https://twitter.com/CreativeTim?ref=creativetim>
+- `SERVICE` - for launching an application basing on was instance
+- `PUBLIC_URL` - public address of the instance run by you<br/><br/>
+  ![public-url](misc/images/public_url.png)<br/><br/>
+- `APP_KEY` - App secret key. Important! If the application key is not set, your user sessions and other encrypted data will not be secure!;
+- `AWS_ACCESS_KEY_ID` - AWS access key ID;
+- `AWS_SECRET_ACCESS_KEY` - AWS secret access key;<br/><br/>
+  ![aws-access-key-id](misc/images/aws_access_key_id.png)<br/><br/>
+  ![create-key](misc/images/create_key.png)<br/><br/>
+  ![download-key](misc/images/download_key.png)<br/><br/>
+- `AWS_IMAGE_ID` - Default AWS Image id;
 
-Facebook: <https://www.facebook.com/CreativeTim?ref=creativetim>
+- `AWS_CLOUDFRONT_INSTANCES_HOST` - AWS url for the instance configuration.<br/><br/>
+  ![cloudFront](misc/images/cloudFront.png)<br/><br/>
+  ![cloudFront_url](misc/images/cloudFront_url.png)<br/><br/>
 
-Dribbble: <https://dribbble.com/creativetim?ref=creativetim>
+3. After completion of all installs, 80bots will be available by instance public DNS address, with which all above-mentioned operations were performed.
 
-Instagram: <https://www.instagram.com/CreativeTimOfficial?ref=creativetim>
+#### Note:
+
+Available resources:
+
+- `http://your_public_DNS.compute.amazonaws.com:80` - frontend
+- `http://your_public_DNS.compute.amazonaws.com:8080` - backend
+- `http://your_public_DNS.compute.amazonaws.com:80` - websocet
+
+## Build update and development process:
+
+Most tasks may be implemented without necessity to build containers every time when changes are added, however, some cases require rebuilding.
+
+#### Examples of such cases are:
+
+- Installing additional OS/PHP dependencies;
+- Updating Supervisor, Cron or code related directly to Queue configurations;
+- Changing parameters in .env file;
+- All other similar tasks that requires affecting the environment.
+
+Rebuild of containers is performed according to official documentation of
+Docker (https://docs.docker.com/)
+
+Almost all rest work related to application development on Laravel as well as on NextJS doesn’t require constant container rebuilds.
+
+## Environment variables:
+
+When you launch 80Bots, you can configure environment, specifying the various parameters in .env file. To do this, you need to create and configure `{appRoot}/.env` file according to the provided example `{appRoot}/.еnv.variables`.
+Please note that none of the variables given below will not have any effect until a container is restructured.
+
+#### SERVICE APP CONFIG
+
+- `TUNNEL_SERVICE` - The name of the service you want to use to start the tunnel: `ngrok` or `serveo`, default:`ngrok`.
+
+Optionally, you can deploy the application using serveo tunnel.
+If you're using Serveo, please make sure that the server is available and functioning, since there are situations when access to it is limited.
+
+After successfully running the local version of the application in the .env file in a specific service (Serveo or Ngrok), a dynamic link to the tunnels is created, and these tunnels start.
+
+#### PROXY SERVER CONFIG
+
+- `DOCKER_FRONTEND_SERVER_HOST` - FRONTEND host, default: localhost (Custom usage example: 80bots.loc);
+- `DOCKER_FRONTEND_SERVER_PORT` - FRONTEND port, default: 80 (Custom usage example: 80);
+- `DOCKER_BACKEND_SERVER_HOST` - BACKEND host, default: localhost (Custom usage example: api.80bots.loc);
+- `DOCKER_BACKEND_SERVER_PORT` - BACKEND port, default: 8080 (Custom usage example: 80);
+- `DOCKER_SOCKET_SERVER_HOST` - WS host, default: localhost (Custom usage example: ws.80bots.loc);
+- `DOCKER_SOCKET_SERVER_PORT` - WS post, default: 6001 (Custom usage example: 80).
+
+If you consider to use your own custom hosts and ports please make sure you've added them to `/etc/hosts`.
+
+If you decide to use configuration, verify that all specified ports are not used, otherwise you may easily redefine them in the abovementioned parameters.
+
+#### MYSQL SERVER CONFIG:
+
+- `DOCKER_MYSQL_ROOT_PASSWORD` - Password to create on the service startup phase for the `root` user, default: root;
+- `DOCKER_MYSQL_USER` - Additional non root user which will be created on the service startup phase, default: user;
+- `DOCKER_MYSQL_PASSWORD` - Additional user's password, default: user;
+- `DOCKER_MYSQL_DATABASE` - Default database name which will be created if not exists on startup phase, default: user.
+
+This configuration is a key configuration for starting MySQL container and change of these parameters won’t have any influence until the container rebuild.
+
+##### LARAVEL APP CONFIG:
+
+- `APP_NAME` - Name of the Laravel App, default: 80bots;
+- `APP_ENV` - Environment, default: local;
+- `APP_DEBUG` - Debug enabled, default: false (see more on https://laravel.com/docs);
+- `APP_URL` - The public accessible App server url (this variable is generated automatically when launching the application), default: http://localhost:8080 (Based on PROXY SERVER CONFIG section);
+- `WEB_CLIENT_URL` - The public accessible Web app server url (this variable is generated automatically when launching the application), default: http://localhost:80 (Based on PROXY SERVER CONFIG section);
+- `WS_URL` - The public accessible WebSockets url (this variable is generated automatically when launching the application), default: http://localhost:6001 (Based on PROXY SERVER CONFIG section);
+- `LOG_CHANNEL` - The log channel, default: stack;
+- `BROADCAST_DRIVER` - Broadcast driver, default: redis. Warning! Changing of this parameter could affect the app stability and functionality;
+- `QUEUE_CONNECTION` - Broadcast driver, default: redis. Warning! Changing of this parameter could affect the app stability and functionality;
+- `CACHE_DRIVER` - Cache driver, default: file;
+- `SESSION_DRIVER` - Session driver, default: file;
+- `SESSION_LIFETIME` - Session lifetime, default 120;
+- `DB_CONNECTION` - DB driver (connection), default: mysql. Warning! Changing of this parameter could affect the app stability and functionality;
+- `DB_HOST` - DB host, default: mysql. The default value uses linked container and interact with it using service's name. If you wish to use you own mysql server, please provide the public accessible host;
+- `DB_PORT` - DB port, default: 3306;
+- `DB_DATABASE` - DB name, default: 80bots;
+- `DB_USERNAME` - DB username, default: user;
+- `DB_PASSWORD` - DB password, default: user;
+- `REDIS_HOST` - Redis host, default: redis. The default value uses linked container and interact with it using service's name. If you wish to use you own redis server, please provide the public accessible host;
+- `REDIS_PORT` - Redis port, default: 6379;
+- `REDIS_PASSWORD` - Redis password, default: root;
+- `SENTRY_LARAVEL_DSN` - Sentry DSN, default: none;
+- `AWS_BUCKET` - AWS S3 bucket, default:80bots;
+- `AWS_INSTANCE_TYPE` - Default AWS Bot instance type, default: t3.medium;
+- `AWS_REGION` - AWS Region, default: us-east-2.
+
+The extended description for each of the variables you can find here https://laravel.com/docs.
+
+##### AUTOGENERATED:
+
+- `API_URL` - Publicly available auto generating URL-address of the application server, default value : http://localhost:8080;
+- `WS_URL`- Publicly available auto generating URL-address of ws application, default value: http://localhost:6001;
+- `FRONTEND_SUBDOMAIN` - Frontend subdomain for setting up ngrok tunnel;
+- `BACKEND_SUBDOMAIN`- Backend subdomain for setting up ngrok tunnel;
+- `WS_SUBDOMAIN`- Ws subdomain for setting up ngrok tunnel.
+
+##### HELPERS:
+
+When writing custom scripts, you can use an internal function - `notify()`, that output required statuses, script work progress to Workforce page. It is not needed to import this function.
+
+`notify()` - receives one parameter (status). This parameter should have a string type, otherwise the function throws an error.
+
+## Architecture overview
+
+Configuration of application architecture is provided in docker-compose.yml file and represents a set of services:
+
+#### Proxy server based on Nginx
+
+Nginx service itself is based on this image https://hub.docker.com/_/nginx, which default starting command was redefined for forming dynamical configurations using .env file
+
+All required config files are located in directory `./docker-compose/proxy/src` and are used for creation of proxy server configuration.
+
+A ready-to-go server config file may be checked in `./docker-compose/proxy/conf.d` directory. NOTE: Changes in this directory will affect nothing! For adding corrections, it is necessary to edit files from `./docker-compose/proxy/src` directory.
+
+#### MySQL server
+
+MySql service itself is based on this image https://hub.docker.com/_/mysql.
+
+The service is configured in such a way that after launching the container, volume is formed between directory with mysql data and `./docker-compose/mysql/data` directory.
+
+Thus, it is possible to develop, change a container without losing data from the local environment
+
+#### Redis server
+
+Redis service itself is based on this image https://hub.docker.com/_/redis/
+
+Service is configured in such a way that after launching the container, volume is formed between directory with Redit data and `./docker-compose/redis/data` directory.
+
+Thus, it is possible to develop, change a container without losing data from the local environment
+
+#### Laravel App (API + BG workers) server
+
+This container build is implemented in `./docker-compose/backend/Dockerfile`.
+
+When the container is started, Bash Script launches. Every time, when starting, it executes a few auxiliary things, re-generate the .env file and run all the necessary internal services (cron, supervisor and php-fpm server)
+
+#### NextJS server (React Web App)
+
+This container build is implemented in `./docker-compose/frontend/Dockerfile`.
+
+When the container is started, Bash Script (`./docker-compose/frontend/bin/start.sh`) launches. Every time, when starting, re-generate the .env file, start the watcher or build compiled application, depending on `APP_ENV` , and start http server (NextJS)
+
+#### Laravel Echo Server (WebSockets)
+
+Redis service itself is based on this image https://hub.docker.com/r/oanhnn/laravel-echo-server
+
+After starting the application, generated server configurations may be checked in `./docker-compose/ws/conf.d`.
+
+All services operate inside their own network and interact with each other by links within their own network
+
+#### Ngrok
+
+Ngrok service is based on the image: https://hub.docker.com/r/wernight/ngrok/
+
+When launching the application, a new image is formed, based on Ngrok image.
+The server is set in the way that after launching a container, the `ngrok.yml` root file is replaced with the one containing necessary configurations to provide the ability of running multiple simultaneous tunnels.
+
+## Shell Scripts:
+
+- `install.sh` - This script clones frontend and backend from a git repository and installs a required software.
+- `start.sh` - this script runs an application for selected service and generates required variables for .env file.
+- `configure.sh` - this script runs install.sh, creates .env file and generates required variables, and then runs start.sh(!!!Removes an existing .env file, if it exists)
+- `deploy-aws.sh` - this script runs cloudformation `80bots-template.yaml` template that installs required resources to aws. It is necessary for correct work of 80bots basing on aws instance.
+
+## Additional supporting commands:
+
+#### Refresh Database:
+
+```
+docker exec 80bots-backend php artisan db:refresh
+```
+
+#### Refresh Cache:
+
+```
+docker exec 80bots-backend php artisan cache:refresh
+```
+
+#### Rebuild all containers:
+
+```
+docker-compose up --build
+```
+
+#### Rebuild specific container:
+
+```
+docker-compose up --build {container_name}
+```
+
+#### Stop all containers:
+
+```
+docker-compose stop
+```
+
+#### Remove ALL the containers and images (Warning! This command will remove all of your images and containers!):
+
+```
+docker system prune -a
+```
