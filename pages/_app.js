@@ -1,11 +1,10 @@
 import React from 'react'
-// import ReactDOM from 'react-dom'
+import { PersistGate } from 'redux-persist/integration/react'
 import App from 'next/app'
 import Head from 'next/head'
 // import Router from 'next/router'
 import { Provider } from 'react-redux'
 import ReduxToastr from 'react-redux-toastr'
-import { PersistGate } from 'redux-persist/integration/react'
 
 // import PageChange from 'components/PageChange/PageChange.js'
 import withReduxStore from '../lib/connectRedux'
@@ -21,7 +20,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 // plugins styles downloaded
 import 'assets/vendor/nucleo/css/nucleo.css'
 // core styles
-import 'assets/scss/nextjs-argon-dashboard-pro.scss?v1.1.0'
+import 'assets/scss/nextjs-argon-dashboard-pro.scss'
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css'
 
 // Router.events.on('routeChangeStart', (url) => {
