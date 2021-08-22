@@ -151,25 +151,31 @@ export const reducer = (state = initialState, action) => {
         total: action.data.total,
         loading: false,
       }
-
     case success(COPY_INSTANCE):
     case success(RESTORE_INSTANCE):
     case success(POST_LAUNCH_INSTANCE):
     case success(DOWNLOAD_INSTANCE_PEM_FILE):
-      return { ...state, loading: false }
-
+      return {
+        ...state,
+        loading: false,
+      }
     case success(UPDATE_STATUS):
     case success(UPDATE_BOT): {
       const botIdx = state.bots.findIndex((item) => item.id === action.data.id)
       if (botIdx || botIdx === 0) state.bots[botIdx] = action.data
-      return { ...state, bots: [...state.bots], loading: false }
+      return {
+        ...state,
+        bots: [...state.bots],
+        loading: false,
+      }
     }
-
     case success(UPDATE_RUNNING_BOT): {
-      const userIdx = state.botInstances.findIndex(
+      const idx = state.botInstances.findIndex(
         (item) => item.id === action.data.id
       )
-      if (userIdx || userIdx === 0) state.botInstances[userIdx] = action.data
+      if (idx > -1) {
+        state.botInstances[idx] = action.data
+      }
       return {
         ...state,
         botInstances: [...state.botInstances],
@@ -178,13 +184,12 @@ export const reducer = (state = initialState, action) => {
     }
 
     case success(UPDATE_REGION): {
-      const userIdx = state.regions.findIndex(
-        (item) => item.id === action.data.id
-      )
-      if (userIdx || userIdx === 0) state.regions[userIdx] = action.data
+      const idx = state.regions.findIndex((item) => item.id === action.data.id)
+      if (idx > -1) {
+        state.regions[idx] = action.data
+      }
       return { ...state, regions: [...state.regions], loading: false }
     }
-
     case success(GET_TAGS):
       return { ...state, tags: action.data.data }
 

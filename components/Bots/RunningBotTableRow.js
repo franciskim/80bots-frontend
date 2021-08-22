@@ -2,9 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { useSelector } from 'react-redux'
-import Link from 'next/link'
+// import Link from 'next/link'
 import {
-  List,
+  // List,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
@@ -19,7 +19,7 @@ const OPTIONS = [
   { value: 'pending', label: 'Pending', readOnly: true },
   { value: 'running', label: 'Running' },
   { value: 'stopped', label: 'Stopped' },
-  { value: 'terminated', label: 'Terminated' },
+  // { value: 'terminated', label: 'Terminated' },
 ]
 
 const RunningBotTableRow = ({
@@ -92,10 +92,7 @@ const RunningBotTableRow = ({
                 changeBotInstanceStatus(option, botInstance.id)
               }
               isOptionDisabled={(option) => option.readOnly}
-              isDisabled={
-                botInstance.status === 'pending' ||
-                botInstance.status === 'terminated'
-              }
+              isDisabled={botInstance.status === 'pending'}
               menuPortalTarget={document.body}
               menuPosition={'absolute'}
               menuPlacement={'bottom'}
@@ -129,11 +126,8 @@ const RunningBotTableRow = ({
               status={botInstance.status}
             />
           </td>
-          <td>{botInstance.ip}</td>
           <td>{botInstance.name}</td>
-          <td>{botInstance.instance_id}</td>
           <td>{botInstance.launched_by}</td>
-          <td>{botInstance.region}</td>
           <td className="text-right">
             <UncontrolledDropdown>
               <DropdownToggle

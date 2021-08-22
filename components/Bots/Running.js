@@ -328,13 +328,10 @@ const RunningBots = () => {
                 Deployed At
               </SortableTableHeader>
               <SortableTableHeader field={'uptime'}>Uptime</SortableTableHeader>
-              <SortableTableHeader field={'ip'}>IP</SortableTableHeader>
               <SortableTableHeader field={'name'}>Name</SortableTableHeader>
-              <th>Instance ID</th>
               <SortableTableHeader field={'launched_by'}>
                 Deployed By
               </SortableTableHeader>
-              <SortableTableHeader field={'region'}>Region</SortableTableHeader>
               <th>Actions</th>
             </tr>
           </thead>

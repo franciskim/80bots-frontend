@@ -12,7 +12,6 @@ import {
   NavItem,
   TabPane,
   TabContent,
-  Navbar,
 } from 'reactstrap'
 import classnames from 'classnames'
 import { getInstance, clearInstance } from 'store/bot/actions'

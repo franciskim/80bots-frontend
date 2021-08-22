@@ -79,64 +79,60 @@ const ScheduleEditorRow = ({
   }
 
   return (
-    <>
-      <tr>
-        <td>
-          <Select
-            options={STATUS_OPTIONS}
-            defaultValue={scheduleStatus}
-            value={scheduleStatus}
-            onChange={(option) =>
-              changeSchedule('status', setScheduleStatus, option)
-            }
-          />
-        </td>
-        <td>
-          <Select
-            options={DAY_OPTIONS}
-            defaultValue={scheduleDay}
-            value={scheduleDay}
-            onChange={(option) => changeSchedule('day', setScheduleDay, option)}
-          />
-        </td>
-        <td>
-          <Select
-            options={TIME_OPTIONS}
-            defaultValue={scheduleTime}
-            value={scheduleTime}
-            onChange={(option) =>
-              changeSchedule('time', setScheduleTime, option)
-            }
-          />
-        </td>
-        <td>
-          {idx === 0 && (
-            <Button
-              className="btn-icon"
-              color="success"
-              onClick={addSchedule}
-              size="sm"
-            >
-              <span className="btn-inner--icon mr-1">
-                <i className="fa fa-plus" />
-              </span>
-            </Button>
-          )}
-          {idx > 0 && (
-            <Button
-              className="btn-icon"
-              color="danger"
-              onClick={remove}
-              size="sm"
-            >
-              <span className="btn-inner--icon mr-1">
-                <i className="fa fa-trash" />
-              </span>
-            </Button>
-          )}
-        </td>
-      </tr>
-    </>
+    <tr>
+      <td>
+        <Select
+          options={STATUS_OPTIONS}
+          defaultValue={scheduleStatus}
+          value={scheduleStatus}
+          onChange={(option) =>
+            changeSchedule('status', setScheduleStatus, option)
+          }
+        />
+      </td>
+      <td>
+        <Select
+          options={DAY_OPTIONS}
+          defaultValue={scheduleDay}
+          value={scheduleDay}
+          onChange={(option) => changeSchedule('day', setScheduleDay, option)}
+        />
+      </td>
+      <td>
+        <Select
+          options={TIME_OPTIONS}
+          defaultValue={scheduleTime}
+          value={scheduleTime}
+          onChange={(option) => changeSchedule('time', setScheduleTime, option)}
+        />
+      </td>
+      <td>
+        {idx === 0 && (
+          <Button
+            className="btn-icon"
+            color="success"
+            onClick={addSchedule}
+            size="sm"
+          >
+            <span className="btn-inner--icon mr-1">
+              <i className="fa fa-plus" />
+            </span>
+          </Button>
+        )}
+        {idx > 0 && (
+          <Button
+            className="btn-icon"
+            color="danger"
+            onClick={remove}
+            size="sm"
+          >
+            <span className="btn-inner--icon mr-1">
+              <i className="fa fa-trash" />
+            </span>
+          </Button>
+        )}
+      </td>
+    </tr>
   )
 }
 
