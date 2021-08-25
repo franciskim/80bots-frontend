@@ -20,6 +20,8 @@ import {
   TabPane,
   CardFooter,
   CardHeader,
+  ModalHeader,
+  ModalBody,
 } from 'reactstrap'
 import { CodeEditor } from 'components/default/inputs'
 import {
@@ -30,61 +32,13 @@ import {
 import RestartEditor from './RestartEditor'
 import classnames from 'classnames'
 
-// const Error = styled.span`
-//   font-size: 15px;
-//   text-align: center;
-// `
-
-// const selectStyles = {
-//   control: (provided, state) => ({
-//     ...provided,
-//     border: 'solid 1px hsl(0,0%,80%)',
-//     borderRadius: '4px',
-//     color: '#fff',
-//     backgroundColor: 'transparent',
-//     '&:hover': {
-//       borderColor: '#7dffff',
-//     },
-//   }),
-//   singleValue: (provided, state) => ({
-//     ...provided,
-//     color: '#fff',
-//   }),
-//   menu: (provided, state) => ({
-//     ...provided,
-//     border: 'solid 1px hsl(0,0%,80%)',
-//     borderRadius: '4px',
-//     zIndex: '7',
-//   }),
-//   menuList: (provided, state) => ({
-//     ...provided,
-//     backgroundColor: '#333',
-//   }),
-//   option: (provided, state) => ({
-//     ...provided,
-//     color: state.isFocused ? 'black' : '#fff',
-//   }),
-// }
-
-// const inputStyles = {
-//   container: css`
-//     color: #fff;
-//     font-size: 16px;
-//     &:first-of-type {
-//       margin-right: 10px;
-//     }
-//     &:last-of-type {
-//       margin-left: 10px;
-//     }
-//   `,
-// }
-
 const UpdateBotInstance = () => {
   const dispatch = useDispatch()
   const { id } = useRouter().query
   const [botScript, setBotScript] = useState('')
   const [botPackageJSON, setBotPackageJSON] = useState('')
   // const [error, setError] = useState(null)
+  const [isOpen, setIsOpen] = useState(false)
   const modal = useRef(null)
   const [activeTab, setActiveTab] = useState('script')
   const router = useRouter()
@@ -126,24 +80,24 @@ const UpdateBotInstance = () => {
       botScript,
       botPackageJSON,
     }
-    dispatch(updateBotInstance(aboutBot.id, convertBotData(botData)))
-      .then(() => {
+    dispatch(updateBotInstance(aboutBot.id, convertBotData(botData))).then(
+      () => {
         addNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
           message: 'BotInstance updated!',
         })
-        modal.current.open()
-      })
-      .catch(() =>
-        addNotification({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: 'Update failed!',
-        })
-      )
+        setIsOpen(true)
+      }
+    )
+    // .catch(() =>
+    //   addNotification({
+    //     type: NOTIFICATION_TYPES.ERROR,
+    //     message: 'Update failed!',
+    //   })
+    // )
   }
 
   const restartSubmit = (params) => {
-    modal.current.close()
     dispatch(restartInstance(aboutBot.id, params))
       .then(() => {
         addNotification({
@@ -221,12 +175,22 @@ const UpdateBotInstance = () => {
           </FormGroup>
         </Form>
         {/* {error && <Error>{error}</Error>} */}
-        <Modal ref={modal} title={'Restart bot instance'} disableSideClosing>
-          <RestartEditor
-            onSubmit={restartSubmit}
-            onClose={() => modal.current.close()}
-            botInstance={aboutBot}
-          />
+        <Modal
+          isOpen={isOpen}
+          onClose={() => {
+            setIsOpen(false)
+          }}
+        >
+          <ModalHeader>Restart bot instance</ModalHeader>
+          <ModalBody>
+            <RestartEditor
+              onSubmit={restartSubmit}
+              onClose={() => {
+                setIsOpen(false)
+              }}
+              botInstance={aboutBot}
+            />
+          </ModalBody>
         </Modal>
       </CardBody>
       <CardFooter>

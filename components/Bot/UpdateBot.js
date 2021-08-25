@@ -29,50 +29,6 @@ import Router, { useRouter } from 'next/router'
 import classnames from 'classnames'
 import * as yup from 'yup'
 
-// const selectStyles = {
-//   control: (provided, state) => ({
-//     ...provided,
-//     border: 'solid 1px hsl(0,0%,80%)',
-//     borderRadius: '4px',
-//     color: '#fff',
-//     backgroundColor: 'transparent',
-//     '&:hover': {
-//       borderColor: '#7dffff',
-//     },
-//   }),
-//   singleValue: (provided, state) => ({
-//     ...provided,
-//     color: '#fff',
-//   }),
-//   menu: (provided, state) => ({
-//     ...provided,
-//     border: 'solid 1px hsl(0,0%,80%)',
-//     borderRadius: '4px',
-//     zIndex: '7',
-//   }),
-//   menuList: (provided, state) => ({
-//     ...provided,
-//     backgroundColor: '#333',
-//   }),
-//   option: (provided, state) => ({
-//     ...provided,
-//     color: state.isFocused ? 'black' : '#fff',
-//   }),
-// }
-
-// const inputStyles = {
-//   container: css`
-//     color: #fff;
-//     font-size: 16px;
-//     &:first-of-type {
-//       margin-right: 10px;
-//     }
-//     &:last-of-type {
-//       margin-left: 10px;
-//     }
-//   `,
-// }
-
 const UpdateBot = () => {
   const dispatch = useDispatch()
 
