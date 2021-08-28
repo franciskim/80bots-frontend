@@ -39,7 +39,6 @@ const UpdateBotInstance = () => {
   const [botPackageJSON, setBotPackageJSON] = useState('')
   // const [error, setError] = useState(null)
   const [isOpen, setIsOpen] = useState(false)
-  const modal = useRef(null)
   const [activeTab, setActiveTab] = useState('script')
   const router = useRouter()
 
@@ -80,21 +79,20 @@ const UpdateBotInstance = () => {
       botScript,
       botPackageJSON,
     }
-    dispatch(updateBotInstance(aboutBot.id, convertBotData(botData))).then(
-      () => {
+    dispatch(updateBotInstance(id, convertBotData(botData)))
+      .then(() => {
         addNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
           message: 'BotInstance updated!',
         })
         setIsOpen(true)
-      }
-    )
-    // .catch(() =>
-    //   addNotification({
-    //     type: NOTIFICATION_TYPES.ERROR,
-    //     message: 'Update failed!',
-    //   })
-    // )
+      })
+      .catch(() =>
+        addNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Update failed!',
+        })
+      )
   }
 
   const restartSubmit = (params) => {

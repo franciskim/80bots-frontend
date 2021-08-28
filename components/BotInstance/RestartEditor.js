@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Select, Range } from 'components/default/inputs'
-import { Label, Button, Input, ButtonGroup } from 'reactstrap'
+import { Label, Button, Input } from 'reactstrap'
 
 const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
   const [values, setValues] = useState({})
   const [errors, setErrors] = useState([])
   useEffect(() => {
     initializeValues()
+    console.error('>>>', botInstance)
   }, [botInstance])
 
   const initializeValues = () => {

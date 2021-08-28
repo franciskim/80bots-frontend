@@ -17,6 +17,7 @@ const DeployBotModal = ({ isOpen, bot, onClose }) => {
           type: NOTIFICATION_TYPES.INFO,
           message: 'New bot instance is deploying',
         })
+        onClose()
       })
       .catch((action) => {
         addNotification({
