@@ -86,6 +86,7 @@ const BotView = () => {
   }, [activeTab])
 
   const { component: CurrentTab } = activeTab
+
   return (
     <Card>
       <CardHeader>
@@ -99,7 +100,7 @@ const BotView = () => {
       <CardBody>
         <h3>
           {Object.keys(botInstance).length ? (
-            botInstance.name + ' | ' + botInstance.bot_name
+            botInstance.container_id + ' | ' + botInstance.bot_name
           ) : (
             <Loader80bots
               data={'light'}
@@ -143,6 +144,7 @@ const BotView = () => {
         ) : (
           <TabContent activeTab={activeTab.title}>
             {botTabs.map((tab) => {
+              if (tab.title !== activeTab.title) return null
               return (
                 <TabPane tabId={tab.title} key={tab.title}>
                   <CurrentTab setCustomBack={(f) => setCustomBack(() => f)} />

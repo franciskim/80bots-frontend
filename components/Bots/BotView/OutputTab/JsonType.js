@@ -7,9 +7,6 @@ import { flush, open as openItem } from 'store/fileSystem/actions'
 import FileSystem from 'components/default/FileSystem'
 import { Select } from 'components/default/inputs'
 
-const rootFolder = 'output/json'
-const defaultLimit = 20
-
 const Content = styled(CardBody)`
   display: flex;
   height: 85vh;
@@ -19,6 +16,8 @@ const Content = styled(CardBody)`
 `
 
 const JsonType = () => {
+  const rootFolder = 'output/json'
+  const limit = 20
   const dispatch = useDispatch()
   const [options, setOptions] = useState([])
   const [selected, setSelected] = useState(null)
@@ -30,7 +29,7 @@ const JsonType = () => {
   useEffect(() => {
     // eslint-disable-next-line no-console
     if (!openedFolder || !openedFolder.path.startsWith(rootFolder)) {
-      dispatch(openItem({ path: rootFolder }, { limit: defaultLimit }))
+      dispatch(openItem({ path: rootFolder }, { limit }))
     }
     return () => flush()
   }, [openedFolder])
@@ -64,10 +63,6 @@ const JsonType = () => {
     }
   }, [selected])
 
-  const onSelected = (option) => {
-    setSelected(option)
-  }
-
   return (
     <>
       <Content>
@@ -79,7 +74,7 @@ const JsonType = () => {
         {openedFile ? (
           <>
             <Select
-              onChange={onSelected}
+              onChange={setSelected}
               options={options}
               value={selected}
               styles={{

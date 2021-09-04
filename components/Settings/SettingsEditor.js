@@ -44,7 +44,6 @@ const SettingsEditor = ({ isOpen, onClose }) => {
   const submitForm = () => {
     try {
       const schema = yup.object().shape({
-        instanceType: yup.string().required(),
         storage: yup.string().required(),
         script: yup.string().required(),
       })
@@ -95,20 +94,6 @@ const SettingsEditor = ({ isOpen, onClose }) => {
       <ModalHeader>Edit Global Settings</ModalHeader>
       <ModalBody>
         <Form noValidate>
-          <FormGroup className="row">
-            <Label md={4} className="form-control-label" htmlFor="type">
-              Instance Type
-            </Label>
-            <Col md={8}>
-              <Input
-                id="type"
-                value={instanceType}
-                onChange={(e) => setInstanceType(e.target.value)}
-                invalid={!!errors['instanceType']}
-              />
-              <FormFeedback valid={false}>This field is required</FormFeedback>
-            </Col>
-          </FormGroup>
           <FormGroup className="row">
             <Label md={4} className="form-control-label" htmlFor="storage">
               Storage(GB)

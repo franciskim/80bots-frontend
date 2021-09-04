@@ -16,14 +16,14 @@ import {
   ListFilter,
   TableHeader,
 } from 'components/default'
-import { addNotification, download } from 'lib/helpers'
+import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 import {
   copyInstance,
   restoreBot,
   getRunningBots,
   updateRunningBot,
-  downloadInstancePemFile,
+  // downloadInstancePemFile,
   botInstanceUpdated,
   syncBotInstances,
 } from 'store/bot/actions'
@@ -187,31 +187,31 @@ const RunningBots = () => {
       )
   }
 
-  const downloadEventHandler = (instance) => {
-    dispatch(downloadInstancePemFile(instance.id))
-      .then(({ data }) => {
-        dispatch(
-          download(
-            data,
-            `${instance.instance_id}.pem`,
-            'application/x-pem-file'
-          )
-        )
-      })
-      .catch(({ error: { response } }) => {
-        if (response && response.data) {
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: response.data.message,
-          })
-        } else {
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Error occurred while downloading file',
-          })
-        }
-      })
-  }
+  // const downloadEventHandler = (instance) => {
+  //   dispatch(downloadInstancePemFile(instance.id))
+  //     .then(({ data }) => {
+  //       dispatch(
+  //         download(
+  //           data,
+  //           `${instance.instance_id}.pem`,
+  //           'application/x-pem-file'
+  //         )
+  //       )
+  //     })
+  //     .catch(({ error: { response } }) => {
+  //       if (response && response.data) {
+  //         addNotification({
+  //           type: NOTIFICATION_TYPES.ERROR,
+  //           message: response.data.message,
+  //         })
+  //       } else {
+  //         addNotification({
+  //           type: NOTIFICATION_TYPES.ERROR,
+  //           message: 'Error occurred while downloading file',
+  //         })
+  //       }
+  //     })
+  // }
 
   const changeBotInstanceStatus = (option, id) => {
     dispatch(updateRunningBot(id, { status: option.value }))
@@ -345,7 +345,6 @@ const RunningBots = () => {
                   choiceRestoreBot={choiceRestoreBot}
                   changeBotInstanceStatus={changeBotInstanceStatus}
                   choiceCopyInstance={choiceCopyInstance}
-                  downloadEventHandler={downloadEventHandler}
                 />
               )
             })}

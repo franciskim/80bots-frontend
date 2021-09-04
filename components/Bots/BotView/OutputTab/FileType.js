@@ -9,12 +9,11 @@ import {
   close as closeItem,
 } from 'store/fileSystem/actions'
 import { Loader80bots } from 'components/default'
-const rootFolder = 'output/files'
-const defaultLimit = 20
 
 const FilesType = ({ setCustomBack }) => {
+  const rootFolder = 'output/files'
   const dispatch = useDispatch()
-  const limit = defaultLimit
+  const limit = 20
   const isReportMode = false
   const [reportItems, setReportItems] = useState([])
 

@@ -10,12 +10,10 @@ import {
 import { Loader80bots } from 'components/default'
 import FileSystem from 'components/default/FileSystem'
 
-const rootFolder = 'output/images'
-const defaultLimit = 20
-
 const ImagesType = ({ setCustomBack }) => {
+  const rootFolder = 'output/images'
   const dispatch = useDispatch()
-  const limit = defaultLimit
+  const limit = 20
   const isReportMode = false
   const [reportItems, setReportItems] = useState([])
 

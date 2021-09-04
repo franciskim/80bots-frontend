@@ -9,6 +9,7 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
+  Badge,
 } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 import { formatTimezone } from 'lib/helpers'
@@ -19,7 +20,6 @@ const OPTIONS = [
   { value: 'pending', label: 'Pending', readOnly: true },
   { value: 'running', label: 'Running' },
   { value: 'stopped', label: 'Stopped' },
-  // { value: 'terminated', label: 'Terminated' },
 ]
 
 const RunningBotTableRow = ({
@@ -27,7 +27,6 @@ const RunningBotTableRow = ({
   choiceRestoreBot,
   choiceCopyInstance,
   changeBotInstanceStatus,
-  downloadEventHandler,
   user,
 }) => {
   const botNotifications = useSelector((state) => state.bot.botNotifications)
@@ -98,8 +97,15 @@ const RunningBotTableRow = ({
               menuPlacement={'bottom'}
             />
           </td>
-
-          <td>{botInstance.bot_name}</td>
+          <td>
+            {botInstance.bot_name}
+            <br />
+            {botInstance.container_id && (
+              <Badge color="success" title="Container ID">
+                {botInstance.container_id}:{botInstance.port}
+              </Badge>
+            )}
+          </td>
           <td>
             {hasBotNotification() ? (
               !getBotNotificationError() ? (
@@ -160,13 +166,6 @@ const RunningBotTableRow = ({
                 >
                   Clone
                 </DropdownItem>
-                <DropdownItem
-                  href="#pablo"
-                  disabled={botInstance.status === 'terminated'}
-                  onClick={() => downloadEventHandler(botInstance)}
-                >
-                  Key
-                </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </td>
@@ -192,7 +191,6 @@ const RunningBotTableRow = ({
 RunningBotTableRow.propTypes = {
   botInstance: PropTypes.object.isRequired,
   choiceRestoreBot: PropTypes.func.isRequired,
-  downloadEventHandler: PropTypes.func.isRequired,
   changeBotInstanceStatus: PropTypes.func.isRequired,
   choiceCopyInstance: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,

@@ -46,8 +46,8 @@ const AddScheduleModal = ({ isOpen, onClose, onRefresh }) => {
       (action) => {
         return callback(
           action.data.data.map((bot) => ({
-            value: bot.instance_id,
-            label: bot.instance_id + '|' + bot.name,
+            value: bot.id,
+            label: bot.container_id + '|' + bot.name,
           }))
         )
       }
@@ -72,8 +72,8 @@ const AddScheduleModal = ({ isOpen, onClose, onRefresh }) => {
               defaultOptions={runningBots
                 .filter((bot) => bot.status !== 'terminated')
                 .map((bot) => ({
-                  value: bot.instance_id,
-                  label: bot.instance_id + '|' + bot.name,
+                  value: bot.id,
+                  label: bot.container_id + '|' + bot.name,
                 }))}
             />
           </Col>
