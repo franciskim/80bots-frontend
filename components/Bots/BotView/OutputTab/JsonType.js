@@ -3,9 +3,9 @@ import styled from '@emotion/styled'
 import { useSelector, useDispatch } from 'react-redux'
 import { CardBody } from 'reactstrap'
 import { Loader80bots } from 'components/default'
-import { flush, open as openItem } from 'store/fileSystem/actions'
+import { open as openItem } from 'store/fileSystem/actions'
 import FileSystem from 'components/default/FileSystem'
-import { Select } from 'components/default/inputs'
+import Select from 'react-select'
 
 const Content = styled(CardBody)`
   display: flex;
@@ -27,12 +27,10 @@ const JsonType = () => {
   const openedFolder = useSelector((state) => state.fileSystem.openedFolder)
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
     if (!openedFolder || !openedFolder.path.startsWith(rootFolder)) {
       dispatch(openItem({ path: rootFolder }, { limit }))
     }
-    return () => flush()
-  }, [openedFolder])
+  }, [rootFolder])
 
   useEffect(() => {
     setOptions(
@@ -56,7 +54,6 @@ const JsonType = () => {
   useEffect(() => {
     if (!selected) return
     if (!selected.path.startsWith(rootFolder)) {
-      dispatch(flush())
       setSelected(null)
     } else {
       dispatch(openItem(selected))
@@ -64,41 +61,30 @@ const JsonType = () => {
   }, [selected])
 
   return (
-    <>
-      <Content>
-        <style jsx global>{`
-          .pretty-json-container * {
-            color: #fff !important;
-          }
-        `}</style>
-        {openedFile ? (
-          <>
-            <Select
-              onChange={setSelected}
-              options={options}
-              value={selected}
-              styles={{
-                select: {
-                  container: (provided) => ({
-                    ...provided,
-                    minWidth: '200px',
-                    color: '#fff',
-                  }),
-                },
-              }}
-            />
-            <FileSystem hideNavigator={true} />
-          </>
-        ) : (
-          <Loader80bots
-            data={'light'}
-            styled={{
-              width: '200px',
-            }}
+    <Content>
+      <style jsx global>{`
+        .pretty-json-container * {
+          color: #fff !important;
+        }
+      `}</style>
+      {openedFile ? (
+        <>
+          <Select
+            class="col-md-3"
+            onChange={setSelected}
+            options={options}
+            value={selected}
           />
-        )}
-      </Content>
-    </>
+          <FileSystem hideNavigator={true} />
+        </>
+      ) : (
+        <Loader80bots
+          styled={{
+            width: '200px',
+          }}
+        />
+      )}
+    </Content>
   )
 }
 

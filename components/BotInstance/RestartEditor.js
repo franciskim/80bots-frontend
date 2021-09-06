@@ -8,7 +8,6 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
   const [errors, setErrors] = useState([])
   useEffect(() => {
     initializeValues()
-    console.error('>>>', botInstance)
   }, [botInstance])
 
   const initializeValues = () => {

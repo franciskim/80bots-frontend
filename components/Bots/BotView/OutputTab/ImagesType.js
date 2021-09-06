@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
-import {
-  flush,
-  open as openItem,
-  close as closeItem,
-} from 'store/fileSystem/actions'
+import { open as openItem, close as closeItem } from 'store/fileSystem/actions'
 import { Loader80bots } from 'components/default'
 import FileSystem from 'components/default/FileSystem'
 
@@ -17,8 +13,6 @@ const ImagesType = ({ setCustomBack }) => {
   const isReportMode = false
   const [reportItems, setReportItems] = useState([])
 
-  const router = useRouter()
-
   const channel = useSelector((state) => state.bot.botInstance?.storage_channel)
   const openedFolder = useSelector((state) => state.fileSystem.openedFolder)
   const previous = useSelector(
@@ -26,10 +20,6 @@ const ImagesType = ({ setCustomBack }) => {
   )
   const loading = useSelector((state) => state.fileSystem.loading)
   const items = useSelector((state) => state.fileSystem.items)
-
-  useEffect(() => {
-    return () => dispatch(flush())
-  }, [router.query.id])
 
   useEffect(() => {
     if (channel && !!openedFolder) {
@@ -55,9 +45,8 @@ const ImagesType = ({ setCustomBack }) => {
 
   return (
     <>
-      {loading || !items.length ? (
+      {loading ? (
         <Loader80bots
-          data={'light'}
           styled={{
             width: '200px',
           }}

@@ -175,7 +175,6 @@ const RunningBotTableRow = ({
         <tr>
           <td colSpan={11} className="text-center">
             <Loader80bots
-              data={'dark'}
               styled={{
                 width: '100px',
                 height: '75px',

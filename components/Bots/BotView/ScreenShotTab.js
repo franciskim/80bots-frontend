@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
 import styled from '@emotion/styled'
+import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import FileSystem from 'components/default/FileSystem'
@@ -25,27 +25,25 @@ const Hint = styled.span`
   font-size: 14px;
 `
 
-const ScreenShotTab = ({ setCustomBack }) => {
+const ScreenShotTab = ({ botInstance, setCustomBack }) => {
   const dispatch = useDispatch()
+  const router = useRouter()
+
   const [limit] = useState(16)
   const [reportItems, setReportItems] = useState([])
   const [isReportMode, setReportMode] = useState(false)
-  // const [showReportModal, setShowReportModal] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const router = useRouter()
-
-  const botInstance = useSelector((state) => state.bot.botInstance)
   const channel = useSelector((state) => state.bot.botInstance?.storage_channel)
   const openedFolder = useSelector((state) => state.fileSystem.openedFolder)
   const previous = useSelector(
     (state) => state.fileSystem.history.slice(-1)?.[0]?.openedFolder
   )
   const loading = useSelector((state) => state.fileSystem.loading)
-  const items = useSelector((state) => state.fileSystem.items)
+  // const items = useSelector((state) => state.fileSystem.items)
 
   useEffect(() => {
-    return () => flush()
+    return () => dispatch(flush())
   }, [router.query.id])
 
   useEffect(() => {
@@ -60,13 +58,13 @@ const ScreenShotTab = ({ setCustomBack }) => {
       setCustomBack(null)
     } else {
       setCustomBack(() => {
-        closeItem(openedFolder)
+        dispatch(closeItem(openedFolder))
         dispatch(openItem(previous, { limit }))
       })
     }
   }, [openedFolder, previous])
 
-  React.useEffect(() => {
+  useEffect(() => {
     !isReportMode && setReportItems([])
   }, [isReportMode])
 
@@ -81,9 +79,8 @@ const ScreenShotTab = ({ setCustomBack }) => {
 
   return (
     <div className="justify-content-center">
-      {loading || !items.length ? (
+      {loading ? (
         <Loader80bots
-          data={'light'}
           styled={{
             width: '200px',
           }}
@@ -97,7 +94,9 @@ const ScreenShotTab = ({ setCustomBack }) => {
                 size="sm"
                 type={'danger'}
                 color="danger"
-                onClick={() => setReportMode(!isReportMode)}
+                onClick={() => {
+                  setReportMode(!isReportMode)
+                }}
               >
                 {isReportMode ? 'Cancel' : 'Report Issue'}
               </Button>
@@ -134,6 +133,7 @@ const ScreenShotTab = ({ setCustomBack }) => {
 
 ScreenShotTab.propTypes = {
   setCustomBack: PropTypes.func.isRequired,
+  botInstance: PropTypes.object,
 }
 
 export default ScreenShotTab

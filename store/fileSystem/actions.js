@@ -57,20 +57,23 @@ export const getItems = (query) => (dispatch, getState) => {
   const state = getState()
   const currentQuery = state.fileSystem?.query || {}
   const instance_id = state.bot?.botInstance.id || null
+
   if (!instance_id) {
     return false
   }
+
   Object.keys(query).forEach((key) => query[key] === '' && delete query[key])
+
   const finalQuery = {
     ...currentQuery,
     ...query,
-    instance_id,
   }
+
   return dispatch({
     type: GET_FILES,
     request: {
       method: 'GET',
-      url: `/instances/${finalQuery.instance_id}/objects`,
+      url: `/instances/${instance_id}/objects`,
       params: { ...finalQuery },
     },
     data: {

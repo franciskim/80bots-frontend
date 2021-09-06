@@ -70,9 +70,9 @@ const TextViewer = ({ item }) => {
 
   return (
     <>
-      <Row className="mt-2 mb-2">
-        <Label md={2}>View mode: </Label>
-        <Col md={4}>
+      <Row>
+        <Label md={4}>View mode: </Label>
+        <Col md={8}>
           {Object.keys(MODS)
             .filter((modeName) => {
               if (MODS[modeName] === MODS.TABLE && !Array.isArray(json)) {

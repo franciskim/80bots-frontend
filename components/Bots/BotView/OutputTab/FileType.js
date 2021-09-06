@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import FileSystem from 'components/default/FileSystem'
-import {
-  flush,
-  open as openItem,
-  close as closeItem,
-} from 'store/fileSystem/actions'
+import { open as openItem, close as closeItem } from 'store/fileSystem/actions'
 import { Loader80bots } from 'components/default'
 
 const FilesType = ({ setCustomBack }) => {
@@ -16,8 +12,7 @@ const FilesType = ({ setCustomBack }) => {
   const limit = 20
   const isReportMode = false
   const [reportItems, setReportItems] = useState([])
-
-  const router = useRouter()
+  // const router = useRouter()
 
   const channel = useSelector((state) => state.bot.botInstance?.storage_channel)
   const openedFolder = useSelector((state) => state.fileSystem.openedFolder)
@@ -28,11 +23,9 @@ const FilesType = ({ setCustomBack }) => {
   const items = useSelector((state) => state.fileSystem.items)
 
   useEffect(() => {
-    return () => dispatch(flush())
-  }, [router.query.id])
-
-  useEffect(() => {
-    if (channel && !!openedFolder) return
+    if (channel && !!openedFolder) {
+      return
+    }
     dispatch(openItem({ path: rootFolder }, { limit }))
   }, [channel, openedFolder])
 
@@ -53,9 +46,8 @@ const FilesType = ({ setCustomBack }) => {
 
   return (
     <>
-      {loading || !items.length ? (
+      {loading ? (
         <Loader80bots
-          data={'light'}
           styled={{
             width: '200px',
           }}
