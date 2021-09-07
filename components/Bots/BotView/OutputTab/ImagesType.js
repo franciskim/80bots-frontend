@@ -9,7 +9,7 @@ import FileSystem from 'components/default/FileSystem'
 const ImagesType = ({ setCustomBack }) => {
   const rootFolder = 'output/images'
   const dispatch = useDispatch()
-  const limit = 20
+  const limit = 12
   const isReportMode = false
   const [reportItems, setReportItems] = useState([])
 
@@ -19,7 +19,7 @@ const ImagesType = ({ setCustomBack }) => {
     (state) => state.fileSystem.history.slice(-1)?.[0]?.openedFolder
   )
   const loading = useSelector((state) => state.fileSystem.loading)
-  const items = useSelector((state) => state.fileSystem.items)
+  // const items = useSelector((state) => state.fileSystem.items)
 
   useEffect(() => {
     if (channel && !!openedFolder) {

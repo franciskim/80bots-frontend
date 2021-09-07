@@ -29,7 +29,7 @@ const ScreenShotTab = ({ botInstance, setCustomBack }) => {
   const dispatch = useDispatch()
   const router = useRouter()
 
-  const [limit] = useState(16)
+  const [limit] = useState(12)
   const [reportItems, setReportItems] = useState([])
   const [isReportMode, setReportMode] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)

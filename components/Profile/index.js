@@ -4,7 +4,7 @@ import Clock from 'react-live-clock'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
-import { getTimezones, getRegions } from 'store/user/actions'
+import { getTimezones } from 'store/user/actions'
 import {
   Label,
   Button,
@@ -32,16 +32,13 @@ const currClockStyle = {
 const Profile = () => {
   const dispatch = useDispatch()
   const [timezone, setTimezone] = useState(null)
-  const [region, setRegion] = useState(null)
 
   useEffect(() => {
     dispatch(getTimezones())
-    dispatch(getRegions())
   }, [])
 
   const user = useSelector((state) => state.auth.user)
   const timezones = useSelector((state) => state.user.timezones)
-  const regions = useSelector((state) => state.user.regions)
 
   useEffect(() => {
     if (user && user.timezone && timezones.length > 0) {
@@ -52,17 +49,8 @@ const Profile = () => {
     }
   }, [timezones])
 
-  useEffect(() => {
-    if (user && user.region && regions.length > 0) {
-      const defaultValue = regions.find((item) => item.name === user.region)
-      setRegion({ value: defaultValue.id, label: defaultValue.name })
-    }
-  }, [regions])
-
   const handleUpdate = () => {
-    dispatch(
-      updateUser({ region_id: region.value, timezone_id: timezone.value })
-    )
+    dispatch(updateUser({ timezone_id: timezone.value }))
       .then(() => {
         addNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -145,28 +133,6 @@ const Profile = () => {
                   }))}
                   onChange={(option) => setTimezone(option)}
                   value={timezone}
-                />
-              )}
-              {!user && <Skeleton count={1} />}
-            </Col>
-          </FormGroup>
-          <FormGroup className="row">
-            <Label
-              className="form-control-label"
-              htmlFor="example-text-input"
-              md="4"
-            >
-              Preferred Region
-            </Label>
-            <Col md={8}>
-              {user && (
-                <Select
-                  options={regions.map((item) => ({
-                    value: item.id,
-                    label: item.name,
-                  }))}
-                  onChange={(option) => setRegion(option)}
-                  value={region}
                 />
               )}
               {!user && <Skeleton count={1} />}

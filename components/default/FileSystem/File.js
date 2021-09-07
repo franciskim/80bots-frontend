@@ -11,7 +11,6 @@ const Wrapper = styled.div`
   margin-right: 20px;
   cursor: pointer;
   width: 100%;
-  height: 200px;
   transition: 100ms all;
   cursor: pointer;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
@@ -35,13 +34,14 @@ const File = ({ item, onClick }) => {
   const instance = useSelector((state) => state.bot.botInstance)
   const formatName = formatScreenshot(item.name)
   const formatDate = formatTimezone(user.timezone, formatName)
+  const token = localStorage.getItem('token')
 
   return (
     <Col md={3}>
       <Wrapper onClick={() => onClick(item)} selected={item.selected}>
         {instance && (
           <Media
-            src={`${process.env.API_URL}/instances/${instance.id}/file/${item.id}`}
+            src={`${process.env.API_URL}/instances/${instance.id}/file/${item.id}?token=${token}`}
             className="w-100"
             alt=""
           />
