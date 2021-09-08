@@ -1,19 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 import { useSelector, useDispatch } from 'react-redux'
-import { CardBody } from 'reactstrap'
+import { Row, Col } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 import { open as openItem } from 'store/fileSystem/actions'
 import FileSystem from 'components/default/FileSystem'
 import Select from 'react-select'
-
-const Content = styled(CardBody)`
-  display: flex;
-  height: 85vh;
-  flex-flow: column nowrap;
-  overflow-y: hidden;
-  ${(props) => props.styles};
-`
 
 const JsonType = () => {
   const rootFolder = 'output/json'
@@ -61,20 +52,18 @@ const JsonType = () => {
   }, [selected])
 
   return (
-    <Content>
-      <style jsx global>{`
-        .pretty-json-container * {
-          color: #fff !important;
-        }
-      `}</style>
+    <>
       {openedFile ? (
         <>
-          <Select
-            class="col-md-3"
-            onChange={setSelected}
-            options={options}
-            value={selected}
-          />
+          <Row>
+            <Col md="3">
+              <Select
+                onChange={setSelected}
+                options={options}
+                value={selected}
+              />
+            </Col>
+          </Row>
           <FileSystem hideNavigator={true} />
         </>
       ) : (
@@ -84,7 +73,7 @@ const JsonType = () => {
           }}
         />
       )}
-    </Content>
+    </>
   )
 }
 

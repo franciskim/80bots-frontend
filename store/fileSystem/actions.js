@@ -5,6 +5,8 @@ import {
   CLOSE_ITEM,
   ADD_ITEM,
   FILTER_ITEMS,
+  GET_JSON_FILE,
+  GET_LOGS_FILE,
 } from './types'
 
 export const flush = () => {
@@ -51,6 +53,32 @@ export const addItem = (item) => {
       item,
     },
   }
+}
+
+export const getJson = (item) => (dispatch) => {
+  return dispatch({
+    type: GET_JSON_FILE,
+    request: {
+      method: 'GET',
+      url: `/instances/${item.instance_id}/file/${item.id}/json`,
+    },
+    meta: {
+      thunk: true,
+    },
+  })
+}
+
+export const getLogs = (item) => (dispatch) => {
+  return dispatch({
+    type: GET_LOGS_FILE,
+    request: {
+      method: 'GET',
+      url: `/instances/${item.instance_id}/file/${item.id}/logs`,
+    },
+    meta: {
+      thunk: true,
+    },
+  })
 }
 
 export const getItems = (query) => (dispatch, getState) => {

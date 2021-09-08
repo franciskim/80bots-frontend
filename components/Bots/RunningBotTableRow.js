@@ -2,9 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { useSelector } from 'react-redux'
-// import Link from 'next/link'
 import {
-  // List,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,

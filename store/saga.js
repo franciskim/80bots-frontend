@@ -28,6 +28,7 @@ axios.interceptors.response.use(
       return Promise.reject(new Error('Could not communicate with server'))
     }
     const { status, data } = response
+    console.error(response)
     if (status === 404 || status === 401 || status === 400) {
       return Promise.reject(new Error(data.message))
     }

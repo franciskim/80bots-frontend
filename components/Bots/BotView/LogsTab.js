@@ -66,7 +66,7 @@ const LogsTab = () => {
   }
 
   return (
-    <CardBody className="d-flex justify-content-center">
+    <CardBody>
       {openedFile ? (
         <Row>
           <Col md={4}>

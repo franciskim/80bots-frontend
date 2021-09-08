@@ -5,30 +5,29 @@ import TextViewer from './TextViewer'
 import JsonViewer from './JsonViewer'
 import { lookup as getMime } from 'mime-types'
 
-const openFile = (item, onClose) => {
+const FileReaderComponent = ({ item, onClose }) => {
   const mime = getMime(item.path)
+  let component = (
+    <div>
+      Oops! Can not open file click <a href={item.url}>here</a> to download file
+    </div>
+  )
   switch (mime) {
     case 'image/jpeg':
     case 'image/gif':
     case 'image/png':
     case 'image/webp':
-      return <ImageViewer item={item} onClose={onClose} />
+      component = <ImageViewer item={item} onClose={onClose} />
+      break
     case 'text/plain':
-      return <TextViewer item={item} onClose={onClose} />
+      component = <TextViewer item={item} onClose={onClose} />
+      break
     case 'application/json':
-      return <JsonViewer item={item} onClose={onClose} />
-    default:
-      return (
-        <div>
-          Oops! Can not open file click <a href={item.url}>here</a> to download
-          file
-        </div>
-      )
+      component = <JsonViewer item={item} onClose={onClose} />
+      break
   }
-}
 
-const FileReaderComponent = ({ item, onClose }) => {
-  return <div>{openFile(item, onClose)}</div>
+  return <>{component}</>
 }
 
 FileReaderComponent.propTypes = {
