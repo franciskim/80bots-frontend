@@ -45,10 +45,11 @@ const botTabs = [
 
 const BotView = () => {
   const dispatch = useDispatch()
+  const router = useRouter()
+
   const [activeTab, setActiveTab] = useState(botTabs[0])
   const [status, setStatus] = useState(STATUSES.CONNECTING)
   const [customBack, setCustomBack] = useState(null)
-  const router = useRouter()
   const {
     query: { id },
   } = router
@@ -93,7 +94,10 @@ const BotView = () => {
       <CardHeader>
         <Button
           color="primary"
-          onClick={() => (customBack ? customBack() : router.back())}
+          onClick={() => {
+            if (customBack) customBack()
+            else router.back()
+          }}
         >
           Back
         </Button>

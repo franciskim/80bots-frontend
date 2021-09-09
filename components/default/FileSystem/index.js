@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import List from './List'
 import FileReaderComponent from './Tools/FileReader'
 import {
-  flush,
   close as closeItem,
   getItems,
   open as openItem,
@@ -28,12 +27,11 @@ const FileSystem = ({
 
   const handleItemClick = (item) => {
     if (item.type === 'file') {
-      return dispatch(onFileOpen ? onFileOpen(item) : openItem(item))
+      return onFileOpen ? onFileOpen(item) : dispatch(openItem(item))
     } else {
-      dispatch(flush())
-      return dispatch(
-        onFolderOpen ? onFolderOpen(item) : openItem(item, { limit })
-      )
+      return onFolderOpen
+        ? onFolderOpen(item)
+        : dispatch(openItem(item, { limit }))
     }
   }
 

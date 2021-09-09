@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Select from 'react-select'
 import { useSelector } from 'react-redux'
 import {
   DropdownItem,
@@ -8,6 +7,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   Badge,
+  Input,
 } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 import { formatTimezone } from 'lib/helpers'
@@ -18,6 +18,7 @@ const OPTIONS = [
   { value: 'pending', label: 'Pending', readOnly: true },
   { value: 'running', label: 'Running' },
   { value: 'stopped', label: 'Stopped' },
+  { value: 'terminated', label: 'Terminated' },
 ]
 
 const RunningBotTableRow = ({
@@ -82,24 +83,40 @@ const RunningBotTableRow = ({
           }
         >
           <td>
-            <Select
-              options={OPTIONS}
-              value={OPTIONS.find((item) => item.value === botInstance.status)}
-              onChange={(option) =>
-                changeBotInstanceStatus(option, botInstance.id)
+            <Input
+              type="select"
+              onChange={({ target }) =>
+                changeBotInstanceStatus(botInstance.id, target.value)
               }
-              isOptionDisabled={(option) => option.readOnly}
-              isDisabled={botInstance.status === 'pending'}
-              menuPortalTarget={document.body}
-              menuPosition={'absolute'}
-              menuPlacement={'bottom'}
-            />
+            >
+              {OPTIONS.map((option) => {
+                return (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                    disabled={option.value === 'pending'}
+                    selected={option.value === botInstance.status}
+                  >
+                    {option.label}
+                  </option>
+                )
+              })}
+            </Input>
           </td>
           <td>
             {botInstance.bot_name}
             <br />
             {botInstance.container_id && (
-              <Badge color="success" title="Container ID">
+              <Badge
+                color={
+                  botInstance.status == 'running'
+                    ? 'success'
+                    : botInstance.status === 'terminated'
+                    ? 'danger'
+                    : 'info'
+                }
+                title="Container ID"
+              >
                 {botInstance.container_id}:{botInstance.port}
               </Badge>
             )}

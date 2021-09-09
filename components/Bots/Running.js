@@ -213,12 +213,12 @@ const RunningBots = () => {
   //     })
   // }
 
-  const changeBotInstanceStatus = (option, id) => {
-    dispatch(updateRunningBot(id, { status: option.value }))
+  const changeBotInstanceStatus = (id, value) => {
+    dispatch(updateRunningBot(id, { status: value }))
       .then(() =>
         addNotification({
           type: NOTIFICATION_TYPES.INFO,
-          message: `Enqueued status change: ${option.value}`,
+          message: `Enqueued status change: ${value}`,
         })
       )
       .catch(() =>

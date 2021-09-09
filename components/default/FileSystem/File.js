@@ -19,6 +19,12 @@ const Wrapper = styled.div`
     transform: scale(1.05);
   }
 `
+const SelectionBox = styled.i`
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  color: green;
+`
 
 const Caption = styled.span`
   position: absolute;
@@ -38,13 +44,16 @@ const File = ({ item, onClick }) => {
 
   return (
     <Col md={3}>
-      <Wrapper onClick={() => onClick(item)} selected={item.selected}>
+      <Wrapper onClick={() => onClick(item)}>
         {instance && (
-          <Media
-            src={`${process.env.API_URL}/instances/${instance.id}/file/${item.id}?token=${token}`}
-            className="w-100"
-            alt=""
-          />
+          <>
+            {item.selected && <SelectionBox className="fas fa-check-circle" />}
+            <Media
+              src={`${process.env.API_URL}/instances/${instance.id}/file/${item.id}?token=${token}`}
+              className="w-100"
+              alt=""
+            />
+          </>
         )}
         <Caption>{formatDate}</Caption>
       </Wrapper>

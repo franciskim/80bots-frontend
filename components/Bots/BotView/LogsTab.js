@@ -15,7 +15,6 @@ const LogsTab = () => {
   const [limit] = useState(16)
 
   useEffect(() => {
-    console.error(openedFolder, rootFolder)
     if (!openedFolder || !openedFolder.path.startsWith(rootFolder)) {
       console.error('get')
       dispatch(openItem({ path: rootFolder }, { limit }))

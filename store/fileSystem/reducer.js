@@ -39,26 +39,26 @@ export const reducer = (state = initialState, action) => {
       }
     case CLOSE_ITEM:
       if (action.data?.item?.type === 'file') {
-        console.debug('STORE:CLOSING FILE:', state.openedFile.path)
+        // console.debug('STORE:CLOSING FILE:', state.openedFile.path)
         return { ...state, openedFile: null }
       } else {
-        console.debug('STORE:CLOSING FOLDER:', state.openedFolder.path)
+        // console.debug('STORE:CLOSING FOLDER:', state.openedFolder.path)
         const prevState = state.history.length
           ? state.history[state.history.length - 2]
           : initialState
         return { ...prevState }
       }
     case OPEN_ITEM:
-      console.error(action.data?.item)
       if (action.data?.item?.type === 'file') {
-        console.debug('STORE:OPENING FILE:', action.data.item)
+        // console.debug('STORE:OPENING FILE:', action.data.item)
         return { ...state, openedFile: action.data.item }
       } else {
-        console.error('STORE:OPENING FOLDER:', action.data.item.path, state)
+        // console.error('STORE:OPENING FOLDER:', action.data.item)
+        const { path, type } = action.data.item
         return {
           ...state,
           openedFolder: action.data.item,
-          history: [...state.history, state],
+          history: [...state.history, { path, type }],
         }
       }
     case ADD_ITEM:

@@ -20,7 +20,6 @@ const FilesType = ({ setCustomBack }) => {
     (state) => state.fileSystem.history.slice(-1)?.[0]?.openedFolder
   )
   const loading = useSelector((state) => state.fileSystem.loading)
-  const items = useSelector((state) => state.fileSystem.items)
 
   useEffect(() => {
     if (channel && !!openedFolder) {

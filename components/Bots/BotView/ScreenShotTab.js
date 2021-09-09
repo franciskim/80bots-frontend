@@ -21,10 +21,6 @@ const FiltersSection = styled.div`
   padding: 1.25rem;
 `
 
-const Hint = styled.span`
-  font-size: 14px;
-`
-
 const ScreenShotTab = ({ botInstance, setCustomBack }) => {
   const dispatch = useDispatch()
   const router = useRouter()
@@ -36,11 +32,10 @@ const ScreenShotTab = ({ botInstance, setCustomBack }) => {
 
   const channel = useSelector((state) => state.bot.botInstance?.storage_channel)
   const openedFolder = useSelector((state) => state.fileSystem.openedFolder)
-  const previous = useSelector(
-    (state) => state.fileSystem.history.slice(-1)?.[0]?.openedFolder
-  )
+  const previous = useSelector((state) => {
+    return state.fileSystem.history.slice(-1)?.[0]?.openedFolder
+  })
   const loading = useSelector((state) => state.fileSystem.loading)
-  // const items = useSelector((state) => state.fileSystem.items)
 
   useEffect(() => {
     return () => dispatch(flush())
@@ -54,9 +49,13 @@ const ScreenShotTab = ({ botInstance, setCustomBack }) => {
   }, [channel, openedFolder])
 
   useEffect(() => {
+    console.error('>>>>', previous, openedFolder, rootFolder)
     if (!previous || openedFolder.path === rootFolder) {
+      console.error('***', null)
       setCustomBack(null)
     } else {
+      console.error('***>>>>', null)
+
       setCustomBack(() => {
         dispatch(closeItem(openedFolder))
         dispatch(openItem(previous, { limit }))
@@ -89,7 +88,7 @@ const ScreenShotTab = ({ botInstance, setCustomBack }) => {
         <Row>
           <Col>
             <FiltersSection>
-              {isReportMode && <Hint>Select issued screenshots |&nbsp;</Hint>}
+              {isReportMode && <>Select issued screenshots |&nbsp;</>}
               <Button
                 size="sm"
                 type={'danger'}
@@ -102,11 +101,12 @@ const ScreenShotTab = ({ botInstance, setCustomBack }) => {
               </Button>
               {isReportMode && (
                 <>
-                  <Hint>&nbsp;|&nbsp;</Hint>
+                  &nbsp;|&nbsp;
                   <Button
                     size="sm"
                     type={'success'}
                     onClick={() => setIsModalOpen(true)}
+                    disabled={!reportItems.length}
                   >
                     Proceed
                   </Button>
@@ -115,7 +115,7 @@ const ScreenShotTab = ({ botInstance, setCustomBack }) => {
             </FiltersSection>
             <FileSystem
               selectedItems={reportItems}
-              onFileOpen={isReportMode ? handleItemSelect : null}
+              onFileOpen={isReportMode ? handleItemSelect : () => {}}
             />
           </Col>
         </Row>

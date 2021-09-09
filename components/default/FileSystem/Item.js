@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-// import styled from '@emotion/styled'
 import Folder, { TYPE as FOLDER_TYPE } from './Folder'
 import File, { TYPE as FILE_TYPE } from './File'
 
