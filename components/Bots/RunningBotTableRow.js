@@ -88,6 +88,7 @@ const RunningBotTableRow = ({
               onChange={({ target }) =>
                 changeBotInstanceStatus(botInstance.id, target.value)
               }
+              defaultValue={botInstance.status}
             >
               {OPTIONS.map((option) => {
                 return (
@@ -95,7 +96,6 @@ const RunningBotTableRow = ({
                     key={option.value}
                     value={option.value}
                     disabled={option.value === 'pending'}
-                    selected={option.value === botInstance.status}
                   >
                     {option.label}
                   </option>

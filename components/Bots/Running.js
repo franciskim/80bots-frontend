@@ -81,6 +81,7 @@ const RunningBots = () => {
     dispatch(getRunningBots({ page, limit, list })).then(() => {
       setLoadingAll(false)
     })
+
     dispatch(
       addListener(`running.${user.id}`, 'InstanceLaunched', (event) => {
         const { status } = event.instance
