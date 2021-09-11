@@ -50,10 +50,10 @@ export const reducer = (state = initialState, action) => {
       }
     case OPEN_ITEM:
       if (action.data?.item?.type === 'file') {
-        // console.debug('STORE:OPENING FILE:', action.data.item)
+        console.debug('STORE:OPENING FILE:', action.data.item)
         return { ...state, openedFile: action.data.item }
       } else {
-        // console.error('STORE:OPENING FOLDER:', action.data.item)
+        console.debug('STORE:OPENING FOLDER:', action.data.item)
         const { path, type } = action.data.item
         return {
           ...state,

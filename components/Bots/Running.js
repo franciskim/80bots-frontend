@@ -23,7 +23,6 @@ import {
   restoreBot,
   getRunningBots,
   updateRunningBot,
-  // downloadInstancePemFile,
   botInstanceUpdated,
   syncBotInstances,
 } from 'store/bot/actions'
@@ -33,6 +32,7 @@ import {
   subscribe as wsSubscribe,
   unsubscribe as wsUnsubscribe,
 } from 'store/socket/actions'
+import Skeleton from 'react-loading-skeleton'
 
 import RunningBotTableRow from './RunningBotTableRow'
 
@@ -60,9 +60,11 @@ const RunningBots = () => {
   const botInstances = useSelector((state) => state.bot.botInstances)
   const total = useSelector((state) => state.bot.total)
   const syncLoading = useSelector((state) => state.bot.syncLoading)
+  const loading = useSelector((state) => state.bot.loading)
   const settings_channel = useSelector(
     (state) => state.scriptNotification.settings_channel
   )
+  const botUpdateLoading = useSelector((state) => state.bot.botUpdateLoading)
 
   const onSearch = () => {
     return dispatch(
@@ -84,10 +86,10 @@ const RunningBots = () => {
 
     dispatch(
       addListener(`running.${user.id}`, 'InstanceLaunched', (event) => {
+        console.error('Received socket message InstanceLaunched', event)
         const { status } = event.instance
         if (event.instance) {
           const statusText = status === 'running' ? 'launched' : status
-
           addNotification({
             type: NOTIFICATION_TYPES.SUCCESS,
             message: `Bot ${event.instance.bot_name} successfully ${statusText}`,
@@ -96,15 +98,24 @@ const RunningBots = () => {
         }
       })
     )
+
     dispatch(
-      addListener(`running.${user.id}`, 'InstanceStatusUpdated', () => {
-        setPage(1)
-        setSearch(null)
-        onSearch()
+      addListener(`running.${user.id}`, 'InstanceStatusUpdated', (data) => {
+        const botInstance = botInstances.find(
+          (instance) => instance.id === data.instanceId
+        )
+        if (botInstance) {
+          botInstance.status = data.status
+          dispatch(botInstanceUpdated(botInstance))
+        } else {
+          console.error('Botinstance is not found')
+        }
       })
     )
+
     dispatch(
       addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
+        console.error('add listener BotsSyncSucceeded done.')
         addNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
           message: 'Sync completed',
@@ -113,13 +124,14 @@ const RunningBots = () => {
         onSearch()
       })
     )
+
     return () => {
       dispatch(removeAllListeners())
     }
   }, [])
 
   useEffect(() => {
-    // console.log('botInstances ****** ' + JSON.stringify(botInstances))
+    // console.log('botInstances ****** ' + botInstances.length)
     botInstances.map(async (botInstance) => {
       const { notification_channel, status } = botInstance
       // console.log('settings_channel ******', settings_channel)
@@ -187,32 +199,6 @@ const RunningBots = () => {
         })
       )
   }
-
-  // const downloadEventHandler = (instance) => {
-  //   dispatch(downloadInstancePemFile(instance.id))
-  //     .then(({ data }) => {
-  //       dispatch(
-  //         download(
-  //           data,
-  //           `${instance.instance_id}.pem`,
-  //           'application/x-pem-file'
-  //         )
-  //       )
-  //     })
-  //     .catch(({ error: { response } }) => {
-  //       if (response && response.data) {
-  //         addNotification({
-  //           type: NOTIFICATION_TYPES.ERROR,
-  //           message: response.data.message,
-  //         })
-  //       } else {
-  //         addNotification({
-  //           type: NOTIFICATION_TYPES.ERROR,
-  //           message: 'Error occurred while downloading file',
-  //         })
-  //       }
-  //     })
-  // }
 
   const changeBotInstanceStatus = (id, value) => {
     dispatch(updateRunningBot(id, { status: value }))
@@ -302,6 +288,7 @@ const RunningBots = () => {
               setLimit(value)
               onSearch()
             }}
+            loading={loading}
           />
           <ListFilter
             options={FILTERS_LIST_OPTIONS}
@@ -317,40 +304,53 @@ const RunningBots = () => {
             }}
           />
         </div>
-        <Table className="table-flush" responsive>
-          <thead className="thead-light">
-            <tr>
-              <SortableTableHeader field={'status'}>Status</SortableTableHeader>
-              <SortableTableHeader field={'bot_name'}>Bot</SortableTableHeader>
-              <SortableTableHeader field={'script_notification'}>
-                Last Notification
-              </SortableTableHeader>
-              <SortableTableHeader field={'launched_at'}>
-                Deployed At
-              </SortableTableHeader>
-              <SortableTableHeader field={'uptime'}>Uptime</SortableTableHeader>
-              <SortableTableHeader field={'name'}>Name</SortableTableHeader>
-              <SortableTableHeader field={'launched_by'}>
-                Deployed By
-              </SortableTableHeader>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {botInstances.map((bot) => {
-              return (
-                <RunningBotTableRow
-                  user={user}
-                  botInstance={bot}
-                  key={bot.id}
-                  choiceRestoreBot={choiceRestoreBot}
-                  changeBotInstanceStatus={changeBotInstanceStatus}
-                  choiceCopyInstance={choiceCopyInstance}
-                />
-              )
-            })}
-          </tbody>
-        </Table>
+        {!loading && (
+          <Table className="table-flush" responsive>
+            <thead className="thead-light">
+              <tr>
+                <SortableTableHeader field={'status'}>
+                  Status
+                </SortableTableHeader>
+                <SortableTableHeader field={'bot_name'}>
+                  Bot
+                </SortableTableHeader>
+                <SortableTableHeader field={'script_notification'}>
+                  Last Notification
+                </SortableTableHeader>
+                <SortableTableHeader field={'launched_at'}>
+                  Deployed At
+                </SortableTableHeader>
+                <SortableTableHeader field={'uptime'}>
+                  Uptime
+                </SortableTableHeader>
+                <SortableTableHeader field={'name'}>Name</SortableTableHeader>
+                <SortableTableHeader field={'launched_by'}>
+                  Deployed By
+                </SortableTableHeader>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {botInstances.map((bot) => {
+                return (
+                  <RunningBotTableRow
+                    user={user}
+                    botInstance={bot}
+                    key={bot.id}
+                    choiceRestoreBot={choiceRestoreBot}
+                    changeBotInstanceStatus={changeBotInstanceStatus}
+                    choiceCopyInstance={choiceCopyInstance}
+                    botUpdateLoading={botUpdateLoading[bot.id]}
+                  />
+                )
+              })}
+            </tbody>
+          </Table>
+        )}
+        {loading &&
+          Array.from({ length: 5 }, (v, k) => {
+            return <Skeleton key={k} />
+          })}
       </CardBody>
       <CardFooter className="py-4">
         {!loadingAll && (

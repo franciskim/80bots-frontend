@@ -8,6 +8,7 @@ import {
   DropdownMenu,
   Badge,
   Input,
+  Spinner,
 } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 import { formatTimezone } from 'lib/helpers'
@@ -26,6 +27,7 @@ const RunningBotTableRow = ({
   choiceRestoreBot,
   choiceCopyInstance,
   changeBotInstanceStatus,
+  botUpdateLoading,
   user,
 }) => {
   const botNotifications = useSelector((state) => state.bot.botNotifications)
@@ -88,6 +90,7 @@ const RunningBotTableRow = ({
               onChange={({ target }) =>
                 changeBotInstanceStatus(botInstance.id, target.value)
               }
+              disabled={botUpdateLoading}
               defaultValue={botInstance.status}
             >
               {OPTIONS.map((option) => {
@@ -106,7 +109,8 @@ const RunningBotTableRow = ({
           <td>
             {botInstance.bot_name}
             <br />
-            {botInstance.container_id && (
+            {botUpdateLoading && <Spinner type="grow" color="secondary" />}
+            {botInstance.container_id && !botUpdateLoading && (
               <Badge
                 color={
                   botInstance.status == 'running'
@@ -208,6 +212,7 @@ RunningBotTableRow.propTypes = {
   changeBotInstanceStatus: PropTypes.func.isRequired,
   choiceCopyInstance: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
+  botUpdateLoading: PropTypes.bool.isRequired,
 }
 
 export default RunningBotTableRow

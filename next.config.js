@@ -8,27 +8,25 @@ const { parsed: localEnv } = require('dotenv').config()
 
 // for transpiling all ESM @fullcalendar/* packages
 // also, for piping fullcalendar thru babel (to learn why, see babel.config.js)
-const withTM = require('next-transpile-modules')(['@fullcalendar/core'])
+// const withTM = require('next-transpile-modules')(['@fullcalendar/core'])
 
 module.exports = withFonts(
   withCSS(
     withImages(
       withSass(
-        withTM({
-          webpack(config, options) {
-            config.plugins.push(
-              new webpack.EnvironmentPlugin({ ...process.env, ...localEnv })
-            )
-            config.module.rules.push({
-              test: /\.(eot|ttf|woff|woff2)$/,
-              use: {
-                loader: 'url-loader',
-              },
-            })
-            config.resolve.modules.push(path.resolve('./'))
-            return config
-          },
-        })
+        webpack(config, options) {
+          config.plugins.push(
+            new webpack.EnvironmentPlugin({ ...process.env, ...localEnv })
+          )
+          config.module.rules.push({
+            test: /\.(eot|ttf|woff|woff2)$/,
+            use: {
+              loader: 'url-loader',
+            },
+          })
+          config.resolve.modules.push(path.resolve('./'))
+          return config
+        },
       )
     )
   )

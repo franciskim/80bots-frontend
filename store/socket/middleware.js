@@ -15,7 +15,7 @@ import {
 import { AUTH_CHECK, LOGIN, REGISTER } from '../auth/types'
 
 export default function createWebSocketMiddleware() {
-  return (store) => {
+  return (/* store */) => {
     // const { dispatch } = store;
     let socket
     let rooms = {}
@@ -26,6 +26,7 @@ export default function createWebSocketMiddleware() {
         authEndpoint: process.env.SOCKET_AUTH_URL,
         host: process.env.SOCKET_URL,
         client: io,
+        logToConsole: true,
         auth: {
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -39,8 +40,9 @@ export default function createWebSocketMiddleware() {
         case success(REGISTER):
         case success(LOGIN):
         case success(AUTH_CHECK): {
-          socket = connect()
-
+          if (!socket) {
+            socket = connect()
+          }
           return next(action)
         }
         case error(REGISTER):
@@ -69,12 +71,14 @@ export default function createWebSocketMiddleware() {
           return next(action)
         }
         case ADD_LISTENER: {
-          if (socket && !rooms[action.data.room])
-            rooms[action.data.room] = socket.channel(action.data.room)
-          return rooms[action.data.room]?.listen(
-            action.data.eventName,
-            action.data.handler
-          )
+          const { eventName, handler, room } = action.data
+          if (!socket) {
+            socket = connect()
+          }
+          if (socket && !rooms[room]) {
+            rooms[room] = socket.channel(room)
+          }
+          return rooms[room]?.listen(eventName, handler)
         }
         case ADD_WHISPER_LISTENER: {
           const { channel, signal, callback } = action.data
@@ -102,7 +106,6 @@ export default function createWebSocketMiddleware() {
         }
         case EMIT_MESSAGE:
           return socket.emit(action.data.eventName, action.data.message)
-
         default:
           return next(action)
       }

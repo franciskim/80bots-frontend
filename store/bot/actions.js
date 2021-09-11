@@ -202,6 +202,7 @@ export const updateRunningBot = (id, updateData) => {
     },
     meta: {
       thunk: true,
+      id,
     },
   }
 }

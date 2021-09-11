@@ -25,9 +25,7 @@ const SimpleHeader = ({ name, parentName }) => {
         <div className="header-body">
           <Row className="align-items-center py-4">
             <Col>
-              <h6 className="fullcalendar-title h2 text-white d-inline-block mb-0">
-                {name}
-              </h6>{' '}
+              <h6 className="h2 text-white d-inline-block mb-0">{name}</h6>{' '}
               <Breadcrumb
                 className="d-none d-md-inline-block ml-lg-4"
                 listClassName="breadcrumb-links breadcrumb-dark"

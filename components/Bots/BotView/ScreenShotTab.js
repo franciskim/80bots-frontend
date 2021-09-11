@@ -49,13 +49,9 @@ const ScreenShotTab = ({ botInstance, setCustomBack }) => {
   }, [channel, openedFolder])
 
   useEffect(() => {
-    console.error('>>>>', previous, openedFolder, rootFolder)
     if (!previous || openedFolder.path === rootFolder) {
-      console.error('***', null)
       setCustomBack(null)
     } else {
-      console.error('***>>>>', null)
-
       setCustomBack(() => {
         dispatch(closeItem(openedFolder))
         dispatch(openItem(previous, { limit }))

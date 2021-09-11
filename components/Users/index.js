@@ -14,7 +14,7 @@ const Users = () => {
   const [search, setSearch] = useState(null)
   const [order, setOrder] = useState({ value: '', field: '' })
 
-  const [loadingAll, setLoadingAll] = useState(true)
+  const loading = useSelector((state) => state.user.loading)
 
   /***
    * Dispatch the action
@@ -32,10 +32,8 @@ const Users = () => {
   }
 
   useEffect(() => {
-    onSearch().then(() => {
-      setLoadingAll(false)
-    })
-  }, [page, limit])
+    onSearch()
+  }, [])
 
   const users = useSelector((state) => state.user.users)
   const total = useSelector((state) => state.user.total)
@@ -66,6 +64,7 @@ const Users = () => {
               setLimit(value)
               onSearch()
             }}
+            loading={loading}
           />
           <SearchFilter
             onChange={(value) => {
@@ -74,8 +73,8 @@ const Users = () => {
             }}
           />
         </div>
-        {loadingAll && <Skeleton count={5} />}
-        {!loadingAll && (
+        {loading && <Skeleton count={5} />}
+        {!loading && (
           <Table className="table-flush" responsive>
             <thead className="thead-light">
               <tr>
@@ -98,7 +97,7 @@ const Users = () => {
         )}
       </CardBody>
       <CardFooter>
-        {!loadingAll && (
+        {!loading && (
           <Paginator
             total={total}
             pageSize={limit}

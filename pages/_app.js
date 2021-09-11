@@ -11,8 +11,6 @@ import withReduxStore from '../lib/connectRedux'
 
 // plugins styles from node_modules
 import 'react-perfect-scrollbar/dist/css/styles.css'
-import '@fullcalendar/common/main.min.css'
-import '@fullcalendar/daygrid/main.min.css'
 import 'sweetalert2/dist/sweetalert2.min.css'
 import 'select2/dist/css/select2.min.css'
 import 'quill/dist/quill.core.css'

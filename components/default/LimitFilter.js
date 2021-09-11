@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Label } from 'reactstrap'
 import Select from 'react-select'
+import Skeleton from 'react-loading-skeleton'
 
-export const LimitFilter = ({ defaultValue, onChange, total }) => {
+export const LimitFilter = ({ defaultValue, onChange, total, loading }) => {
   const LIMIT_OPTIONS = [
     { value: 20, label: 20 },
     { value: 50, label: 50 },
@@ -38,17 +39,20 @@ export const LimitFilter = ({ defaultValue, onChange, total }) => {
           }),
         }}
       />
-      entries. Showing rows 1 to 10 of {total}
+      entries. {!loading && <>Showing rows 1 to 10 of {total}</>}
+      {loading && <Skeleton style={{ width: 120 }} />}
     </div>
   )
 }
 
 LimitFilter.propTypes = {
   total: PropTypes.number,
+  loading: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   defaultValue: PropTypes.oneOf([20, 50, 100, 500]),
 }
 
 LimitFilter.defaultProps = {
   total: 0,
+  loading: false,
 }

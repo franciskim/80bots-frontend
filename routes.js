@@ -60,11 +60,6 @@ const routes = [
     icon: 'fa fa-history',
   },
   {
-    path: '/settings',
-    name: 'AWS AMI Settings',
-    icon: 'fa fa-cog text-gray',
-  },
-  {
     path: '/users',
     name: 'Users',
     icon: 'fa fa-users text-red',
