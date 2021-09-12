@@ -13,7 +13,7 @@ const { parsed: localEnv } = require('dotenv').config()
 module.exports = withFonts(
   withCSS(
     withImages(
-      withSass(
+      withSass({
         webpack(config, options) {
           config.plugins.push(
             new webpack.EnvironmentPlugin({ ...process.env, ...localEnv })
@@ -27,7 +27,7 @@ module.exports = withFonts(
           config.resolve.modules.push(path.resolve('./'))
           return config
         },
-      )
+      })
     )
   )
 )
