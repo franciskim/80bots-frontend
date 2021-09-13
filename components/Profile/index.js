@@ -68,77 +68,74 @@ const Profile = () => {
   return (
     <Card>
       <CardHeader>User information</CardHeader>
-      <CardBody className="row">
-        <Col md={6}>
-          <FormGroup className="row">
-            <Label md={4} className="form-control-label" htmlFor="input-email">
-              Email address
-            </Label>
-            <Col md={8}>
-              {user && (
-                <Input
-                  id="input-email"
-                  type="email"
-                  value={user.email}
-                  readOnly
-                />
-              )}
-              {!user && <Skeleton count={1} />}
-            </Col>
-          </FormGroup>
-          <FormGroup className="row">
-            <Label md="4" className="form-control-label">
-              Your current time:
-            </Label>
-            <Col md="8">
+      <CardBody>
+        <FormGroup className="row">
+          <Label md={4} className="form-control-label" htmlFor="input-email">
+            Email address
+          </Label>
+          <Col md={4}>
+            {user && (
+              <Input
+                id="input-email"
+                type="email"
+                value={user.email}
+                readOnly
+              />
+            )}
+            {!user && <Skeleton count={1} />}
+          </Col>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md="4" className="form-control-label">
+            Your current time:
+          </Label>
+          <Col md="4">
+            <Clock
+              format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
+              timezone={null}
+              style={currClockStyle}
+              ticking={true}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label md={4} className="form-control-label">
+            Current platform time:
+          </Label>
+          <Col md="4">
+            {user && (
               <Clock
                 format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
-                timezone={null}
-                style={currClockStyle}
+                timezone={user.timezone}
+                style={clockStyle}
                 ticking={true}
               />
-            </Col>
-          </FormGroup>
-          <FormGroup className="row">
-            <Label md={4} className="form-control-label">
-              Current platform time:
-            </Label>
-            <Col md="8">
-              {user && (
-                <Clock
-                  format={'dddd Do, MMMM Mo, YYYY, h:mm:ss A'}
-                  timezone={user.timezone}
-                  style={clockStyle}
-                  ticking={true}
-                />
-              )}
-              {!user && <Skeleton count={1} />}
-            </Col>
-          </FormGroup>
-
-          <FormGroup className="row">
-            <Label
-              className="form-control-label"
-              htmlFor="example-text-input"
-              md="4"
-            >
-              My Timezone
-            </Label>
-            <Col md="8">
-              {user && (
-                <Select
-                  options={timezones.map((item) => ({
-                    value: item.id,
-                    label: item.value,
-                  }))}
-                  onChange={(option) => setTimezone(option)}
-                  value={timezone}
-                />
-              )}
-              {!user && <Skeleton count={1} />}
-            </Col>
-          </FormGroup>
-        </Col>
+            )}
+            {!user && <Skeleton count={1} />}
+          </Col>
+        </FormGroup>
+        <FormGroup className="row">
+          <Label
+            className="form-control-label"
+            htmlFor="example-text-input"
+            md="4"
+          >
+            My Timezone
+          </Label>
+          <Col md="8">
+            {user && (
+              <Select
+                options={timezones.map((item) => ({
+                  value: item.id,
+                  label: item.value,
+                }))}
+                onChange={(option) => setTimezone(option)}
+                value={timezone}
+              />
+            )}
+            {!user && <Skeleton count={1} />}
+          </Col>
+        </FormGroup>
       </CardBody>
       <CardFooter>
         <Button color={'primary'} onClick={handleUpdate}>

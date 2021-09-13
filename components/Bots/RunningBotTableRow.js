@@ -146,10 +146,12 @@ const RunningBotTableRow = ({
           </td>
           <td>{formatTimezone(user.timezone, botInstance.launched_at)}</td>
           <td>
-            <UptimeLabel
-              uptime={botInstance.uptime}
-              status={botInstance.status}
-            />
+            {botInstance.status == 'running' && (
+              <UptimeLabel
+                uptime={botInstance.uptime}
+                status={botInstance.status}
+              />
+            )}
           </td>
           <td>{botInstance.name}</td>
           <td>{botInstance.launched_by}</td>

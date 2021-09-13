@@ -13,7 +13,6 @@ import {
   UPDATE_BOT,
   UPDATE_STATUS,
   POST_LAUNCH_INSTANCE,
-  DOWNLOAD_INSTANCE_PEM_FILE,
   GET_TAGS,
   BOT_SETTINGS,
   SYNC_BOT_INSTANCES,
@@ -22,8 +21,6 @@ import {
   GET_INSTANCE,
   CLEAR_BOT,
   CLEAR_INSTANCE,
-  REGIONS,
-  UPDATE_REGION,
   LIMIT_CHANGE,
   ADD_SCRIPT_NOTIFICATION,
   UPDATE_LAST_NOTIFICATION,
@@ -65,13 +62,11 @@ export const reducer = (state = initialState, action) => {
     case GET_BOT:
     case GET_INSTANCE:
     case COPY_INSTANCE:
-    case RESTORE_INSTANCE:
     case POST_LAUNCH_INSTANCE:
     case UPDATE_BOT:
     case UPDATE_STATUS:
-    case DOWNLOAD_INSTANCE_PEM_FILE:
-    case UPDATE_REGION:
       return { ...state, loading: true, error: null }
+    case RESTORE_INSTANCE:
     case UPDATE_RUNNING_BOT: {
       return {
         ...state,
@@ -162,14 +157,13 @@ export const reducer = (state = initialState, action) => {
         loading: false,
       }
     case success(COPY_INSTANCE):
-    case success(RESTORE_INSTANCE):
     case success(POST_LAUNCH_INSTANCE):
-    case success(DOWNLOAD_INSTANCE_PEM_FILE):
       return {
         ...state,
         loading: false,
       }
     case success(UPDATE_STATUS):
+    case success(RESTORE_INSTANCE):
     case success(UPDATE_BOT): {
       const botIdx = state.bots.findIndex((item) => item.id === action.data.id)
       if (botIdx || botIdx === 0) state.bots[botIdx] = action.data
@@ -230,13 +224,9 @@ export const reducer = (state = initialState, action) => {
     case error(POST_LAUNCH_INSTANCE):
     case error(UPDATE_RUNNING_BOT):
     case error(UPDATE_BOT):
-    case error(DOWNLOAD_INSTANCE_PEM_FILE):
-    case error(UPDATE_REGION):
     case error(UPDATE_LAST_NOTIFICATION):
     case error(UPDATE_STATUS):
-    case error(REGIONS):
       return { ...state, loading: false, error: action.error }
-
     default:
       return state
   }

@@ -24,7 +24,7 @@ const UptimeLabel = ({ uptime, status }) => {
     }
   }, [uptime])
 
-  return <UTLabel>{minToTime(time)}</UTLabel>
+  return <UTLabel>{time && minToTime(time)}</UTLabel>
 }
 
 UptimeLabel.propTypes = {

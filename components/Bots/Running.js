@@ -54,8 +54,6 @@ const RunningBots = () => {
   const [order, setOrder] = useState({ value: '', field: '' })
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
-  const [loadingAll, setLoadingAll] = useState(true)
-
   const user = useSelector((state) => state.auth.user)
   const botInstances = useSelector((state) => state.bot.botInstances)
   const total = useSelector((state) => state.bot.total)
@@ -80,9 +78,11 @@ const RunningBots = () => {
   }
 
   useEffect(() => {
-    dispatch(getRunningBots({ page, limit, list })).then(() => {
-      setLoadingAll(false)
-    })
+    dispatch(getRunningBots({ page, limit, list }))
+  }, [])
+
+  useEffect(() => {
+    if (botInstances.length === 0) return
 
     dispatch(
       addListener(`running.${user.id}`, 'InstanceLaunched', (event) => {
@@ -125,13 +125,26 @@ const RunningBots = () => {
       })
     )
 
+    dispatch(
+      addListener(`running.${user.id}`, 'LastNotificationUpdated', (data) => {
+        const botInstance = botInstances.find(
+          (instance) => instance.id === data.instanceId
+        )
+        if (botInstance) {
+          botInstance.last_notification = data.message
+          dispatch(botInstanceUpdated(botInstance))
+        } else {
+          console.error('Botinstance is not found')
+        }
+      })
+    )
+
     return () => {
       dispatch(removeAllListeners())
     }
-  }, [])
+  }, [user, botInstances])
 
   useEffect(() => {
-    // console.log('botInstances ****** ' + botInstances.length)
     botInstances.map(async (botInstance) => {
       const { notification_channel, status } = botInstance
       // console.log('settings_channel ******', settings_channel)
@@ -353,7 +366,7 @@ const RunningBots = () => {
           })}
       </CardBody>
       <CardFooter className="py-4">
-        {!loadingAll && (
+        {!loading && (
           <Paginator
             total={total}
             pageSize={limit}

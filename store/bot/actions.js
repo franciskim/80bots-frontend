@@ -20,8 +20,6 @@ import {
   RESTORE_INSTANCE,
   SYNC_BOT_INSTANCES,
   CLEAR_BOT,
-  REGIONS,
-  UPDATE_REGION,
   BOT_REPORT,
   LIMIT_CHANGE,
   ADD_SCRIPT_NOTIFICATION,
@@ -298,53 +296,16 @@ export const restoreBot = (id) => {
     },
     meta: {
       thunk: true,
+      id,
     },
   }
 }
-
-// export const downloadInstancePemFile = id => {
-//   return {
-//     type: DOWNLOAD_INSTANCE_PEM_FILE,
-//     request: {
-//       method: "GET",
-//       url: "/bots/instances/pem",
-//       params: { instance: id }
-//     },
-//     meta: {
-//       thunk: true,
-//     }
-//   };
-// };
 
 export const syncBotInstances = (id, data) => ({
   type: SYNC_BOT_INSTANCES,
   request: {
     method: 'GET',
     url: '/bots/instances/sync',
-    data: { update: data },
-  },
-  meta: {
-    thunk: true,
-  },
-})
-
-export const getRegions = (query) => ({
-  type: REGIONS,
-  request: {
-    method: 'GET',
-    url: '/bots/instances/regions',
-    params: query,
-  },
-  meta: {
-    thunk: true,
-  },
-})
-
-export const updateRegion = (id, data) => ({
-  type: UPDATE_REGION,
-  request: {
-    method: 'PUT',
-    url: `/bots/instances/regions/${id}`,
     data: { update: data },
   },
   meta: {

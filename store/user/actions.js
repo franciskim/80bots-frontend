@@ -1,21 +1,10 @@
-import { TIMEZONES, USERS, UPDATE_USER, REGIONS } from './types'
+import { TIMEZONES, USERS, UPDATE_USER } from './types'
 
 export const getTimezones = () => ({
   type: TIMEZONES,
   request: {
     method: 'GET',
     url: '/user/timezone',
-  },
-  meta: {
-    thunk: true,
-  },
-})
-
-export const getRegions = () => ({
-  type: REGIONS,
-  request: {
-    method: 'GET',
-    url: '/instances/regions',
   },
   meta: {
     thunk: true,
