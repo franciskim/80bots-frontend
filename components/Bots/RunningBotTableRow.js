@@ -27,7 +27,7 @@ const RunningBotTableRow = ({
   choiceRestoreBot,
   choiceCopyInstance,
   changeBotInstanceStatus,
-  botUpdateLoading,
+  runningBotsLoading,
   user,
 }) => {
   const botNotifications = useSelector((state) => state.bot.botNotifications)
@@ -90,7 +90,7 @@ const RunningBotTableRow = ({
               onChange={({ target }) =>
                 changeBotInstanceStatus(botInstance.id, target.value)
               }
-              disabled={botUpdateLoading}
+              disabled={runningBotsLoading}
               defaultValue={botInstance.status}
             >
               {OPTIONS.map((option) => {
@@ -109,8 +109,8 @@ const RunningBotTableRow = ({
           <td>
             {botInstance.bot_name}
             <br />
-            {botUpdateLoading && <Spinner type="grow" color="secondary" />}
-            {botInstance.container_id && !botUpdateLoading && (
+            {runningBotsLoading && <Spinner type="grow" color="info" />}
+            {botInstance.container_id && !runningBotsLoading && (
               <Badge
                 color={
                   botInstance.status == 'running'
@@ -214,7 +214,7 @@ RunningBotTableRow.propTypes = {
   changeBotInstanceStatus: PropTypes.func.isRequired,
   choiceCopyInstance: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
-  botUpdateLoading: PropTypes.bool.isRequired,
+  runningBotsLoading: PropTypes.bool.isRequired,
 }
 
 export default RunningBotTableRow

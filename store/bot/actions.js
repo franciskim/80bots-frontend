@@ -90,6 +90,7 @@ export const updateStatusBot = (id, updateStatus) => {
     },
     meta: {
       thunk: true,
+      id,
     },
   }
 }
@@ -114,6 +115,7 @@ export const deleteBot = (id) => ({
   },
   meta: {
     thunk: true,
+    id,
   },
 })
 

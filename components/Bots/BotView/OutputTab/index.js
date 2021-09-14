@@ -28,7 +28,7 @@ const Hint = styled.span`
   color: #fff;
 `
 
-const OutputTab = ({ botInstance, setCustomBack }) => {
+const OutputTab = ({ setCustomBack }) => {
   const dispatch = useDispatch()
   const [activeTab, setActiveTab] = useState('images')
 

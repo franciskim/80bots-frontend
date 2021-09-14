@@ -5,7 +5,7 @@ import { Label } from 'reactstrap'
 
 const { SearchBar } = Search
 
-export const SearchFilter = ({ onChange, ...props }) => {
+export const SearchFilter = ({ onChange }) => {
   const [keyword, setKeywoard] = useState('')
 
   const handleChange = (value) => {

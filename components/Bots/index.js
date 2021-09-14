@@ -35,13 +35,13 @@ const Bots = () => {
   const [clickedBot, setClickedBot] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [loadingAllAfterSync, setLoadingAllAfterSync] = useState(false)
 
   const syncLoading = useSelector((state) => state.bot.syncLoading)
   const bots = useSelector((state) => state.bot.bots)
   const total = useSelector((state) => state.bot.total)
   const user = useSelector((state) => state.auth.user)
   const loading = useSelector((state) => state.bot.loading)
+  const botsLoading = useSelector((state) => state.bot.botsLoading)
 
   useEffect(() => {
     dispatch(getBots({ page, limit })).then(() => {
@@ -53,7 +53,6 @@ const Bots = () => {
           type: NOTIFICATION_TYPES.SUCCESS,
           message: 'Sync completed',
         })
-        setLoadingAllAfterSync(true)
       })
     )
     return () => {
@@ -73,16 +72,7 @@ const Bots = () => {
     )
   }
 
-  useEffect(() => {
-    if (loadingAllAfterSync) {
-      onSearch().then(() => {
-        setPage(1)
-        setLoadingAllAfterSync(false)
-      })
-    }
-  }, [loadingAllAfterSync])
-
-  const getDeleteBot = () => {
+  const handleDeleteBot = () => {
     dispatch(deleteBot(clickedBot.id))
       .then(() => {
         addNotification({
@@ -90,15 +80,6 @@ const Bots = () => {
           message: 'Bot removed!',
         })
         setClickedBot(null)
-        dispatch(
-          getBots({
-            page,
-            limit,
-            sort: order.field,
-            order: order.value,
-            search,
-          })
-        )
         setIsDeleteModalOpen(false)
       })
       .catch(() =>
@@ -205,6 +186,7 @@ const Bots = () => {
                     setIsDeleteModalOpen={setIsDeleteModalOpen}
                     setClickedBot={setClickedBot}
                     key={bot.id}
+                    botsLoading={botsLoading[bot.id]}
                   />
                 )
               })}
@@ -228,7 +210,7 @@ const Bots = () => {
             confirmBtnText="Yes"
             confirmBtnBsStyle="danger"
             title="Delete selected bot?"
-            onConfirm={getDeleteBot}
+            onConfirm={handleDeleteBot}
             onCancel={() => {
               setIsDeleteModalOpen(false)
             }}

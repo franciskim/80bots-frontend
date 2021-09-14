@@ -18,7 +18,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Breadcrumb, BreadcrumbItem, Container, Row, Col } from 'reactstrap'
 
-const SimpleHeader = ({ name, parentName }) => {
+const SimpleHeader = ({ name }) => {
   return (
     <div className="header header-dark bg-dark pb-6 content__title content__title--calendar">
       <Container fluid>

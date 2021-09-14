@@ -51,7 +51,7 @@ export const DragDropContainer = ({
     setCount(count)
   }
 
-  const onDragLeave = (e) => {
+  const onDragLeave = () => {
     let count = counter - 1
     toggleDragOver(count > 0)
     setCount(count)

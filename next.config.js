@@ -14,7 +14,7 @@ module.exports = withFonts(
   withCSS(
     withImages(
       withSass({
-        webpack(config, options) {
+        webpack(config) {
           config.plugins.push(
             new webpack.EnvironmentPlugin({ ...process.env, ...localEnv })
           )

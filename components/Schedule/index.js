@@ -68,6 +68,7 @@ const BotsSchedule = () => {
   const schedules = useSelector((state) => state.schedule.schedules)
   const total = useSelector((state) => state.schedule.total)
   const loading = useSelector((state) => state.schedule.loading)
+  const scheduleLoading = useSelector((state) => state.schedule.scheduleLoading)
 
   const handleStatusChange = (schedule) => {
     const statusName =
@@ -125,8 +126,6 @@ const BotsSchedule = () => {
     setIsModalOpen(false)
     dispatch(deleteSchedule(clickedSchedule.id))
       .then(() => {
-        setPage(1)
-        onSearch()
         addNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
           message: 'Schedule was successfully deleted',
@@ -198,8 +197,8 @@ const BotsSchedule = () => {
             <thead className="thead-light">
               <tr>
                 <SortableTableHeader field={'user'}>User</SortableTableHeader>
-                <SortableTableHeader field={'instance_id'}>
-                  Instance Id
+                <SortableTableHeader field={'container_id'}>
+                  Container Id
                 </SortableTableHeader>
                 <SortableTableHeader field={'bot_name'}>
                   Bot Name
@@ -220,6 +219,7 @@ const BotsSchedule = () => {
                     onEdit={handleEdit}
                     onDelete={handleDelete}
                     handleStatusChange={handleStatusChange}
+                    scheduleLoading={scheduleLoading[schedule.id]}
                   />
                 )
               })}

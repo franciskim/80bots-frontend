@@ -46,6 +46,7 @@ export const updateSchedule = (id, updateData) => {
     },
     meta: {
       thunk: true,
+      id,
     },
   }
 }
@@ -59,6 +60,7 @@ export const deleteSchedule = (id) => {
     },
     meta: {
       thunk: true,
+      id,
     },
   }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import Router, { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNotification } from 'lib/helpers'

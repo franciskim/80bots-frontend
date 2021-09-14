@@ -24,6 +24,7 @@ import {
   LIMIT_CHANGE,
   ADD_SCRIPT_NOTIFICATION,
   UPDATE_LAST_NOTIFICATION,
+  DELETE_BOT,
 } from './types'
 
 const initialState = {
@@ -46,7 +47,8 @@ const initialState = {
   limit: 10,
   loading: true,
   syncLoading: false,
-  botUpdateLoading: {},
+  runningBotsLoading: {},
+  botsLoading: {},
   error: null,
 }
 
@@ -57,22 +59,48 @@ export const reducer = (state = initialState, action) => {
     case GET_IMAGES:
     case GET_LOGS:
     case GET_OUTPUT_JSON:
-    case GET_BOTS:
     case GET_RUNNING_BOTS:
     case GET_BOT:
     case GET_INSTANCE:
     case COPY_INSTANCE:
     case POST_LAUNCH_INSTANCE:
-    case UPDATE_BOT:
-    case UPDATE_STATUS:
-      return { ...state, loading: true, error: null }
-    case RESTORE_INSTANCE:
-    case UPDATE_RUNNING_BOT: {
       return {
         ...state,
-        botUpdateLoading: {
-          ...state.botUpdateLoading,
-          [action.meta.id]: true,
+        loading: true,
+        error: null,
+      }
+    case GET_BOTS: {
+      return {
+        ...state,
+        botsLoading: {},
+        error: null,
+      }
+    }
+    case UPDATE_STATUS:
+    case UPDATE_BOT: {
+      const {
+        meta: { id },
+      } = action
+      return {
+        ...state,
+        botsLoading: {
+          ...state.botsLoading,
+          [id]: true,
+        },
+      }
+    }
+
+    case RESTORE_INSTANCE:
+    case DELETE_BOT:
+    case UPDATE_RUNNING_BOT: {
+      const {
+        meta: { id },
+      } = action
+      return {
+        ...state,
+        runningBotsLoading: {
+          ...state.runningBotsLoading,
+          [id]: true,
         },
       }
     }
@@ -135,18 +163,19 @@ export const reducer = (state = initialState, action) => {
         loading: false,
       }
 
-    case success(GET_BOTS):
+    case success(GET_BOTS): {
+      const { data: bots, total } = action.data
       return {
         ...state,
-        bots: action.data.data,
-        total: action.data.total,
+        bots,
+        total,
         loading: false,
       }
-
+    }
     case success(GET_RUNNING_BOTS):
       return {
         ...state,
-        botUpdateLoading: action.data.data.reduce((accr, instance) => {
+        runningBotsLoading: action.data.data.reduce((accr, instance) => {
           return {
             ...accr,
             [instance.id]: false,
@@ -162,15 +191,47 @@ export const reducer = (state = initialState, action) => {
         ...state,
         loading: false,
       }
-    case success(UPDATE_STATUS):
+    case success(UPDATE_STATUS): {
+      const {
+        data: { id },
+      } = action
+      const botIdx = state.bots.findIndex((item) => item.id === id)
+      if (botIdx > -1) {
+        state.bots[botIdx] = action.data
+      }
+      return {
+        ...state,
+        bots: [...state.bots],
+        botsLoading: {
+          ...state.botsLoading,
+          [id]: false,
+        },
+      }
+    }
     case success(RESTORE_INSTANCE):
     case success(UPDATE_BOT): {
       const botIdx = state.bots.findIndex((item) => item.id === action.data.id)
-      if (botIdx || botIdx === 0) state.bots[botIdx] = action.data
+      if (botIdx || botIdx === 0) {
+        state.bots[botIdx] = action.data
+      }
       return {
         ...state,
         bots: [...state.bots],
         loading: false,
+      }
+    }
+    case success(DELETE_BOT): {
+      const {
+        data: { id },
+      } = action
+      const bots = state.bots.filter((bot) => bot.id !== id)
+      return {
+        ...state,
+        bots: [...bots],
+        botsLoading: {
+          ...state.botsLoading,
+          [id]: false,
+        },
       }
     }
     case success(UPDATE_RUNNING_BOT): {
@@ -183,8 +244,8 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         botInstances: [...state.botInstances],
-        botUpdateLoading: {
-          ...state.botUpdateLoading,
+        runningBotsLoading: {
+          ...state.runningBotsLoading,
           [action.data.id]: false,
         },
       }

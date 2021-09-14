@@ -58,7 +58,7 @@ class MyApp extends App {
 `)
     document.insertBefore(comment, document.documentElement)
   }
-  static async getInitialProps({ Component, router, ctx }) {
+  static async getInitialProps({ Component, ctx }) {
     let pageProps = {}
 
     if (Component.getInitialProps) {

@@ -49,11 +49,13 @@ const FILTERS_LIST_OPTIONS = [
 
 const RunningBots = () => {
   const dispatch = useDispatch()
+
   const [list, setFilterList] = useState('all')
   const [limit, setLimit] = useState(20)
   const [order, setOrder] = useState({ value: '', field: '' })
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
+
   const user = useSelector((state) => state.auth.user)
   const botInstances = useSelector((state) => state.bot.botInstances)
   const total = useSelector((state) => state.bot.total)
@@ -62,7 +64,9 @@ const RunningBots = () => {
   const settings_channel = useSelector(
     (state) => state.scriptNotification.settings_channel
   )
-  const botUpdateLoading = useSelector((state) => state.bot.botUpdateLoading)
+  const runningBotsLoading = useSelector(
+    (state) => state.bot.runningBotsLoading
+  )
 
   const onSearch = () => {
     return dispatch(
@@ -89,12 +93,13 @@ const RunningBots = () => {
         console.error('Received socket message InstanceLaunched', event)
         const { status } = event.instance
         if (event.instance) {
-          const statusText = status === 'running' ? 'launched' : status
+          dispatch(botInstanceUpdated(event.instance))
           addNotification({
             type: NOTIFICATION_TYPES.SUCCESS,
-            message: `Bot ${event.instance.bot_name} successfully ${statusText}`,
+            message: `Bot ${event.instance.bot_name} successfully ${
+              status === 'running' ? 'launched' : status
+            }`,
           })
-          dispatch(botInstanceUpdated(event.instance))
         }
       })
     )
@@ -115,13 +120,13 @@ const RunningBots = () => {
 
     dispatch(
       addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
-        console.error('add listener BotsSyncSucceeded done.')
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: 'Sync completed',
-        })
         setSearch(null)
-        onSearch()
+        onSearch().then(() => {
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: 'Sync completed',
+          })
+        })
       })
     )
 
@@ -353,7 +358,7 @@ const RunningBots = () => {
                     choiceRestoreBot={choiceRestoreBot}
                     changeBotInstanceStatus={changeBotInstanceStatus}
                     choiceCopyInstance={choiceCopyInstance}
-                    botUpdateLoading={botUpdateLoading[bot.id]}
+                    runningBotsLoading={runningBotsLoading[bot.id]}
                   />
                 )
               })}
