@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'

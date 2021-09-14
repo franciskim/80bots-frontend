@@ -110,7 +110,7 @@ const RunningBotTableRow = ({
             {botInstance.bot_name}
             <br />
             {runningBotsLoading && <Spinner type="grow" color="info" />}
-            {botInstance.container_id && !runningBotsLoading && (
+            {!runningBotsLoading && (
               <Badge
                 color={
                   botInstance.status == 'running'

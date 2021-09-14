@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import ImagesType from './ImagesType'
 import JsonType from './JsonType'
 import { CardBody, Button, TabContent, TabPane, Nav, NavItem } from 'reactstrap'

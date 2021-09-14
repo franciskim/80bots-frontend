@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { DragDropContainer } from 'components/default'
 import { Card } from 'reactstrap'
 

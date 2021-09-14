@@ -3,7 +3,7 @@ import { getJson } from 'store/fileSystem/actions'
 import { lookup } from 'mime-types'
 import PropTypes from 'prop-types'
 import dynamic from 'next/dynamic'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 const ReactJson = dynamic(import('react-json-view'), { ssr: false })
 import { Button, Input, Row, Col, Label } from 'reactstrap'
 import { useDispatch, useSelector } from 'react-redux'

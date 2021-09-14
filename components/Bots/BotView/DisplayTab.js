@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
 import { CardBody, Row, Col } from 'reactstrap'
@@ -17,7 +17,7 @@ const Display = styled.iframe`
 const DisplayTab = ({ botInstance }) => {
   const [loadingPage, setLoadingPage] = useState(true)
 
-  const url = `http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`
+  const url = `http://localhost:${botInstance.novnc_port}/vnc.html?autoconnect=1&password=headless`
   return (
     <CardBody>
       <Row>
