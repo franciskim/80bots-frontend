@@ -1,24 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 import { useSelector, useDispatch } from 'react-redux'
-import { CardBody } from 'reactstrap'
+import { Row, Col } from 'reactstrap'
 import { Loader80bots } from 'components/default'
-import { flush, open as openItem } from 'store/fileSystem/actions'
+import { open as openItem } from 'store/fileSystem/actions'
 import FileSystem from 'components/default/FileSystem'
-import { Select } from 'components/default/inputs'
-
-const rootFolder = 'output/json'
-const defaultLimit = 20
-
-const Content = styled(CardBody)`
-  display: flex;
-  height: 85vh;
-  flex-flow: column nowrap;
-  overflow-y: hidden;
-  ${(props) => props.styles};
-`
+import Select from 'react-select'
 
 const JsonType = () => {
+  const rootFolder = 'output/json'
+  const limit = 20
   const dispatch = useDispatch()
   const [options, setOptions] = useState([])
   const [selected, setSelected] = useState(null)
@@ -28,12 +18,10 @@ const JsonType = () => {
   const openedFolder = useSelector((state) => state.fileSystem.openedFolder)
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
     if (!openedFolder || !openedFolder.path.startsWith(rootFolder)) {
-      dispatch(openItem({ path: rootFolder }, { limit: defaultLimit }))
+      dispatch(openItem({ path: rootFolder }, { limit }))
     }
-    return () => flush()
-  }, [openedFolder])
+  }, [rootFolder])
 
   useEffect(() => {
     setOptions(
@@ -57,52 +45,34 @@ const JsonType = () => {
   useEffect(() => {
     if (!selected) return
     if (!selected.path.startsWith(rootFolder)) {
-      dispatch(flush())
       setSelected(null)
     } else {
       dispatch(openItem(selected))
     }
   }, [selected])
 
-  const onSelected = (option) => {
-    setSelected(option)
-  }
-
   return (
     <>
-      <Content>
-        <style jsx global>{`
-          .pretty-json-container * {
-            color: #fff !important;
-          }
-        `}</style>
-        {openedFile ? (
-          <>
-            <Select
-              onChange={onSelected}
-              options={options}
-              value={selected}
-              styles={{
-                select: {
-                  container: (provided) => ({
-                    ...provided,
-                    minWidth: '200px',
-                    color: '#fff',
-                  }),
-                },
-              }}
-            />
-            <FileSystem hideNavigator={true} />
-          </>
-        ) : (
-          <Loader80bots
-            data={'light'}
-            styled={{
-              width: '200px',
-            }}
-          />
-        )}
-      </Content>
+      {openedFile ? (
+        <>
+          <Row>
+            <Col md="3">
+              <Select
+                onChange={setSelected}
+                options={options}
+                value={selected}
+              />
+            </Col>
+          </Row>
+          <FileSystem hideNavigator={true} />
+        </>
+      ) : (
+        <Loader80bots
+          styled={{
+            width: '200px',
+          }}
+        />
+      )}
     </>
   )
 }

@@ -7,10 +7,8 @@ import {
   LimitFilter,
   TableHeader,
 } from 'components/default'
-
 import ScheduleLogTableRow from './ScheduleLogTableRow'
 import { getSessions } from 'store/instanceSession/actions'
-
 import Skeleton from 'react-loading-skeleton'
 
 const SchedulerLog = () => {
@@ -19,12 +17,9 @@ const SchedulerLog = () => {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
   const [order, setOrder] = useState({ value: '', field: '' })
-  const [loadingAll, setLoadingAll] = useState(true)
 
   useEffect(() => {
-    dispatch(getSessions({ page, limit })).then(() => {
-      setLoadingAll(false)
-    })
+    dispatch(getSessions({ page, limit }))
   }, [])
 
   const onSearch = () => {
@@ -41,6 +36,7 @@ const SchedulerLog = () => {
 
   const sessions = useSelector((state) => state.instanceSession.sessions)
   const total = useSelector((state) => state.instanceSession.total)
+  const loading = useSelector((state) => state.instanceSession.loading)
 
   const onOrderChange = (field, value) => {
     setOrder({ field, value })
@@ -70,6 +66,7 @@ const SchedulerLog = () => {
               setLimit(value)
               onSearch()
             }}
+            loading={loading}
           />
           <SearchFilter
             onChange={(value) => {
@@ -78,8 +75,8 @@ const SchedulerLog = () => {
             }}
           />
         </div>
-        {loadingAll && <Skeleton count={5} />}
-        {!loadingAll && (
+        {loading && <Skeleton count={5} />}
+        {!loading && (
           <Table className="table-flush" responsive>
             <thead className="thead-light">
               <tr>
@@ -110,7 +107,7 @@ const SchedulerLog = () => {
         )}
       </CardBody>
       <CardFooter>
-        {!loadingAll && (
+        {!loading && (
           <Paginator
             total={total}
             pageSize={limit}

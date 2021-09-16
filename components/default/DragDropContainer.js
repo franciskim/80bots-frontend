@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
 const Title = styled.h1`
@@ -51,7 +51,7 @@ export const DragDropContainer = ({
     setCount(count)
   }
 
-  const onDragLeave = (e) => {
+  const onDragLeave = () => {
     let count = counter - 1
     toggleDragOver(count > 0)
     setCount(count)

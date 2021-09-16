@@ -12,7 +12,7 @@ import {
   NavItem,
   TabPane,
   TabContent,
-  Navbar,
+  Spinner,
 } from 'reactstrap'
 import classnames from 'classnames'
 import { getInstance, clearInstance } from 'store/bot/actions'
@@ -22,47 +22,50 @@ import ScreenShotTab from './ScreenShotTab'
 import LogsTab from './LogsTab'
 import OutputTab from './OutputTab'
 import DisplayTab from './DisplayTab'
+import { flush } from 'store/fileSystem/actions'
 
 const botTabs = [
   {
     title: 'Screenshots',
-    component: ScreenShotTab,
+    key: 'screenshots',
   },
   {
     title: 'Logs',
-    component: LogsTab,
+    key: 'logs',
   },
   {
     title: 'Outputs',
-    component: OutputTab,
+    key: 'output',
   },
   {
     title: 'Display',
-    component: DisplayTab,
+    key: 'display',
   },
 ]
 
 const BotView = () => {
   const dispatch = useDispatch()
+  const router = useRouter()
+
   const [activeTab, setActiveTab] = useState(botTabs[0])
   const [status, setStatus] = useState(STATUSES.CONNECTING)
   const [customBack, setCustomBack] = useState(null)
-  const router = useRouter()
   const {
     query: { id },
   } = router
 
+  const botInstance = useSelector((state) => state.bot.botInstance)
+
   const toggle = (tab) => {
-    if (tab.title === 'Display' && window.location.protocol === 'https:') {
+    if (tab.key === 'display' && window.location.protocol === 'https:') {
       window.open(`http://${botInstance.ip}:6080?autoconnect=1`)
     } else {
-      if (activeTab.title !== tab.title) {
+      if (activeTab.key !== tab.key) {
+        dispatch(flush())
         setActiveTab(tab)
       }
     }
   }
-
-  const botInstance = useSelector((state) => state.bot.botInstance)
 
   useEffect(() => {
     const { storage_channel } = botInstance
@@ -86,13 +89,15 @@ const BotView = () => {
     setCustomBack(null)
   }, [activeTab])
 
-  const { component: CurrentTab } = activeTab
   return (
     <Card>
       <CardHeader>
         <Button
           color="primary"
-          onClick={() => (customBack ? customBack() : router.back())}
+          onClick={() => {
+            if (customBack) customBack()
+            else router.back()
+          }}
         >
           Back
         </Button>
@@ -100,15 +105,9 @@ const BotView = () => {
       <CardBody>
         <h3>
           {Object.keys(botInstance).length ? (
-            botInstance.name + ' | ' + botInstance.bot_name
+            botInstance.container_id + ' | ' + botInstance.bot_name
           ) : (
-            <Loader80bots
-              data={'light'}
-              styled={{
-                width: '50px',
-                height: '25px',
-              }}
-            />
+            <Spinner type="grow" size="sm" color="primary" />
           )}
         </h3>
         <Nav tabs>
@@ -117,10 +116,10 @@ const BotView = () => {
           </NavItem>
           {botTabs.map((tab) => {
             return (
-              <NavItem key={tab.title}>
+              <NavItem key={tab.key}>
                 <NavLink
                   className={classnames({
-                    active: activeTab.title === tab.title,
+                    active: activeTab.key === tab.key,
                   })}
                   onClick={() => {
                     toggle(tab)
@@ -133,23 +132,43 @@ const BotView = () => {
           })}
         </Nav>
         {status === STATUSES.CONNECTING ? (
-          <Card>
-            <Loader80bots
-              data={'light'}
-              styled={{
-                width: '200px',
-              }}
-            />
-          </Card>
+          <Loader80bots
+            styled={{
+              width: '200px',
+            }}
+          />
         ) : (
-          <TabContent activeTab={activeTab.title}>
-            {botTabs.map((tab) => {
-              return (
-                <TabPane tabId={tab.title} key={tab.title}>
-                  <CurrentTab setCustomBack={(f) => setCustomBack(() => f)} />
-                </TabPane>
-              )
-            })}
+          <TabContent activeTab={activeTab.key}>
+            {activeTab.key === 'screenshots' && (
+              <TabPane tabId="screenshots">
+                <ScreenShotTab
+                  botInstance={botInstance}
+                  setCustomBack={setCustomBack}
+                />
+              </TabPane>
+            )}
+            <TabPane tabId="display">
+              <DisplayTab
+                botInstance={botInstance}
+                setCustomBack={setCustomBack}
+              />
+            </TabPane>
+            {activeTab.key === 'output' && (
+              <TabPane tabId="output">
+                <OutputTab
+                  botInstance={botInstance}
+                  setCustomBack={setCustomBack}
+                />
+              </TabPane>
+            )}
+            {activeTab.key === 'logs' && (
+              <TabPane tabId="logs">
+                <LogsTab
+                  botInstance={botInstance}
+                  setCustomBack={setCustomBack}
+                />
+              </TabPane>
+            )}
           </TabContent>
         )}
       </CardBody>

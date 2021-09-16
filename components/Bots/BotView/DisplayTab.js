@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import Link from 'next/link'
-import { useSelector } from 'react-redux'
+import PropTypes from 'prop-types'
 import { CardBody, Row, Col } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 
@@ -14,10 +14,10 @@ const Display = styled.iframe`
   background-color: #999;
 `
 
-const DisplayTab = () => {
+const DisplayTab = ({ botInstance }) => {
   const [loadingPage, setLoadingPage] = useState(true)
-  const botInstance = useSelector((state) => state.bot.botInstance)
-  const url = `http://${botInstance.ip}:6080?autoconnect=1&password=Uge9uuro`
+
+  const url = `http://localhost:${botInstance.novnc_port}/vnc.html?autoconnect=1&password=headless`
   return (
     <CardBody>
       <Row>
@@ -31,7 +31,6 @@ const DisplayTab = () => {
       </Row>
       {loadingPage && (
         <Loader80bots
-          data={'light'}
           styled={{
             width: '200px',
           }}
@@ -40,6 +39,10 @@ const DisplayTab = () => {
       <Display onLoad={() => setLoadingPage(false)} id={'display'} src={url} />
     </CardBody>
   )
+}
+
+DisplayTab.propTypes = {
+  botInstance: PropTypes.object,
 }
 
 export default DisplayTab

@@ -93,7 +93,7 @@ export const CodeEditor = ({ value, mode, onChange }) => {
         <Button
           color="info"
           onClick={() => handleBeautify(value)}
-          disabled={value.trim() === ''}
+          disabled={value === ''}
         >
           Beautify
         </Button>
@@ -116,4 +116,5 @@ CodeEditor.propTypes = {
 
 CodeEditor.defaultProps = {
   model: 'javascript',
+  value: '',
 }

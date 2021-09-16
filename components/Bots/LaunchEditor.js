@@ -205,7 +205,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
         return (
           <Input
             type="number"
-            value={values[item.name]}
+            defaultValue={values[item.name]}
             min={item.range && Number(item.range[0])}
             max={item.range && Number(item.range[1])}
             onChange={(e) => changeValue(item.name, Number(e.target.value))}
@@ -247,7 +247,7 @@ const LaunchEditor = ({ bot, onSubmit, onClose }) => {
         return (
           <Input
             type="text"
-            value={values[item.name]}
+            defaultValue={values[item.name]}
             onChange={(e) => changeValue(item.name, e.target.value)}
             // error={
             //   errors.indexOf(item.name) > -1 ? 'This field is required' : ''

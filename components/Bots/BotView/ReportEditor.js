@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 import {
   Button,
@@ -34,6 +34,7 @@ const ReportEditor = ({
 }) => {
   const dispatch = useDispatch()
   const [message, setMessage] = useState('')
+  const token = localStorage.getItem('token')
 
   const submitForm = () => {
     dispatch(
@@ -75,7 +76,12 @@ const ReportEditor = ({
           <ScreenshotsContainer>
             {screenshots.map((image, key) => {
               return (
-                <img key={key} src={image.url} width={'75'} height={'75'} />
+                <img
+                  key={key}
+                  src={`${process.env.API_URL}/instances/${bot.id}/file/${image.id}?token=${token}`}
+                  width={'75'}
+                  height={'75'}
+                />
               )
             })}
           </ScreenshotsContainer>
@@ -84,7 +90,7 @@ const ReportEditor = ({
       <ModalFooter>
         <Button onClick={onClose}>Cancel</Button>
         <Button color="primary" disabled={!message} onClick={submitForm}>
-          submitForm
+          Submit
         </Button>
       </ModalFooter>
     </Modal>

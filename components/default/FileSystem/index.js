@@ -19,26 +19,20 @@ const FileSystem = ({
   const dispatch = useDispatch()
   const openedFolder = useSelector((state) => state.fileSystem.openedFolder)
   const openedFile = useSelector((state) => state.fileSystem.openedFile)
-  const items = useSelector((state) => state.fileSystem.items)
+  const items = useSelector((state) => state.fileSystem.items || [])
   const total = useSelector((state) => state.fileSystem.total)
   const limit = useSelector((state) => state.fileSystem.query?.limit)
-  const page = useSelector((state) => state.fileSystem.query?.page)
+  const page = useSelector((state) => state.fileSystem.query?.page || 1)
   const filter = useSelector((state) => state.fileSystem.filter)
-  // const isFiltered = useSelector((state) => state.fileSystem.isFiltered)
 
   const handleItemClick = (item) => {
     if (item.type === 'file') {
-      return dispatch(onFileOpen ? onFileOpen(item) : openItem(item))
+      return onFileOpen ? onFileOpen(item) : dispatch(openItem(item))
     } else {
-      return dispatch(onFolderOpen ? onFolderOpen(item) : openItem(item))
+      return onFolderOpen
+        ? onFolderOpen(item)
+        : dispatch(openItem(item, { limit }))
     }
-  }
-
-  const getSelectedItems = () => {
-    return items.map((item) => {
-      item.selected = !!selectedItems.find((i) => i.id === item.id)
-      return item
-    })
   }
 
   return (
@@ -51,9 +45,12 @@ const FileSystem = ({
           }}
         />
       )}
-      {openedFolder && !hideNavigator && (
+      {openedFolder && !hideNavigator && items.length > 0 && (
         <List
-          items={getSelectedItems()}
+          items={items.map((item) => {
+            item.selected = !!selectedItems.find((i) => i.id === item.id)
+            return item
+          })}
           onItemClick={handleItemClick}
           onLimitChange={(limit) =>
             dispatch(getItems({ limit, isFiltered: filter }))

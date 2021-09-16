@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import ImagesType from './ImagesType'
 import JsonType from './JsonType'
-import { CardBody, Button, Row, Col } from 'reactstrap'
-import { Loader80bots } from 'components/default'
+import { CardBody, Button, TabContent, TabPane, Nav, NavItem } from 'reactstrap'
 import FilesType from './FileType'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { flush } from 'store/fileSystem/actions'
 
 const OUTPUT_TYPES = {
   JSON: {
@@ -28,61 +29,64 @@ const Hint = styled.span`
 `
 
 const OutputTab = ({ setCustomBack }) => {
-  const [currentType, setCurrentType] = useState(OUTPUT_TYPES.JSON)
+  const dispatch = useDispatch()
+  const [activeTab, setActiveTab] = useState('images')
 
-  const renderCurrentType = () => {
-    switch (currentType.value) {
-      case OUTPUT_TYPES.IMAGES.value:
-        return <ImagesType setCustomBack={setCustomBack} />
-      case OUTPUT_TYPES.JSON.value:
-        return <JsonType setCustomBack={setCustomBack} />
-      case OUTPUT_TYPES.FILES.value:
-        return <FilesType setCustomBack={setCustomBack} />
-      default:
-        return (
-          <Loader80bots
-            data={'light'}
-            styled={{
-              width: '200px',
-            }}
-          />
-        )
+  const toggle = (tab) => {
+    if (activeTab !== tab) {
+      dispatch(flush())
+      setActiveTab(tab)
     }
   }
 
   return (
     <>
-      <Row className="mt-2 mb-2">
-        <Col>
+      <CardBody>
+        <Nav className="mb-2">
           {Object.values(OUTPUT_TYPES).map((item, i, all) => {
-            const variant =
-              item.value === currentType.value ? 'success' : 'primary'
-
+            const color = item.value === activeTab ? 'success' : 'primary'
             return (
-              <>
+              <NavItem key={i}>
                 <Button
                   outline
-                  key={i}
-                  color={variant}
-                  onClick={() => setCurrentType(item)}
+                  color={color}
+                  onClick={() => {
+                    toggle(item.value)
+                  }}
                   size="sm"
                 >
                   {item.label}
                 </Button>
                 {all.length - 1 > i && <Hint>&nbsp;|&nbsp;</Hint>}
-              </>
+              </NavItem>
             )
           })}
-        </Col>
-      </Row>
-      <CardBody className="d-flex justify-content-center">
-        {renderCurrentType()}
+        </Nav>
+
+        <TabContent activeTab={activeTab}>
+          {activeTab === 'json' && (
+            <TabPane tabId="json">
+              <JsonType setCustomBack={setCustomBack} />
+            </TabPane>
+          )}
+          {activeTab === 'images' && (
+            <TabPane tabId="images">
+              <ImagesType setCustomBack={setCustomBack} />
+            </TabPane>
+          )}
+          {activeTab === 'files' && (
+            <TabPane tabId="files">
+              <FilesType setCustomBack={setCustomBack} />
+            </TabPane>
+          )}
+        </TabContent>
       </CardBody>
     </>
   )
 }
 
 OutputTab.propTypes = {
+  botInstance: PropTypes.object,
   setCustomBack: PropTypes.func.isRequired,
 }
 

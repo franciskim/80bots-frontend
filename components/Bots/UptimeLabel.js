@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { minToTime } from 'lib/helpers'
 
 const UTLabel = styled.label`
@@ -24,7 +24,7 @@ const UptimeLabel = ({ uptime, status }) => {
     }
   }, [uptime])
 
-  return <UTLabel>{minToTime(time)}</UTLabel>
+  return <UTLabel>{time && minToTime(time)}</UTLabel>
 }
 
 UptimeLabel.propTypes = {

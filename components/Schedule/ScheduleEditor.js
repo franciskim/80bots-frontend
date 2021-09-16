@@ -122,7 +122,7 @@ const ScheduleEditor = ({ close, onUpdateClick, ...props }) => {
             <span className="alert-text ml-1">{error}</span>
           </UncontrolledAlert>
         )}
-        <Table className="table-flush" responsive>
+        <Table className="table-flush">
           <thead className="thead-light">
             <tr>
               <th>Status</th>

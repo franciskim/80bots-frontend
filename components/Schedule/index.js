@@ -36,38 +36,6 @@ const FILTERS_LIST_OPTIONS = [
   { value: 'my', label: 'My Schedules' },
 ]
 
-// const selectStyles = {
-//   control: (provided, { selectProps: { width } }) => ({
-//     ...provided,
-//     width: width,
-//     minWidth: '75px',
-//     border: 'solid 1px hsl(0,0%,80%)',
-//     borderRadius: '4px',
-//     color: '#fff',
-//     backgroundColor: 'transparent',
-//     '&:hover': {
-//       borderColor: '#7dffff',
-//     },
-//   }),
-//   singleValue: (provided, state) => ({
-//     ...provided,
-//     color: '#fff',
-//   }),
-//   menu: (provided, state) => ({
-//     ...provided,
-//     border: 'solid 1px hsl(0,0%,80%)',
-//     borderRadius: '4px',
-//   }),
-//   menuList: (provided, state) => ({
-//     ...provided,
-//     backgroundColor: '#333',
-//   }),
-//   option: (provided, state) => ({
-//     ...provided,
-//     color: state.isFocused ? 'black' : '#fff',
-//   }),
-// }
-
 const BotsSchedule = () => {
   const dispatch = useDispatch()
   const [list, setFilterList] = useState('all')
@@ -76,8 +44,6 @@ const BotsSchedule = () => {
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
   const [clickedSchedule, setClickedSchedule] = useState(null)
-  const [loadingAll, setLoadingAll] = useState(true)
-
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
@@ -96,15 +62,13 @@ const BotsSchedule = () => {
   }
 
   useEffect(() => {
-    onSearch().then(() => {
-      setLoadingAll(false)
-    })
+    onSearch()
   }, [])
 
   const schedules = useSelector((state) => state.schedule.schedules)
   const total = useSelector((state) => state.schedule.total)
-  // const user = useSelector((state) => state.auth.user)
-  // const error = useSelector((state) => state.schedule.error)
+  const loading = useSelector((state) => state.schedule.loading)
+  const scheduleLoading = useSelector((state) => state.schedule.scheduleLoading)
 
   const handleStatusChange = (schedule) => {
     const statusName =
@@ -162,8 +126,6 @@ const BotsSchedule = () => {
     setIsModalOpen(false)
     dispatch(deleteSchedule(clickedSchedule.id))
       .then(() => {
-        setPage(1)
-        onSearch()
         addNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
           message: 'Schedule was successfully deleted',
@@ -203,16 +165,6 @@ const BotsSchedule = () => {
         </Button>
       </CardHeader>
       <CardBody>
-        {/* {error && (
-          <UncontrolledAlert color="danger">
-            <span className="alert-icon">
-              <i className="ni ni-like-2" />
-            </span>
-            <span className="alert-text ml-1">
-              <strong>Danger!</strong> This is a danger alert—check it out!
-            </span>
-          </UncontrolledAlert>
-        )} */}
         <div>
           <LimitFilter
             defaultValue={limit}
@@ -221,6 +173,7 @@ const BotsSchedule = () => {
               setLimit(value)
               onSearch()
             }}
+            loading={loading}
           />
           <ListFilter
             id="listfilter1"
@@ -238,14 +191,14 @@ const BotsSchedule = () => {
             }}
           />
         </div>
-        {loadingAll && <Skeleton count={5} />}
-        {!loadingAll && (
+        {loading && <Skeleton count={5} />}
+        {!loading && (
           <Table className="table-flush" responsive>
             <thead className="thead-light">
               <tr>
                 <SortableTableHeader field={'user'}>User</SortableTableHeader>
-                <SortableTableHeader field={'instance_id'}>
-                  Instance Id
+                <SortableTableHeader field={'container_id'}>
+                  Container Id
                 </SortableTableHeader>
                 <SortableTableHeader field={'bot_name'}>
                   Bot Name
@@ -266,6 +219,7 @@ const BotsSchedule = () => {
                     onEdit={handleEdit}
                     onDelete={handleDelete}
                     handleStatusChange={handleStatusChange}
+                    scheduleLoading={scheduleLoading[schedule.id]}
                   />
                 )
               })}
@@ -309,7 +263,7 @@ const BotsSchedule = () => {
         </Modal>
       </CardBody>
       <CardFooter>
-        {!loadingAll && (
+        {!loading && (
           <Paginator
             total={total}
             pageSize={limit}

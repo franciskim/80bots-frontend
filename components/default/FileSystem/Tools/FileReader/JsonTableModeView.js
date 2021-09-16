@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { LimitFilter } from 'components/default'
 import { Paginator } from 'components/default/Paginator'
 import { Table } from 'reactstrap'
-
-// const Wrapper = styled.div`
-//   display: flex;
-//   min-height: 100%;
-//   flex-direction: column;
-// `
 
 const Header = styled.header`
   display: flex;
@@ -37,7 +31,7 @@ const JsonTableModeView = ({ output }) => {
   const [deepViewing, setDeepViewing] = useState(false)
 
   const [page, setPage] = useState(1)
-  const [total, setTotal] = useState(output.length)
+  const [total] = useState(output.length)
   const [limit, setLimit] = useState(100)
 
   const viewNestedData = (data) => {

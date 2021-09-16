@@ -16,14 +16,13 @@ import {
   ListFilter,
   TableHeader,
 } from 'components/default'
-import { addNotification, download } from 'lib/helpers'
+import { addNotification } from 'lib/helpers'
 import { NOTIFICATION_TYPES } from 'config'
 import {
   copyInstance,
   restoreBot,
   getRunningBots,
   updateRunningBot,
-  downloadInstancePemFile,
   botInstanceUpdated,
   syncBotInstances,
 } from 'store/bot/actions'
@@ -33,6 +32,7 @@ import {
   subscribe as wsSubscribe,
   unsubscribe as wsUnsubscribe,
 } from 'store/socket/actions'
+import Skeleton from 'react-loading-skeleton'
 
 import RunningBotTableRow from './RunningBotTableRow'
 
@@ -49,19 +49,23 @@ const FILTERS_LIST_OPTIONS = [
 
 const RunningBots = () => {
   const dispatch = useDispatch()
+
   const [list, setFilterList] = useState('all')
   const [limit, setLimit] = useState(20)
   const [order, setOrder] = useState({ value: '', field: '' })
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState(null)
-  const [loadingAll, setLoadingAll] = useState(true)
 
   const user = useSelector((state) => state.auth.user)
   const botInstances = useSelector((state) => state.bot.botInstances)
   const total = useSelector((state) => state.bot.total)
   const syncLoading = useSelector((state) => state.bot.syncLoading)
+  const loading = useSelector((state) => state.bot.loading)
   const settings_channel = useSelector(
     (state) => state.scriptNotification.settings_channel
+  )
+  const runningBotsLoading = useSelector(
+    (state) => state.bot.runningBotsLoading
   )
 
   const onSearch = () => {
@@ -78,47 +82,74 @@ const RunningBots = () => {
   }
 
   useEffect(() => {
-    dispatch(getRunningBots({ page, limit, list })).then(() => {
-      setLoadingAll(false)
-    })
-    dispatch(
-      addListener(`running.${user.id}`, 'InstanceLaunched', (event) => {
-        const { status } = event.instance
-        if (event.instance) {
-          const statusText = status === 'running' ? 'launched' : status
-
-          addNotification({
-            type: NOTIFICATION_TYPES.SUCCESS,
-            message: `Bot ${event.instance.bot_name} successfully ${statusText}`,
-          })
-          dispatch(botInstanceUpdated(event.instance))
-        }
-      })
-    )
-    dispatch(
-      addListener(`running.${user.id}`, 'InstanceStatusUpdated', () => {
-        setPage(1)
-        setSearch(null)
-        onSearch()
-      })
-    )
-    dispatch(
-      addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
-        addNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          message: 'Sync completed',
-        })
-        setSearch(null)
-        onSearch()
-      })
-    )
-    return () => {
-      dispatch(removeAllListeners())
-    }
+    dispatch(getRunningBots({ page, limit, list }))
   }, [])
 
   useEffect(() => {
-    // console.log('botInstances ****** ' + JSON.stringify(botInstances))
+    if (botInstances.length === 0) return
+
+    dispatch(
+      addListener(`running.${user.id}`, 'InstanceLaunched', (event) => {
+        console.error('Received socket message InstanceLaunched', event)
+        const { status } = event.instance
+        if (event.instance) {
+          dispatch(botInstanceUpdated(event.instance))
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: `Bot ${event.instance.bot_name} successfully ${
+              status === 'running' ? 'launched' : status
+            }`,
+          })
+        }
+      })
+    )
+
+    dispatch(
+      addListener(`running.${user.id}`, 'InstanceStatusUpdated', (data) => {
+        const botInstance = botInstances.find(
+          (instance) => instance.id === data.instanceId
+        )
+        if (botInstance) {
+          botInstance.status = data.status
+          dispatch(botInstanceUpdated(botInstance))
+        } else {
+          console.error('Botinstance is not found')
+        }
+      })
+    )
+
+    dispatch(
+      addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
+        setSearch(null)
+        onSearch().then(() => {
+          addNotification({
+            type: NOTIFICATION_TYPES.SUCCESS,
+            message: 'Sync completed',
+          })
+        })
+      })
+    )
+
+    dispatch(
+      addListener(`running.${user.id}`, 'LastNotificationUpdated', (data) => {
+        const botInstance = botInstances.find(
+          (instance) => instance.id === data.instanceId
+        )
+        if (botInstance) {
+          botInstance.last_notification = data.message
+          dispatch(botInstanceUpdated(botInstance))
+        } else {
+          console.error('Botinstance is not found')
+        }
+      })
+    )
+
+    return () => {
+      dispatch(removeAllListeners())
+    }
+  }, [user, botInstances])
+
+  useEffect(() => {
     botInstances.map(async (botInstance) => {
       const { notification_channel, status } = botInstance
       // console.log('settings_channel ******', settings_channel)
@@ -187,38 +218,12 @@ const RunningBots = () => {
       )
   }
 
-  const downloadEventHandler = (instance) => {
-    dispatch(downloadInstancePemFile(instance.id))
-      .then(({ data }) => {
-        dispatch(
-          download(
-            data,
-            `${instance.instance_id}.pem`,
-            'application/x-pem-file'
-          )
-        )
-      })
-      .catch(({ error: { response } }) => {
-        if (response && response.data) {
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: response.data.message,
-          })
-        } else {
-          addNotification({
-            type: NOTIFICATION_TYPES.ERROR,
-            message: 'Error occurred while downloading file',
-          })
-        }
-      })
-  }
-
-  const changeBotInstanceStatus = (option, id) => {
-    dispatch(updateRunningBot(id, { status: option.value }))
+  const changeBotInstanceStatus = (id, value) => {
+    dispatch(updateRunningBot(id, { status: value }))
       .then(() =>
         addNotification({
           type: NOTIFICATION_TYPES.INFO,
-          message: `Enqueued status change: ${option.value}`,
+          message: `Enqueued status change: ${value}`,
         })
       )
       .catch(() =>
@@ -301,6 +306,7 @@ const RunningBots = () => {
               setLimit(value)
               onSearch()
             }}
+            loading={loading}
           />
           <ListFilter
             options={FILTERS_LIST_OPTIONS}
@@ -316,47 +322,56 @@ const RunningBots = () => {
             }}
           />
         </div>
-        <Table className="table-flush" responsive>
-          <thead className="thead-light">
-            <tr>
-              <SortableTableHeader field={'status'}>Status</SortableTableHeader>
-              <SortableTableHeader field={'bot_name'}>Bot</SortableTableHeader>
-              <SortableTableHeader field={'script_notification'}>
-                Last Notification
-              </SortableTableHeader>
-              <SortableTableHeader field={'launched_at'}>
-                Deployed At
-              </SortableTableHeader>
-              <SortableTableHeader field={'uptime'}>Uptime</SortableTableHeader>
-              <SortableTableHeader field={'ip'}>IP</SortableTableHeader>
-              <SortableTableHeader field={'name'}>Name</SortableTableHeader>
-              <th>Instance ID</th>
-              <SortableTableHeader field={'launched_by'}>
-                Deployed By
-              </SortableTableHeader>
-              <SortableTableHeader field={'region'}>Region</SortableTableHeader>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {botInstances.map((bot) => {
-              return (
-                <RunningBotTableRow
-                  user={user}
-                  botInstance={bot}
-                  key={bot.id}
-                  choiceRestoreBot={choiceRestoreBot}
-                  changeBotInstanceStatus={changeBotInstanceStatus}
-                  choiceCopyInstance={choiceCopyInstance}
-                  downloadEventHandler={downloadEventHandler}
-                />
-              )
-            })}
-          </tbody>
-        </Table>
+        {!loading && (
+          <Table className="table-flush" responsive>
+            <thead className="thead-light">
+              <tr>
+                <SortableTableHeader field={'status'}>
+                  Status
+                </SortableTableHeader>
+                <SortableTableHeader field={'bot_name'}>
+                  Bot
+                </SortableTableHeader>
+                <SortableTableHeader field={'script_notification'}>
+                  Last Notification
+                </SortableTableHeader>
+                <SortableTableHeader field={'launched_at'}>
+                  Deployed At
+                </SortableTableHeader>
+                <SortableTableHeader field={'uptime'}>
+                  Uptime
+                </SortableTableHeader>
+                <SortableTableHeader field={'name'}>Name</SortableTableHeader>
+                <SortableTableHeader field={'launched_by'}>
+                  Deployed By
+                </SortableTableHeader>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {botInstances.map((bot) => {
+                return (
+                  <RunningBotTableRow
+                    user={user}
+                    botInstance={bot}
+                    key={bot.id}
+                    choiceRestoreBot={choiceRestoreBot}
+                    changeBotInstanceStatus={changeBotInstanceStatus}
+                    choiceCopyInstance={choiceCopyInstance}
+                    runningBotsLoading={runningBotsLoading[bot.id]}
+                  />
+                )
+              })}
+            </tbody>
+          </Table>
+        )}
+        {loading &&
+          Array.from({ length: 5 }, (v, k) => {
+            return <Skeleton key={k} />
+          })}
       </CardBody>
       <CardFooter className="py-4">
-        {!loadingAll && (
+        {!loading && (
           <Paginator
             total={total}
             pageSize={limit}

@@ -13,7 +13,6 @@ import {
   UPDATE_BOT,
   UPDATE_STATUS,
   POST_LAUNCH_INSTANCE,
-  DOWNLOAD_INSTANCE_PEM_FILE,
   GET_TAGS,
   BOT_SETTINGS,
   SYNC_BOT_INSTANCES,
@@ -22,11 +21,10 @@ import {
   GET_INSTANCE,
   CLEAR_BOT,
   CLEAR_INSTANCE,
-  REGIONS,
-  UPDATE_REGION,
   LIMIT_CHANGE,
   ADD_SCRIPT_NOTIFICATION,
   UPDATE_LAST_NOTIFICATION,
+  DELETE_BOT,
 } from './types'
 
 const initialState = {
@@ -37,8 +35,6 @@ const initialState = {
   jsons: [],
   bots: [],
   tags: [],
-  amis: [],
-  regions: [],
   botInstances: [],
   botNotifications: [],
   botInstance: {
@@ -47,11 +43,12 @@ const initialState = {
   },
   aboutBot: {},
   botSettings: {},
-  totalRegions: 0,
   total: 0,
   limit: 10,
   loading: true,
   syncLoading: false,
+  runningBotsLoading: {},
+  botsLoading: {},
   error: null,
 }
 
@@ -62,24 +59,54 @@ export const reducer = (state = initialState, action) => {
     case GET_IMAGES:
     case GET_LOGS:
     case GET_OUTPUT_JSON:
-    case GET_BOTS:
     case GET_RUNNING_BOTS:
     case GET_BOT:
     case GET_INSTANCE:
     case COPY_INSTANCE:
-    case RESTORE_INSTANCE:
     case POST_LAUNCH_INSTANCE:
-    case UPDATE_RUNNING_BOT:
-    case UPDATE_BOT:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      }
+    case GET_BOTS: {
+      return {
+        ...state,
+        botsLoading: {},
+        error: null,
+      }
+    }
     case UPDATE_STATUS:
-    case DOWNLOAD_INSTANCE_PEM_FILE:
-    case UPDATE_REGION:
-      return { ...state, loading: true, error: null }
+    case UPDATE_BOT: {
+      const {
+        meta: { id },
+      } = action
+      return {
+        ...state,
+        botsLoading: {
+          ...state.botsLoading,
+          [id]: true,
+        },
+      }
+    }
 
+    case RESTORE_INSTANCE:
+    case DELETE_BOT:
+    case UPDATE_RUNNING_BOT: {
+      const {
+        meta: { id },
+      } = action
+      return {
+        ...state,
+        runningBotsLoading: {
+          ...state.runningBotsLoading,
+          [id]: true,
+        },
+      }
+    }
     case SYNC_BOT_INSTANCES:
     case SYNC_BOTS:
       return { ...state, syncLoading: true }
-
     case CLEAR_INSTANCE:
       return { ...state, botInstance: {} }
 
@@ -136,55 +163,93 @@ export const reducer = (state = initialState, action) => {
         loading: false,
       }
 
-    case success(GET_BOTS):
+    case success(GET_BOTS): {
+      const { data: bots, total } = action.data
       return {
         ...state,
-        bots: action.data.data,
-        total: action.data.total,
+        bots,
+        total,
         loading: false,
       }
-
+    }
     case success(GET_RUNNING_BOTS):
       return {
         ...state,
+        runningBotsLoading: action.data.data.reduce((accr, instance) => {
+          return {
+            ...accr,
+            [instance.id]: false,
+          }
+        }, {}),
         botInstances: action.data.data,
         total: action.data.total,
         loading: false,
       }
-
     case success(COPY_INSTANCE):
-    case success(RESTORE_INSTANCE):
     case success(POST_LAUNCH_INSTANCE):
-    case success(DOWNLOAD_INSTANCE_PEM_FILE):
-      return { ...state, loading: false }
-
-    case success(UPDATE_STATUS):
-    case success(UPDATE_BOT): {
-      const botIdx = state.bots.findIndex((item) => item.id === action.data.id)
-      if (botIdx || botIdx === 0) state.bots[botIdx] = action.data
-      return { ...state, bots: [...state.bots], loading: false }
-    }
-
-    case success(UPDATE_RUNNING_BOT): {
-      const userIdx = state.botInstances.findIndex(
-        (item) => item.id === action.data.id
-      )
-      if (userIdx || userIdx === 0) state.botInstances[userIdx] = action.data
       return {
         ...state,
-        botInstances: [...state.botInstances],
+        loading: false,
+      }
+    case success(UPDATE_STATUS): {
+      const {
+        data: { id },
+      } = action
+      const botIdx = state.bots.findIndex((item) => item.id === id)
+      if (botIdx > -1) {
+        state.bots[botIdx] = action.data
+      }
+      return {
+        ...state,
+        bots: [...state.bots],
+        botsLoading: {
+          ...state.botsLoading,
+          [id]: false,
+        },
+      }
+    }
+    case success(RESTORE_INSTANCE):
+    case success(UPDATE_BOT): {
+      const botIdx = state.bots.findIndex((item) => item.id === action.data.id)
+      if (botIdx || botIdx === 0) {
+        state.bots[botIdx] = action.data
+      }
+      return {
+        ...state,
+        bots: [...state.bots],
         loading: false,
       }
     }
-
-    case success(UPDATE_REGION): {
-      const userIdx = state.regions.findIndex(
+    case success(DELETE_BOT): {
+      const {
+        data: { id },
+      } = action
+      const bots = state.bots.filter((bot) => bot.id !== id)
+      return {
+        ...state,
+        bots: [...bots],
+        botsLoading: {
+          ...state.botsLoading,
+          [id]: false,
+        },
+      }
+    }
+    case success(UPDATE_RUNNING_BOT): {
+      const idx = state.botInstances.findIndex(
         (item) => item.id === action.data.id
       )
-      if (userIdx || userIdx === 0) state.regions[userIdx] = action.data
-      return { ...state, regions: [...state.regions], loading: false }
+      if (idx > -1) {
+        state.botInstances[idx] = action.data
+      }
+      return {
+        ...state,
+        botInstances: [...state.botInstances],
+        runningBotsLoading: {
+          ...state.runningBotsLoading,
+          [action.data.id]: false,
+        },
+      }
     }
-
     case success(GET_TAGS):
       return { ...state, tags: action.data.data }
 
@@ -196,15 +261,6 @@ export const reducer = (state = initialState, action) => {
     case error(SYNC_BOT_INSTANCES):
     case error(SYNC_BOTS):
       return { ...state, syncLoading: false }
-
-    case success(REGIONS):
-      return {
-        ...state,
-        regions: action.data.data,
-        totalRegions: action.data.total,
-        loading: false,
-      }
-
     case ADD_SCRIPT_NOTIFICATION: {
       const notification = { ...state.botNotifications }
       notification[action.data.item.instanceId] = { ...action.data.item }
@@ -229,13 +285,9 @@ export const reducer = (state = initialState, action) => {
     case error(POST_LAUNCH_INSTANCE):
     case error(UPDATE_RUNNING_BOT):
     case error(UPDATE_BOT):
-    case error(DOWNLOAD_INSTANCE_PEM_FILE):
-    case error(UPDATE_REGION):
     case error(UPDATE_LAST_NOTIFICATION):
     case error(UPDATE_STATUS):
-    case error(REGIONS):
       return { ...state, loading: false, error: action.error }
-
     default:
       return state
   }

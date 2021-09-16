@@ -32,12 +32,7 @@ const Bots = () => {
   const [order, setOrder] = useState({ value: '', field: '' })
   const [search, setSearch] = useState(null)
   const [limit, setLimit] = useState(20)
-
-  const [loadingAll, setLoadingAll] = useState(true)
-  const [loadingAllAfterSync, setLoadingAllAfterSync] = useState(false)
-
   const [clickedBot, setClickedBot] = useState(null)
-
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
@@ -45,10 +40,11 @@ const Bots = () => {
   const bots = useSelector((state) => state.bot.bots)
   const total = useSelector((state) => state.bot.total)
   const user = useSelector((state) => state.auth.user)
+  const loading = useSelector((state) => state.bot.loading)
+  const botsLoading = useSelector((state) => state.bot.botsLoading)
 
   useEffect(() => {
     dispatch(getBots({ page, limit })).then(() => {
-      setLoadingAll(false)
       setPage(1)
     })
     dispatch(
@@ -57,7 +53,6 @@ const Bots = () => {
           type: NOTIFICATION_TYPES.SUCCESS,
           message: 'Sync completed',
         })
-        setLoadingAllAfterSync(true)
       })
     )
     return () => {
@@ -77,17 +72,7 @@ const Bots = () => {
     )
   }
 
-  useEffect(() => {
-    if (loadingAllAfterSync) {
-      onSearch().then(() => {
-        setLoadingAll(false)
-        setPage(1)
-        setLoadingAllAfterSync(false)
-      })
-    }
-  }, [loadingAllAfterSync])
-
-  const getDeleteBot = () => {
+  const handleDeleteBot = () => {
     dispatch(deleteBot(clickedBot.id))
       .then(() => {
         addNotification({
@@ -95,15 +80,6 @@ const Bots = () => {
           message: 'Bot removed!',
         })
         setClickedBot(null)
-        dispatch(
-          getBots({
-            page,
-            limit,
-            sort: order.field,
-            order: order.value,
-            search,
-          })
-        )
         setIsDeleteModalOpen(false)
       })
       .catch(() =>
@@ -173,6 +149,7 @@ const Bots = () => {
               setLimit(value)
               onSearch()
             }}
+            loading={loading}
           />
           <SearchFilter
             onChange={(value) => {
@@ -181,8 +158,8 @@ const Bots = () => {
             }}
           />
         </div>
-        {loadingAll && <Skeleton count={5} />}
-        {!loadingAll && (
+        {loading && <Skeleton count={5} />}
+        {!loading && (
           <Table className="table-flush" responsive>
             <thead className="thead-light">
               <tr>
@@ -209,6 +186,7 @@ const Bots = () => {
                     setIsDeleteModalOpen={setIsDeleteModalOpen}
                     setClickedBot={setClickedBot}
                     key={bot.id}
+                    botsLoading={botsLoading[bot.id]}
                   />
                 )
               })}
@@ -232,7 +210,7 @@ const Bots = () => {
             confirmBtnText="Yes"
             confirmBtnBsStyle="danger"
             title="Delete selected bot?"
-            onConfirm={getDeleteBot}
+            onConfirm={handleDeleteBot}
             onCancel={() => {
               setIsDeleteModalOpen(false)
             }}
@@ -241,7 +219,7 @@ const Bots = () => {
         )}
       </CardBody>
       <CardFooter>
-        {!loadingAll && (
+        {!loading && (
           <Paginator
             total={total}
             pageSize={limit}

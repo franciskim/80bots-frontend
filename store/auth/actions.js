@@ -7,7 +7,7 @@ import {
   RESET_PASSWORD,
   UPDATE_USER_PROFILE,
 } from './types'
-// import Router from 'next/router'
+import Router from 'next/router'
 
 export const login = (email, password) => {
   return {

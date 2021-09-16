@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Badge, Button } from 'reactstrap'
+import { Badge, Button, Spinner } from 'reactstrap'
 import Link from 'next/link'
 import { useDispatch } from 'react-redux'
 import { updateStatusBot } from 'store/bot/actions'
@@ -12,6 +12,7 @@ const BotTableRow = ({
   setIsModalOpen,
   setIsDeleteModalOpen,
   setClickedBot,
+  botsLoading,
 }) => {
   const dispatch = useDispatch()
 
@@ -36,7 +37,10 @@ const BotTableRow = ({
 
   return (
     <tr key={bot.id}>
-      <td>{bot.name}</td>
+      <td>
+        {bot.name}
+        {botsLoading && <Spinner type="grow" color="info" />}
+      </td>
       <td>
         <Badge color={bot.type === 'public' ? 'info' : 'danger'}>
           {bot.type}
@@ -104,6 +108,7 @@ BotTableRow.propTypes = {
   setIsModalOpen: PropTypes.func.isRequired,
   setIsDeleteModalOpen: PropTypes.func.isRequired,
   setClickedBot: PropTypes.func.isRequired,
+  botsLoading: PropTypes.bool,
 }
 
 export default BotTableRow

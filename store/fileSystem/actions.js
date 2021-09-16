@@ -5,6 +5,8 @@ import {
   CLOSE_ITEM,
   ADD_ITEM,
   FILTER_ITEMS,
+  GET_JSON_FILE,
+  GET_LOGS_FILE,
 } from './types'
 
 export const flush = () => {
@@ -53,24 +55,53 @@ export const addItem = (item) => {
   }
 }
 
+export const getJson = (item) => (dispatch) => {
+  return dispatch({
+    type: GET_JSON_FILE,
+    request: {
+      method: 'GET',
+      url: `/instances/${item.instance_id}/file/${item.id}/json`,
+    },
+    meta: {
+      thunk: true,
+    },
+  })
+}
+
+export const getLogs = (item) => (dispatch) => {
+  return dispatch({
+    type: GET_LOGS_FILE,
+    request: {
+      method: 'GET',
+      url: `/instances/${item.instance_id}/file/${item.id}/logs`,
+    },
+    meta: {
+      thunk: true,
+    },
+  })
+}
+
 export const getItems = (query) => (dispatch, getState) => {
   const state = getState()
   const currentQuery = state.fileSystem?.query || {}
   const instance_id = state.bot?.botInstance.id || null
+
   if (!instance_id) {
     return false
   }
+
   Object.keys(query).forEach((key) => query[key] === '' && delete query[key])
+
   const finalQuery = {
     ...currentQuery,
     ...query,
-    instance_id,
   }
+
   return dispatch({
     type: GET_FILES,
     request: {
       method: 'GET',
-      url: `/instances/${finalQuery.instance_id}/objects`,
+      url: `/instances/${instance_id}/objects`,
       params: { ...finalQuery },
     },
     data: {

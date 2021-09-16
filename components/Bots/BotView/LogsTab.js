@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { CardBody } from 'reactstrap'
+import { useSelector, useDispatch } from 'react-redux'
+import { CardBody, Row, Col } from 'reactstrap'
 import { Loader80bots } from 'components/default'
-import { flush, open as openItem } from 'store/fileSystem/actions'
+import { open as openItem } from 'store/fileSystem/actions'
 import FileSystem from 'components/default/FileSystem'
-import { Select } from 'components/default/inputs'
+import Select from 'react-select'
 
 const rootFolder = 'logs'
 
 const LogsTab = () => {
+  const dispatch = useDispatch()
   const [options, setOptions] = useState([])
   const [selected, setSelected] = useState(null)
+  const [limit] = useState(16)
 
   useEffect(() => {
     if (!openedFolder || !openedFolder.path.startsWith(rootFolder)) {
-      openItem({ path: rootFolder }, { limit: 10 })
+      dispatch(openItem({ path: rootFolder }, { limit }))
     }
-    return () => flush()
+    // return () => flush()
   }, [openedFolder])
 
   const items = useSelector((state) => state.fileSystem.items)
@@ -50,10 +52,10 @@ const LogsTab = () => {
   useEffect(() => {
     if (!selected) return
     if (!selected.path.startsWith(rootFolder)) {
-      flush()
+      // flush()
       setSelected(null)
     } else {
-      openItem(selected)
+      dispatch(openItem(selected))
     }
   }, [selected])
 
@@ -62,27 +64,18 @@ const LogsTab = () => {
   }
 
   return (
-    <CardBody className="d-flex justify-content-center">
+    <CardBody>
       {openedFile ? (
-        <>
-          <Select
-            onChange={onSelected}
-            options={options}
-            value={selected}
-            styles={{
-              select: {
-                container: (provided) => ({
-                  ...provided,
-                  minWidth: '200px',
-                }),
-              },
-            }}
-          />
-          <FileSystem hideNavigator={true} />
-        </>
+        <Row>
+          <Col md={4}>
+            <Select onChange={onSelected} options={options} value={selected} />
+          </Col>
+          <Col md={8}>
+            <FileSystem hideNavigator={true} />
+          </Col>
+        </Row>
       ) : (
         <Loader80bots
-          data={'light'}
           styled={{
             width: '200px',
           }}

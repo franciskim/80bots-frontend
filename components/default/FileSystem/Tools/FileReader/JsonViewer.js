@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { parseUrl } from 'lib/helpers'
+import { getJson } from 'store/fileSystem/actions'
 import { lookup } from 'mime-types'
 import PropTypes from 'prop-types'
 import dynamic from 'next/dynamic'
+import styled from 'styled-components'
 const ReactJson = dynamic(import('react-json-view'), { ssr: false })
 import { Button, Input, Row, Col, Label } from 'reactstrap'
+import { useDispatch, useSelector } from 'react-redux'
 import JsonTableModeView from './JsonTableModeView'
 
 const MODS = {
@@ -13,37 +15,27 @@ const MODS = {
   TABLE: 3,
 }
 
-const TextViewer = ({ item }) => {
-  const [jsonRaw, setJsonRaw] = useState(null)
-  const [json, setJson] = useState(null)
-  const [mode, setMode] = useState(MODS.STRUCTURED)
-  const [valid, setValid] = useState(false)
+const JSONViewerWrapper = styled.div`
+  background-color: black;
+`
 
-  const onLoaded = (res) => {
-    const enc = new TextDecoder('utf-8')
-    const newText = enc.decode(res)
-    setValid(true)
-    setJsonRaw(newText)
-    try {
-      const jsonData = JSON.parse(newText)
-      setJson(jsonData)
-    } catch (e) {
-      return setValid(false)
-    }
-  }
+const JsonViewer = ({ item }) => {
+  const dispatch = useDispatch()
+
+  const [mode, setMode] = useState(MODS.STRUCTURED)
+
+  const json = useSelector((state) => state.fileSystem.json)
 
   const renderByMode = () => {
     switch (mode) {
       case MODS.RAW:
-        return <Input type="textarea" disabled value={jsonRaw} />
+        return <Input type="textarea" disabled value={JSON.stringify(json)} />
       case MODS.STRUCTURED:
         return (
           json && (
-            <Row>
-              <Col md={12}>
-                <ReactJson src={json} name={null} />
-              </Col>
-            </Row>
+            <JSONViewerWrapper>
+              <ReactJson src={json} name={null} />
+            </JSONViewerWrapper>
           )
         )
       case MODS.TABLE:
@@ -52,11 +44,11 @@ const TextViewer = ({ item }) => {
   }
 
   useEffect(() => {
-    parseUrl(item.url, lookup(item.url), onLoaded)
+    dispatch(getJson(item))
   }, [item])
 
-  const getLink = (item, dataString) => {
-    const data = btoa(dataString)
+  const getLink = (item, json) => {
+    const data = btoa(JSON.stringify(json))
     const mime = lookup(item.path)
     return `data:${mime};base64,${data}`
   }
@@ -70,9 +62,9 @@ const TextViewer = ({ item }) => {
 
   return (
     <>
-      <Row className="mt-2 mb-2">
-        <Label md={2}>View mode: </Label>
-        <Col md={4}>
+      <Row>
+        <Label md={4}>View mode: </Label>
+        <Col md={8}>
           {Object.keys(MODS)
             .filter((modeName) => {
               if (MODS[modeName] === MODS.TABLE && !Array.isArray(json)) {
@@ -85,7 +77,7 @@ const TextViewer = ({ item }) => {
                 <Button
                   color={mode === MODS[modeName] ? 'info' : 'secondary'}
                   key={i}
-                  outline
+                  size="sm"
                   onClick={() => setMode(MODS[modeName])}
                 >
                   {startCase(modeName.toLowerCase())}
@@ -95,13 +87,13 @@ const TextViewer = ({ item }) => {
         </Col>
       </Row>
       <>
-        {valid ? (
+        {json ? (
           renderByMode(item)
         ) : (
           <div>
             Could not parse JSON file. Click{' '}
             <a
-              href={getLink(item, jsonRaw)}
+              href={getLink(item, json)}
               download={`${item.name}.json`}
               target={'_blank'}
               rel="noreferrer"
@@ -116,8 +108,8 @@ const TextViewer = ({ item }) => {
   )
 }
 
-TextViewer.propTypes = {
+JsonViewer.propTypes = {
   item: PropTypes.object,
 }
 
-export default TextViewer
+export default JsonViewer

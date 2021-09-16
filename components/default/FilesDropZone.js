@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { DragDropContainer } from 'components/default'
 import { Card } from 'reactstrap'
 
@@ -62,13 +62,13 @@ const Add = ({ onClick, ...props }) => (
   </ImageDiv>
 )
 
-const Image = ({ src, onCancel, ...props }) => (
+const Image = ({ src, ...props }) => (
   <ImageDivFilled imgSrc={src} {...props}>
     {/* <Icon name={'cross'} width={10} height={10} onClick={onCancel} /> */}
   </ImageDivFilled>
 )
 
-export const FilesDropZone = ({ onChange, predefined, hint, ...props }) => {
+export const FilesDropZone = ({ onChange, predefined, hint }) => {
   const [files, setFiles] = useState([])
 
   const fileInput = useRef(null)
@@ -91,7 +91,7 @@ export const FilesDropZone = ({ onChange, predefined, hint, ...props }) => {
     e.stopPropagation()
     e.preventDefault()
     let data = []
-    ;[...e.target.files].forEach((file, index) => {
+    ;[...e.target.files].forEach((file) => {
       if (ACCEPT_TYPES.includes(file.type)) {
         data.push(file)
       }

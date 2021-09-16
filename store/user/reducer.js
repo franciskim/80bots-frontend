@@ -1,46 +1,45 @@
-import { success, error } from 'redux-saga-requests';
-import {
-  TIMEZONES, USERS, UPDATE_USER, REGIONS
-} from './types';
+import { success, error } from 'redux-saga-requests'
+import { TIMEZONES, USERS, UPDATE_USER } from './types'
 
 const initialState = {
   timezones: [],
-  regions: [],
   users: [],
   total: 0,
   loading: true,
   error: null,
-};
+}
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case TIMEZONES:
-    case REGIONS:
     case USERS:
-      return { ...state, loading: true, error: null };
-
+      return { ...state, loading: true, error: null }
     case success(TIMEZONES):
-      return { ...state, timezones: action.data.data, loading: false };
-
-    case success(REGIONS):
-      return { ...state, regions: action.data.data, loading: false };
-
+      return { ...state, timezones: action.data.data, loading: false }
     case success(USERS):
-      return { ...state, users: action.data.data, total: action.data.total, loading: false };
+      return {
+        ...state,
+        users: action.data.data,
+        total: action.data.total,
+        loading: false,
+      }
 
     case success(UPDATE_USER): {
-      const userIdx = state.users.findIndex(item => item.id === action.data.id);
-      if(userIdx || userIdx === 0) state.users[userIdx] = action.data;
-      return { ...state, users: [...state.users], loading: false };
+      const userIdx = state.users.findIndex(
+        (item) => item.id === action.data.id
+      )
+      if (userIdx > -1) state.users[userIdx] = action.data
+      return { ...state, users: [...state.users], loading: false }
     }
 
     case error(TIMEZONES):
     case error(USERS):
     case error(UPDATE_USER):
-      return { ...state, loading: false, error: action.error };
+      return { ...state, loading: false, error: action.error }
 
-    default: return state;
+    default:
+      return state
   }
-};
+}
 
-export default reducer;
+export default reducer

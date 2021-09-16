@@ -1,29 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import styled from '@emotion/styled'
 import PropTypes from 'prop-types'
 import { Row, Col } from 'reactstrap'
 import Slider from 'nouislider'
-
-const RangeValue = styled.span`
-  display: inline-block;
-  position: relative;
-  width: 50px;
-  line-height: 20px;
-  text-align: center;
-  border-radius: 3px;
-  padding: 5px 10px;
-  margin-left: 12px;
-  &:after {
-    position: absolute;
-    top: 8px;
-    left: -7px;
-    width: 0;
-    height: 0;
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-    content: '';
-  }
-`
 
 export const Range = ({ onChange, min, max, value, ...props }) => {
   const [val, setVal] = useState(value || min || 0)
@@ -42,15 +20,15 @@ export const Range = ({ onChange, min, max, value, ...props }) => {
       connect: [true, false],
       step: 0.01,
       range: { min: 100.0, max: 500.0 },
-    }).on('update', function (values, handle) {
+    }).on('update', (values) => {
       setSlider1Value(values[0])
     })
   }, [])
 
-  const changeValue = (e) => {
-    onChange(Number(e.target.value))
-    setVal(Number(e.target.value))
-  }
+  // const changeValue = (e) => {
+  //   onChange(Number(e.target.value))
+  //   setVal(Number(e.target.value))
+  // }
 
   return (
     <div className="input-slider-container">

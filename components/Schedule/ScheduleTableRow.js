@@ -1,5 +1,5 @@
 import React from 'react'
-import { Badge } from 'reactstrap'
+import { Badge, Spinner } from 'reactstrap'
 import PropTypes from 'prop-types'
 
 const ScheduleTableRow = ({
@@ -7,11 +7,15 @@ const ScheduleTableRow = ({
   onEdit,
   onDelete,
   handleStatusChange,
+  scheduleLoading,
 }) => {
   return (
     <tr key={schedule.id}>
-      <td>{schedule.user}</td>
-      <td>{schedule.instance_id}</td>
+      <td>
+        {schedule.user}
+        {scheduleLoading && <Spinner type="grow" color="info" />}
+      </td>
+      <td>{schedule.container_id}</td>
       <td>{schedule.bot_name}</td>
       <td>
         <label className="custom-toggle custom-toggle-success">
@@ -76,6 +80,7 @@ ScheduleTableRow.propTypes = {
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   handleStatusChange: PropTypes.func.isRequired,
+  scheduleLoading: PropTypes.bool,
 }
 
 export default ScheduleTableRow

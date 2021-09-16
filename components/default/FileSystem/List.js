@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Item from './Item'
-import { Col, Row, Label, FormGroup } from 'reactstrap'
+import { Col, Row, Label } from 'reactstrap'
 import { Paginator } from '../Paginator'
 
 const List = ({
@@ -25,8 +25,8 @@ const List = ({
   return (
     <>
       {items[0].type === 'file' && (
-        <FormGroup className="row">
-          <Col>
+        <Row>
+          <Col md={12}>
             <Label className="mr-2">Filter Blank</Label>
             <label className="custom-toggle custom-toggle-info mr-1">
               <input
@@ -41,19 +41,18 @@ const List = ({
               />
             </label>
           </Col>
-        </FormGroup>
+        </Row>
       )}
       <Row>
         {getFiles.map((item, i) => (
           <Item item={item} key={i} onClick={onItemClick} />
         ))}
       </Row>
-
       <Paginator
         initialPage={page}
         total={total}
         pageSize={limit}
-        onChangePage={(page) => onPageChange(page)}
+        onChangePage={onPageChange}
       />
     </>
   )

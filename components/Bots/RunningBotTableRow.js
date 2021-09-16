@@ -1,14 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Select from 'react-select'
 import { useSelector } from 'react-redux'
-import Link from 'next/link'
 import {
-  List,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
+  Badge,
+  Input,
+  Spinner,
 } from 'reactstrap'
 import { Loader80bots } from 'components/default'
 import { formatTimezone } from 'lib/helpers'
@@ -27,7 +27,7 @@ const RunningBotTableRow = ({
   choiceRestoreBot,
   choiceCopyInstance,
   changeBotInstanceStatus,
-  downloadEventHandler,
+  runningBotsLoading,
   user,
 }) => {
   const botNotifications = useSelector((state) => state.bot.botNotifications)
@@ -85,24 +85,46 @@ const RunningBotTableRow = ({
           }
         >
           <td>
-            <Select
-              options={OPTIONS}
-              value={OPTIONS.find((item) => item.value === botInstance.status)}
-              onChange={(option) =>
-                changeBotInstanceStatus(option, botInstance.id)
+            <Input
+              type="select"
+              onChange={({ target }) =>
+                changeBotInstanceStatus(botInstance.id, target.value)
               }
-              isOptionDisabled={(option) => option.readOnly}
-              isDisabled={
-                botInstance.status === 'pending' ||
-                botInstance.status === 'terminated'
-              }
-              menuPortalTarget={document.body}
-              menuPosition={'absolute'}
-              menuPlacement={'bottom'}
-            />
+              disabled={runningBotsLoading}
+              defaultValue={botInstance.status}
+            >
+              {OPTIONS.map((option) => {
+                return (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                    disabled={option.value === 'pending'}
+                  >
+                    {option.label}
+                  </option>
+                )
+              })}
+            </Input>
           </td>
-
-          <td>{botInstance.bot_name}</td>
+          <td>
+            {botInstance.bot_name}
+            <br />
+            {runningBotsLoading && <Spinner type="grow" color="info" />}
+            {!runningBotsLoading && (
+              <Badge
+                color={
+                  botInstance.status == 'running'
+                    ? 'success'
+                    : botInstance.status === 'terminated'
+                    ? 'danger'
+                    : 'info'
+                }
+                title="Container ID"
+              >
+                {botInstance.container_id}:{botInstance.port}
+              </Badge>
+            )}
+          </td>
           <td>
             {hasBotNotification() ? (
               !getBotNotificationError() ? (
@@ -124,16 +146,15 @@ const RunningBotTableRow = ({
           </td>
           <td>{formatTimezone(user.timezone, botInstance.launched_at)}</td>
           <td>
-            <UptimeLabel
-              uptime={botInstance.uptime}
-              status={botInstance.status}
-            />
+            {botInstance.status == 'running' && (
+              <UptimeLabel
+                uptime={botInstance.uptime}
+                status={botInstance.status}
+              />
+            )}
           </td>
-          <td>{botInstance.ip}</td>
           <td>{botInstance.name}</td>
-          <td>{botInstance.instance_id}</td>
           <td>{botInstance.launched_by}</td>
-          <td>{botInstance.region}</td>
           <td className="text-right">
             <UncontrolledDropdown>
               <DropdownToggle
@@ -166,13 +187,6 @@ const RunningBotTableRow = ({
                 >
                   Clone
                 </DropdownItem>
-                <DropdownItem
-                  href="#pablo"
-                  disabled={botInstance.status === 'terminated'}
-                  onClick={() => downloadEventHandler(botInstance)}
-                >
-                  Key
-                </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </td>
@@ -182,7 +196,6 @@ const RunningBotTableRow = ({
         <tr>
           <td colSpan={11} className="text-center">
             <Loader80bots
-              data={'dark'}
               styled={{
                 width: '100px',
                 height: '75px',
@@ -198,10 +211,10 @@ const RunningBotTableRow = ({
 RunningBotTableRow.propTypes = {
   botInstance: PropTypes.object.isRequired,
   choiceRestoreBot: PropTypes.func.isRequired,
-  downloadEventHandler: PropTypes.func.isRequired,
   changeBotInstanceStatus: PropTypes.func.isRequired,
   choiceCopyInstance: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
+  runningBotsLoading: PropTypes.bool.isRequired,
 }
 
 export default RunningBotTableRow

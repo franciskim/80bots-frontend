@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Select, Range } from 'components/default/inputs'
-import { Label, Button, Input, ButtonGroup } from 'reactstrap'
+import { Label, Button, Input } from 'reactstrap'
 
 const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
   const [values, setValues] = useState({})
@@ -273,14 +273,12 @@ const RestartEditor = ({ botInstance, onSubmit, onClose }) => {
   return (
     <>
       {botInstance && botInstance.parameters.map(renderParams)}
-      <ButtonGroup>
-        <Button color={'danger'} onClick={cancel}>
-          Cancel
-        </Button>
-        <Button color={'primary'} onClick={submit}>
-          Restart
-        </Button>
-      </ButtonGroup>
+      <Button color={'danger'} onClick={cancel}>
+        Cancel
+      </Button>
+      <Button color={'primary'} onClick={submit}>
+        Restart
+      </Button>
     </>
   )
 }

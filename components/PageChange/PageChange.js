@@ -8,7 +8,6 @@ const PageChange = () => {
       <div className="page-transition-wrapper-div">
         <div className="page-transition-icon-wrapper mb-3">
           <Loader80bots
-            data={'light'}
             styled={{
               width: '200px',
               height: '100px',
