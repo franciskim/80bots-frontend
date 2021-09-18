@@ -20,6 +20,7 @@ import 'assets/vendor/nucleo/css/nucleo.css'
 // core styles
 import 'assets/scss/nextjs-argon-dashboard-pro.scss'
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css'
+import 'assets/css/styles.css'
 
 // Router.events.on('routeChangeStart', (url) => {
 //   console.log(`Loading: ${url}`)

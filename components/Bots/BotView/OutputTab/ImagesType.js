@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-// import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { open as openItem, close as closeItem } from 'store/fileSystem/actions'
@@ -9,9 +8,10 @@ import FileSystem from 'components/default/FileSystem'
 const ImagesType = ({ setCustomBack }) => {
   const rootFolder = 'output/images'
   const dispatch = useDispatch()
-  const limit = 12
-  const isReportMode = false
+
+  const [isReportMode] = useState(false)
   const [reportItems, setReportItems] = useState([])
+  const [limit] = useState(8)
 
   const channel = useSelector((state) => state.bot.botInstance?.storage_channel)
   const openedFolder = useSelector((state) => state.fileSystem.openedFolder)

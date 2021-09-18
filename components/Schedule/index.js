@@ -164,7 +164,7 @@ const BotsSchedule = () => {
           Add schedule list
         </Button>
       </CardHeader>
-      <CardBody>
+      <CardBody className="table-wrapper">
         <div>
           <LimitFilter
             defaultValue={limit}
