@@ -9,8 +9,7 @@ import { addScriptNotification, updateLastNotification } from '../bot/actions'
 export default function scriptNotificationMiddleware() {
   let listeners = []
 
-  return (storeApi) => {
-    const { dispatch } = storeApi
+  return ({ dispatch }) => {
     return (next) => (action) => {
       if (
         ![OPEN_SCRIPT_NOTIFICATION, CLOSE_SCRIPT_NOTIFICATION].includes(

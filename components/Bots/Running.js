@@ -297,7 +297,7 @@ const RunningBots = () => {
           </Button>
         </ButtonGroup>
       </CardHeader>
-      <CardBody>
+      <CardBody className="table-wrapper">
         <div>
           <LimitFilter
             defaultValue={limit}

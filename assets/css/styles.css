@@ -1,4 +1,4 @@
-.react-toggle {
+/* .react-toggle {
   touch-action: pan-x;
 
   margin-right: 20px;
@@ -140,4 +140,8 @@
   -webkit-box-shadow: 0px 0px 5px 5px #0099e0;
   -moz-box-shadow: 0px 0px 5px 5px #0099e0;
   box-shadow: 0px 0px 5px 5px #0099e0;
+} */
+
+.table-wrapper {
+  min-height: 420px !important;
 }

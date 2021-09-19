@@ -57,7 +57,7 @@ const SchedulerLog = () => {
 
   return (
     <Card>
-      <CardBody>
+      <CardBody className="table-wrapper">
         <div>
           <LimitFilter
             defaultValue={limit}

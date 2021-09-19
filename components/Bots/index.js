@@ -136,11 +136,11 @@ const Bots = () => {
             onClick={sync}
             loading={`${syncLoading}`}
           >
-            Sync Bots From Repo
+            Sync Bots
           </Button>
         </ButtonGroup>
       </CardHeader>
-      <CardBody>
+      <CardBody className="table-wrapper">
         <div>
           <LimitFilter
             defaultValue={limit}

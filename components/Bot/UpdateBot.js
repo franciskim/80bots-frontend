@@ -203,6 +203,7 @@ const UpdateBot = () => {
               value={botName}
               onChange={({ target }) => setBotName(target.value)}
               invalid={!!errors['botName']}
+              autoFocus
             />
             <FormFeedback valid={false}>You must fill in bot name</FormFeedback>
           </Col>

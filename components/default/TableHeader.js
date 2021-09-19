@@ -2,16 +2,16 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-export const TableHeader = ({ order, field, children, onClick, ...props }) => {
-  const Th = styled.th`
-    cursor: pointer;
-    svg {
-      transform: ${(props) =>
-        props.order === 'asc' ? 'rotate(-90deg);' : 'rotate(90deg);'};
-      margin: 0 0 1px 4px;
-    }
-  `
+const Th = styled.th`
+  cursor: pointer;
+  svg {
+    transform: ${(props) =>
+      props.order === 'asc' ? 'rotate(-90deg);' : 'rotate(90deg);'};
+    margin: 0 0 1px 4px;
+  }
+`
 
+export const TableHeader = ({ order, field, children, onClick, ...props }) => {
   const handle = () => {
     const newOrder = order === '' || order === 'desc' ? 'asc' : 'desc'
     onClick && onClick(field || children, newOrder)
@@ -27,7 +27,7 @@ export const TableHeader = ({ order, field, children, onClick, ...props }) => {
       {...props}
     >
       {children}
-      {/* {order && <Icon name={'arrow'} />} */}
+      {order && <i className={'arrow'} />}
     </Th>
   )
 }

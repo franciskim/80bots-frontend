@@ -58,13 +58,13 @@ const ImageDivFilled = styled(ImageDiv)`
 
 const Add = ({ onClick, ...props }) => (
   <ImageDiv onClick={onClick} {...props}>
-    {/* <Icon name={'light-plus'} width={50} height={50} /> */}
+    <i className="fa plus" width={50} height={50} />
   </ImageDiv>
 )
 
 const Image = ({ src, ...props }) => (
   <ImageDivFilled imgSrc={src} {...props}>
-    {/* <Icon name={'cross'} width={10} height={10} onClick={onCancel} /> */}
+    <i className="fa times" width={10} height={10} />
   </ImageDivFilled>
 )
 
