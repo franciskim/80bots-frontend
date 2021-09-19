@@ -119,6 +119,20 @@ const RunningBots = () => {
     )
 
     dispatch(
+      addListener(`running.${user.id}`, 'UptimeUpdate', (data) => {
+        const botInstance = botInstances.find(
+          (instance) => instance.id === data.instanceId
+        )
+        if (botInstance) {
+          botInstance.uptime = data.upTime
+          dispatch(botInstanceUpdated(botInstance))
+        } else {
+          console.error('Botinstance is not found')
+        }
+      })
+    )
+
+    dispatch(
       addListener(`bots.${user.id}`, 'BotsSyncSucceeded', () => {
         setSearch(null)
         onSearch().then(() => {
@@ -290,7 +304,7 @@ const RunningBots = () => {
             onClick={syncWithAWS}
             loading={`${syncLoading}`}
           >
-            Sync Bot Instances
+            Sync Instances
           </Button>
           <Button color="info" outline onClick={startAllBots}>
             Launch Workforce
