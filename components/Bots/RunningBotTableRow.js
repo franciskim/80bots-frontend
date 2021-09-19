@@ -15,7 +15,7 @@ import { formatTimezone } from 'lib/helpers'
 
 import UptimeLabel from './UptimeLabel'
 
-const OPTIONS = [
+const StatusOptions = [
   { value: 'pending', label: 'Pending', readOnly: true },
   { value: 'running', label: 'Running' },
   { value: 'stopped', label: 'Stopped' },
@@ -93,7 +93,7 @@ const RunningBotTableRow = ({
               disabled={runningBotsLoading}
               defaultValue={botInstance.status}
             >
-              {OPTIONS.map((option) => {
+              {StatusOptions.map((option) => {
                 return (
                   <option
                     key={option.value}

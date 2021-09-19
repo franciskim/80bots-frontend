@@ -23,13 +23,20 @@ const UptimeLabel = ({ uptime, status }) => {
       clearInterval(tikMinutes)
     }
   }, [uptime])
-
+  if (isNaN(time)) {
+    console.info('>> UpdateTime: ', time)
+    return null
+  }
   return <UTLabel>{time && minToTime(time)}</UTLabel>
 }
 
 UptimeLabel.propTypes = {
   uptime: PropTypes.number,
   status: PropTypes.string,
+}
+
+UptimeLabel.defaultProps = {
+  uptime: 0,
 }
 
 export default UptimeLabel

@@ -166,6 +166,7 @@ const Index = () => {
                     botName: null,
                   })
                 }}
+                autoFocus
                 invalid={!!errors['botName']}
               />
               <FormFeedback valid={false}>
