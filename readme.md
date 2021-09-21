@@ -64,11 +64,6 @@ To launch via Ngrok, you'll need the API key, because is uses multi-tunnel funct
 
 - `APP_KEY` - App secret key. Important! If the application key is not set, your user sessions and other encrypted data will not be secure!;
 
-- `AWS_ACCESS_KEY_ID` - AWS access key ID;
-- `AWS_SECRET_ACCESS_KEY` - AWS secret access key;
-- `AWS_IMAGE_ID` - Default AWS Image id;
-- `AWS_CLOUDFRONT_INSTANCES_HOST` - AWS url for the instance configuration.
-
 This configuration is a key configuration for starting 80bots.
 
 ## The 80bots Quickstart:
@@ -117,12 +112,6 @@ You can run service creation manually following 3-6 points(Setup) as well as usi
 - `PUBLIC_URL` - public address of the instance run by you<br/><br/>
   ![public-url](misc/images/public_url.png)<br/><br/>
 - `APP_KEY` - App secret key. Important! If the application key is not set, your user sessions and other encrypted data will not be secure!;
-- `AWS_ACCESS_KEY_ID` - AWS access key ID;
-- `AWS_SECRET_ACCESS_KEY` - AWS secret access key;<br/><br/>
-  ![aws-access-key-id](misc/images/aws_access_key_id.png)<br/><br/>
-  ![create-key](misc/images/create_key.png)<br/><br/>
-  ![download-key](misc/images/download_key.png)<br/><br/>
-- `AWS_IMAGE_ID` - Default AWS Image id;
 
 - `AWS_CLOUDFRONT_INSTANCES_HOST` - AWS url for the instance configuration.<br/><br/>
   ![cloudFront](misc/images/cloudFront.png)<br/><br/>
