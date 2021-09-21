@@ -58,7 +58,9 @@ const BotView = () => {
 
   const toggle = (tab) => {
     if (tab.key === 'display' && window.location.protocol === 'https:') {
-      window.open(`http://${botInstance.ip}:6080?autoconnect=1`)
+      window.open(
+        `http://localhost:${botInstance.novnc_port}?autoconnect=1&password=${botInstance.vnc_passport}`
+      )
     } else {
       if (activeTab.key !== tab.key) {
         dispatch(flush())
