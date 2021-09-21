@@ -10,7 +10,7 @@
     "minify:scss": "node-sass --importer node_modules/node-sass-package-importer/dist/cli.js assets/scss/nextjs-argon-dashboard-pro.scss assets/css/nextjs-argon-dashboard-pro.min.css --output-style compressed",
     "map:scss": "node-sass --importer node_modules/node-sass-package-importer/dist/cli.js assets/scss/nextjs-argon-dashboard-pro.scss assets/css/nextjs-argon-dashboard-pro.css --source-map true",
     "build:scss": "npm run compile:scss && npm run minify:scss && npm run map:scss",
-    "dev": "next dev",
+    "dev": "next dev -p 8000",
     "lint": "eslint --ext .js --ignore-path .gitignore .",
     "lint-fix": "eslint --fix --ext .js --ignore-path .gitignore ."
   },
