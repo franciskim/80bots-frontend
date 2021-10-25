@@ -17,7 +17,9 @@ const Display = styled.iframe`
 const DisplayTab = ({ botInstance }) => {
   const [loadingPage, setLoadingPage] = useState(true)
 
-  const url = `${process.env.WEB_CLIENT_URL}:${botInstance.novnc_port}/vnc.html?autoconnect=1&password=${botInstance.vnc_password}`
+  const url = `${process.env.WEB_CLIENT_URL.replace(':80', '')}:${
+    botInstance.novnc_port
+  }/vnc.html?autoconnect=1&password=${botInstance.vnc_password}`
 
   return (
     <CardBody>
