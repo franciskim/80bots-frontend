@@ -1,4 +1,4 @@
-![80bots builder](misc/images/80bots-beam-animated-3x-padding.gif)
+![80bots builder](public/images/80bots-beam-animated-3x-padding.gif)
 
 # 80bots builder
 
@@ -104,18 +104,14 @@ You can run service creation manually following 3-6 points(Setup) as well as usi
 #### Deployment:
 
 1. Connect to the instance using `ssh your_custom_name` command<br/><br/>
-   ![connect](misc/images/connect.png)<br/><br/>
 
 2. After you connected to your instance successfully, enter `./deploy.sh` command and configure an environment by entering relevant info in order to launch 80bots correctly. The installation will request entering such info as AWS credentials, store configuration, and basic app settings. Details of requested info:
 
 - `SERVICE` - for launching an application basing on was instance
 - `PUBLIC_URL` - public address of the instance run by you<br/><br/>
-  ![public-url](misc/images/public_url.png)<br/><br/>
 - `APP_KEY` - App secret key. Important! If the application key is not set, your user sessions and other encrypted data will not be secure!;
 
 - `AWS_CLOUDFRONT_INSTANCES_HOST` - AWS url for the instance configuration.<br/><br/>
-  ![cloudFront](misc/images/cloudFront.png)<br/><br/>
-  ![cloudFront_url](misc/images/cloudFront_url.png)<br/><br/>
 
 3. After completion of all installs, 80bots will be available by instance public DNS address, with which all above-mentioned operations were performed.
 
