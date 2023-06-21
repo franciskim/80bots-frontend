@@ -6,7 +6,7 @@
 
 This application is developed for simple local deployment and AWS deployment of 80bots application architecture that includes the following repositories and they are added as submodules:
 
-##### Laravel APP (https://github.com/80bots/backend) is intended for:
+##### Laravel APP is intended for:
 
 - Backend to interact with functional options;
 - Laravel Schedule to perform routine tasks such as sync and data update;
@@ -15,7 +15,7 @@ This application is developed for simple local deployment and AWS deployment of 
 - Interaction with Primary database based on MySQL;
 - Bots (instances) management (Start, Stop, Terminate etc.).
 
-##### NextJS APP (https://github.com/80bots/frontend) is intended for:
+##### NextJS APP is intended for:
 
 - Convenient providing data related to bots;
 - Interaction with API for managing data and services;
